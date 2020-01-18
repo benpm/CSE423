@@ -24,7 +24,9 @@ private:
         {"int", Keyword}
     });
     const std::regex pattern = std::regex(
-        "([a-zA-Z]\\w*)"            //Identifiers, keywords
+        "([a-zA-Z_]\\w*)"           //Identifiers, keywords
+        "|(#include *<.*>)"         //Include statements
+        "|(#[a-zA-Z_]\\w*)"         //Pre-processor directives
         "|(\\d+)"                   //Number literals
         "|(\".*\")"                 //String literals
         "|([=()*{}&,;>+\\[\\].])"   //Operators, symbols
