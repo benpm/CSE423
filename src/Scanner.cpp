@@ -19,6 +19,7 @@ std::vector<Scanner::Token> Scanner::tokenize(const std::string source) {
                 // << " , " << match.str(4)
                 // << " , " << match.str(5)
                 // << std::endl;
+            tokens.emplace_back(match.str(0), TokenLabel::Identifier);
             next++;
         }
         std::cout << std::endl;
