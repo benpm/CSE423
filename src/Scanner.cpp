@@ -12,15 +12,16 @@ std::vector<Scanner::Token> Scanner::tokenize(const std::string source) {
         std::sregex_iterator end;
         while (next != end) {
             std::smatch match = *next;
-            std::cout << "Match: " << match.str(0)
-                << " , " << match.str(1)
-                << " , " << match.str(2)
-                << " , " << match.str(3)
-                << " , " << match.str(4)
-                << " , " << match.str(5)
-                << std::endl;
+            std::cout << "[" << match.str(0) << "], ";
+                // << " , " << match.str(1)
+                // << " , " << match.str(2)
+                // << " , " << match.str(3)
+                // << " , " << match.str(4)
+                // << " , " << match.str(5)
+                // << std::endl;
             next++;
         }
+        std::cout << std::endl;
     } catch (std::regex_error& e) {
         // Syntax error in the regular expression
         printf("Regex syntax error\n");
