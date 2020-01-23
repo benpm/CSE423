@@ -7,6 +7,7 @@ const std::vector<const char*> Scanner::tokenLabels {
     "NumberLiteral", "CharacterLiteral", "Comment", "Operator",
     "SpecialSymbol", "PreprocessorDirective", "Invalid"
 };
+
 //Valid C keywords
 const std::set<std::string> Scanner::keywords{
     "case",     "enum",
@@ -20,22 +21,27 @@ const std::set<std::string> Scanner::keywords{
     "for",      "while",
     "struct",   "extern"
 };
+
 //Valid C type identifiers
 const std::set<std::string> Scanner::typeIdentifiers{
     "int", "char", "float", "double", "short", "long", "unsigned"
 };
+
 //Valid C operators
 const std::set<std::string> Scanner::operators{
     "+", "-", "/", "*", "+=", "++", "--", "|", "||", "&&", "=",
     "==", "^", "&", "<<", ">>", "%", "!", "~", ".", "<=", ">=",
     "->", "<", ">", "!=", "*=", "/="
 };
+
 //C special symbols
 const std::set<std::string> Scanner::specialSymbols{
     "{", "}", "[", "]", "(", ")", ";", ","
 };
+
 //Number of regex capture groups (change to reflect number of capture groups)
 const int Scanner::regex_groups = 9;
+
 //The regex pattern for tokenizing
 const std::regex Scanner::pattern = std::regex(  
     "([a-zA-Z_][a-zA-Z_\\d]*)"               // Identifiers, keywords
@@ -52,6 +58,7 @@ const std::regex Scanner::pattern = std::regex(
 
 //Default constructor
 Scanner::Scanner() {}
+
 //Tokenize the input program
 std::vector<Scanner::Token> Scanner::tokenize(const std::string source)
 {
@@ -75,6 +82,7 @@ std::vector<Scanner::Token> Scanner::tokenize(const std::string source)
 
     return tokens;
 }
+
 //Use regex match to determine type of token
 Scanner::TokenLabel Scanner::identifyToken(std::smatch& match)
 {
@@ -121,6 +129,7 @@ Scanner::TokenLabel Scanner::identifyToken(std::smatch& match)
 
     return TokenLabel::Invalid;
 }
+
 //Returns string name of given label
 std::string Scanner::tokenLabelToString(TokenLabel tokenLabel)
 {
