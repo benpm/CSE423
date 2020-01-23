@@ -36,13 +36,13 @@ private:
     };
 
     const std::set<std::string> keywords{
-        "case", 	"enum",
+        "case",     "enum",
         "register", "typedef",
         "default", 	"goto",
-        "sizeof", 	"volatile",
-        "char", 	"extern",
-        "return", 	"union",
-        "do", 	    "if",
+        "sizeof",   "volatile",
+        "char",     "extern",
+        "return",   "union",
+        "do",       "if",
         "static",   "switch",
         "for",      "while",
         "struct",   "extern"
@@ -72,7 +72,7 @@ private:
         "|(\\/\\*[\\S\\s]*\\*\\/)"               // Block comments
         "|(<<=?|>>=?|\\+\\+|--|&&|\\|\\||\\.|->" // Operators
             "|[-+*/=<>!%&\\|^]=?)"               // More operators
-        "|([(){}\\[\\],;])"                   // Special symbols
-        "|(#[a-zA-Z_]+ .*)"                      // Pre-processor directives
+        "|([(){}\\[\\],;])"                      // Special symbols
+        "|(#[a-zA-Z_]+.*)"                       // Pre-processor directives
     );
 };
