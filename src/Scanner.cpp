@@ -1,8 +1,58 @@
 #include <iostream>
 #include <Scanner.hpp>
 
-Scanner::Scanner() {}
+//Types of tokens
+const std::vector<const char*> Scanner::tokenLabels {
+    "Identifier", "Keyword", "TypeIdentifier", "StringLiteral",
+    "NumberLiteral", "CharacterLiteral", "Comment", "Operator",
+    "SpecialSymbol", "PreprocessorDirective", "Invalid"
+};
+//Valid C keywords
+const std::set<std::string> Scanner::keywords{
+    "case", 	"enum",
+    "register", "typedef",
+    "default", 	"goto",
+    "sizeof", 	"volatile",
+    "char", 	"extern",
+    "return", 	"union",
+    "do", 	    "if",
+    "static",   "switch",
+    "for",      "while",
+    "struct",   "extern"
+};
+//Valid C type identifiers
+const std::set<std::string> Scanner::typeIdentifiers{
+    "int", "char", "float", "double", "short", "long", "unsigned"
+};
+//Valid C operators
+const std::set<std::string> Scanner::operators{
+    "+", "-", "/", "*", "+=", "++", "--", "|", "||", "&&", "=",
+    "==", "^", "&", "<<", ">>", "%", "!", "~", ".", "<=", ">=",
+    "->", "<", ">", "!=", "*=", "/="
+};
+//C special symbols
+const std::set<std::string> Scanner::specialSymbols{
+    "{", "}", "[", "]", "(", ")", ";", ","
+};
+//Number of regex capture groups (change to reflect number of capture groups)
+const int Scanner::regex_groups = 9;
+//The regex pattern for tokenizing
+const std::regex Scanner::pattern = std::regex(  
+    "([a-zA-Z_][a-zA-Z_\\d]*)"               // Identifiers, keywords
+    "|(\".*\")"                              // String literals
+    "|(-?\\d+\\.?\\d*)"                      // Number literals
+    "|('.')"                                 // Character literals
+    "|(\\/\\/.*)"                            // In-line comments
+    "|(\\/\\*[\\S\\s]*\\*\\/)"               // Block comments
+    "|(<<=?|>>=?|\\+\\+|--|&&|\\|\\||\\.|->" // Operators
+    "|[-+*/=<>!%&\\|^]=?)"                   // More operators
+    "|([(){}\\[\\],;])"                      // Special symbols
+    "|(#[a-zA-Z_]+ .*)"                      // Pre-processor directives
+);
 
+//Default constructor
+Scanner::Scanner() {}
+//Tokenize the input program
 std::vector<Scanner::Token> Scanner::tokenize(const std::string source)
 {
     std::vector<Scanner::Token> tokens;
@@ -15,8 +65,6 @@ std::vector<Scanner::Token> Scanner::tokenize(const std::string source)
             std::string token = match.str();
             // Get the token label
             TokenLabel tokenLabel = identifyToken(match);
-            // Print the token and its label
-            std::cout << "[" << token << ", " << tokenLabelToString(tokenLabel) << "]," << std::endl;
             // Store the token-label pair
             tokens.emplace_back(token, tokenLabel);
         }
@@ -27,7 +75,7 @@ std::vector<Scanner::Token> Scanner::tokenize(const std::string source)
 
     return tokens;
 }
-
+//Use regex match to determine type of token
 Scanner::TokenLabel Scanner::identifyToken(std::smatch& match)
 {
     for (int i = 1; i <= this->regex_groups; i++) {
@@ -73,8 +121,8 @@ Scanner::TokenLabel Scanner::identifyToken(std::smatch& match)
 
     return TokenLabel::Invalid;
 }
-
-const char *Scanner::tokenLabelToString(TokenLabel tokenLabel)
+//Returns string name of given label
+std::string Scanner::tokenLabelToString(TokenLabel tokenLabel)
 {
     return tokenLabels.at(tokenLabel);
 }
