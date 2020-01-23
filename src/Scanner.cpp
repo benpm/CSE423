@@ -9,13 +9,13 @@ const std::vector<const char*> Scanner::tokenLabels {
 };
 //Valid C keywords
 const std::set<std::string> Scanner::keywords{
-    "case", 	"enum",
+    "case",     "enum",
     "register", "typedef",
-    "default", 	"goto",
-    "sizeof", 	"volatile",
-    "char", 	"extern",
-    "return", 	"union",
-    "do", 	    "if",
+    "default",  "goto",
+    "sizeof",   "volatile",
+    "char",     "extern",
+    "return",   "union",
+    "do",       "if",
     "static",   "switch",
     "for",      "while",
     "struct",   "extern"
