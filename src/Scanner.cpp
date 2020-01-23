@@ -11,9 +11,13 @@ std::vector<Scanner::Token> Scanner::tokenize(const std::string source)
         std::sregex_iterator end;
         for (; next != end; next++) {
             std::smatch match = *next;
+            // Get string of matched token
             std::string token = match.str();
+            // Get the token label
             TokenLabel tokenLabel = identifyToken(match);
+            // Print the token and its label
             std::cout << "[" << token << ", " << tokenLabelToString(tokenLabel) << "]," << std::endl;
+            // Store the token-label pair
             tokens.emplace_back(token, tokenLabel);
         }
     } catch (std::regex_error& e) {
@@ -27,7 +31,9 @@ std::vector<Scanner::Token> Scanner::tokenize(const std::string source)
 Scanner::TokenLabel Scanner::identifyToken(std::smatch& match)
 {
     for (int i = 1; i <= this->regex_groups; i++) {
+        // Regex match made
         if (!match.str(i).empty()) {
+            // Switch on the regex match group
             switch (i) {
                 // 1 Identifiers, keywords, type identifiers
                 case 1:
