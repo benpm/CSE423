@@ -1,7 +1,5 @@
 #include <iostream>
 #include <Scanner.hpp>
-#include <fstream>
-#include <streambuf>
 
 //Types of tokens
 const std::vector<const char*> Scanner::tokenLabels {
@@ -136,10 +134,4 @@ Scanner::TokenLabel Scanner::identifyToken(std::smatch& match)
 std::string Scanner::tokenLabelToString(TokenLabel tokenLabel)
 {
     return tokenLabels.at(tokenLabel);
-}
-
-std::string load_file(std::string path)
-{
-    std::ifstream fileStream(path);
-    return std::string(std::istreambuf_iterator<char>(fileStream), std::istreambuf_iterator<char>());
 }

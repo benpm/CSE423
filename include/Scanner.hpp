@@ -39,5 +39,3 @@ private:
     static const int regex_groups;
     static const std::regex pattern;
 };
-
-std::string load_file(std::string path);

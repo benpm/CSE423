@@ -1,4 +1,7 @@
 #include <Scanner.hpp>
+#include <fstream>
+
+std::string load_file(std::string path);
 
 int main(int argc, char **argv) {
     if (argc != 2) {
@@ -20,4 +23,10 @@ int main(int argc, char **argv) {
     }
 
     return 0;
+}
+
+std::string load_file(std::string path)
+{
+    std::ifstream fileStream(path);
+    return std::string(std::istreambuf_iterator<char>(fileStream), std::istreambuf_iterator<char>());
 }
