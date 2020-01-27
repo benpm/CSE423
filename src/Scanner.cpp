@@ -73,7 +73,8 @@ std::vector<Scanner::Token> Scanner::tokenize(const std::string source)
             // Get the token label
             TokenLabel tokenLabel = identifyToken(match);
             // Store the token-label pair
-            tokens.emplace_back(token, tokenLabel);
+            if (tokenLabel != TokenLabel::Comment)
+                tokens.emplace_back(token, tokenLabel);
         }
     } catch (std::regex_error& e) {
         // Syntax error in the regular expression
