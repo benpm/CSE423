@@ -1,13 +1,15 @@
-#include <fstream>
-#include <streambuf>
 #include <Scanner.hpp>
 
-int main() {
-    //Tokenize
+int main(int argc, char **argv) {
+    if (argc != 2) {
+        printf("Please provide an input file path!");
+        return -1;
+    }
+
     Scanner scanner;
-    std::ifstream fileStream("../test_files/test_a.c");
-    std::string source((std::istreambuf_iterator<char>(fileStream)),
-                        std::istreambuf_iterator<char>());
+    std::string source = load_file(argv[1]);
+
+    //Tokenize
     std::vector<Scanner::Token> tokens = scanner.tokenize(source);
 
     //Print tokens
@@ -16,5 +18,6 @@ int main() {
             scanner.tokenLabelToString(token.second).c_str(), 
             token.first.c_str());
     }
+
     return 0;
 }
