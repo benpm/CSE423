@@ -5,7 +5,7 @@ std::string load_file(std::string path);
 
 int main(int argc, char **argv) {
     if (argc != 2) {
-        printf("Please provide an input file path!");
+        printf("Please provide an input file path!\n");
         return -1;
     }
 
