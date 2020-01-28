@@ -96,7 +96,7 @@ const int Scanner::regex_groups = 9;
 //The regex pattern for tokenizing
 const std::regex Scanner::pattern = std::regex(  
     "([a-zA-Z_][a-zA-Z_\\d]*)"               // Identifiers, keywords
-    "|(\".*\")"                              // String literals
+    "|(\"[\\S\\s]*?\")"                      // String literals
     "|(-?\\d+\\.?\\d*)"                      // Number literals
     "|('.')"                                 // Character literals
     "|(\\/\\/.*)"                            // In-line comments
