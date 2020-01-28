@@ -1,60 +1,5 @@
-#include <iostream>
 #include <Scanner.hpp>
-
-//Types of tokens
-const std::vector<const char*> Scanner::tokenLabels {
-    "Identifier", "Keyword", "TypeIdentifier", "StringLiteral",
-    "NumberLiteral", "CharacterLiteral", "Comment", "Operator",
-    "SpecialSymbol", "PreprocessorDirective", "Invalid"
-};
-
-//Valid C keywords
-const std::set<std::string> Scanner::keywords{
-    "case",     "enum",
-    "register", "typedef",
-    "default",  "goto",
-    "sizeof",   "volatile",
-    "char",     "extern",
-    "return",   "union",
-    "do",       "if",
-    "static",   "switch",
-    "for",      "while",
-    "struct",   "extern"
-};
-
-//Valid C type identifiers
-const std::set<std::string> Scanner::typeIdentifiers{
-    "int", "char", "float", "double", "short", "long", "unsigned"
-};
-
-//Valid C operators
-const std::set<std::string> Scanner::operators{
-    "+", "-", "/", "*", "+=", "++", "--", "|", "||", "&&", "=",
-    "==", "^", "&", "<<", ">>", "%", "!", "~", ".", "<=", ">=",
-    "->", "<", ">", "!=", "*=", "/="
-};
-
-//C special symbols
-const std::set<std::string> Scanner::specialSymbols{
-    "{", "}", "[", "]", "(", ")", ";", ","
-};
-
-//Number of regex capture groups (change to reflect number of capture groups)
-const int Scanner::regex_groups = 9;
-
-//The regex pattern for tokenizing
-const std::regex Scanner::pattern = std::regex(  
-    "([a-zA-Z_][a-zA-Z_\\d]*)"               // Identifiers, keywords
-    "|(\".*\")"                              // String literals
-    "|(-?\\d+\\.?\\d*)"                      // Number literals
-    "|('.')"                                 // Character literals
-    "|(\\/\\/.*)"                            // In-line comments
-    "|(\\/\\*[\\S\\s]*\\*\\/)"               // Block comments
-    "|(<<=?|>>=?|\\+\\+|--|&&|\\|\\||\\.|->" // Operators
-    "|[-+*/=<>!%&\\|^]=?)"                   // More operators
-    "|([(){}\\[\\],;])"                      // Special symbols
-    "|(#[a-zA-Z_]+ .*)"                      // Pre-processor directives
-);
+#include <definitions.hpp>
 
 //Default constructor
 Scanner::Scanner() {}
@@ -84,6 +29,12 @@ std::vector<Scanner::Token> Scanner::tokenize(const std::string source)
     return tokens;
 }
 
+//Returns string name of given label
+std::string Scanner::tokenLabelToString(TokenLabel tokenLabel)
+{
+    return tokenLabels.at(tokenLabel);
+}
+
 //Use regex match to determine type of token
 Scanner::TokenLabel Scanner::identifyToken(std::smatch& match)
 {
@@ -94,9 +45,10 @@ Scanner::TokenLabel Scanner::identifyToken(std::smatch& match)
             switch (i) {
                 // 1 Identifiers, keywords, type identifiers
                 case 1:
-                    if (keywords.find(match.str(i)) != keywords.end()) {
+                    if (definitions::keywords.find(match.str(i)) != definitions::keywords.end()) {
                         return TokenLabel::Keyword;
-                    } else if (typeIdentifiers.find(match.str(i)) != typeIdentifiers.end()) {
+                    } else if (definitions::typeIdentifiers.find(match.str(i)) !=
+                            definitions::typeIdentifiers.end()) {
                         return TokenLabel::TypeIdentifier;
                     } else {
                         return TokenLabel::Identifier;
@@ -131,8 +83,27 @@ Scanner::TokenLabel Scanner::identifyToken(std::smatch& match)
     return TokenLabel::Invalid;
 }
 
-//Returns string name of given label
-std::string Scanner::tokenLabelToString(TokenLabel tokenLabel)
-{
-    return tokenLabels.at(tokenLabel);
-}
+//Types of tokens
+const std::vector<const char*> Scanner::tokenLabels {
+    "Identifier", "Keyword", "TypeIdentifier", "StringLiteral",
+    "NumberLiteral", "CharacterLiteral", "Comment", "Operator",
+    "SpecialSymbol", "PreprocessorDirective", "Invalid"
+};
+
+//Number of regex capture groups (change to reflect number of capture groups)
+const int Scanner::regex_groups = 9;
+
+//The regex pattern for tokenizing
+const std::regex Scanner::pattern = std::regex(  
+    "([a-zA-Z_][a-zA-Z_\\d]*)"               // Identifiers, keywords
+    "|(\".*\")"                              // String literals
+    "|(-?\\d+\\.?\\d*)"                      // Number literals
+    "|('.')"                                 // Character literals
+    "|(\\/\\/.*)"                            // In-line comments
+    "|(\\/\\*[\\S\\s]*\\*\\/)"               // Block comments
+    "|(<<=?|>>=?|\\+\\+|--|&&|\\|\\||\\.|->" // Operators
+    "|[-+*/=<>!%&\\|^]=?|[?:])"              // More operators
+    "|([(){}\\[\\],;])"                      // Special symbols
+    "|(#[a-zA-Z_]+ .*)"                      // Pre-processor directives
+);
+

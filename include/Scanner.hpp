@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 #include <regex>
-#include <set>
 
 class Scanner {
 public:
@@ -32,10 +31,6 @@ public:
 private:
     TokenLabel identifyToken(std::smatch& match);
     static const std::vector<const char*> tokenLabels;
-    static const std::set<std::string> keywords;
-    static const std::set<std::string> typeIdentifiers;
-    static const std::set<std::string> operators;
-    static const std::set<std::string> specialSymbols;
     static const int regex_groups;
     static const std::regex pattern;
 };
