@@ -100,7 +100,7 @@ const std::regex Scanner::pattern = std::regex(
     "|(-?\\d+\\.?\\d*)"                      // Number literals
     "|('.')"                                 // Character literals
     "|(\\/\\/.*)"                            // In-line comments
-    "|(\\/\\*[\\S\\s]*\\*\\/)"               // Block comments
+    "|(\\/\\*[\\S\\s]*?\\*\\/)"              // Block comments
     "|(<<=?|>>=?|\\+\\+|--|&&|\\|\\||\\.|->" // Operators
     "|[-+*/=<>!%&\\|^]=?|[?:])"              // More operators
     "|([(){}\\[\\],;])"                      // Special symbols
