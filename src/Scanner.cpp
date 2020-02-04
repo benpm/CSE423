@@ -1,10 +1,25 @@
+/**
+ * @file Scanner.cpp
+ * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
+ * @brief Implementation of a C- scanner (tokenizes a subset of C)
+ * 
+ */
 #include <Scanner.hpp>
 #include <definitions.hpp>
+#include <iostream>
 
-//Default constructor
+/**
+ * @brief Construct a new Scanner:: Scanner object
+ * 
+ */
 Scanner::Scanner() {}
 
-//Tokenize the input program
+/**
+ * @brief Takes in a string representing a C- file and returns a vector of Tokens
+ * 
+ * @param source String representation of input source file
+ * @return std::vector<Scanner::Token> 
+ */
 std::vector<Scanner::Token> Scanner::tokenize(const std::string source)
 {
     std::vector<Scanner::Token> tokens;
@@ -23,19 +38,29 @@ std::vector<Scanner::Token> Scanner::tokenize(const std::string source)
         }
     } catch (std::regex_error& e) {
         // Syntax error in the regular expression
-        printf("Regex syntax error\n");
+        std::cerr << "Regex syntax error" << std::endl;
     }
 
     return tokens;
 }
 
-//Returns string name of given label
+/**
+ * @brief Returns a string representation of a token label (i.e. maps TokenLabel::Invalid to "Invalid")
+ * 
+ * @param tokenLabel Token label to be string-ified
+ * @return std::string 
+ */
 std::string Scanner::tokenLabelToString(TokenLabel tokenLabel)
 {
     return tokenLabels.at(tokenLabel);
 }
 
-//Use regex match to determine type of token
+/**
+ * @brief Takes in a regex match, and determines what kind of token it is
+ * 
+ * @param match Regex match to be identified
+ * @return Scanner::TokenLabel 
+ */
 Scanner::TokenLabel Scanner::identifyToken(std::smatch& match)
 {
     for (int i = 1; i <= this->regex_groups; i++) {
