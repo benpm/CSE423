@@ -1,3 +1,9 @@
+/**
+ * @file main.cpp
+ * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
+ * @brief Driver for our C- compiler
+ * 
+ */
 #include <Scanner.hpp>
 #include <fstream>
 
@@ -25,6 +31,12 @@ int main(int argc, char **argv) {
     return 0;
 }
 
+/**
+ * @brief Opens up a file at path and returns a string representation of it
+ * 
+ * @param path File to be opened
+ * @return std::string 
+ */
 std::string load_file(std::string path)
 {
     std::ifstream fileStream(path);
