@@ -32,6 +32,12 @@ std::vector<Scanner::Token> Scanner::tokenize(const std::string source)
             std::string token = match.str();
             // Get the token label
             TokenLabel tokenLabel = identifyToken(match);
+            // Error
+            if (tokenLabel == TokenLabel::Invalid) {
+                // TODO: We should be using a logger or something for errors
+                std::cerr << "Invalid token " << token << std::endl;
+                continue;
+            }
             // Store the token-label pair
             if (tokenLabel != TokenLabel::Comment)
                 tokens.emplace_back(token, tokenLabel);
@@ -101,6 +107,9 @@ Scanner::TokenLabel Scanner::identifyToken(std::smatch& match)
                 // 9 Pre-processor directives
                 case 9:
                     return TokenLabel::PreprocessorDirective;
+                // 10 Invalid symbols
+                case 10:
+                    return TokenLabel::Invalid;
             }
         }
     }
@@ -116,7 +125,7 @@ const std::vector<const char*> Scanner::tokenLabels {
 };
 
 //Number of regex capture groups (change to reflect number of capture groups)
-const int Scanner::regex_groups = 9;
+const int Scanner::regex_groups = 10;
 
 //The regex pattern for tokenizing
 const std::regex Scanner::pattern = std::regex(  
@@ -128,6 +137,7 @@ const std::regex Scanner::pattern = std::regex(
     "|(\\/\\*[\\S\\s]*?\\*\\/)"              // Block comments
     "|(<<=?|>>=?|\\+\\+|--|&&|\\|\\||\\.|->" // Operators
     "|[-+*/=<>!%&\\|^]=?|[?:])"              // More operators
-    "|([(){}\\[\\],;])"                      // Special symbols
+    "|([(){}\\[\\],;\\\\])"                  // Special symbols
     "|(#[a-zA-Z_]+ .*)"                      // Pre-processor directives
+    "|([@`]+)"                                  // Invalid symbols
 );
