@@ -7,8 +7,9 @@
 
 %%
 [ \t\n]
-"/*<C_COMMENT>*/"
-<C_COMMENT>.
+"/*"            { BEGIN(C_COMMENT); }
+<C_COMMENT>"*/" { BEGIN(INITIAL); }
+<C_COMMENT>.    { }
 int                     { std::cout << "IntType:    " << yytext << std::endl; }
 float                   { std::cout << "FloatType:  " << yytext << std::endl; }
 char                    { std::cout << "CharType:   " << yytext << std::endl; }
