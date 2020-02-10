@@ -1,7 +1,8 @@
 %{
-  #include <iostream>
-  extern int yylex();
+	#include <iostream>
+	#include "scanner.tab.h"  // to get the token types from Bison
 %}
+
 %option noyywrap
 %x C_COMMENT
 
@@ -46,7 +47,3 @@ return                  { std::cout << "return:     " << yytext << std::endl; }
 [a-zA-Z_][a-zA-Z_\\d]*  { std::cout << "Identifier: " << yytext << std::endl; }
 .                       { std::cout << "UNKNOWN:    " << yytext << std::endl; }
 %%
-
-int main(int, char**) {
-  while (yylex());
-}

@@ -10,5 +10,6 @@ include_directories("include")
 FLEX_TARGET(scanner scanner/scanner.l  ${CMAKE_CURRENT_BINARY_DIR}/lex.yy.cpp)
 
 add_executable(scanner
+    scanner/scanner.cpp
     ${FLEX_scanner_OUTPUTS}
 )
