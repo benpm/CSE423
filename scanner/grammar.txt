@@ -1,0 +1,78 @@
+program := declarationList
+declarationList := declarationList declaration | declaration
+declaration := varDeclaration | funDeclaration
+varDeclaration := typeSpecifier varDeclList ;
+scopedVarDeclaration := scopedTypeSpecifier varDeclList ;
+varDeclList := varDeclList , varDeclInitialize | varDeclInitialize
+varDeclInitialize := varDeclId | varDeclId = simpleExpression
+varDeclId := ID | ID [ NUMCONST ]
+scopedTypeSpecifier := static typeSpecifier | typeSpecifier
+typeSpecifier := int | bool | char
+funDeclaration := typeSpecifier ID ( params ) statement | ID ( params ) statement
+params := paramList | eps
+paramList := paramList ; paramTypeList | paramTypeList
+paramTypeList := typeSpecifier paramIdList
+paramIdList := paramIdList , paramId | paramId
+paramId := ID | ID [ ]
+statement := expressionStmt | compoundStmt | selectionStmt | iterationStmt | returnStmt | breakStmt
+expressionStmt := expression ; | ;
+compoundStmt := { localDeclarations statementList }
+localDeclarations := localDeclarations scopedVarDeclaration | eps
+statementList := statementList statement | eps
+elsifList := elsifList else if ( simpleExpression ) { statement } | eps
+elsifList := elsifList elsif ( simpleExpression ) { statement } | eps
+selectionStmt := if ( simpleExpression ) { statement } elsifList | if ( simpleExpression ) { statement } elsifList else { statement }
+iterationStmt := whileStmt | forStmt
+whileStmt := while ( simpleExpression ) { statement }
+forStmt := for forRange { statement }
+forRange := ( typeSpecifier varDeclId = simpleExpression ; relExpression ; expression ) | ( varDeclInitialize ; relExpression ; expression )
+returnStmt := return ; | return expression ;
+breakStmt := break ;
+expression := mutable = expression | mutable += expression | mutable -= expression | mutable *= expression | mutable /= expression | mutable ++ | mutable -- | simpleExpression
+simpleExpression := simpleExpression || andExpression | andExpression
+andExpression := andExpression && unaryRelExpression | unaryRelExpression
+unaryRelExpression := ! unaryRelExpression | relExpression
+relExpression := sumExpression relop sumExpression | sumExpression
+relop := <= | < | > | >= | == | !=
+sumExpression := sumExpression sumop mulExpression | mulExpression
+sumop := + | -
+mulExpression := mulExpression mulop unaryExpression | unaryExpression
+mulop := * | / | %
+unaryExpression := unaryop unaryExpression | factor
+unaryop := - | *
+factor := immutable | mutable
+mutable := ID | mutable [ expression ]
+immutable := ( expression ) | call | constant
+call := ID ( args )
+args := argList | eps
+argList := argList , expression | expression
+constant := NUMCONST | CHARCONST | STRINGCONST | true | false
+
+int
+bool
+char
+elsif
+letter
+digit
+static
+;
+,
+=
+-
+%
+*
++
+<=
+<
+>
+>=
+==
+!=
+!
+true
+false
+letdig = digit|letter
+ID= letter letdig∗
+NUMCONST= digit+
+CHARCONST
+STRINGCONST
