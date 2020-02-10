@@ -45,10 +45,8 @@ return                  { std::cout << "return:     " << yytext << std::endl; }
 [0-9]+\.?[0-9]?         { std::cout << "NumberLit:  " << yytext << std::endl; }
 [a-zA-Z_][a-zA-Z_\\d]*  { std::cout << "Identifier: " << yytext << std::endl; }
 .                       { std::cout << "UNKNOWN:    " << yytext << std::endl; }
-\s|\n
 %%
 
 int main(int, char**) {
-  // lex through the input:
   while (yylex());
 }
