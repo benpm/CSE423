@@ -4,7 +4,7 @@ _Benjamin Mastripolito, Haydn Jones, and Steven Anaya_
 
 Limited C Compiler written in C++.
 
-[Code Documentation](https://benpm.github.io/CSE423) / [Design Document](docs/design.md)
+[Code Documentation](https://benpm.github.io/CSE423/doxygen/html/index.html) / [Design Document](docs/design.md)
 
 ## Compile and Run
 1. `mkdir build && cd build`
