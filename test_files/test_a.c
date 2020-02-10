@@ -1,12 +1,13 @@
 #define TEST 111
 
-#include <stdio.h>
-
 int main(int argc, char **argv) {
     int value = -5;
     //int 0vaije;
     int hek = 5 * -18;
-    double k = 14 > 0.00 ? 14. : -19.45;
+    char str[] = "blahlalhlahlhhal\n";
+    char str2[] = "-19.45";
+    int logand = 1 && 2;
+    int logor = 1 || 2;
     /*
     boi
     */
