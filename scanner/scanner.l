@@ -1,6 +1,6 @@
 %{
 	#include <iostream>
-	#include "scanner.tab.h"  // to get the token types from Bison
+	#include <parser.tab.hpp>  // to get the token types from Bison
 %}
 
 %option noyywrap
