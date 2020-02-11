@@ -2,6 +2,7 @@
 
 int main(int argc, char **argv) {
     int value = -5;
+    float a = 10.1;
     //int 0vaije;
     int hek = 5 * -18;
     char str[] = "blahlalhlahlhhal\n";

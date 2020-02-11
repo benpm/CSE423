@@ -1,6 +1,6 @@
 %{
 	#include <iostream>
-	#include <parser.tab.hpp>  // to get the token types from Bison
+	#include "parser.tab.hpp"  // to get the token types from Bison
 %}
 
 %option noyywrap
@@ -13,9 +13,9 @@
 <C_COMMENT>\n   { }
 <C_COMMENT>.    { }
 "//".*
-int                     { std::cout << "IntType:    " << yytext << std::endl; }
-float                   { std::cout << "FloatType:  " << yytext << std::endl; }
-char                    { std::cout << "CharType:   " << yytext << std::endl; }
+int                     { return INT;   }
+float                   { return FLOAT; }
+char                    { return CHAR;  }
 for                     { std::cout << "For:        " << yytext << std::endl; }
 while                   { std::cout << "While:      " << yytext << std::endl; }
 if                      { std::cout << "If:         " << yytext << std::endl; }
@@ -46,7 +46,8 @@ return                  { std::cout << "return:     " << yytext << std::endl; }
 #define                 { std::cout << "Define:     " << yytext << std::endl; }
 \"(\\.|[^"\\])*\"       { std::cout << "StringLit:  " << yytext << std::endl; }
 '.'                     { std::cout << "CharLit:    " << yytext << std::endl; }
-[0-9]+\.?[0-9]?         { std::cout << "NumberLit:  " << yytext << std::endl; }
+[0-9]+                  { yylval.ival = atoi(yytext); return INTCONST;        }
+[0-9]+\.[0-9]?          { yylval.fval = atof(yytext); return FLOATCONST;	  }
 [a-zA-Z_][a-zA-Z_\\d]*  { std::cout << "Identifier: " << yytext << std::endl; }
 .                       { std::cout << "UNKNOWN:    " << yytext << std::endl; }
 %%

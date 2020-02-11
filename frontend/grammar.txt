@@ -6,8 +6,8 @@ scopedVarDeclaration := scopedTypeSpecifier varDeclList ;
 varDeclList := varDeclList , varDeclInitialize | varDeclInitialize
 varDeclInitialize := varDeclId | varDeclId = simpleExpression
 varDeclId := ID | ID [ NUMCONST ]
-scopedTypeSpecifier := static typeSpecifier | typeSpecifier
-typeSpecifier := int | bool | char
+scopedTypeSpecifier := typeSpecifier
+typeSpecifier := INT | FLOAT | CHAR
 funDeclaration := typeSpecifier ID ( params ) statement | ID ( params ) statement
 params := paramList | eps
 paramList := paramList ; paramTypeList | paramTypeList
@@ -46,17 +46,15 @@ immutable := ( expression ) | call | constant
 call := ID ( args )
 args := argList | eps
 argList := argList , expression | expression
-constant := FLOATCONST | INTCONST | CHARCONST | STRINGCONST | true | false
-
+constant := FLOATCONST | INTCONST | CHARCONST | STRINGCONST
 
 TERMINALS
 _________
 
-int
+INT
 bool
-char
+CHAR
 elsif
-static
 ;
 ,
 =
@@ -71,8 +69,6 @@ static
 ==
 !=
 !
-true
-false
 ID
 INTCONST
 FLOATCONST

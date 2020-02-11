@@ -15,18 +15,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 ####################################################################################
 BISON_TARGET(parser frontend/parser.ypp ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.cpp)
 FLEX_TARGET(scanner frontend/scanner.l ${CMAKE_CURRENT_BINARY_DIR}/lex.yy.cpp)
-add_flex_bison_dependency(scanner parser)
-
-####################################################################################
-#
-#   Builds a basic scanner driver, Takes in a file name with argv[1]
-#   and tokenizes the file
-#
-####################################################################################
-add_executable(scanner
-    frontend/scanner.cpp
-    ${FLEX_scanner_OUTPUTS}
-)
+ADD_FLEX_BISON_DEPENDENCY(scanner parser)
 
 ####################################################################################
 #
@@ -36,6 +25,6 @@ add_executable(scanner
 ####################################################################################
 add_executable(frontend
     frontend/frontend.cpp
-    ${FLEX_scanner_OUTPUTS}
     ${BISON_parser_OUTPUTS}
+    ${FLEX_scanner_OUTPUTS}
 )

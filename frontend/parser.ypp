@@ -5,6 +5,7 @@
 	extern int yylex();
 	extern int yyparse();
 	extern void yyerror(const char *s);
+	// https://aquamentus.com/flex_bison.html
 %}
 
 // Bison fundamentally works by asking flex to get the next token, which it
@@ -23,6 +24,10 @@
 }
 
 //Terminals
+%token INT
+%token FLOAT
+%token CHAR
+
 %token <sval> ID
 %token <sval> STRINGCONST
 %token <ival> INTCONST
@@ -31,5 +36,15 @@
 
 //Grammar
 %%
-constant: FLOATCONST | INTCONST | CHARCONST | STRINGCONST;
+typeSpecifier:
+	INT   { std::cout << "TYPESPECIFIER found: " << $1 << std::endl; } |
+	FLOAT { std::cout << "TYPESPECIFIER found: " << $1 << std::endl; } |
+	CHAR  { std::cout << "TYPESPECIFIER found: " << $1 << std::endl; }
+;
+constant:
+	FLOATCONST  { std::cout << "FLOATCONST  found: " << $1 << std::endl; } |
+	INTCONST    { std::cout << "INTCONST    found: " << $1 << std::endl; } |
+	CHARCONST   { std::cout << "CHARCONST   found: " << $1 << std::endl; } |
+	STRINGCONST { std::cout << "STRINGCONST found: " << $1 << std::endl; }
+;
 %%
