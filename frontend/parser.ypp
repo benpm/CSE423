@@ -6,7 +6,7 @@
 	extern int yyparse();
 	extern FILE *yyin;
 
-	void yyerror(const char *s);
+	extern void yyerror(const char *s);
 %}
 
 // Bison fundamentally works by asking flex to get the next token, which it
@@ -36,24 +36,3 @@
 %%
 constant: FLOATCONST | INTCONST | CHARCONST | STRINGCONST | TRUE | FALSE;
 %%
-
-int main(int, char**) {
-	// Open a file handle to a particular file:
-	FILE *myfile = fopen("../test_files/basic.c", "r");
-	// Make sure it is valid:
-	if (!myfile) {
-		std::cout << "I can't open ../test_files/basic.c!" << std::endl;
-		return -1;
-	}
-	// Set Flex to read from it instead of defaulting to STDIN:
-	yyin = myfile;
-
-	// Parse through the input:
-	yyparse();
-}
-
-void yyerror(const char *s) {
-	std::cout << "EEK, parse error!  Message: " << s << std::endl;
-	// might as well halt now:
-	exit(-1);
-}

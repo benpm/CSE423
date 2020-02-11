@@ -3,22 +3,34 @@ project("CSE423_Compiler")
 
 find_package(FLEX)
 find_package(BISON)
-include_directories("scanner" "parser")
 
+include_directories("frontend")
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-# Targets
-BISON_TARGET(parser parser/parser.ypp ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.cpp)
-FLEX_TARGET(scanner scanner/scanner.l  ${CMAKE_CURRENT_BINARY_DIR}/lex.yy.cpp)
-
-# Required for anything to work
+################################################################################
+#
+#   Prepare the scanner and parser with FLEX and BISON
+#   Results are stored in ${FLEX_scanner_OUTPUTS} and ${BISON_parser_OUTPUTS}
+#
+###############################################################################
+BISON_TARGET(parser frontend/parser.ypp ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.cpp)
+FLEX_TARGET(scanner frontend/scanner.l ${CMAKE_CURRENT_BINARY_DIR}/lex.yy.cpp)
 add_flex_bison_dependency(scanner parser)
 
-add_executable(parser
-    ${BISON_parser_OUTPUTS}
+################################################################################
+#
+#   Build a basic scanner driver, Takes in a file with as argv[1]
+#   and tokenizes it
+#
+###############################################################################
+add_executable(scanner
+    frontend/scanner.cpp
+    ${FLEX_scanner_OUTPUTS}
 )
 
-add_executable(scanner
-    scanner/scanner.cpp
+add_executable(frontend
+    frontend/frontend.cpp
     ${FLEX_scanner_OUTPUTS}
+    ${BISON_parser_OUTPUTS}
 )
 
