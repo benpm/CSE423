@@ -4,8 +4,6 @@
 
 	extern int yylex();
 	extern int yyparse();
-	extern FILE *yyin;
-
 	extern void yyerror(const char *s);
 %}
 
@@ -25,7 +23,6 @@
 }
 
 //Terminals
-%token TRUE FALSE
 %token <sval> ID
 %token <sval> STRINGCONST
 %token <ival> INTCONST
