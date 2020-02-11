@@ -28,9 +28,13 @@ add_executable(scanner
     ${FLEX_scanner_OUTPUTS}
 )
 
+################################################################################
+#
+#   Builds the frontend driver. Tokenizes input and builds parse tree
+#
+###############################################################################
 add_executable(frontend
     frontend/frontend.cpp
     ${FLEX_scanner_OUTPUTS}
     ${BISON_parser_OUTPUTS}
 )
-
