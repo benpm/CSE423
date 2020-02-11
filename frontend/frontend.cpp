@@ -8,7 +8,6 @@
 #include <cstdio>
 #include <iostream>
 
-extern int yylex();
 extern int yyparse();
 extern FILE *yyin;
 
@@ -23,12 +22,12 @@ int main(int argc, char **argv) {
 
     FILE *myfile = fopen(argv[1], "r");
     // Make sure it opened
-    if (!myfile) {
+    if (!(myfile)) {
         std::cerr << "Cannot open " << argv[1] << std::endl;
         return -2;
     }
 
-    // Point FLEX/BISOn to it and run
+    // Point FLEX/BISON to it and run
 	yyin = myfile;
 	yyparse();
 }
