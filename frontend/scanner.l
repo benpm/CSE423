@@ -52,11 +52,10 @@ break                   { yylval.sval = strdup(yytext); return BREAK;      }
 &&                      { yylval.sval = strdup(yytext); return LOGAND;     }
 \|\|                    { yylval.sval = strdup(yytext); return LOGOR;      }
 !                       { yylval.cval = yytext[0]; return NOT;             }
-#define                 { yylval.sval = strdup(yytext); return DEFINE;     }
 \"(\\.|[^"\\])*\"       { yylval.sval = strdup(yytext); return STRINGLIT;  }
 '.'                     { yylval.cval = yytext[0]; return CHARLIT;         }
 [0-9]+                  { yylval.ival = atoi(yytext); return INTCONST;     }
 [0-9]+\.[0-9]?          { yylval.fval = atof(yytext); return FLOATCONST;   }
-[a-zA-Z_][a-zA-Z_\\d]*  { yylval.sval = strdup(yytext); return ID;         }
+[a-zA-Z_][a-zA-Z0-9_]*  { yylval.sval = strdup(yytext); return ID;         }
 .                       { yylval.sval = strdup(yytext); return UNKNOWN;    }
 %%
