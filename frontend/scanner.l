@@ -1,6 +1,6 @@
 %{
-	#include <iostream>
-	#include "parser.tab.hpp"  // to get the token types from Bison
+    #include <iostream>
+    #include "parser.tab.hpp"  // to get the token types from Bison
 %}
 
 %option noyywrap
@@ -13,41 +13,50 @@
 <C_COMMENT>\n   { }
 <C_COMMENT>.    { }
 "//".*
-int                     { return INT;   }
-float                   { return FLOAT; }
-char                    { return CHAR;  }
-for                     { std::cout << "For:        " << yytext << std::endl; }
-while                   { std::cout << "While:      " << yytext << std::endl; }
-if                      { std::cout << "If:         " << yytext << std::endl; }
-else                    { std::cout << "Else:       " << yytext << std::endl; }
-return                  { std::cout << "return:     " << yytext << std::endl; }
-;                       { std::cout << "Semicolon:  " << yytext << std::endl; }
-,                       { std::cout << "Comma:      " << yytext << std::endl; }
-\(                      { std::cout << "Oparen:     " << yytext << std::endl; }
-\)                      { std::cout << "Cparen:     " << yytext << std::endl; }
-\{                      { std::cout << "Obrace:     " << yytext << std::endl; }
-\}                      { std::cout << "Cbrace:     " << yytext << std::endl; }
-\[                      { std::cout << "Obrack:     " << yytext << std::endl; }
-\]                      { std::cout << "Cbrack:     " << yytext << std::endl; }
-=                       { std::cout << "Equal:      " << yytext << std::endl; }
-%                       { std::cout << "Modulo:     " << yytext << std::endl; }
--                       { std::cout << "Minus:      " << yytext << std::endl; }
-\+                      { std::cout << "Plus:       " << yytext << std::endl; }
-\/                      { std::cout << "Divide:     " << yytext << std::endl; }
-\*                      { std::cout << "Times:      " << yytext << std::endl; }
-\<                      { std::cout << "Less:       " << yytext << std::endl; }
-\>                      { std::cout << "Greater:    " << yytext << std::endl; }
-\<=                     { std::cout << "Le:         " << yytext << std::endl; }
-\>=                     { std::cout << "Ge:         " << yytext << std::endl; }
-==                      { std::cout << "Iseq:       " << yytext << std::endl; }
-!=                      { std::cout << "Noteq:      " << yytext << std::endl; }
-&&                      { std::cout << "LogAnd:     " << yytext << std::endl; }
-\|\|                    { std::cout << "LogOr:      " << yytext << std::endl; }
-#define                 { std::cout << "Define:     " << yytext << std::endl; }
-\"(\\.|[^"\\])*\"       { std::cout << "StringLit:  " << yytext << std::endl; }
-'.'                     { std::cout << "CharLit:    " << yytext << std::endl; }
-[0-9]+                  { yylval.ival = atoi(yytext); return INTCONST;        }
-[0-9]+\.[0-9]?          { yylval.fval = atof(yytext); return FLOATCONST;	  }
-[a-zA-Z_][a-zA-Z_\\d]*  { std::cout << "Identifier: " << yytext << std::endl; }
-.                       { std::cout << "UNKNOWN:    " << yytext << std::endl; }
+int                     { yylval.sval = yytext; return INT;              }
+float                   { yylval.sval = yytext; return FLOAT;            }
+char                    { yylval.sval = yytext; return CHAR;             }
+for                     { yylval.sval = yytext; return FOR;              }
+while                   { yylval.sval = yytext; return WHILE;            }
+if                      { yylval.sval = yytext; return IF;               }
+else                    { yylval.sval = yytext; return ELSE;             }
+return                  { yylval.sval = yytext; return RETURN;           }
+break                   { yylval.sval = yytext; return BREAK;            }
+;                       { yylval.cval = yytext[0]; return SEMICOLON;     }
+,                       { yylval.cval = yytext[0]; return COMMA;         }
+\(                      { yylval.cval = yytext[0]; return LPAREN;        }
+\)                      { yylval.cval = yytext[0]; return RPAREN;        }
+\{                      { yylval.cval = yytext[0]; return LBRACE;        }
+\}                      { yylval.cval = yytext[0]; return RBRACE;        }
+\[                      { yylval.cval = yytext[0]; return LBRACK;        }
+\]                      { yylval.cval = yytext[0]; return RBRACK;        }
+=                       { yylval.cval = yytext[0]; return EQUAL;         }
+\+                      { yylval.cval = yytext[0]; return PLUS;          }
+-                       { yylval.cval = yytext[0]; return MINUS;         }
+\*                      { yylval.cval = yytext[0]; return TIMES;         }
+\/                      { yylval.cval = yytext[0]; return DIVIDE;        }
+%                       { yylval.cval = yytext[0]; return MODULO;        }
+\+=                     { yylval.sval = yytext; return PLUSEQUAL;        }
+-=                      { yylval.sval = yytext; return MINUSEQUAL;       }
+\*=                     { yylval.sval = yytext; return TIMESEQUAL;       }
+\/=                     { yylval.sval = yytext; return DIVEQUAL;         }
+%=                      { yylval.sval = yytext; return MODEQUAL;         }
+\+\+                    { yylval.sval = yytext; return INCR;             }
+--                      { yylval.sval = yytext; return DECR;             }
+\<                      { yylval.cval = yytext[0]; return LT;            }
+\>                      { yylval.cval = yytext[0]; return GT;            }
+\<=                     { yylval.sval = yytext; return LE; 	   	         }
+\>=                     { yylval.sval = yytext; return GE;               }
+==                      { yylval.sval = yytext; return ISEQ;             }
+!=                      { yylval.sval = yytext; return NOTEQ;            }
+&&                      { yylval.sval = yytext; return LOGAND;           }
+\|\|                    { yylval.sval = yytext; return LOGOR;            }
+!                       { yylval.cval = yytext[0]; return NOT;           }
+#define                 { yylval.sval = yytext; return DEFINE;           }
+\"(\\.|[^"\\])*\"       { yylval.sval = yytext; return STRINGLIT;  	     }
+'.'                     { yylval.cval = yytext[0]; return CHARLIT;       }
+[0-9]+                  { yylval.ival = atoi(yytext); return INTCONST;   }
+[0-9]+\.[0-9]?          { yylval.fval = atof(yytext); return FLOATCONST; }
+[a-zA-Z_][a-zA-Z_\\d]*  { yylval.sval = yytext; return ID;               }
+.                       { yylval.sval = yytext; return UNKNOWN;          }
 %%

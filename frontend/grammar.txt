@@ -4,31 +4,15 @@ declaration := varDeclaration | funDeclaration
 varDeclaration := typeSpecifier varDeclList ;
 scopedVarDeclaration := scopedTypeSpecifier varDeclList ;
 varDeclList := varDeclList , varDeclInitialize | varDeclInitialize
-varDeclInitialize := varDeclId | varDeclId = simpleExpression
-varDeclId := ID | ID [ NUMCONST ]
+varDeclInitialize := ID | ID = simpleExpression
 scopedTypeSpecifier := typeSpecifier
 typeSpecifier := INT | FLOAT | CHAR
-funDeclaration := typeSpecifier ID ( params ) statement | ID ( params ) statement
+funDeclaration := typeSpecifier ID ( params ) statement
 params := paramList | eps
-paramList := paramList ; paramTypeList | paramTypeList
-paramTypeList := typeSpecifier paramIdList
-paramIdList := paramIdList , paramId | paramId
-paramId := ID | ID [ ]
+paramList := paramList , typeSpecifier ID | typeSpecifier ID
 statement := expressionStmt | compoundStmt | selectionStmt | iterationStmt | returnStmt | breakStmt
 expressionStmt := expression ; | ;
-compoundStmt := { localDeclarations statementList }
-localDeclarations := localDeclarations scopedVarDeclaration | eps
-statementList := statementList statement | eps
-elsifList := elsifList else if ( simpleExpression ) { statement } | eps
-elsifList := elsifList elsif ( simpleExpression ) { statement } | eps
-selectionStmt := if ( simpleExpression ) { statement } elsifList | if ( simpleExpression ) { statement } elsifList else { statement }
-iterationStmt := whileStmt | forStmt
-whileStmt := while ( simpleExpression ) { statement }
-forStmt := for forRange { statement }
-forRange := ( typeSpecifier varDeclId = simpleExpression ; relExpression ; expression ) | ( varDeclInitialize ; relExpression ; expression )
-returnStmt := return ; | return expression ;
-breakStmt := break ;
-expression := mutable = expression | mutable += expression | mutable -= expression | mutable *= expression | mutable /= expression | mutable ++ | mutable -- | simpleExpression
+expression := ID = expression | ID += expression | ID -= expression | ID *= expression | ID /= expression | ID ++ | ID -- | simpleExpression
 simpleExpression := simpleExpression || andExpression | andExpression
 andExpression := andExpression && unaryRelExpression | unaryRelExpression
 unaryRelExpression := ! unaryRelExpression | relExpression
@@ -39,22 +23,35 @@ sumop := + | -
 mulExpression := mulExpression mulop unaryExpression | unaryExpression
 mulop := * | / | %
 unaryExpression := unaryop unaryExpression | factor
-unaryop := - | *
+unaryop := + | -
 factor := immutable | mutable
-mutable := ID | mutable [ expression ]
 immutable := ( expression ) | call | constant
 call := ID ( args )
 args := argList | eps
 argList := argList , expression | expression
-constant := FLOATCONST | INTCONST | CHARCONST | STRINGCONST
+constant := STRINGLIT | CHARLIT | INTCOST | FLOATCONST
+compoundStmt := { localDeclarations statementList }
+localDeclarations := localDeclarations scopedVarDeclaration | eps
+statementList := statementList statement | eps
+selectionStmt := IF ( simpleExpression ) { statement } elseifList | IF ( simpleExpression ) { statement } elsifList else { statement }
+elseIfList := elseIfList ELSE IF ( simpleExpression ) { statement } | eps
+iterationStmt := whileStmt | forStmt
+whileStmt := WHILE ( simpleExpression ) { statement }
+forStmt := FOR ( varDeclList ; relExpression ; expression )
+returnStmt := return ; | return expression ;
+breakStmt := break ;
 
 TERMINALS
 _________
 
 INT
-bool
+FLOAT
 CHAR
-elsif
+IF
+ELSE
+WHILE
+FOR
+RETURN
 ;
 ,
 =
@@ -69,8 +66,8 @@ elsif
 ==
 !=
 !
-ID
+STRINGLIT
+CHARLIT
 INTCONST
 FLOATCONST
-CHARCONST
-STRINGCONST
+ID

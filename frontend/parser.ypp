@@ -1,11 +1,11 @@
 %{
-	#include <cstdio>
-	#include <iostream>
+    #include <cstdio>
+    #include <iostream>
 
-	extern int yylex();
-	extern int yyparse();
-	extern void yyerror(const char *s);
-	// https://aquamentus.com/flex_bison.html
+    extern int yylex();
+    extern int yyparse();
+    extern void yyerror(const char *s);
+    // https://aquamentus.com/flex_bison.html
 %}
 
 // Bison fundamentally works by asking flex to get the next token, which it
@@ -17,34 +17,242 @@
 // we can return ints or floats or strings cleanly.  Bison implements this
 // mechanism with the %union directive:
 %union {
-	int ival;
-	float fval;
-	char *sval;
-	char cval;
+    int ival;
+    float fval;
+    char *sval;
+    char cval;
 }
 
 //Terminals
-%token INT
-%token FLOAT
-%token CHAR
+%token <sval> INT
+%token <sval> FLOAT
+%token <sval> CHAR
 
-%token <sval> ID
-%token <sval> STRINGCONST
+%token <sval> FOR
+%token <sval> WHILE
+%token <sval> IF
+%token <sval> ELSE
+%token <sval> RETURN
+%token <sval> BREAK
+
+%token <cval> SEMICOLON
+%token <cval> COMMA
+%token <cval> LPAREN
+%token <cval> RPAREN
+%token <cval> LBRACE
+%token <cval> RBRACE
+%token <cval> LBRACK
+%token <cval> RBRACK
+%token <cval> EQUAL
+%token <cval> PLUS
+%token <cval> MINUS
+%token <cval> TIMES
+%token <cval> DIVIDE
+%token <cval> MODULO
+%token <sval> PLUSEQUAL
+%token <sval> MINUSEQUAL
+%token <sval> TIMESEQUAL
+%token <sval> DIVEQUAL
+%token <sval> MODEQUAL
+%token <sval> INCR
+%token <sval> DECR
+%token <cval> LT
+%token <cval> GT
+%token <sval> LE
+%token <sval> GE
+%token <sval> ISEQ
+%token <sval> NOTEQ
+%token <sval> LOGAND
+%token <sval> LOGOR
+%token <cval> NOT
+
+%token <sval> DEFINE
+
+%token <sval> STRINGLIT
+%token <cval> CHARLIT
 %token <ival> INTCONST
 %token <fval> FLOATCONST
-%token <cval> CHARCONST
+%token <sval> ID
+
+%token <sval> UNKNOWN
 
 //Grammar
 %%
+program:
+    declarationList
+;
+declarationList:
+    declarationList declaration
+    | declaration
+;
+declaration:
+    varDeclaration
+    | funDeclaration
+;
+varDeclaration:
+    typeSpecifier varDeclList SEMICOLON
+;
+scopedVarDeclaration:
+    scopedTypeSpecifier varDeclList SEMICOLON
+;
+varDeclList:
+    varDeclList COMMA varDeclInitialize
+    | varDeclInitialize
+;
+varDeclInitialize:
+    ID
+    | ID EQUAL simpleExpression
+;
+scopedTypeSpecifier:
+    typeSpecifier
+;
 typeSpecifier:
-	INT   { std::cout << "TYPESPECIFIER found: " << $1 << std::endl; } |
-	FLOAT { std::cout << "TYPESPECIFIER found: " << $1 << std::endl; } |
-	CHAR  { std::cout << "TYPESPECIFIER found: " << $1 << std::endl; }
+    INT     { std::cout << "typeSpecifier found: " << $1 << std::endl; }
+    | FLOAT { std::cout << "typeSpecifier found: " << $1 << std::endl; }
+    | CHAR  { std::cout << "typeSpecifier found: " << $1 << std::endl; }
+;
+funDeclaration:
+    typeSpecifier ID LPAREN params RPAREN statement {}
+;
+params:
+    paramList
+    | %empty
+;
+paramList:
+    paramList COMMA typeSpecifier ID
+    | typeSpecifier ID
+;
+statement:
+    expressionStmt
+    | compoundStmt
+    | selectionStmt
+    | iterationStmt
+    | returnStmt
+    | breakStmt
+;
+expressionStmt:
+    expression SEMICOLON
+    | SEMICOLON
+;
+expression:
+    ID EQUAL simpleExpression
+    | ID PLUSEQUAL simpleExpression
+    | ID MINUSEQUAL simpleExpression
+    | ID TIMESEQUAL simpleExpression
+    | ID DIVEQUAL simpleExpression
+    | ID INCR
+    | ID DECR
+    | simpleExpression
+;
+simpleExpression:
+    simpleExpression LOGOR andExpression
+    | andExpression
+;
+andExpression:
+    andExpression LOGAND unaryRelExpression
+    | unaryRelExpression
+;
+unaryRelExpression:
+    NOT unaryRelExpression
+    | relExpression
+;
+relExpression:
+    sumExpression relop sumExpression
+    | sumExpression
+;
+relop:
+    LE
+    | LT
+    | GT
+    | GE
+    | ISEQ
+    | NOTEQ
+;
+sumExpression:
+    sumExpression sumop mulExpression
+    | mulExpression
+;
+sumop:
+    PLUS
+    | MINUS
+;
+mulExpression:
+    mulExpression mulop unaryExpression
+    | unaryExpression
+;
+mulop:
+    TIMES
+    | DIVIDE
+    | MODULO
+;
+unaryExpression:
+    unaryop unaryExpression
+    | factor
+;
+unaryop:
+    PLUS
+    | MINUS
+;
+factor:
+    immutable
+    | ID
+;
+immutable:
+    LPAREN expression RPAREN
+    | call
+    | constant
+;
+call:
+    ID LPAREN args RPAREN
+;
+args:
+    argList
+    | %empty
+;
+argList:
+    argList COMMA expression
+    | expression
 ;
 constant:
-	FLOATCONST  { std::cout << "FLOATCONST  found: " << $1 << std::endl; } |
-	INTCONST    { std::cout << "INTCONST    found: " << $1 << std::endl; } |
-	CHARCONST   { std::cout << "CHARCONST   found: " << $1 << std::endl; } |
-	STRINGCONST { std::cout << "STRINGCONST found: " << $1 << std::endl; }
+    STRINGLIT    { std::cout << "STRINGLIT   found: " << $1 << std::endl; free($1); }
+    | CHARLIT    { std::cout << "CHARLIT     found: " << $1 << std::endl;           }
+    | FLOATCONST { std::cout << "FLOATCONST  found: " << $1 << std::endl;           }
+    | INTCONST   { std::cout << "INTCONST    found: " << $1 << std::endl;           }
+;
+compoundStmt:
+    LBRACK localDeclarations statementList RBRACK
+;
+localDeclarations:
+    localDeclarations scopedVarDeclaration
+    | %empty
+;
+statementList:
+    statementList statement
+    | %empty
+;
+selectionStmt:
+    IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE elseIfList
+    | IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE
+;
+elseIfList:
+    elseIfList ELSE IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE
+    | %empty
+;
+iterationStmt:
+    whileStmt
+    | forStmt
+;
+whileStmt:
+    WHILE LPAREN simpleExpression RPAREN LBRACE statement RBRACE
+;
+forStmt:
+    FOR LPAREN typeSpecifier varDeclList SEMICOLON relExpression SEMICOLON expression RPAREN
+;
+returnStmt:
+    RETURN SEMICOLON
+    | RETURN expression SEMICOLON
+;
+breakStmt:
+    BREAK SEMICOLON
 ;
 %%
