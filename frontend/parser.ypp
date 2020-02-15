@@ -66,8 +66,6 @@
 %token <sval> LOGOR
 %token <cval> NOT
 
-%token <sval> DEFINE
-
 %token <sval> STRINGLIT
 %token <cval> CHARLIT
 %token <ival> INTCONST
@@ -79,32 +77,37 @@
 //Grammar
 %%
 program:
-    declarationList
+    declarationList { std::cout << "program found" << std::endl; }
 ;
 declarationList:
-    declarationList declaration
-    | declaration
+    declarationList declaration { std::cout << "declarationList 1 found" << std::endl; }
+    | declaration               { std::cout << "declarationList 2 found" << std::endl; }
 ;
 declaration:
-    varDeclaration
-    | funDeclaration
+    varDeclaration   { std::cout << "declaration 1 found" << std::endl; }
+    | funDeclaration { std::cout << "declaration 2 found" << std::endl; }
 ;
 varDeclaration:
-    typeSpecifier varDeclList SEMICOLON
+    typeSpecifier varDeclList SEMICOLON { std::cout << "varDeclaration found" << std::endl; }
 ;
 scopedVarDeclaration:
-    scopedTypeSpecifier varDeclList SEMICOLON
+    scopedTypeSpecifier varDeclList SEMICOLON { std::cout << "scopedVarDeclaration found" << std::endl; }
 ;
 varDeclList:
-    varDeclList COMMA varDeclInitialize
-    | varDeclInitialize
+    varDeclList COMMA varDeclInitialize { std::cout << "varDeclList 1 found" << std::endl; }
+    | varDeclInitialize                 { std::cout << "varDeclList 2 found" << std::endl; }
 ;
 varDeclInitialize:
-    ID
-    | ID EQUAL simpleExpression
+    varDeclId                          { std::cout << "varDeclInitialize 1 found" << std::endl; }
+    | varDeclId EQUAL simpleExpression { std::cout << "varDeclInitialize 2 found" << std::endl; }
+;
+varDeclId:
+    ID                          { std::cout << "varDeclId 1 found: " << $1 << std::endl; }
+    | ID LBRACK RBRACK          { std::cout << "varDeclId 2 found: " << $1 << std::endl; }
+    | ID LBRACK INTCONST RBRACK { std::cout << "varDeclId 3 found: " << $1 << std::endl; }
 ;
 scopedTypeSpecifier:
-    typeSpecifier
+    typeSpecifier { std::cout << "scopedTypeSpecifier found" << std::endl; }
 ;
 typeSpecifier:
     INT     { std::cout << "typeSpecifier found: " << $1 << std::endl; free($1); }
@@ -112,147 +115,152 @@ typeSpecifier:
     | CHAR  { std::cout << "typeSpecifier found: " << $1 << std::endl; free($1); }
 ;
 funDeclaration:
-    typeSpecifier ID LPAREN params RPAREN statement {}
+    typeSpecifier ID LPAREN params RPAREN statement { std::cout << "funDeclaration found" << std::endl; }
 ;
 params:
-    paramList
-    | %empty
+    paramList { std::cout << "params 1 found" << std::endl; }
+    | %empty  { std::cout << "params 2 found" << std::endl; }
 ;
 paramList:
-    paramList COMMA typeSpecifier ID
-    | typeSpecifier ID
+    paramList COMMA typeSpecifier paramId { std::cout << "paramList 1 found" << std::endl; }
+    | typeSpecifier paramId               { std::cout << "paramList 2 found" << std::endl; }
+;
+paramId:
+    ID                 { std::cout << "paramId 1 found: " << $1 << std::endl; }
+    | ID LBRACK RBRACK { std::cout << "paramId 2 found: " << $1 << std::endl; }
 ;
 statement:
-    expressionStmt
-    | compoundStmt
-    | selectionStmt
-    | iterationStmt
-    | returnStmt
-    | breakStmt
+    expressionStmt  { std::cout << "statement 1 found" << std::endl; }
+    | compoundStmt  { std::cout << "statement 2 found" << std::endl; }
+    | selectionStmt { std::cout << "statement 3 found" << std::endl; }
+    | iterationStmt { std::cout << "statement 4 found" << std::endl; }
+    | returnStmt    { std::cout << "statement 5 found" << std::endl; }
+    | breakStmt     { std::cout << "statement 6 found" << std::endl; }
 ;
 expressionStmt:
-    expression SEMICOLON
-    | SEMICOLON
+    expression SEMICOLON { std::cout << "expressionStmt 1 found" << std::endl; }
+    | SEMICOLON          { std::cout << "expressionStmt 2 found" << std::endl; }
 ;
 expression:
-    ID EQUAL expression
-    | ID PLUSEQUAL expression
-    | ID MINUSEQUAL expression
-    | ID TIMESEQUAL expression
-    | ID DIVEQUAL expression
-    | ID INCR
-    | ID DECR
-    | simpleExpression
+    ID EQUAL expression        { std::cout << "expression 1 found" << std::endl; }
+    | ID PLUSEQUAL expression  { std::cout << "expression 2 found" << std::endl; }
+    | ID MINUSEQUAL expression { std::cout << "expression 3 found" << std::endl; }
+    | ID TIMESEQUAL expression { std::cout << "expression 4 found" << std::endl; }
+    | ID DIVEQUAL expression   { std::cout << "expression 5 found" << std::endl; }
+    | ID INCR                  { std::cout << "expression 6 found" << std::endl; }
+    | ID DECR                  { std::cout << "expression 7 found" << std::endl; }
+    | simpleExpression         { std::cout << "expression 8 found" << std::endl; }
 ;
 simpleExpression:
-    simpleExpression LOGOR andExpression
-    | andExpression
+    simpleExpression LOGOR andExpression { std::cout << "simpleExpression 1 found" << std::endl; }
+    | andExpression                      { std::cout << "simpleExpression 2 found" << std::endl; }
 ;
 andExpression:
-    andExpression LOGAND unaryRelExpression
-    | unaryRelExpression
+    andExpression LOGAND unaryRelExpression { std::cout << "andExpression 1 found" << std::endl; }
+    | unaryRelExpression                    { std::cout << "andExpression 2 found" << std::endl; }
 ;
 unaryRelExpression:
-    NOT unaryRelExpression
-    | relExpression
+    NOT unaryRelExpression { std::cout << "unaryRelExpression 1 found" << std::endl; }
+    | relExpression        { std::cout << "unaryRelExpression 2 found" << std::endl; }
 ;
 relExpression:
-    sumExpression relop sumExpression
-    | sumExpression
+    sumExpression relop sumExpression { std::cout << "relExpression 1 found" << std::endl; }
+    | sumExpression                   { std::cout << "relExpression 2 found" << std::endl; }
 ;
 relop:
-    LE
-    | LT
-    | GT
-    | GE
-    | ISEQ
-    | NOTEQ
+    LE      { std::cout << "relop found: " << $1 << std::endl; }
+    | LT    { std::cout << "relop found: " << $1 << std::endl; }
+    | GT    { std::cout << "relop found: " << $1 << std::endl; }
+    | GE    { std::cout << "relop found: " << $1 << std::endl; }
+    | ISEQ  { std::cout << "relop found: " << $1 << std::endl; }
+    | NOTEQ { std::cout << "relop found: " << $1 << std::endl; }
 ;
 sumExpression:
-    sumExpression sumop mulExpression
-    | mulExpression
+    sumExpression sumop mulExpression { std::cout << "sumExpression 1 found" << std::endl; }
+    | mulExpression                   { std::cout << "sumExpression 2 found" << std::endl; }
 ;
 sumop:
-    PLUS
-    | MINUS
+    PLUS    { std::cout << "sumop found: " << $1 << std::endl; }
+    | MINUS { std::cout << "sumpop found: " << $1 << std::endl; }
 ;
 mulExpression:
-    mulExpression mulop unaryExpression
-    | unaryExpression
+    mulExpression mulop unaryExpression { std::cout << "mulExpression 1 found" << std::endl; }
+    | unaryExpression                   { std::cout << "mulexpression 2 found" << std::endl; }
 ;
 mulop:
-    TIMES
-    | DIVIDE
-    | MODULO
+    TIMES    { std::cout << "mulop found: " << $1 << std::endl; }
+    | DIVIDE { std::cout << "mulop found: " << $1 << std::endl; }
+    | MODULO { std::cout << "mulop found: " << $1 << std::endl; }
 ;
 unaryExpression:
-    unaryop unaryExpression
-    | factor
+    unaryop unaryExpression { std::cout << "unaryExpression 1 found" << std::endl; }
+    | factor                { std::cout << "unaryExpression 2 found" << std::endl; }
 ;
 unaryop:
-    PLUS
-    | MINUS
+    PLUS    { std::cout << "unaryop found: " << $1 << std::endl; }
+    | MINUS { std::cout << "unaryop found: " << $1 << std::endl; }
+    | TIMES { std::cout << "unaryop found: " << $1 << std::endl; }
 ;
 factor:
-    immutable
-    | ID
+    immutable { std::cout << "factor 1 found" << std::endl; }
+    | ID      { std::cout << "factor 2 found: " << $1 << std::endl; }
 ;
 immutable:
-    LPAREN expression RPAREN
-    | call
-    | constant
+    LPAREN expression RPAREN { std::cout << "immutable 1 found" << std::endl; }
+    | call                   { std::cout << "immutable 2 found" << std::endl; }
+    | constant               { std::cout << "immutable 3 found" << std::endl; }
 ;
 call:
-    ID LPAREN args RPAREN
+    ID LPAREN args RPAREN { std::cout << "call found: " << $1 << std::endl; }
 ;
 args:
-    argList
-    | %empty
+    argList  { std::cout << "args 1 found" << std::endl; }
+    | %empty { std::cout << "args 2 found" << std::endl; }
 ;
 argList:
-    argList COMMA expression
-    | expression
+    argList COMMA expression { std::cout << "argList 1 found" << std::endl; }
+    | expression             { std::cout << "argList 2 found" << std::endl; }
 ;
 constant:
-    STRINGLIT    { std::cout << "STRINGLIT   found: " << $1 << std::endl; free($1); }
-    | CHARLIT    { std::cout << "CHARLIT     found: " << $1 << std::endl;           }
-    | FLOATCONST { std::cout << "FLOATCONST  found: " << $1 << std::endl;           }
-    | INTCONST   { std::cout << "INTCONST    found: " << $1 << std::endl;           }
+    STRINGLIT    { std::cout << "STRINGLIT found: " << $1 << std::endl; free($1); }
+    | CHARLIT    { std::cout << "CHARLIT found: " << $1 << std::endl;           }
+    | FLOATCONST { std::cout << "FLOATCONST found: " << $1 << std::endl;           }
+    | INTCONST   { std::cout << "INTCONST found: " << $1 << std::endl;           }
 ;
 compoundStmt:
-    LBRACK localDeclarations statementList RBRACK
+    LBRACE localDeclarations statementList RBRACE { std::cout << "compoundStmt found" << std::endl; }
 ;
 localDeclarations:
-    localDeclarations scopedVarDeclaration
-    | %empty
+    localDeclarations scopedVarDeclaration { std::cout << "localDeclarations found" << std::endl; }
+    | %empty                               { std::cout << "localDeclarations found" << std::endl; }
 ;
 statementList:
-    statementList statement
-    | %empty
+    statementList statement { std::cout << "statementList 1 found" << std::endl; }
+    | %empty                { std::cout << "statementList 2 found" << std::endl; }
 ;
 selectionStmt:
-    IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE elseIfList
-    | IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE
+    IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE elseIfList { std::cout << "selectionStmt 1 found" << std::endl; }
+    | IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE          { std::cout << "selectionStmt 2 found" << std::endl; }
 ;
 elseIfList:
-    elseIfList ELSE IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE
-    | %empty
+    elseIfList ELSE IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE { std::cout << "elseIfList 1 found" << std::endl; }
+    | %empty                                                                  { std::cout << "elseIfList 2 found" << std::endl; }
 ;
 iterationStmt:
-    whileStmt
-    | forStmt
+    whileStmt { std::cout << "iterationStmt 1 found" << std::endl; }
+    | forStmt { std::cout << "iterationStmt 2 found" << std::endl; }
 ;
 whileStmt:
-    WHILE LPAREN simpleExpression RPAREN LBRACE statement RBRACE
+    WHILE LPAREN simpleExpression RPAREN LBRACE statement RBRACE { std::cout << "whileStmt found" << std::endl; }
 ;
 forStmt:
-    FOR LPAREN typeSpecifier varDeclList SEMICOLON relExpression SEMICOLON expression RPAREN
+    FOR LPAREN typeSpecifier varDeclList SEMICOLON relExpression SEMICOLON expression RPAREN { std::cout << "forStmt found" << std::endl; }
 ;
 returnStmt:
-    RETURN SEMICOLON
-    | RETURN expression SEMICOLON
+    RETURN SEMICOLON              { std::cout << "returnStmt 1 found" << std::endl; }
+    | RETURN expression SEMICOLON { std::cout << "returnStmt 2 found" << std::endl; }
 ;
 breakStmt:
-    BREAK SEMICOLON
+    BREAK SEMICOLON { std::cout << "breakStmt found" << std::endl; }
 ;
 %%
