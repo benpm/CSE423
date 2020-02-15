@@ -107,9 +107,9 @@ scopedTypeSpecifier:
     typeSpecifier
 ;
 typeSpecifier:
-    INT     { std::cout << "typeSpecifier found: " << $1 << std::endl; }
-    | FLOAT { std::cout << "typeSpecifier found: " << $1 << std::endl; }
-    | CHAR  { std::cout << "typeSpecifier found: " << $1 << std::endl; }
+    INT     { std::cout << "typeSpecifier found: " << $1 << std::endl; free($1); }
+    | FLOAT { std::cout << "typeSpecifier found: " << $1 << std::endl; free($1); }
+    | CHAR  { std::cout << "typeSpecifier found: " << $1 << std::endl; free($1); }
 ;
 funDeclaration:
     typeSpecifier ID LPAREN params RPAREN statement {}
