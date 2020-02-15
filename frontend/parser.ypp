@@ -135,11 +135,11 @@ expressionStmt:
     | SEMICOLON
 ;
 expression:
-    ID EQUAL simpleExpression
-    | ID PLUSEQUAL simpleExpression
-    | ID MINUSEQUAL simpleExpression
-    | ID TIMESEQUAL simpleExpression
-    | ID DIVEQUAL simpleExpression
+    ID EQUAL expression
+    | ID PLUSEQUAL expression
+    | ID MINUSEQUAL expression
+    | ID TIMESEQUAL expression
+    | ID DIVEQUAL expression
     | ID INCR
     | ID DECR
     | simpleExpression
