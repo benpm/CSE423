@@ -7,7 +7,9 @@
  */
 #include <cstdio>
 #include <iostream>
+#include "parsetree.hpp"
 
+extern ParseTree pt;
 extern int yyparse();
 extern FILE *yyin;
 
