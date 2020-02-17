@@ -5,9 +5,7 @@
  * @date 2020-02-11
  * 
  */
-#include <cstdio>
 #include <cstring>
-#include <iostream>
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/fmt/fmt.h>

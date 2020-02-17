@@ -1,6 +1,4 @@
 %{
-    #include <cstdio>
-    #include <iostream>
     #include <vector>
     #include <spdlog/spdlog.h>
     #include <spdlog/sinks/stdout_color_sinks.h>
@@ -674,22 +672,22 @@ statementList:
         }
 ;
 selectionStmt:
-    IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE elseIfList
+    IF LPAREN simpleExpression RPAREN compoundStmt elseIfList
         {
             $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::SELECTION_STMT,
-                std::vector<ParseTree> { $3, $6, $8 });
+                std::vector<ParseTree> { $3, $5, $6 });
         }
-    | IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE
+    | IF LPAREN simpleExpression RPAREN statement
         {
             $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::SELECTION_STMT,
-                std::vector<ParseTree> { $3, $6 });
+                std::vector<ParseTree> { $3, $5 });
         }
 ;
 elseIfList:
-    elseIfList ELSE IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE
+    elseIfList ELSE IF LPAREN simpleExpression RPAREN compoundStmt
         {
             $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::ELSE_IF_LIST,
-                std::vector<ParseTree> { $1, $5, $8 });
+                std::vector<ParseTree> { $1, $5, $7 });
         }
     | %empty
         {
@@ -710,14 +708,14 @@ iterationStmt:
         }
 ;
 whileStmt:
-    WHILE LPAREN simpleExpression RPAREN LBRACE statement RBRACE
+    WHILE LPAREN simpleExpression RPAREN statement
         {
             $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::WHILE_STMT,
-                std::vector<ParseTree> { $3, $6 });
+                std::vector<ParseTree> { $3, $5 });
         }
 ;
 forStmt:
-    FOR LPAREN typeSpecifier varDeclList SEMICOLON relExpression SEMICOLON expression RPAREN
+    FOR LPAREN typeSpecifier varDeclList SEMICOLON relExpression SEMICOLON expression RPAREN statement
         {
             $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::FOR_STMT,
                 std::vector<ParseTree> { $3, $4, $6, $8 });
