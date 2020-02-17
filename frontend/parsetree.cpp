@@ -7,7 +7,7 @@ void Tree::print()
     // Keep track of current node
     ParseTree cur = this;
 
-    int children;
+    int children = 0;
     int cnt = 1;
 
     // Create a queue for BFS 
@@ -39,18 +39,16 @@ void Tree::print()
         }
   
         // Get all child nodes of the current node
-        children = 0;
         for (auto i = cur->nodes.begin(); i != cur->nodes.end(); i++) {
             q.push(*i); 
             children += (*i)->nodes.size();
         }
 
-        if (children > 0)
-            child_cnt.push(children);
-
         if (cnt == 0) {
+            child_cnt.push(children);
             child_cnt.pop();
             cnt = child_cnt.front();
+            children = 0;
         }
     } 
 }
