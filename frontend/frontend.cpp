@@ -10,8 +10,8 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/fmt/fmt.h>
-#include "flag.hpp"
-#include "parsetree.hpp"
+#include <flag.hpp>
+#include <parsetree.hpp>
 
 extern ParseTree pt;
 extern int yyparse();

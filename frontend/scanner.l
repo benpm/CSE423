@@ -1,8 +1,8 @@
 %{
     #include <cstdio>
-    #include "flag.hpp"
-    #include "parsetree.hpp"
-    #include "parser.tab.hpp"  // to get the token types from Bison
+    #include <flag.hpp>
+    #include <parsetree.hpp>
+    #include <parser.tab.hpp>  // to get the token types from Bison
 %}
 
 %option noyywrap
