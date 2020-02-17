@@ -6,8 +6,35 @@
  * 
  */
 #include <iostream>
+#include <string>
 #include <queue>
+#include <vector>
 #include <parsetree.hpp>
+
+// Map enum to string for terminals
+std::vector<std::string> Tree::terminalStr {
+    "INT", "FLOAT", "CHAR", "FOR", "WHILE", "IF", "ELSE", "RETURN", "BREAK", "SEMICOLON",
+    "COMMA", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACK", "RBRACK", "EQUAL", "PLUS",
+    "MINUS", "TIMES", "DIVIDE", "MODULO", "PLUSEQUAL", "MINUSEQUAL", "TIMESEQUAL",
+    "DIVEQUAL", "MODEQUAL", "INCR", "DECR", "LT", "GT", "LE", "GE", "ISEQ", "NOTEQ", "LOGAND",
+    "LOGOR", "NOT", "STRINGLIT", "CHARLIT", "INTCONST", "FLOATCONST", "ID", "ARRAY_ID",
+    "EPSILON", "NONE"
+};
+
+// Map enum to string for nonterminals
+std::vector<std::string> Tree::nonTerminalStr {
+    "PROGRAM", "DECLARATION_LIST", "DECLARATION", "VAR_DECLARATION",
+    "SCOPED_VAR_DECLARATION", "VAR_DECL_LIST", "VAR_DECL_INITIALIZE",
+    "VAR_DECL_ID", "SCOPED_TYPE_SPECIFIER", "TYPE_SPECIFIER",
+    "FUN_DECLARATION", "PARAMS", "PARAM_LIST", "PARAM_ID", "STATEMENT",
+    "EXPRESSION_STMT", "EXPRESSION", "MUTABLE", "ASSIGN_OP", "UNARY_ASSIGN_OP",
+    "SIMPLE_EXPRESSION", "AND_EXPRESSION", "UNARY_REL_EXPRESSION",
+    "REL_EXPRESSION", "REL_OP", "SUM_EXPRESSION", "SUM_OP", "MUL_EXPRESSION",
+    "MUL_OP", "UNARY_EXPRESSION", "UNARY_OP", "FACTOR", "IMMUTABLE", "CALL",
+    "ARGS", "ARG_LIST", "CONSTANT", "COMPOUND_STMT", "LOCAL_DECLARATIONS",
+    "STATEMENT_LIST", "SELECTION_STMT", "ELSE_IF_LIST", "ITERATION_STMT",
+    "WHILE_STMT", "FOR_STMT", "RETURN_STMT", "BREAK_STMT"
+};
 
 /**
  * @brief 
@@ -23,7 +50,6 @@ void Tree::print()
 
     // Create a queue for BFS 
     std::queue<ParseTree> q; 
-    std::queue<int> child_cnt;
   
     // Enqueue the current node
     q.push(cur); 
