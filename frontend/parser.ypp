@@ -1,14 +1,17 @@
 %{
     #include <cstdio>
     #include <iostream>
+    #include <vector>
     #include <spdlog/spdlog.h>
     #include <spdlog/sinks/stdout_color_sinks.h>
     #include <spdlog/fmt/fmt.h>
+    #include "parsetree.hpp"
 
     extern int yylex();
     extern int yyparse();
     extern void yyerror(const char *s);
-    // https://aquamentus.com/flex_bison.html
+
+    ParseTree pt;
 %}
 
 // Bison fundamentally works by asking flex to get the next token, which it
@@ -24,7 +27,56 @@
     float fval;
     char *sval;
     char cval;
+    ParseTree pt;
 }
+
+%type <pt> program
+%type <pt> declarationList
+%type <pt> declaration
+%type <pt> varDeclaration
+%type <pt> scopedVarDeclaration
+%type <pt> varDeclList
+%type <pt> varDeclInitialize
+%type <pt> varDeclId
+%type <pt> scopedTypeSpecifier
+%type <pt> typeSpecifier
+%type <pt> funDeclaration
+%type <pt> params
+%type <pt> paramList
+%type <pt> paramId
+%type <pt> statement
+%type <pt> expressionStmt
+%type <pt> expression
+%type <pt> mutable
+%type <pt> assignop
+%type <pt> unaryAssignop
+%type <pt> simpleExpression
+%type <pt> andExpression
+%type <pt> unaryRelExpression
+%type <pt> relExpression
+%type <pt> relop
+%type <pt> sumExpression
+%type <pt> sumop
+%type <pt> mulExpression
+%type <pt> mulop
+%type <pt> unaryExpression
+%type <pt> unaryop
+%type <pt> factor
+%type <pt> immutable
+%type <pt> call
+%type <pt> args
+%type <pt> argList
+%type <pt> constant
+%type <pt> compoundStmt
+%type <pt> localDeclarations
+%type <pt> statementList
+%type <pt> selectionStmt
+%type <pt> elseIfList
+%type <pt> iterationStmt
+%type <pt> whileStmt
+%type <pt> forStmt
+%type <pt> returnStmt
+%type <pt> breakStmt
 
 //Terminals
 %token <sval> INT
@@ -80,190 +132,614 @@
 //Grammar
 %%
 program:
-    declarationList { spdlog::info("program found"); }
+    declarationList
+        {
+            pt = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::PROGRAM,
+                std::vector<ParseTree> { $1 });
+        }
 ;
 declarationList:
-    declarationList declaration { spdlog::debug("declarationList 1 found"); }
-    | declaration               { spdlog::debug("declarationList 2 found"); }
+    declarationList declaration
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::DECLARATION_LIST,
+                std::vector<ParseTree> { $1, $2 });
+        }
+    | declaration
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::DECLARATION_LIST,
+                std::vector<ParseTree> { $1 });
+        }
 ;
 declaration:
-    varDeclaration   { spdlog::debug("declaration 1 found"); }
-    | funDeclaration { spdlog::debug("declaration 2 found"); }
+    varDeclaration
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::DECLARATION,
+                std::vector<ParseTree> { $1 });
+        }
+    | funDeclaration
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::DECLARATION,
+                std::vector<ParseTree> { $1 });
+        }
 ;
 varDeclaration:
-    typeSpecifier varDeclList SEMICOLON { spdlog::debug("varDeclaration found"); }
+    typeSpecifier varDeclList SEMICOLON
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::VAR_DECLARATION,
+                std::vector<ParseTree> { $1, $2 });
+        }
 ;
 scopedVarDeclaration:
-    scopedTypeSpecifier varDeclList SEMICOLON { spdlog::debug("scopedVarDeclaration found"); }
+    scopedTypeSpecifier varDeclList SEMICOLON
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::SCOPED_VAR_DECLARATION,
+                std::vector<ParseTree> { $1, $2 });
+        }
 ;
 varDeclList:
-    varDeclList COMMA varDeclInitialize { spdlog::debug("varDeclList 1 found"); }
-    | varDeclInitialize                 { spdlog::debug("varDeclList 2 found"); }
+    varDeclList COMMA varDeclInitialize
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::VAR_DECL_LIST,
+                std::vector<ParseTree> { $1, $3 });
+        }
+    | varDeclInitialize
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::VAR_DECL_LIST,
+                std::vector<ParseTree> { $1 });
+        }
 ;
 varDeclInitialize:
-    varDeclId                          { spdlog::debug("varDeclInitialize 1 found"); }
-    | varDeclId EQUAL simpleExpression { spdlog::debug("varDeclInitialize 2 found"); }
+    varDeclId
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::VAR_DECL_INITIALIZE,
+                std::vector<ParseTree> { $1 });
+        }
+    | varDeclId EQUAL simpleExpression
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::VAR_DECL_INITIALIZE,
+                std::vector<ParseTree> { $1, $3});
+        }
 ;
 varDeclId:
-    ID                          { spdlog::debug("varDeclId 1 found: {}", $1);}
-    | ID LBRACK RBRACK          { spdlog::debug("varDeclId 2 found: {}", $1);}
-    | ID LBRACK INTCONST RBRACK { spdlog::debug("varDeclId 3 found: {}", $1);}
+    ID
+        {
+            $$ = new Tree(Tree::Terminal::ID, Tree::NonTerminal::VAR_DECL_ID,
+                std::vector<ParseTree>());
+        }
+    | ID LBRACK RBRACK
+        {
+            $$ = new Tree(Tree::Terminal::ARRAY_ID, Tree::NonTerminal::VAR_DECL_ID,
+                std::vector<ParseTree>());
+        }
+    | ID LBRACK constant RBRACK
+        {
+            $$ = new Tree(Tree::Terminal::ARRAY_ID, Tree::NonTerminal::VAR_DECL_ID,
+                std::vector<ParseTree> { $3 });
+        }
 ;
 scopedTypeSpecifier:
-    typeSpecifier { spdlog::debug("scopedTypeSpecifier found"); }
+    typeSpecifier
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::SCOPED_TYPE_SPECIFIER,
+                std::vector<ParseTree> { $1 });
+        }
 ;
 typeSpecifier:
-    INT     { spdlog::debug("typeSpecifier found: {}", $1); free($1); }
-    | FLOAT { spdlog::debug("typeSpecifier found: {}", $1); free($1); }
-    | CHAR  { spdlog::debug("typeSpecifier found: {}", $1); free($1); }
+    INT
+        {
+            $$ = new Tree(Tree::Terminal::INT, Tree::NonTerminal::TYPE_SPECIFIER,
+                std::vector<ParseTree>());
+        }
+    | FLOAT
+        {
+            $$ = new Tree(Tree::Terminal::FLOAT, Tree::NonTerminal::TYPE_SPECIFIER,
+                std::vector<ParseTree>());
+        }
+    | CHAR
+        {
+            $$ = new Tree(Tree::Terminal::CHAR, Tree::NonTerminal::TYPE_SPECIFIER,
+                std::vector<ParseTree>());
+        }
 ;
 funDeclaration:
-    typeSpecifier ID LPAREN params RPAREN statement { spdlog::debug("funDeclaration found"); }
+    typeSpecifier ID LPAREN params RPAREN statement
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::FUN_DECLARATION,
+                std::vector<ParseTree> { $1, $4, $6});
+        }
 ;
 params:
-    paramList { spdlog::debug("params 1 found"); }
-    | %empty  { spdlog::debug("params 2 found"); }
+    paramList
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::PARAMS,
+                std::vector<ParseTree> { $1 });
+        }
+    | %empty
+        {
+            $$ = new Tree(Tree::Terminal::EPSILON, Tree::NonTerminal::PARAMS,
+                std::vector<ParseTree>());
+        }
 ;
 paramList:
-    paramList COMMA typeSpecifier paramId { spdlog::debug("paramList 1 found"); }
-    | typeSpecifier paramId               { spdlog::debug("paramList 2 found"); }
+    paramList COMMA typeSpecifier paramId
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::PARAM_LIST,
+                std::vector<ParseTree> { $1, $3, $4 });
+        }
+    | typeSpecifier paramId
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::PARAM_LIST,
+                std::vector<ParseTree> { $1, $2 });
+        }
 ;
 paramId:
-    ID                 { spdlog::debug("paramId 1 found: {}", $1); }
-    | ID LBRACK RBRACK { spdlog::debug("paramId 2 found: {}", $1); }
+    ID
+        {
+            $$ = new Tree(Tree::Terminal::ID, Tree::NonTerminal::PARAM_ID,
+                std::vector<ParseTree>());
+        }
+    | ID LBRACK RBRACK
+        {
+            $$ = new Tree(Tree::Terminal::ARRAY_ID, Tree::NonTerminal::PARAM_ID,
+                std::vector<ParseTree>());
+        }
 ;
 statement:
-    expressionStmt  { spdlog::debug("statement 1 found"); }
-    | compoundStmt  { spdlog::debug("statement 2 found"); }
-    | selectionStmt { spdlog::debug("statement 3 found"); }
-    | iterationStmt { spdlog::debug("statement 4 found"); }
-    | returnStmt    { spdlog::debug("statement 5 found"); }
-    | breakStmt     { spdlog::debug("statement 6 found"); }
+    expressionStmt
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::STATEMENT,
+                std::vector<ParseTree> { $1 });
+        }
+    | compoundStmt
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::STATEMENT,
+                std::vector<ParseTree> { $1 });
+        }
+    | selectionStmt
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::STATEMENT,
+                std::vector<ParseTree> { $1 });
+        }
+    | iterationStmt
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::STATEMENT,
+                std::vector<ParseTree> { $1 });
+        }
+    | returnStmt
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::STATEMENT,
+                std::vector<ParseTree> { $1 });
+        }
+    | breakStmt
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::STATEMENT,
+                std::vector<ParseTree> { $1 });
+        }
 ;
 expressionStmt:
-    expression SEMICOLON { spdlog::debug("expressionStmt 1 found"); }
-    | SEMICOLON          { spdlog::debug("expressionStmt 2 found"); }
+    expression SEMICOLON
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::EXPRESSION_STMT,
+                std::vector<ParseTree> { $1 });
+        }
+    | SEMICOLON
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::EXPRESSION_STMT,
+                std::vector<ParseTree>());
+        }
 ;
 expression:
-    ID EQUAL expression        { spdlog::debug("expression 1 found"); }
-    | ID PLUSEQUAL expression  { spdlog::debug("expression 2 found"); }
-    | ID MINUSEQUAL expression { spdlog::debug("expression 3 found"); }
-    | ID TIMESEQUAL expression { spdlog::debug("expression 4 found"); }
-    | ID DIVEQUAL expression   { spdlog::debug("expression 5 found"); }
-    | ID INCR                  { spdlog::debug("expression 6 found"); }
-    | ID DECR                  { spdlog::debug("expression 7 found"); }
-    | simpleExpression         { spdlog::debug("expression 8 found"); }
+    mutable assignop expression
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::EXPRESSION,
+                std::vector<ParseTree> { $2, $3 });
+        }
+    | unaryAssignop mutable
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::EXPRESSION,
+                std::vector<ParseTree> { $1 });
+        }
+    | mutable unaryAssignop
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::EXPRESSION,
+                std::vector<ParseTree> { $2 });
+        }
+    | simpleExpression
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::EXPRESSION,
+                std::vector<ParseTree> { $1 });
+        }
 ;
+mutable:
+    ID
+        {
+            $$ = new Tree(Tree::Terminal::ID, Tree::NonTerminal::MUTABLE,
+                std::vector<ParseTree>());
+        }
+    | mutable LBRACK expression RBRACK
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::MUTABLE,
+                std::vector<ParseTree> { $1, $3 });
+        }
+assignop:
+    EQUAL
+        {
+            $$ = new Tree(Tree::Terminal::EQUAL, Tree::NonTerminal::ASSIGN_OP,
+                std::vector<ParseTree>());
+        }
+    | PLUSEQUAL
+        {
+            $$ = new Tree(Tree::Terminal::PLUSEQUAL, Tree::NonTerminal::ASSIGN_OP,
+                std::vector<ParseTree>());
+        }
+    | MINUSEQUAL
+        {
+            $$ = new Tree(Tree::Terminal::MINUSEQUAL, Tree::NonTerminal::ASSIGN_OP,
+                std::vector<ParseTree>());
+        }
+    | TIMESEQUAL
+        {
+            $$ = new Tree(Tree::Terminal::TIMESEQUAL, Tree::NonTerminal::ASSIGN_OP,
+                std::vector<ParseTree>());
+        }
+    | DIVEQUAL
+        {
+            $$ = new Tree(Tree::Terminal::DIVEQUAL, Tree::NonTerminal::ASSIGN_OP,
+                std::vector<ParseTree>());
+        }
+    | MODEQUAL
+        {
+            $$ = new Tree(Tree::Terminal::MODEQUAL, Tree::NonTerminal::ASSIGN_OP,
+                std::vector<ParseTree>());
+        }
+unaryAssignop:
+    INCR
+        {
+            $$ = new Tree(Tree::Terminal::INCR, Tree::NonTerminal::UNARY_ASSIGN_OP,
+                std::vector<ParseTree>());
+        }
+    | DECR
+        {
+            $$ = new Tree(Tree::Terminal::DECR, Tree::NonTerminal::UNARY_ASSIGN_OP,
+                std::vector<ParseTree>());
+        }
 simpleExpression:
-    simpleExpression LOGOR andExpression { spdlog::debug("simpleExpression 1 found"); }
-    | andExpression                      { spdlog::debug("simpleExpression 2 found"); }
+    simpleExpression LOGOR andExpression
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::SIMPLE_EXPRESSION,
+                std::vector<ParseTree> { $1, $3 });
+        }
+    | andExpression
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::SIMPLE_EXPRESSION,
+                std::vector<ParseTree> { $1 });
+        }
 ;
 andExpression:
-    andExpression LOGAND unaryRelExpression { spdlog::debug("andExpression 1 found"); }
-    | unaryRelExpression                    { spdlog::debug("andExpression 2 found"); }
+    andExpression LOGAND unaryRelExpression
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::AND_EXPRESSION,
+                std::vector<ParseTree> { $1, $3 });
+        }
+    | unaryRelExpression
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::AND_EXPRESSION,
+                std::vector<ParseTree> { $1 });
+        }
 ;
 unaryRelExpression:
-    NOT unaryRelExpression { spdlog::debug("unaryRelExpression 1 found"); }
-    | relExpression        { spdlog::debug("unaryRelExpression 2 found"); }
+    NOT unaryRelExpression
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::UNARY_REL_EXPRESSION,
+                std::vector<ParseTree> { $2 });
+        }
+    | relExpression
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::UNARY_REL_EXPRESSION,
+                std::vector<ParseTree> { $1 });
+        }
 ;
 relExpression:
-    sumExpression relop sumExpression { spdlog::debug("relExpression 1 found"); }
-    | sumExpression                   { spdlog::debug("relExpression 2 found"); }
+    sumExpression relop sumExpression
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::REL_EXPRESSION,
+                std::vector<ParseTree> { $1, $2, $3 });
+        }
+    | sumExpression
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::REL_EXPRESSION,
+                std::vector<ParseTree> { $1 });
+        }
 ;
 relop:
-    LE      { spdlog::debug("relop found: {}", $1); }
-    | LT    { spdlog::debug("relop found: {}", $1); }
-    | GT    { spdlog::debug("relop found: {}", $1); }
-    | GE    { spdlog::debug("relop found: {}", $1); }
-    | ISEQ  { spdlog::debug("relop found: {}", $1); }
-    | NOTEQ { spdlog::debug("relop found: {}", $1); }
+    LE
+        {
+            $$ = new Tree(Tree::Terminal::LE, Tree::NonTerminal::REL_OP,
+                std::vector<ParseTree>());
+        }
+    | LT
+        {
+            $$ = new Tree(Tree::Terminal::LT, Tree::NonTerminal::REL_OP,
+                std::vector<ParseTree>());
+        }
+    | GT
+        {
+            $$ = new Tree(Tree::Terminal::GT, Tree::NonTerminal::REL_OP,
+                std::vector<ParseTree>());
+        }
+    | GE
+        {
+            $$ = new Tree(Tree::Terminal::GE, Tree::NonTerminal::REL_OP,
+                std::vector<ParseTree>());
+        }
+    | ISEQ
+        {
+            $$ = new Tree(Tree::Terminal::ISEQ, Tree::NonTerminal::REL_OP,
+                std::vector<ParseTree>());
+        }
+    | NOTEQ
+        {
+            $$ = new Tree(Tree::Terminal::NOTEQ, Tree::NonTerminal::REL_OP,
+                std::vector<ParseTree>());
+        }
 ;
 sumExpression:
-    sumExpression sumop mulExpression { spdlog::debug("sumExpression 1 found"); }
-    | mulExpression                   { spdlog::debug("sumExpression 2 found"); }
+    sumExpression sumop mulExpression
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::SUM_EXPRESSION,
+                std::vector<ParseTree> { $1, $2, $3 });
+        }
+    | mulExpression
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::SUM_EXPRESSION,
+                std::vector<ParseTree> { $1 });
+        }
 ;
 sumop:
-    PLUS    { spdlog::debug("sumop found: {}", $1); }
-    | MINUS { spdlog::debug("sumpop found: {}", $1); }
+    PLUS
+        {
+            $$ = new Tree(Tree::Terminal::PLUS, Tree::NonTerminal::SUM_OP,
+                std::vector<ParseTree>());
+        }
+    | MINUS
+        {
+            $$ = new Tree(Tree::Terminal::MINUS, Tree::NonTerminal::SUM_OP,
+                std::vector<ParseTree>());
+        }
 ;
 mulExpression:
-    mulExpression mulop unaryExpression { spdlog::debug("mulExpression 1 found"); }
-    | unaryExpression                   { spdlog::debug("mulexpression 2 found"); }
+    mulExpression mulop unaryExpression
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::MUL_EXPRESSION,
+                std::vector<ParseTree> { $1, $2, $3 });
+        }
+    | unaryExpression
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::MUL_EXPRESSION,
+                std::vector<ParseTree> { $1 });
+        }
 ;
 mulop:
-    TIMES    { spdlog::debug("mulop found: {}", $1); }
-    | DIVIDE { spdlog::debug("mulop found: {}", $1); }
-    | MODULO { spdlog::debug("mulop found: {}", $1); }
+    TIMES
+        {
+            $$ = new Tree(Tree::Terminal::TIMES, Tree::NonTerminal::MUL_OP,
+                std::vector<ParseTree>());
+        }
+    | DIVIDE
+        {
+            $$ = new Tree(Tree::Terminal::DIVIDE, Tree::NonTerminal::MUL_OP,
+                std::vector<ParseTree>());
+        }
+    | MODULO
+        {
+            $$ = new Tree(Tree::Terminal::MODULO, Tree::NonTerminal::MUL_OP,
+                std::vector<ParseTree>());
+        }
 ;
 unaryExpression:
-    unaryop unaryExpression { spdlog::debug("unaryExpression 1 found"); }
-    | factor                { spdlog::debug("unaryExpression 2 found"); }
+    unaryop unaryExpression
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::UNARY_EXPRESSION,
+                std::vector<ParseTree> { $1, $2 });
+        }
+    | factor
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::UNARY_EXPRESSION,
+                std::vector<ParseTree> { $1 });
+        }
 ;
 unaryop:
-    PLUS    { spdlog::debug("unaryop found: {}", $1); }
-    | MINUS { spdlog::debug("unaryop found: {}", $1); }
-    | TIMES { spdlog::debug("unaryop found: {}", $1); }
+    PLUS
+        {
+            $$ = new Tree(Tree::Terminal::PLUS, Tree::NonTerminal::UNARY_OP,
+                std::vector<ParseTree>());
+        }
+    | MINUS
+        {
+            $$ = new Tree(Tree::Terminal::MINUS, Tree::NonTerminal::UNARY_OP,
+                std::vector<ParseTree>());
+        }
 ;
 factor:
-    immutable { spdlog::debug("factor 1 found"); }
-    | ID      { spdlog::debug("factor 2 found: {}", $1); }
+    immutable
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::FACTOR,
+                std::vector<ParseTree> { $1 });
+        }
+    | mutable
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::FACTOR,
+                std::vector<ParseTree> { $1 });
+        }
 ;
 immutable:
-    LPAREN expression RPAREN { spdlog::debug("immutable 1 found"); }
-    | call                   { spdlog::debug("immutable 2 found"); }
-    | constant               { spdlog::debug("immutable 3 found"); }
+    LPAREN expression RPAREN
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::IMMUTABLE,
+                std::vector<ParseTree> { $2 });
+        }
+    | call
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::IMMUTABLE,
+                std::vector<ParseTree> { $1 });
+        }
+    | constant
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::IMMUTABLE,
+                std::vector<ParseTree> { $1 });
+        }
 ;
 call:
-    ID LPAREN args RPAREN { spdlog::debug("call found: {}", $1); }
+    ID LPAREN args RPAREN
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::CALL,
+                std::vector<ParseTree> { $3 });
+        }
 ;
 args:
-    argList  { spdlog::debug("args 1 found"); }
-    | %empty { spdlog::debug("args 2 found"); }
+    argList
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::ARGS,
+                std::vector<ParseTree> { $1 });
+        }
+    | %empty
+        {
+            $$ = new Tree(Tree::Terminal::EPSILON, Tree::NonTerminal::ARGS,
+                std::vector<ParseTree>());
+        }
 ;
 argList:
-    argList COMMA expression { spdlog::debug("argList 1 found"); }
-    | expression             { spdlog::debug("argList 2 found"); }
+    argList COMMA expression
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::ARG_LIST,
+                std::vector<ParseTree> { $1, $3 });
+        }
+    | expression
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::ARG_LIST,
+                std::vector<ParseTree> { $1 });
+        }
 ;
 constant:
-    STRINGLIT    { spdlog::debug("STRINGLIT found: {}", $1); free($1); }
-    | CHARLIT    { spdlog::debug("CHARLIT found: {}", $1);           }
-    | FLOATCONST { spdlog::debug("FLOATCONST found: {}", $1);           }
-    | INTCONST   { spdlog::debug("INTCONST found: {}", $1);           }
+    STRINGLIT
+        {
+            $$ = new Tree(Tree::Terminal::STRINGLIT, Tree::NonTerminal::CONSTANT,
+                std::vector<ParseTree>());
+        }
+    | CHARLIT
+        {
+            $$ = new Tree(Tree::Terminal::CHARLIT, Tree::NonTerminal::CONSTANT,
+                std::vector<ParseTree>());
+        }
+    | FLOATCONST
+        {
+            $$ = new Tree(Tree::Terminal::FLOATCONST, Tree::NonTerminal::CONSTANT,
+                std::vector<ParseTree>());
+        }
+    | INTCONST
+        {
+            $$ = new Tree(Tree::Terminal::INTCONST, Tree::NonTerminal::CONSTANT,
+                std::vector<ParseTree>());
+        }
 ;
 compoundStmt:
-    LBRACE localDeclarations statementList RBRACE { spdlog::debug("compoundStmt found"); }
+    LBRACE localDeclarations statementList RBRACE
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::COMPOUND_STMT,
+                std::vector<ParseTree> { $2, $3 });
+        }
 ;
 localDeclarations:
-    localDeclarations scopedVarDeclaration { spdlog::debug("localDeclarations found"); }
-    | %empty                               { spdlog::debug("localDeclarations found"); }
+    localDeclarations scopedVarDeclaration
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::LOCAL_DECLARATIONS,
+                std::vector<ParseTree> { $1, $2 });
+        }
+    | %empty
+        {
+            $$ = new Tree(Tree::Terminal::EPSILON, Tree::NonTerminal::LOCAL_DECLARATIONS,
+                std::vector<ParseTree>());
+        }
 ;
 statementList:
-    statementList statement { spdlog::debug("statementList 1 found"); }
-    | %empty                { spdlog::debug("statementList 2 found"); }
+    statementList statement
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::STATEMENT_LIST,
+                std::vector<ParseTree> { $1, $2 });
+        }
+    | %empty
+        {
+            $$ = new Tree(Tree::Terminal::EPSILON, Tree::NonTerminal::STATEMENT_LIST,
+                std::vector<ParseTree>());
+        }
 ;
 selectionStmt:
-    IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE elseIfList { spdlog::debug("selectionStmt 1 found"); }
-    | IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE          { spdlog::debug("selectionStmt 2 found"); }
+    IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE elseIfList
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::SELECTION_STMT,
+                std::vector<ParseTree> { $3, $6, $8 });
+        }
+    | IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::SELECTION_STMT,
+                std::vector<ParseTree> { $3, $6 });
+        }
 ;
 elseIfList:
-    elseIfList ELSE IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE { spdlog::debug("elseIfList 1 found"); }
-    | %empty                                                                  { spdlog::debug("elseIfList 2 found"); }
+    elseIfList ELSE IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::ELSE_IF_LIST,
+                std::vector<ParseTree> { $1, $5, $8 });
+        }
+    | %empty
+        {
+            $$ = new Tree(Tree::Terminal::EPSILON, Tree::NonTerminal::ELSE_IF_LIST,
+                std::vector<ParseTree>());
+        }
 ;
 iterationStmt:
-    whileStmt { spdlog::debug("iterationStmt 1 found"); }
-    | forStmt { spdlog::debug("iterationStmt 2 found"); }
+    whileStmt
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::ITERATION_STMT,
+                std::vector<ParseTree> { $1 });
+        }
+    | forStmt
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::ITERATION_STMT,
+                std::vector<ParseTree> { $1 });
+        }
 ;
 whileStmt:
-    WHILE LPAREN simpleExpression RPAREN LBRACE statement RBRACE { spdlog::debug("whileStmt found"); }
+    WHILE LPAREN simpleExpression RPAREN LBRACE statement RBRACE
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::WHILE_STMT,
+                std::vector<ParseTree> { $3, $6 });
+        }
 ;
 forStmt:
-    FOR LPAREN typeSpecifier varDeclList SEMICOLON relExpression SEMICOLON expression RPAREN { spdlog::debug("forStmt found"); }
+    FOR LPAREN typeSpecifier varDeclList SEMICOLON relExpression SEMICOLON expression RPAREN
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::FOR_STMT,
+                std::vector<ParseTree> { $3, $4, $6, $8 });
+        }
 ;
 returnStmt:
-    RETURN SEMICOLON              { spdlog::debug("returnStmt 1 found"); }
-    | RETURN expression SEMICOLON { spdlog::debug("returnStmt 2 found"); }
+    RETURN SEMICOLON
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::RETURN_STMT,
+                std::vector<ParseTree>());
+        }
+    | RETURN expression SEMICOLON
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::RETURN_STMT,
+                std::vector<ParseTree> { $2 });
+        }
 ;
 breakStmt:
-    BREAK SEMICOLON { spdlog::debug("breakStmt found"); }
+    BREAK SEMICOLON
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::BREAK_STMT,
+                std::vector<ParseTree>());
+        }
 ;
 %%

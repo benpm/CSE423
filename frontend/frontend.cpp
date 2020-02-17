@@ -10,7 +10,9 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/fmt/fmt.h>
+#include "parsetree.hpp"
 
+extern ParseTree pt;
 extern int yyparse();
 extern FILE *yyin;
 
@@ -40,6 +42,7 @@ int main(int argc, char **argv) {
     // Point FLEX/BISON to it and run
 	yyin = myfile;
 	yyparse();
+    return 0;
 }
 
 void yyerror(const char *s) {

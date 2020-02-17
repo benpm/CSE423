@@ -1,5 +1,6 @@
 %{
     #include <iostream>
+    #include "parsetree.hpp"
     #include "parser.tab.hpp"  // to get the token types from Bison
 %}
 
