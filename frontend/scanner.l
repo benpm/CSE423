@@ -6,7 +6,6 @@
     #include "flag.hpp"
     #include "parsetree.hpp"
     #include "parser.tab.hpp"  // to get the token types from Bison
-    
 %}
 
 %option noyywrap

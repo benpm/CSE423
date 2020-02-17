@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
     // Logging configuration
     spdlog::set_default_logger(spdlog::stderr_color_mt("console"));
     spdlog::set_level(spdlog::level::debug);
-    spdlog::set_pattern("[parser][%^%l%$] %v");
+    spdlog::set_pattern("[frontend][%^%l%$] %v");
 
     spdlog::info("Frontend begin");
 
