@@ -160,7 +160,7 @@ declaration:
 varDeclaration:
     typeSpecifier varDeclList SEMICOLON
         {
-            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::DECLARATION,
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::VAR_DECLARATION,
                 std::vector<ParseTree> { $1, $2 });
         }
 ;
@@ -653,7 +653,7 @@ statementList:
         }
     | %empty
         {
-            $$ = new Tree(Tree::Terminal::EPSILON, Tree::NonTerminal::LOCAL_DECLARATIONS,
+            $$ = new Tree(Tree::Terminal::EPSILON, Tree::NonTerminal::STATEMENT_LIST,
                 std::vector<ParseTree>());
         }
 ;
