@@ -18,8 +18,8 @@ extern ParseTree pt;
 extern int yyparse();
 extern FILE *yyin;
 
-bool Flag::token_print = false;
-bool Flag::parser_print = false;
+bool Flag::tokenPrint = false;
+bool Flag::parserPrint = false;
 
 void yyerror(const char *s);
 
@@ -48,10 +48,10 @@ int main(int argc, char **argv) {
             spdlog::info("Help message\nUsage: {} filepath [-h] [-t] [-p]", argv[0]);
             return 0;
         } else if (!strcmp(argv[i], "-t")) {
-            Flag::token_print = true;
+            Flag::tokenPrint = true;
             spdlog::info("Token printing enabled");
         } else if (!strcmp(argv[i], "-p")) {
-            Flag::parser_print = true;
+            Flag::parserPrint = true;
             spdlog::info("Parse tree printing enabled");
         } else {
             spdlog::error("Option not recognized: {}\n"
@@ -63,6 +63,8 @@ int main(int argc, char **argv) {
     // Point FLEX/BISON to it and run
 	yyin = myfile;
 	yyparse();
+    if (Flag::parserPrint)
+        pt->print();
     return 0;
 }
 

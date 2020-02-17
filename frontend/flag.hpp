@@ -2,7 +2,7 @@
 
 namespace Flag {
 
-extern bool token_print;
-extern bool parser_print;
+extern bool tokenPrint;
+extern bool parserPrint;
 
 }
