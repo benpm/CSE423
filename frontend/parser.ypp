@@ -203,13 +203,13 @@ varDeclId:
         }
     | ID LBRACK RBRACK
         {
-            $$ = new Tree(Tree::Terminal::ID, Tree::NonTerminal::VAR_DECL_ID,
+            $$ = new Tree(Tree::Terminal::ARRAY_ID, Tree::NonTerminal::VAR_DECL_ID,
                 std::vector<ParseTree>());
         }
-    | ID LBRACK INTCONST RBRACK
+    | ID LBRACK constant RBRACK
         {
-            $$ = new Tree(Tree::Terminal::ID, Tree::NonTerminal::VAR_DECL_ID,
-                std::vector<ParseTree>());
+            $$ = new Tree(Tree::Terminal::ARRAY_ID, Tree::NonTerminal::VAR_DECL_ID,
+                std::vector<ParseTree> { $3 });
         }
 ;
 scopedTypeSpecifier:
@@ -275,7 +275,7 @@ paramId:
         }
     | ID LBRACK RBRACK
         {
-            $$ = new Tree(Tree::Terminal::ID, Tree::NonTerminal::PARAM_ID,
+            $$ = new Tree(Tree::Terminal::ARRAY_ID, Tree::NonTerminal::PARAM_ID,
                 std::vector<ParseTree>());
         }
 ;
