@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project("CSE423_Compiler")
 
+find_package(spdlog REQUIRED)
 find_package(FLEX)
 find_package(BISON)
 
@@ -28,3 +29,5 @@ add_executable(frontend
     ${BISON_parser_OUTPUTS}
     ${FLEX_scanner_OUTPUTS}
 )
+
+target_link_libraries(frontend spdlog::spdlog)

@@ -1,6 +1,9 @@
 %{
     #include <cstdio>
     #include <iostream>
+    #include <spdlog/spdlog.h>
+    #include <spdlog/sinks/stdout_color_sinks.h>
+    #include <spdlog/fmt/fmt.h>
 
     extern int yylex();
     extern int yyparse();
@@ -77,190 +80,190 @@
 //Grammar
 %%
 program:
-    declarationList { std::cout << "program found" << std::endl; }
+    declarationList { spdlog::info("program found"); }
 ;
 declarationList:
-    declarationList declaration { std::cout << "declarationList 1 found" << std::endl; }
-    | declaration               { std::cout << "declarationList 2 found" << std::endl; }
+    declarationList declaration { spdlog::debug("declarationList 1 found"); }
+    | declaration               { spdlog::debug("declarationList 2 found"); }
 ;
 declaration:
-    varDeclaration   { std::cout << "declaration 1 found" << std::endl; }
-    | funDeclaration { std::cout << "declaration 2 found" << std::endl; }
+    varDeclaration   { spdlog::debug("declaration 1 found"); }
+    | funDeclaration { spdlog::debug("declaration 2 found"); }
 ;
 varDeclaration:
-    typeSpecifier varDeclList SEMICOLON { std::cout << "varDeclaration found" << std::endl; }
+    typeSpecifier varDeclList SEMICOLON { spdlog::debug("varDeclaration found"); }
 ;
 scopedVarDeclaration:
-    scopedTypeSpecifier varDeclList SEMICOLON { std::cout << "scopedVarDeclaration found" << std::endl; }
+    scopedTypeSpecifier varDeclList SEMICOLON { spdlog::debug("scopedVarDeclaration found"); }
 ;
 varDeclList:
-    varDeclList COMMA varDeclInitialize { std::cout << "varDeclList 1 found" << std::endl; }
-    | varDeclInitialize                 { std::cout << "varDeclList 2 found" << std::endl; }
+    varDeclList COMMA varDeclInitialize { spdlog::debug("varDeclList 1 found"); }
+    | varDeclInitialize                 { spdlog::debug("varDeclList 2 found"); }
 ;
 varDeclInitialize:
-    varDeclId                          { std::cout << "varDeclInitialize 1 found" << std::endl; }
-    | varDeclId EQUAL simpleExpression { std::cout << "varDeclInitialize 2 found" << std::endl; }
+    varDeclId                          { spdlog::debug("varDeclInitialize 1 found"); }
+    | varDeclId EQUAL simpleExpression { spdlog::debug("varDeclInitialize 2 found"); }
 ;
 varDeclId:
-    ID                          { std::cout << "varDeclId 1 found: " << $1 << std::endl; }
-    | ID LBRACK RBRACK          { std::cout << "varDeclId 2 found: " << $1 << std::endl; }
-    | ID LBRACK INTCONST RBRACK { std::cout << "varDeclId 3 found: " << $1 << std::endl; }
+    ID                          { spdlog::debug("varDeclId 1 found: {}", $1);}
+    | ID LBRACK RBRACK          { spdlog::debug("varDeclId 2 found: {}", $1);}
+    | ID LBRACK INTCONST RBRACK { spdlog::debug("varDeclId 3 found: {}", $1);}
 ;
 scopedTypeSpecifier:
-    typeSpecifier { std::cout << "scopedTypeSpecifier found" << std::endl; }
+    typeSpecifier { spdlog::debug("scopedTypeSpecifier found"); }
 ;
 typeSpecifier:
-    INT     { std::cout << "typeSpecifier found: " << $1 << std::endl; free($1); }
-    | FLOAT { std::cout << "typeSpecifier found: " << $1 << std::endl; free($1); }
-    | CHAR  { std::cout << "typeSpecifier found: " << $1 << std::endl; free($1); }
+    INT     { spdlog::debug("typeSpecifier found: {}", $1); free($1); }
+    | FLOAT { spdlog::debug("typeSpecifier found: {}", $1); free($1); }
+    | CHAR  { spdlog::debug("typeSpecifier found: {}", $1); free($1); }
 ;
 funDeclaration:
-    typeSpecifier ID LPAREN params RPAREN statement { std::cout << "funDeclaration found" << std::endl; }
+    typeSpecifier ID LPAREN params RPAREN statement { spdlog::debug("funDeclaration found"); }
 ;
 params:
-    paramList { std::cout << "params 1 found" << std::endl; }
-    | %empty  { std::cout << "params 2 found" << std::endl; }
+    paramList { spdlog::debug("params 1 found"); }
+    | %empty  { spdlog::debug("params 2 found"); }
 ;
 paramList:
-    paramList COMMA typeSpecifier paramId { std::cout << "paramList 1 found" << std::endl; }
-    | typeSpecifier paramId               { std::cout << "paramList 2 found" << std::endl; }
+    paramList COMMA typeSpecifier paramId { spdlog::debug("paramList 1 found"); }
+    | typeSpecifier paramId               { spdlog::debug("paramList 2 found"); }
 ;
 paramId:
-    ID                 { std::cout << "paramId 1 found: " << $1 << std::endl; }
-    | ID LBRACK RBRACK { std::cout << "paramId 2 found: " << $1 << std::endl; }
+    ID                 { spdlog::debug("paramId 1 found: {}", $1); }
+    | ID LBRACK RBRACK { spdlog::debug("paramId 2 found: {}", $1); }
 ;
 statement:
-    expressionStmt  { std::cout << "statement 1 found" << std::endl; }
-    | compoundStmt  { std::cout << "statement 2 found" << std::endl; }
-    | selectionStmt { std::cout << "statement 3 found" << std::endl; }
-    | iterationStmt { std::cout << "statement 4 found" << std::endl; }
-    | returnStmt    { std::cout << "statement 5 found" << std::endl; }
-    | breakStmt     { std::cout << "statement 6 found" << std::endl; }
+    expressionStmt  { spdlog::debug("statement 1 found"); }
+    | compoundStmt  { spdlog::debug("statement 2 found"); }
+    | selectionStmt { spdlog::debug("statement 3 found"); }
+    | iterationStmt { spdlog::debug("statement 4 found"); }
+    | returnStmt    { spdlog::debug("statement 5 found"); }
+    | breakStmt     { spdlog::debug("statement 6 found"); }
 ;
 expressionStmt:
-    expression SEMICOLON { std::cout << "expressionStmt 1 found" << std::endl; }
-    | SEMICOLON          { std::cout << "expressionStmt 2 found" << std::endl; }
+    expression SEMICOLON { spdlog::debug("expressionStmt 1 found"); }
+    | SEMICOLON          { spdlog::debug("expressionStmt 2 found"); }
 ;
 expression:
-    ID EQUAL expression        { std::cout << "expression 1 found" << std::endl; }
-    | ID PLUSEQUAL expression  { std::cout << "expression 2 found" << std::endl; }
-    | ID MINUSEQUAL expression { std::cout << "expression 3 found" << std::endl; }
-    | ID TIMESEQUAL expression { std::cout << "expression 4 found" << std::endl; }
-    | ID DIVEQUAL expression   { std::cout << "expression 5 found" << std::endl; }
-    | ID INCR                  { std::cout << "expression 6 found" << std::endl; }
-    | ID DECR                  { std::cout << "expression 7 found" << std::endl; }
-    | simpleExpression         { std::cout << "expression 8 found" << std::endl; }
+    ID EQUAL expression        { spdlog::debug("expression 1 found"); }
+    | ID PLUSEQUAL expression  { spdlog::debug("expression 2 found"); }
+    | ID MINUSEQUAL expression { spdlog::debug("expression 3 found"); }
+    | ID TIMESEQUAL expression { spdlog::debug("expression 4 found"); }
+    | ID DIVEQUAL expression   { spdlog::debug("expression 5 found"); }
+    | ID INCR                  { spdlog::debug("expression 6 found"); }
+    | ID DECR                  { spdlog::debug("expression 7 found"); }
+    | simpleExpression         { spdlog::debug("expression 8 found"); }
 ;
 simpleExpression:
-    simpleExpression LOGOR andExpression { std::cout << "simpleExpression 1 found" << std::endl; }
-    | andExpression                      { std::cout << "simpleExpression 2 found" << std::endl; }
+    simpleExpression LOGOR andExpression { spdlog::debug("simpleExpression 1 found"); }
+    | andExpression                      { spdlog::debug("simpleExpression 2 found"); }
 ;
 andExpression:
-    andExpression LOGAND unaryRelExpression { std::cout << "andExpression 1 found" << std::endl; }
-    | unaryRelExpression                    { std::cout << "andExpression 2 found" << std::endl; }
+    andExpression LOGAND unaryRelExpression { spdlog::debug("andExpression 1 found"); }
+    | unaryRelExpression                    { spdlog::debug("andExpression 2 found"); }
 ;
 unaryRelExpression:
-    NOT unaryRelExpression { std::cout << "unaryRelExpression 1 found" << std::endl; }
-    | relExpression        { std::cout << "unaryRelExpression 2 found" << std::endl; }
+    NOT unaryRelExpression { spdlog::debug("unaryRelExpression 1 found"); }
+    | relExpression        { spdlog::debug("unaryRelExpression 2 found"); }
 ;
 relExpression:
-    sumExpression relop sumExpression { std::cout << "relExpression 1 found" << std::endl; }
-    | sumExpression                   { std::cout << "relExpression 2 found" << std::endl; }
+    sumExpression relop sumExpression { spdlog::debug("relExpression 1 found"); }
+    | sumExpression                   { spdlog::debug("relExpression 2 found"); }
 ;
 relop:
-    LE      { std::cout << "relop found: " << $1 << std::endl; }
-    | LT    { std::cout << "relop found: " << $1 << std::endl; }
-    | GT    { std::cout << "relop found: " << $1 << std::endl; }
-    | GE    { std::cout << "relop found: " << $1 << std::endl; }
-    | ISEQ  { std::cout << "relop found: " << $1 << std::endl; }
-    | NOTEQ { std::cout << "relop found: " << $1 << std::endl; }
+    LE      { spdlog::debug("relop found: {}", $1); }
+    | LT    { spdlog::debug("relop found: {}", $1); }
+    | GT    { spdlog::debug("relop found: {}", $1); }
+    | GE    { spdlog::debug("relop found: {}", $1); }
+    | ISEQ  { spdlog::debug("relop found: {}", $1); }
+    | NOTEQ { spdlog::debug("relop found: {}", $1); }
 ;
 sumExpression:
-    sumExpression sumop mulExpression { std::cout << "sumExpression 1 found" << std::endl; }
-    | mulExpression                   { std::cout << "sumExpression 2 found" << std::endl; }
+    sumExpression sumop mulExpression { spdlog::debug("sumExpression 1 found"); }
+    | mulExpression                   { spdlog::debug("sumExpression 2 found"); }
 ;
 sumop:
-    PLUS    { std::cout << "sumop found: " << $1 << std::endl; }
-    | MINUS { std::cout << "sumpop found: " << $1 << std::endl; }
+    PLUS    { spdlog::debug("sumop found: {}", $1); }
+    | MINUS { spdlog::debug("sumpop found: {}", $1); }
 ;
 mulExpression:
-    mulExpression mulop unaryExpression { std::cout << "mulExpression 1 found" << std::endl; }
-    | unaryExpression                   { std::cout << "mulexpression 2 found" << std::endl; }
+    mulExpression mulop unaryExpression { spdlog::debug("mulExpression 1 found"); }
+    | unaryExpression                   { spdlog::debug("mulexpression 2 found"); }
 ;
 mulop:
-    TIMES    { std::cout << "mulop found: " << $1 << std::endl; }
-    | DIVIDE { std::cout << "mulop found: " << $1 << std::endl; }
-    | MODULO { std::cout << "mulop found: " << $1 << std::endl; }
+    TIMES    { spdlog::debug("mulop found: {}", $1); }
+    | DIVIDE { spdlog::debug("mulop found: {}", $1); }
+    | MODULO { spdlog::debug("mulop found: {}", $1); }
 ;
 unaryExpression:
-    unaryop unaryExpression { std::cout << "unaryExpression 1 found" << std::endl; }
-    | factor                { std::cout << "unaryExpression 2 found" << std::endl; }
+    unaryop unaryExpression { spdlog::debug("unaryExpression 1 found"); }
+    | factor                { spdlog::debug("unaryExpression 2 found"); }
 ;
 unaryop:
-    PLUS    { std::cout << "unaryop found: " << $1 << std::endl; }
-    | MINUS { std::cout << "unaryop found: " << $1 << std::endl; }
-    | TIMES { std::cout << "unaryop found: " << $1 << std::endl; }
+    PLUS    { spdlog::debug("unaryop found: {}", $1); }
+    | MINUS { spdlog::debug("unaryop found: {}", $1); }
+    | TIMES { spdlog::debug("unaryop found: {}", $1); }
 ;
 factor:
-    immutable { std::cout << "factor 1 found" << std::endl; }
-    | ID      { std::cout << "factor 2 found: " << $1 << std::endl; }
+    immutable { spdlog::debug("factor 1 found"); }
+    | ID      { spdlog::debug("factor 2 found: {}", $1); }
 ;
 immutable:
-    LPAREN expression RPAREN { std::cout << "immutable 1 found" << std::endl; }
-    | call                   { std::cout << "immutable 2 found" << std::endl; }
-    | constant               { std::cout << "immutable 3 found" << std::endl; }
+    LPAREN expression RPAREN { spdlog::debug("immutable 1 found"); }
+    | call                   { spdlog::debug("immutable 2 found"); }
+    | constant               { spdlog::debug("immutable 3 found"); }
 ;
 call:
-    ID LPAREN args RPAREN { std::cout << "call found: " << $1 << std::endl; }
+    ID LPAREN args RPAREN { spdlog::debug("call found: {}", $1); }
 ;
 args:
-    argList  { std::cout << "args 1 found" << std::endl; }
-    | %empty { std::cout << "args 2 found" << std::endl; }
+    argList  { spdlog::debug("args 1 found"); }
+    | %empty { spdlog::debug("args 2 found"); }
 ;
 argList:
-    argList COMMA expression { std::cout << "argList 1 found" << std::endl; }
-    | expression             { std::cout << "argList 2 found" << std::endl; }
+    argList COMMA expression { spdlog::debug("argList 1 found"); }
+    | expression             { spdlog::debug("argList 2 found"); }
 ;
 constant:
-    STRINGLIT    { std::cout << "STRINGLIT found: " << $1 << std::endl; free($1); }
-    | CHARLIT    { std::cout << "CHARLIT found: " << $1 << std::endl;           }
-    | FLOATCONST { std::cout << "FLOATCONST found: " << $1 << std::endl;           }
-    | INTCONST   { std::cout << "INTCONST found: " << $1 << std::endl;           }
+    STRINGLIT    { spdlog::debug("STRINGLIT found: {}", $1); free($1); }
+    | CHARLIT    { spdlog::debug("CHARLIT found: {}", $1);           }
+    | FLOATCONST { spdlog::debug("FLOATCONST found: {}", $1);           }
+    | INTCONST   { spdlog::debug("INTCONST found: {}", $1);           }
 ;
 compoundStmt:
-    LBRACE localDeclarations statementList RBRACE { std::cout << "compoundStmt found" << std::endl; }
+    LBRACE localDeclarations statementList RBRACE { spdlog::debug("compoundStmt found"); }
 ;
 localDeclarations:
-    localDeclarations scopedVarDeclaration { std::cout << "localDeclarations found" << std::endl; }
-    | %empty                               { std::cout << "localDeclarations found" << std::endl; }
+    localDeclarations scopedVarDeclaration { spdlog::debug("localDeclarations found"); }
+    | %empty                               { spdlog::debug("localDeclarations found"); }
 ;
 statementList:
-    statementList statement { std::cout << "statementList 1 found" << std::endl; }
-    | %empty                { std::cout << "statementList 2 found" << std::endl; }
+    statementList statement { spdlog::debug("statementList 1 found"); }
+    | %empty                { spdlog::debug("statementList 2 found"); }
 ;
 selectionStmt:
-    IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE elseIfList { std::cout << "selectionStmt 1 found" << std::endl; }
-    | IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE          { std::cout << "selectionStmt 2 found" << std::endl; }
+    IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE elseIfList { spdlog::debug("selectionStmt 1 found"); }
+    | IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE          { spdlog::debug("selectionStmt 2 found"); }
 ;
 elseIfList:
-    elseIfList ELSE IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE { std::cout << "elseIfList 1 found" << std::endl; }
-    | %empty                                                                  { std::cout << "elseIfList 2 found" << std::endl; }
+    elseIfList ELSE IF LPAREN simpleExpression RPAREN LBRACE statement RBRACE { spdlog::debug("elseIfList 1 found"); }
+    | %empty                                                                  { spdlog::debug("elseIfList 2 found"); }
 ;
 iterationStmt:
-    whileStmt { std::cout << "iterationStmt 1 found" << std::endl; }
-    | forStmt { std::cout << "iterationStmt 2 found" << std::endl; }
+    whileStmt { spdlog::debug("iterationStmt 1 found"); }
+    | forStmt { spdlog::debug("iterationStmt 2 found"); }
 ;
 whileStmt:
-    WHILE LPAREN simpleExpression RPAREN LBRACE statement RBRACE { std::cout << "whileStmt found" << std::endl; }
+    WHILE LPAREN simpleExpression RPAREN LBRACE statement RBRACE { spdlog::debug("whileStmt found"); }
 ;
 forStmt:
-    FOR LPAREN typeSpecifier varDeclList SEMICOLON relExpression SEMICOLON expression RPAREN { std::cout << "forStmt found" << std::endl; }
+    FOR LPAREN typeSpecifier varDeclList SEMICOLON relExpression SEMICOLON expression RPAREN { spdlog::debug("forStmt found"); }
 ;
 returnStmt:
-    RETURN SEMICOLON              { std::cout << "returnStmt 1 found" << std::endl; }
-    | RETURN expression SEMICOLON { std::cout << "returnStmt 2 found" << std::endl; }
+    RETURN SEMICOLON              { spdlog::debug("returnStmt 1 found"); }
+    | RETURN expression SEMICOLON { spdlog::debug("returnStmt 2 found"); }
 ;
 breakStmt:
-    BREAK SEMICOLON { std::cout << "breakStmt found" << std::endl; }
+    BREAK SEMICOLON { spdlog::debug("breakStmt found"); }
 ;
 %%

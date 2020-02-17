@@ -7,6 +7,9 @@
  */
 #include <cstdio>
 #include <iostream>
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/fmt/fmt.h>
 
 extern int yyparse();
 extern FILE *yyin;
@@ -14,16 +17,23 @@ extern FILE *yyin;
 void yyerror(const char *s);
 
 int main(int argc, char **argv) {
+    // Logging configuration
+    spdlog::set_default_logger(spdlog::stderr_color_mt("console"));
+    spdlog::set_level(spdlog::level::debug);
+    spdlog::set_pattern("[parser][%^%l%$] %v");
+
+    spdlog::info("Frontend begin");
+
     // Check if user provided file
     if (argc != 2) {
-        std::cerr << "usage: " << argv[0] << " FILE_TO_PARSE" << std::endl;
+        spdlog::error("No file provided!\nUsage: {} filepath", argv[0]);
         return -1;
     }
 
     FILE *myfile = fopen(argv[1], "r");
     // Make sure it opened
     if (!(myfile)) {
-        std::cerr << "Cannot open " << argv[1] << std::endl;
+        spdlog::error("Cannot open {}\nUsage: {} filepath", argv[1], argv[0]);
         return -2;
     }
 
@@ -33,6 +43,6 @@ int main(int argc, char **argv) {
 }
 
 void yyerror(const char *s) {
-	std::cout << "EEK, parse error!  Message: " << s << std::endl;
+	spdlog::error("Parser error: {}", s);
 	exit(-1);
 }
