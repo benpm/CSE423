@@ -1,8 +1,16 @@
+/**
+ * @file parsetree.hpp
+ * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
+ * @brief Header Tree structure to represent a parse tree
+ * @date 2020-02-11
+ * 
+ */
 #pragma once
 
 #include <vector>
 
 typedef struct Tree {
+    // Enum storing terminals
     enum Terminal {
         INT, FLOAT, CHAR, FOR, WHILE, IF, ELSE, RETURN, BREAK, SEMICOLON,
         COMMA, LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, EQUAL, PLUS,
@@ -12,6 +20,7 @@ typedef struct Tree {
         EPSILON, NONE
     };
 
+    // Map enum to string for terminal
     std::vector<const char*> terminalStr {
         "INT", "FLOAT", "CHAR", "FOR", "WHILE", "IF", "ELSE", "RETURN", "BREAK", "SEMICOLON",
         "COMMA", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACK", "RBRACK", "EQUAL", "PLUS",
@@ -21,6 +30,7 @@ typedef struct Tree {
         "EPSILON", "NONE"
     };
 
+    // Enum storing non terminals
     enum NonTerminal {
         PROGRAM, DECLARATION_LIST, DECLARATION, VAR_DECLARATION,
         SCOPED_VAR_DECLARATION, VAR_DECL_LIST, VAR_DECL_INITIALIZE,
@@ -35,6 +45,7 @@ typedef struct Tree {
         WHILE_STMT, FOR_STMT, RETURN_STMT, BREAK_STMT
     };
 
+    // Map enum to string for nonterminals
     std::vector<const char*> nonTerminalStr {
         "PROGRAM", "DECLARATION_LIST", "DECLARATION", "VAR_DECLARATION",
         "SCOPED_VAR_DECLARATION", "VAR_DECL_LIST", "VAR_DECL_INITIALIZE",
@@ -49,11 +60,13 @@ typedef struct Tree {
         "WHILE_STMT", "FOR_STMT", "RETURN_STMT", "BREAK_STMT"
     };
 
-    Terminal value;
-    NonTerminal identifier;
-    std::vector<struct Tree*> nodes;
+    Terminal value; // Stores terminal if this node is a terminal
+    NonTerminal identifier;  // Stores nonterminal if this node is a nonterminal
+    std::vector<struct Tree*> nodes; // Reference children
 
     Tree(Terminal value, NonTerminal identifier, std::vector<struct Tree*> nodes) :
         value(value), identifier(identifier), nodes(nodes) {};
-    void print();
+
+    void print(); // Print the parse tree
+
 } *ParseTree;

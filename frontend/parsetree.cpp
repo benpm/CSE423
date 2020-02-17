@@ -1,7 +1,18 @@
+/**
+ * @file parsetree.cpp
+ * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
+ * @brief Implementation of tree structure to represent a parse tree
+ * @date 2020-02-11
+ * 
+ */
 #include <iostream>
 #include <queue>
-#include "parsetree.hpp"
+#include <parsetree.hpp>
 
+/**
+ * @brief 
+ * 
+ */
 void Tree::print()
 {
     // Keep track of current node
