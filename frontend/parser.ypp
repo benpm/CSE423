@@ -7,6 +7,8 @@
     extern int yylex();
     extern int yyparse();
     extern void yyerror(const char *s);
+
+    ParseTree pt;
 %}
 
 // Bison fundamentally works by asking flex to get the next token, which it
@@ -129,7 +131,6 @@
 program:
     declarationList
         {
-            ParseTree pt;
             pt = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::PROGRAM,
                 std::vector<ParseTree> { $1 });
         }

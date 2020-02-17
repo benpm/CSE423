@@ -32,6 +32,7 @@ int main(int argc, char **argv) {
     // Point FLEX/BISON to it and run
 	yyin = myfile;
 	yyparse();
+    return 0;
 }
 
 void yyerror(const char *s) {
