@@ -12,7 +12,8 @@ params := paramList | eps
 paramList := paramList , typeSpecifier ID | typeSpecifier ID
 statement := expressionStmt | compoundStmt | selectionStmt | iterationStmt | returnStmt | breakStmt
 expressionStmt := expression ; | ;
-expression := ID assignop expression | unaryMutOp ID | ID unaryAssignOp | simpleExpression
+expression := mutable assignop expression | unaryAssignop mutable | mutable unaryAssignop | simpleExpression
+mutable := ID | mutable [ expression ]
 assignop := = | += | -= | *= | /= | %=
 unaryAssignOp := ++ | --
 simpleExpression := simpleExpression || andExpression | andExpression

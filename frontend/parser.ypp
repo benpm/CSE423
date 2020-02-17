@@ -42,6 +42,7 @@
 %type <pt> statement
 %type <pt> expressionStmt
 %type <pt> expression
+%type <pt> mutable
 %type <pt> assignop
 %type <pt> unaryAssignop
 %type <pt> simpleExpression
@@ -324,17 +325,17 @@ expressionStmt:
         }
 ;
 expression:
-    ID assignop expression
+    mutable assignop expression
         {
             $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::EXPRESSION,
                 std::vector<ParseTree> { $2, $3 });
         }
-    | unaryAssignop ID
+    | unaryAssignop mutable
         {
             $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::EXPRESSION,
                 std::vector<ParseTree> { $1 });
         }
-    | ID unaryAssignop
+    | mutable unaryAssignop
         {
             $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::EXPRESSION,
                 std::vector<ParseTree> { $2 });
@@ -345,6 +346,17 @@ expression:
                 std::vector<ParseTree> { $1 });
         }
 ;
+mutable:
+    ID
+        {
+            $$ = new Tree(Tree::Terminal::ID, Tree::NonTerminal::MUTABLE,
+                std::vector<ParseTree>());
+        }
+    | mutable LBRACK expression RBRACK
+        {
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::MUTABLE,
+                std::vector<ParseTree> { $1, $3 });
+        }
 assignop:
     EQUAL
         {
@@ -550,10 +562,10 @@ factor:
             $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::FACTOR,
                 std::vector<ParseTree> { $1 });
         }
-    | ID
+    | mutable
         {
-            $$ = new Tree(Tree::Terminal::ID, Tree::NonTerminal::FACTOR,
-                std::vector<ParseTree>());
+            $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::FACTOR,
+                std::vector<ParseTree> { $1 });
         }
 ;
 immutable:
