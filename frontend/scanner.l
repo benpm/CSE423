@@ -1,7 +1,5 @@
 %{
-    #include <spdlog/spdlog.h>
-    #include <spdlog/sinks/stdout_color_sinks.h>
-    #include <spdlog/fmt/fmt.h>
+    #include <cstdio>
     #include "flag.hpp"
     #include "parsetree.hpp"
     #include "parser.tab.hpp"  // to get the token types from Bison
@@ -20,270 +18,270 @@
 int {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "INT");
+        printf("<%s, %s>\n", yytext, "INT");
     return INT;
 }
 float {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "FLOAT");
+        printf("<%s, %s>\n", yytext, "FLOAT");
     return FLOAT;
 }
 char {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "CHAR");
+        printf("<%s, %s>\n", yytext, "CHAR");
     return CHAR;
 }
 for {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "FOR");
+        printf("<%s, %s>\n", yytext, "IF");
     return FOR;
 }
 while {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "WHILE");
+        printf("<%s, %s>\n", yytext, "WHILE");
     return WHILE;
 }
 if {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "IF");
+        printf("<%s, %s>\n", yytext, "IF");
     return IF;
 }
 else {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "ELSE");
+        printf("<%s, %s>\n", yytext, "ELSE");
     return ELSE;
 }
 return {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "RETURN");
+        printf("<%s, %s>\n", yytext, "RETURN");
     return RETURN;
 }
 break {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "BREAK");
+        printf("<%s, %s>\n", yytext, "BREAK");
     return BREAK;
 }
 ; {
     yylval.cval = yytext[0];
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "SEMICOLON");
+        printf("<%s, %s>\n", yytext, "SEMICOLON");
     return SEMICOLON;
 }
 , {
     yylval.cval = yytext[0];
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "COMMA");
+        printf("<%s, %s>\n", yytext, "COMMA");
     return COMMA;
 }
 \( {
     yylval.cval = yytext[0];
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "LPAREN");
+        printf("<%s, %s>\n", yytext, "LPAREN");
     return LPAREN;
 }
 \) {
     yylval.cval = yytext[0];
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "RPAREN");
+        printf("<%s, %s>\n", yytext, "RPAREN");
     return RPAREN;
 }
 \{ {
     yylval.cval = yytext[0];
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "LBRACE");
+        printf("<%s, %s>\n", yytext, "LBRACE");
     return LBRACE;
 }
 \} {
     yylval.cval = yytext[0];
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "RBRACE");
+        printf("<%s, %s>\n", yytext, "RBRACE");
     return RBRACE;
 }
 \[ {
     yylval.cval = yytext[0];
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "LBRACK");    
+        printf("<%s, %s>\n", yytext, "LBRACK");
     return LBRACK;
 }
 \] {
     yylval.cval = yytext[0];
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "RBRACK");    
+        printf("<%s, %s>\n", yytext, "RBRACK");
     return RBRACK;
 }
 = {
     yylval.cval = yytext[0];
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "EQUAL");    
+        printf("<%s, %s>\n", yytext, "EQUAL");
     return EQUAL;
 }
 \+ {
     yylval.cval = yytext[0];
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "PLUS");    
+        printf("<%s, %s>\n", yytext, "PLUS");
     return PLUS;
 }
 - {
     yylval.cval = yytext[0];
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "MINUS");    
+        printf("<%s, %s>\n", yytext, "MINUS");
     return MINUS;
 }
 \* {
     yylval.cval = yytext[0];
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "TIMES");
+        printf("<%s, %s>\n", yytext, "TIMES");
     return TIMES;
 }
 \/ {
     yylval.cval = yytext[0];
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "DIVIDE");    
+        printf("<%s, %s>\n", yytext, "DIVIDE");
     return DIVIDE;
 }
 % {
     yylval.cval = yytext[0];
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "MODULO");    
+        printf("<%s, %s>\n", yytext, "MODULO");
     return MODULO;
 }
 \+= {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "PLUSEQUAL");    
+        printf("<%s, %s>\n", yytext, "PLUSEQUAL");
     return PLUSEQUAL;
 }
 -= {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "MINUSEQUAL");    
+        printf("<%s, %s>\n", yytext, "MINUSEQUAL");
     return MINUSEQUAL;
 }
 \*= {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "TIMESEQUAL");    
+        printf("<%s, %s>\n", yytext, "TIMESEQUAL");
     return TIMESEQUAL;
 }
 \/= {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "DIVEQUAL");    
+        printf("<%s, %s>\n", yytext, "DIVEQUAL");
     return DIVEQUAL;
 }
 %= {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "MODEQUAL");    
+        printf("<%s, %s>\n", yytext, "MODEQUAL");
     return MODEQUAL;
 }
 \+\+ {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "INCR");    
+        printf("<%s, %s>\n", yytext, "INCR");
     return INCR;
 }
 -- {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "DECR");    
+        printf("<%s, %s>\n", yytext, "DECR");
     return DECR;
 }
 \< {
     yylval.cval = yytext[0];
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "LT");    
+        printf("<%s, %s>\n", yytext, "LT");
     return LT;
 }
 \> {
     yylval.cval = yytext[0];
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "GT");    
+        printf("<%s, %s>\n", yytext, "GT");
     return GT;
 }
 \<= {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "LE");    
+        printf("<%s, %s>\n", yytext, "LE");
     return LE;
 }
 \>= {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "GE");    
+        printf("<%s, %s>\n", yytext, "GE");
     return GE;
 }
 == {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "ISEQ");    
+        printf("<%s, %s>\n", yytext, "ISEQ");
     return ISEQ;
 }
 != {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "NOTEQ");    
+        printf("<%s, %s>\n", yytext, "NOTEQ");
     return NOTEQ;
 }
 && {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "LOGAND");    
+        printf("<%s, %s>\n", yytext, "LOGAND");
     return LOGAND;
 }
 \|\| {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "LOGOR");    
+        printf("<%s, %s>\n", yytext, "LOGOR");
     return LOGOR;
 }
 ! {
     yylval.cval = yytext[0];
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "NOT");    
+        printf("<%s, %s>\n", yytext, "NOT");
     return NOT;
 }
 \"(\\.|[^"\\])*\" {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "STRINGLIT");    
+        printf("<%s, %s>\n", yytext, "STRINGLIT");
     return STRINGLIT;
 }
 '.' {
     yylval.cval = yytext[0];
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "CHARLIT");    
+        printf("<%s, %s>\n", yytext, "CHARLIT");
     return CHARLIT;
 }
 [0-9]+ {
     yylval.ival = atoi(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "INTCONST");    
+        printf("<%s, %s>\n", yytext, "INTCONST");
     return INTCONST;
 }
 [0-9]+\.[0-9]? {
     yylval.fval = atof(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "FLOATCONST");    
+        printf("<%s, %s>\n", yytext, "FLOATCONST");
     return FLOATCONST;}
 [a-zA-Z_][a-zA-Z0-9_]* {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "ID");    
+        printf("<%s, %s>\n", yytext, "ID");
     return ID;
 }
 . {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
-        spdlog::info("<{}, {}>", yytext, "UNKNOWN");    
+        printf("<%s, %s>\n", yytext, "UNKNOWN");
     return UNKNOWN;
 }
 %%
