@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.0)
 project("CSE423_Compiler")
 
 find_package(spdlog REQUIRED)
-find_package(FLEX)
-find_package(BISON)
+find_package(FLEX REQUIRED)
+find_package(BISON REQUIRED) 
 
 include_directories("frontend")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
