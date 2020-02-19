@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
     if (Flag::parserPrint)
         pt->print();
 
-    spdlog::info("Frontend exiting");
+    spdlog::info("Frontend exit");
 
     return 0;
 }
