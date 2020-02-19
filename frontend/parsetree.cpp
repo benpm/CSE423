@@ -34,18 +34,24 @@ std::vector<std::string> Node::nonTerminalStr {
     "WHILE_STMT", "FOR_STMT", "RETURN_STMT", "BREAK_STMT"
 };
 
+/**
+ * @brief Convert an enumerated Terminal symbol to a string
+ */
 const std::string Node::toTerminal(Node::Terminal t)
 {
     return this->terminalStr.at(t);
 }
 
+/**
+ * @brief Convert an enumerated NonTerminal symbol to a string
+ */
 const std::string Node::toNonTerminal(Node::NonTerminal nt)
 {
     return this->nonTerminalStr.at(nt);
 }
 
 /**
- * @brief 
+ * @brief Pretty print the parse tree to standard output
  * 
  */
 void Node::print()
@@ -53,18 +59,26 @@ void Node::print()
     this->printNode(*this, 0);
 }
 
+/**
+ * @brief Pretty print a node and recursively print its children
+ * @details Uses a simple prefix DFS tree traversal algorithm
+ */
 void Node::printNode(Node &node, int depth)
 {
     std::string printStr;
     const std::string padding(depth * 3, ' ');
 
+    // Print the terminal string if applicable,
+    // otherwise print the nonterminal string
     if (node.value != Node::Terminal::NONE)
         printStr = node.toTerminal(node.value);
     else
         printStr = node.toNonTerminal(node.identifier);
 
+    // Print a graphical depiction of the branch
     std::cout << padding << "`-" << printStr << std::endl;
 
+    // Recur on the node's children
     for (auto it : node.children)
         printNode(*it, depth + 1);
 }
