@@ -45,42 +45,51 @@ void Tree::print()
     // Keep track of current node
     ParseTree cur = this;
 
-    int row_cnt = 0;
-    int cnt = 1;
+    int cur_row_cnt = 1;
+    int next_row_cnt = 0;
 
     // Create a queue for BFS 
     std::queue<ParseTree> q; 
+    
+    // Create a queue for printing
+    std::vector<std::string> print_queue;
   
     // Enqueue the current node
     q.push(cur); 
+    print_queue.push_back(Tree::nonTerminalStr[cur->identifier]);
+    print_queue.push_back("\n");
   
     while(!q.empty()) { 
         // Dequeue a vertex from queue and print it 
         cur = q.front();
         q.pop(); 
 
-        cnt--;
-        
-        if (cur->value != Tree::Terminal::NONE) {
-            if (cnt > 0)
-                std::cout << Tree::terminalStr[cur->value] << "   ";
-            else
-                std::cout << Tree::terminalStr[cur->value] << "\n";
-        } else {
-            if (cnt > 0)
-                std::cout << Tree::nonTerminalStr[cur->identifier] << "   ";
-            else
-                std::cout << Tree::nonTerminalStr[cur->identifier] << "\n";
-        }
-  
-        // Get all child nodes of the current node
-        row_cnt += cur->nodes.size();
-        for (auto i = cur->nodes.begin(); i != cur->nodes.end(); i++)
-            q.push(*i); 
+        cur_row_cnt--;
 
-        if (cnt == 0) {
-            cnt = row_cnt;
-            row_cnt = 0;
+        // Get all child nodes of the current node
+        next_row_cnt += cur->nodes.size();
+        for (auto i = cur->nodes.begin(); i != cur->nodes.end(); i++) {
+            if ((*i)->value != Tree::Terminal::NONE) {
+                print_queue.push_back(Tree::terminalStr[(*i)->value]);
+                if (cur_row_cnt > 0 || next(i) != cur->nodes.end())
+                    print_queue.push_back("  ");
+            } else {
+                print_queue.push_back(Tree::nonTerminalStr[(*i)->identifier]);
+                if (cur_row_cnt > 0 || next(i) != cur->nodes.end())
+                    print_queue.push_back("  ");
+            }
+            q.push(*i); 
         }
-    } 
+
+        if (cur_row_cnt == 0) {
+            print_queue.push_back("\n");
+            cur_row_cnt = next_row_cnt;
+            next_row_cnt = 0;
+        } else {
+            print_queue.push_back("|  ");
+        }
+    }
+
+    for (auto i = print_queue.begin(); i != print_queue.end(); i++)
+        std::cout << *i;
 }
