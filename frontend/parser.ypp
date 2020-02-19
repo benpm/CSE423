@@ -715,7 +715,7 @@ whileStmt:
         }
 ;
 forStmt:
-    FOR LPAREN typeSpecifier varDeclList SEMICOLON relExpression SEMICOLON expression RPAREN statement
+    FOR LPAREN varDeclaration relExpression SEMICOLON expression RPAREN statement
         {
             $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::FOR_STMT,
                 std::vector<ParseTree> { $3, $4, $6, $8 });
