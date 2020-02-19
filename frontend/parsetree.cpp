@@ -66,7 +66,8 @@ void Node::print()
 void Node::printNode(Node &node, int depth)
 {
     std::string printStr;
-    const std::string padding(depth * 3, ' ');
+    const std::string padding(depth * 2, ' ');
+    const std::string branchStr = (depth == 0) ? "" : "╚═ ";
 
     // Print the terminal string if applicable,
     // otherwise print the nonterminal string
@@ -75,8 +76,8 @@ void Node::printNode(Node &node, int depth)
     else
         printStr = node.toNonTerminal(node.identifier);
 
-    // Print a graphical depiction of the branch
-    std::cout << padding << "`-" << printStr << std::endl;
+    // Print a graphical depiction of the node in the tree
+    std::cout << padding << branchStr << printStr << std::endl;
 
     // Recur on the node's children
     for (auto it : node.children)
