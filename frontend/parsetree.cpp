@@ -7,12 +7,10 @@
  */
 #include <iostream>
 #include <string>
-#include <queue>
-#include <vector>
 #include <parsetree.hpp>
 
 // Map enum to string for terminals
-std::vector<std::string> Tree::terminalStr {
+std::vector<std::string> Node::terminalStr {
     "INT", "FLOAT", "CHAR", "FOR", "WHILE", "IF", "ELSE", "RETURN", "BREAK", "SEMICOLON",
     "COMMA", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACK", "RBRACK", "EQUAL", "PLUS",
     "MINUS", "TIMES", "DIVIDE", "MODULO", "PLUSEQUAL", "MINUSEQUAL", "TIMESEQUAL",
@@ -22,7 +20,7 @@ std::vector<std::string> Tree::terminalStr {
 };
 
 // Map enum to string for nonterminals
-std::vector<std::string> Tree::nonTerminalStr {
+std::vector<std::string> Node::nonTerminalStr {
     "PROGRAM", "DECLARATION_LIST", "DECLARATION", "VAR_DECLARATION",
     "SCOPED_VAR_DECLARATION", "VAR_DECL_LIST", "VAR_DECL_INITIALIZE",
     "VAR_DECL_ID", "SCOPED_TYPE_SPECIFIER", "TYPE_SPECIFIER",
@@ -36,60 +34,37 @@ std::vector<std::string> Tree::nonTerminalStr {
     "WHILE_STMT", "FOR_STMT", "RETURN_STMT", "BREAK_STMT"
 };
 
+const std::string Node::toTerminal(Node::Terminal t)
+{
+    return this->terminalStr.at(t);
+}
+
+const std::string Node::toNonTerminal(Node::NonTerminal nt)
+{
+    return this->nonTerminalStr.at(nt);
+}
+
 /**
  * @brief 
  * 
  */
-void Tree::print()
+void Node::print()
 {
-    // Keep track of current node
-    ParseTree cur = this;
+    this->printNode(*this, 0);
+}
 
-    int cur_row_cnt = 1;
-    int next_row_cnt = 0;
+void Node::printNode(Node &node, int depth)
+{
+    std::string printStr;
+    const std::string padding(depth * 3, ' ');
 
-    // Create a queue for BFS 
-    std::queue<ParseTree> q; 
-    
-    // Create a queue for printing
-    std::vector<std::string> print_queue;
-  
-    // Enqueue the current node
-    q.push(cur); 
-    print_queue.push_back(Tree::nonTerminalStr[cur->identifier]);
-    print_queue.push_back("\n");
-  
-    while(!q.empty()) { 
-        // Dequeue a vertex from queue and print it 
-        cur = q.front();
-        q.pop(); 
+    if (node.value != Node::Terminal::NONE)
+        printStr = node.toTerminal(node.value);
+    else
+        printStr = node.toNonTerminal(node.identifier);
 
-        cur_row_cnt--;
+    std::cout << padding << "`-" << printStr << std::endl;
 
-        // Get all child nodes of the current node
-        next_row_cnt += cur->nodes.size();
-        for (auto i = cur->nodes.begin(); i != cur->nodes.end(); i++) {
-            if ((*i)->value != Tree::Terminal::NONE) {
-                print_queue.push_back(Tree::terminalStr[(*i)->value]);
-                if (cur_row_cnt > 0 || next(i) != cur->nodes.end())
-                    print_queue.push_back("  ");
-            } else {
-                print_queue.push_back(Tree::nonTerminalStr[(*i)->identifier]);
-                if (cur_row_cnt > 0 || next(i) != cur->nodes.end())
-                    print_queue.push_back("  ");
-            }
-            q.push(*i); 
-        }
-
-        if (cur_row_cnt == 0) {
-            print_queue.push_back("\n");
-            cur_row_cnt = next_row_cnt;
-            next_row_cnt = 0;
-        } else {
-            print_queue.push_back("|  ");
-        }
-    }
-
-    for (auto i = print_queue.begin(); i != print_queue.end(); i++)
-        std::cout << *i;
+    for (auto it : node.children)
+        printNode(*it, depth + 1);
 }

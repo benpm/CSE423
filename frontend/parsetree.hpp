@@ -10,7 +10,8 @@
 #include <string>
 #include <vector>
 
-typedef struct Tree {
+typedef class Node {
+    public:
     // Enum storing terminals
     enum Terminal {
         INT, FLOAT, CHAR, FOR, WHILE, IF, ELSE, RETURN, BREAK, SEMICOLON,
@@ -36,19 +37,23 @@ typedef struct Tree {
         WHILE_STMT, FOR_STMT, RETURN_STMT, BREAK_STMT
     };
 
+    Terminal value; // Stores terminal if this node is a terminal
+    NonTerminal identifier;  // Stores nonterminal if this node is a nonterminal
+    std::vector<Node*> children; // Reference children
+
+    Node(Terminal value, NonTerminal identifier, std::vector<Node*> children) :
+        value(value), identifier(identifier), children(children) {};
+
+    const std::string toTerminal(Terminal t); // Convert terminal enum to string
+    const std::string toNonTerminal(NonTerminal nt); // Convert nonterminal enum to string
+    void print(); // Print the parse tree
+
+    private:
     // Map enum to string for nonterminals
     static std::vector<std::string> nonTerminalStr;
     // Map enum to string for terminal
     static std::vector<std::string> terminalStr;
 
-
-    Terminal value; // Stores terminal if this node is a terminal
-    NonTerminal identifier;  // Stores nonterminal if this node is a nonterminal
-    std::vector<struct Tree*> nodes; // Reference children
-
-    Tree(Terminal value, NonTerminal identifier, std::vector<struct Tree*> nodes) :
-        value(value), identifier(identifier), nodes(nodes) {};
-
-    void print(); // Print the parse tree
+    void printNode(Node &node, int depth);
 
 } *ParseTree;
