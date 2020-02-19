@@ -677,10 +677,10 @@ selectionStmt:
             $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::SELECTION_STMT,
                 std::vector<ParseTree> { $3, $5, $6 });
         }
-    | IF LPAREN simpleExpression RPAREN statement
+    | IF LPAREN simpleExpression RPAREN compoundStmt elseIfList ELSE compoundStmt
         {
             $$ = new Tree(Tree::Terminal::NONE, Tree::NonTerminal::SELECTION_STMT,
-                std::vector<ParseTree> { $3, $5 });
+                std::vector<ParseTree> { $3, $5, $6, $8 });
         }
 ;
 elseIfList:
