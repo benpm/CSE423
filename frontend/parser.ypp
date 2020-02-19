@@ -133,611 +133,611 @@ program:
     declarationList
         {
             pt = new Node(Node::Terminal::NONE, Node::NonTerminal::PROGRAM,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
 ;
 declarationList:
     declarationList declaration
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::DECLARATION_LIST,
-                std::vector<ParseTree> { $1, $2 });
+                std::vector<Node*> { $1, $2 });
         }
     | declaration
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::DECLARATION_LIST,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
 ;
 declaration:
     varDeclaration
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::DECLARATION,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
     | funDeclaration
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::DECLARATION,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
 ;
 varDeclaration:
     typeSpecifier varDeclList SEMICOLON
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::VAR_DECLARATION,
-                std::vector<ParseTree> { $1, $2 });
+                std::vector<Node*> { $1, $2 });
         }
 ;
 scopedVarDeclaration:
     scopedTypeSpecifier varDeclList SEMICOLON
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::SCOPED_VAR_DECLARATION,
-                std::vector<ParseTree> { $1, $2 });
+                std::vector<Node*> { $1, $2 });
         }
 ;
 varDeclList:
     varDeclList COMMA varDeclInitialize
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::VAR_DECL_LIST,
-                std::vector<ParseTree> { $1, $3 });
+                std::vector<Node*> { $1, $3 });
         }
     | varDeclInitialize
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::VAR_DECL_LIST,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
 ;
 varDeclInitialize:
     varDeclId
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::VAR_DECL_INITIALIZE,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
     | varDeclId EQUAL simpleExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::VAR_DECL_INITIALIZE,
-                std::vector<ParseTree> { $1, $3});
+                std::vector<Node*> { $1, $3});
         }
 ;
 varDeclId:
     ID
         {
             $$ = new Node(Node::Terminal::ID, Node::NonTerminal::VAR_DECL_ID,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | ID LBRACK RBRACK
         {
             $$ = new Node(Node::Terminal::ARRAY_ID, Node::NonTerminal::VAR_DECL_ID,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | ID LBRACK constant RBRACK
         {
             $$ = new Node(Node::Terminal::ARRAY_ID, Node::NonTerminal::VAR_DECL_ID,
-                std::vector<ParseTree> { $3 });
+                std::vector<Node*> { $3 });
         }
 ;
 scopedTypeSpecifier:
     typeSpecifier
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::SCOPED_TYPE_SPECIFIER,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
 ;
 typeSpecifier:
     INT
         {
             $$ = new Node(Node::Terminal::INT, Node::NonTerminal::TYPE_SPECIFIER,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | FLOAT
         {
             $$ = new Node(Node::Terminal::FLOAT, Node::NonTerminal::TYPE_SPECIFIER,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | CHAR
         {
             $$ = new Node(Node::Terminal::CHAR, Node::NonTerminal::TYPE_SPECIFIER,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
 ;
 funDeclaration:
     typeSpecifier ID LPAREN params RPAREN statement
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::FUN_DECLARATION,
-                std::vector<ParseTree> { $1, $4, $6});
+                std::vector<Node*> { $1, $4, $6});
         }
 ;
 params:
     paramList
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::PARAMS,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
     | %empty
         {
             $$ = new Node(Node::Terminal::EPSILON, Node::NonTerminal::PARAMS,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
 ;
 paramList:
     paramList COMMA typeSpecifier paramId
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::PARAM_LIST,
-                std::vector<ParseTree> { $1, $3, $4 });
+                std::vector<Node*> { $1, $3, $4 });
         }
     | typeSpecifier paramId
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::PARAM_LIST,
-                std::vector<ParseTree> { $1, $2 });
+                std::vector<Node*> { $1, $2 });
         }
 ;
 paramId:
     ID
         {
             $$ = new Node(Node::Terminal::ID, Node::NonTerminal::PARAM_ID,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | ID LBRACK RBRACK
         {
             $$ = new Node(Node::Terminal::ARRAY_ID, Node::NonTerminal::PARAM_ID,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
 ;
 statement:
     expressionStmt
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::STATEMENT,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
     | compoundStmt
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::STATEMENT,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
     | selectionStmt
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::STATEMENT,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
     | iterationStmt
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::STATEMENT,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
     | returnStmt
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::STATEMENT,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
     | breakStmt
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::STATEMENT,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
 ;
 expressionStmt:
     expression SEMICOLON
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::EXPRESSION_STMT,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
     | SEMICOLON
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::EXPRESSION_STMT,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
 ;
 expression:
     mutable assignop expression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::EXPRESSION,
-                std::vector<ParseTree> { $2, $3 });
+                std::vector<Node*> { $2, $3 });
         }
     | unaryAssignop mutable
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::EXPRESSION,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
     | mutable unaryAssignop
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::EXPRESSION,
-                std::vector<ParseTree> { $2 });
+                std::vector<Node*> { $2 });
         }
     | simpleExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::EXPRESSION,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
 ;
 mutable:
     ID
         {
             $$ = new Node(Node::Terminal::ID, Node::NonTerminal::MUTABLE,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | mutable LBRACK expression RBRACK
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::MUTABLE,
-                std::vector<ParseTree> { $1, $3 });
+                std::vector<Node*> { $1, $3 });
         }
 assignop:
     EQUAL
         {
             $$ = new Node(Node::Terminal::EQUAL, Node::NonTerminal::ASSIGN_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | PLUSEQUAL
         {
             $$ = new Node(Node::Terminal::PLUSEQUAL, Node::NonTerminal::ASSIGN_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | MINUSEQUAL
         {
             $$ = new Node(Node::Terminal::MINUSEQUAL, Node::NonTerminal::ASSIGN_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | TIMESEQUAL
         {
             $$ = new Node(Node::Terminal::TIMESEQUAL, Node::NonTerminal::ASSIGN_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | DIVEQUAL
         {
             $$ = new Node(Node::Terminal::DIVEQUAL, Node::NonTerminal::ASSIGN_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | MODEQUAL
         {
             $$ = new Node(Node::Terminal::MODEQUAL, Node::NonTerminal::ASSIGN_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
 unaryAssignop:
     INCR
         {
             $$ = new Node(Node::Terminal::INCR, Node::NonTerminal::UNARY_ASSIGN_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | DECR
         {
             $$ = new Node(Node::Terminal::DECR, Node::NonTerminal::UNARY_ASSIGN_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
 simpleExpression:
     simpleExpression LOGOR andExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::SIMPLE_EXPRESSION,
-                std::vector<ParseTree> { $1, $3 });
+                std::vector<Node*> { $1, $3 });
         }
     | andExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::SIMPLE_EXPRESSION,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
 ;
 andExpression:
     andExpression LOGAND unaryRelExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::AND_EXPRESSION,
-                std::vector<ParseTree> { $1, $3 });
+                std::vector<Node*> { $1, $3 });
         }
     | unaryRelExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::AND_EXPRESSION,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
 ;
 unaryRelExpression:
     NOT unaryRelExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::UNARY_REL_EXPRESSION,
-                std::vector<ParseTree> { $2 });
+                std::vector<Node*> { $2 });
         }
     | relExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::UNARY_REL_EXPRESSION,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
 ;
 relExpression:
     sumExpression relop sumExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::REL_EXPRESSION,
-                std::vector<ParseTree> { $1, $2, $3 });
+                std::vector<Node*> { $1, $2, $3 });
         }
     | sumExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::REL_EXPRESSION,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
 ;
 relop:
     LE
         {
             $$ = new Node(Node::Terminal::LE, Node::NonTerminal::REL_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | LT
         {
             $$ = new Node(Node::Terminal::LT, Node::NonTerminal::REL_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | GT
         {
             $$ = new Node(Node::Terminal::GT, Node::NonTerminal::REL_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | GE
         {
             $$ = new Node(Node::Terminal::GE, Node::NonTerminal::REL_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | ISEQ
         {
             $$ = new Node(Node::Terminal::ISEQ, Node::NonTerminal::REL_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | NOTEQ
         {
             $$ = new Node(Node::Terminal::NOTEQ, Node::NonTerminal::REL_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
 ;
 sumExpression:
     sumExpression sumop mulExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::SUM_EXPRESSION,
-                std::vector<ParseTree> { $1, $2, $3 });
+                std::vector<Node*> { $1, $2, $3 });
         }
     | mulExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::SUM_EXPRESSION,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
 ;
 sumop:
     PLUS
         {
             $$ = new Node(Node::Terminal::PLUS, Node::NonTerminal::SUM_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | MINUS
         {
             $$ = new Node(Node::Terminal::MINUS, Node::NonTerminal::SUM_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
 ;
 mulExpression:
     mulExpression mulop unaryExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::MUL_EXPRESSION,
-                std::vector<ParseTree> { $1, $2, $3 });
+                std::vector<Node*> { $1, $2, $3 });
         }
     | unaryExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::MUL_EXPRESSION,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
 ;
 mulop:
     TIMES
         {
             $$ = new Node(Node::Terminal::TIMES, Node::NonTerminal::MUL_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | DIVIDE
         {
             $$ = new Node(Node::Terminal::DIVIDE, Node::NonTerminal::MUL_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | MODULO
         {
             $$ = new Node(Node::Terminal::MODULO, Node::NonTerminal::MUL_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
 ;
 unaryExpression:
     unaryop unaryExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::UNARY_EXPRESSION,
-                std::vector<ParseTree> { $1, $2 });
+                std::vector<Node*> { $1, $2 });
         }
     | factor
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::UNARY_EXPRESSION,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
 ;
 unaryop:
     PLUS
         {
             $$ = new Node(Node::Terminal::PLUS, Node::NonTerminal::UNARY_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | MINUS
         {
             $$ = new Node(Node::Terminal::MINUS, Node::NonTerminal::UNARY_OP,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
 ;
 factor:
     immutable
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::FACTOR,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
     | mutable
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::FACTOR,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
 ;
 immutable:
     LPAREN expression RPAREN
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::IMMUTABLE,
-                std::vector<ParseTree> { $2 });
+                std::vector<Node*> { $2 });
         }
     | call
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::IMMUTABLE,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
     | constant
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::IMMUTABLE,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
 ;
 call:
     ID LPAREN args RPAREN
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::CALL,
-                std::vector<ParseTree> { $3 });
+                std::vector<Node*> { $3 });
         }
 ;
 args:
     argList
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::ARGS,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
     | %empty
         {
             $$ = new Node(Node::Terminal::EPSILON, Node::NonTerminal::ARGS,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
 ;
 argList:
     argList COMMA expression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::ARG_LIST,
-                std::vector<ParseTree> { $1, $3 });
+                std::vector<Node*> { $1, $3 });
         }
     | expression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::ARG_LIST,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
 ;
 constant:
     STRINGLIT
         {
             $$ = new Node(Node::Terminal::STRINGLIT, Node::NonTerminal::CONSTANT,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | CHARLIT
         {
             $$ = new Node(Node::Terminal::CHARLIT, Node::NonTerminal::CONSTANT,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | FLOATCONST
         {
             $$ = new Node(Node::Terminal::FLOATCONST, Node::NonTerminal::CONSTANT,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | INTCONST
         {
             $$ = new Node(Node::Terminal::INTCONST, Node::NonTerminal::CONSTANT,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
 ;
 compoundStmt:
     LBRACE localDeclarations statementList RBRACE
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::COMPOUND_STMT,
-                std::vector<ParseTree> { $2, $3 });
+                std::vector<Node*> { $2, $3 });
         }
 ;
 localDeclarations:
     localDeclarations scopedVarDeclaration
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::LOCAL_DECLARATIONS,
-                std::vector<ParseTree> { $1, $2 });
+                std::vector<Node*> { $1, $2 });
         }
     | %empty
         {
             $$ = new Node(Node::Terminal::EPSILON, Node::NonTerminal::LOCAL_DECLARATIONS,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
 ;
 statementList:
     statementList statement
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::STATEMENT_LIST,
-                std::vector<ParseTree> { $1, $2 });
+                std::vector<Node*> { $1, $2 });
         }
     | %empty
         {
             $$ = new Node(Node::Terminal::EPSILON, Node::NonTerminal::STATEMENT_LIST,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
 ;
 selectionStmt:
     IF LPAREN simpleExpression RPAREN compoundStmt elseIfList
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::SELECTION_STMT,
-                std::vector<ParseTree> { $3, $5, $6 });
+                std::vector<Node*> { $3, $5, $6 });
         }
     | IF LPAREN simpleExpression RPAREN compoundStmt elseIfList ELSE compoundStmt
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::SELECTION_STMT,
-                std::vector<ParseTree> { $3, $5, $6, $8 });
+                std::vector<Node*> { $3, $5, $6, $8 });
         }
 ;
 elseIfList:
     elseIfList ELSE IF LPAREN simpleExpression RPAREN compoundStmt
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::ELSE_IF_LIST,
-                std::vector<ParseTree> { $1, $5, $7 });
+                std::vector<Node*> { $1, $5, $7 });
         }
     | %empty
         {
             $$ = new Node(Node::Terminal::EPSILON, Node::NonTerminal::ELSE_IF_LIST,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
 ;
 iterationStmt:
     whileStmt
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::ITERATION_STMT,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
     | forStmt
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::ITERATION_STMT,
-                std::vector<ParseTree> { $1 });
+                std::vector<Node*> { $1 });
         }
 ;
 whileStmt:
     WHILE LPAREN simpleExpression RPAREN statement
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::WHILE_STMT,
-                std::vector<ParseTree> { $3, $5 });
+                std::vector<Node*> { $3, $5 });
         }
 ;
 forStmt:
     FOR LPAREN varDeclaration relExpression SEMICOLON expression RPAREN statement
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::FOR_STMT,
-                std::vector<ParseTree> { $3, $4, $6, $8 });
+                std::vector<Node*> { $3, $4, $6, $8 });
         }
 ;
 returnStmt:
     RETURN SEMICOLON
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::RETURN_STMT,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
     | RETURN expression SEMICOLON
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::RETURN_STMT,
-                std::vector<ParseTree> { $2 });
+                std::vector<Node*> { $2 });
         }
 ;
 breakStmt:
     BREAK SEMICOLON
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::BREAK_STMT,
-                std::vector<ParseTree>());
+                std::vector<Node*>());
         }
 ;
 %%
