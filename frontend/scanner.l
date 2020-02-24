@@ -3,9 +3,10 @@
     #include <flag.hpp>
     #include <parsetree.hpp>
     #include <parser.tab.hpp>  // to get the token types from Bison
+    #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
 %}
-
 %option noyywrap
+%option yylineno
 %x C_COMMENT
 
 %%

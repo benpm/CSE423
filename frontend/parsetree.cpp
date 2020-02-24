@@ -77,7 +77,7 @@ void Node::printNode(Node &node, int depth)
         printStr = node.toNonTerminal(node.identifier);
 
     // Print a graphical depiction of the node in the tree
-    std::cout << padding << branchStr << printStr << std::endl;
+    std::cout << padding << branchStr << printStr << " | Line num: " << node.lineNum << std::endl;
 
     // Recur on the node's children
     for (auto it : node.children)

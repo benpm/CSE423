@@ -11,7 +11,7 @@
 #include <vector>
 
 typedef class Node {
-    public:
+public:
     // Enum storing terminals
     enum Terminal {
         INT, FLOAT, CHAR, FOR, WHILE, IF, ELSE, RETURN, BREAK, SEMICOLON,
@@ -37,18 +37,19 @@ typedef class Node {
         WHILE_STMT, FOR_STMT, RETURN_STMT, BREAK_STMT
     };
 
-    Terminal value; // Stores terminal if this node is a terminal
-    NonTerminal identifier;  // Stores nonterminal if this node is a nonterminal
+    Terminal value;              // Stores terminal if this node is a terminal
+    NonTerminal identifier;      // Stores nonterminal if this node is a nonterminal
     std::vector<Node*> children; // Reference children
+    int lineNum = -1;            // Stores line number grammar rule was found on
 
-    Node(Terminal value, NonTerminal identifier, std::vector<Node*> children) :
-        value(value), identifier(identifier), children(children) {};
+    Node(Terminal value, NonTerminal identifier, std::vector<Node*> children, int lineNum) :
+        value(value), identifier(identifier), children(children), lineNum(lineNum) {};
 
     const std::string toTerminal(Terminal t); // Convert terminal enum to string
     const std::string toNonTerminal(NonTerminal nt); // Convert nonterminal enum to string
     void print(); // Print the parse tree
 
-    private:
+private:
     // Map enum to string for nonterminals
     static std::vector<std::string> nonTerminalStr;
     // Map enum to string for terminal

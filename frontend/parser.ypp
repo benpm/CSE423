@@ -11,6 +11,7 @@
 
     ParseTree pt;
 %}
+%locations
 
 // Bison fundamentally works by asking flex to get the next token, which it
 // returns as an object of type "yystype".  Initially (by default), yystype
@@ -133,611 +134,611 @@ program:
     declarationList
         {
             pt = new Node(Node::Terminal::NONE, Node::NonTerminal::PROGRAM,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
 ;
 declarationList:
     declarationList declaration
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::DECLARATION_LIST,
-                std::vector<Node*> { $1, $2 });
+                std::vector<Node*> { $1, $2 }, yylloc.first_line);
         }
     | declaration
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::DECLARATION_LIST,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
 ;
 declaration:
     varDeclaration
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::DECLARATION,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
     | funDeclaration
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::DECLARATION,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
 ;
 varDeclaration:
     typeSpecifier varDeclList SEMICOLON
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::VAR_DECLARATION,
-                std::vector<Node*> { $1, $2 });
+                std::vector<Node*> { $1, $2 }, yylloc.first_line);
         }
 ;
 scopedVarDeclaration:
     scopedTypeSpecifier varDeclList SEMICOLON
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::SCOPED_VAR_DECLARATION,
-                std::vector<Node*> { $1, $2 });
+                std::vector<Node*> { $1, $2 }, yylloc.first_line);
         }
 ;
 varDeclList:
     varDeclList COMMA varDeclInitialize
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::VAR_DECL_LIST,
-                std::vector<Node*> { $1, $3 });
+                std::vector<Node*> { $1, $3 }, yylloc.first_line);
         }
     | varDeclInitialize
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::VAR_DECL_LIST,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
 ;
 varDeclInitialize:
     varDeclId
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::VAR_DECL_INITIALIZE,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
     | varDeclId EQUAL simpleExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::VAR_DECL_INITIALIZE,
-                std::vector<Node*> { $1, $3});
+                std::vector<Node*> { $1, $3}, yylloc.first_line);
         }
 ;
 varDeclId:
     ID
         {
             $$ = new Node(Node::Terminal::ID, Node::NonTerminal::VAR_DECL_ID,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | ID LBRACK RBRACK
         {
             $$ = new Node(Node::Terminal::ARRAY_ID, Node::NonTerminal::VAR_DECL_ID,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | ID LBRACK constant RBRACK
         {
             $$ = new Node(Node::Terminal::ARRAY_ID, Node::NonTerminal::VAR_DECL_ID,
-                std::vector<Node*> { $3 });
+                std::vector<Node*> { $3 }, yylloc.first_line);
         }
 ;
 scopedTypeSpecifier:
     typeSpecifier
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::SCOPED_TYPE_SPECIFIER,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
 ;
 typeSpecifier:
     INT
         {
             $$ = new Node(Node::Terminal::INT, Node::NonTerminal::TYPE_SPECIFIER,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | FLOAT
         {
             $$ = new Node(Node::Terminal::FLOAT, Node::NonTerminal::TYPE_SPECIFIER,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | CHAR
         {
             $$ = new Node(Node::Terminal::CHAR, Node::NonTerminal::TYPE_SPECIFIER,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
 ;
 funDeclaration:
     typeSpecifier ID LPAREN params RPAREN statement
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::FUN_DECLARATION,
-                std::vector<Node*> { $1, $4, $6});
+                std::vector<Node*> { $1, $4, $6}, yylloc.first_line);
         }
 ;
 params:
     paramList
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::PARAMS,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
     | %empty
         {
             $$ = new Node(Node::Terminal::EPSILON, Node::NonTerminal::PARAMS,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
 ;
 paramList:
     paramList COMMA typeSpecifier paramId
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::PARAM_LIST,
-                std::vector<Node*> { $1, $3, $4 });
+                std::vector<Node*> { $1, $3, $4 }, yylloc.first_line);
         }
     | typeSpecifier paramId
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::PARAM_LIST,
-                std::vector<Node*> { $1, $2 });
+                std::vector<Node*> { $1, $2 }, yylloc.first_line);
         }
 ;
 paramId:
     ID
         {
             $$ = new Node(Node::Terminal::ID, Node::NonTerminal::PARAM_ID,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | ID LBRACK RBRACK
         {
             $$ = new Node(Node::Terminal::ARRAY_ID, Node::NonTerminal::PARAM_ID,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
 ;
 statement:
     expressionStmt
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::STATEMENT,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
     | compoundStmt
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::STATEMENT,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
     | selectionStmt
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::STATEMENT,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
     | iterationStmt
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::STATEMENT,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
     | returnStmt
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::STATEMENT,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
     | breakStmt
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::STATEMENT,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
 ;
 expressionStmt:
     expression SEMICOLON
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::EXPRESSION_STMT,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
     | SEMICOLON
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::EXPRESSION_STMT,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
 ;
 expression:
     mutable assignop expression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::EXPRESSION,
-                std::vector<Node*> { $2, $3 });
+                std::vector<Node*> { $2, $3 }, yylloc.first_line);
         }
     | unaryAssignop mutable
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::EXPRESSION,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
     | mutable unaryAssignop
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::EXPRESSION,
-                std::vector<Node*> { $2 });
+                std::vector<Node*> { $2 }, yylloc.first_line);
         }
     | simpleExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::EXPRESSION,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
 ;
 mutable:
     ID
         {
             $$ = new Node(Node::Terminal::ID, Node::NonTerminal::MUTABLE,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | mutable LBRACK expression RBRACK
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::MUTABLE,
-                std::vector<Node*> { $1, $3 });
+                std::vector<Node*> { $1, $3 }, yylloc.first_line);
         }
 assignop:
     EQUAL
         {
             $$ = new Node(Node::Terminal::EQUAL, Node::NonTerminal::ASSIGN_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | PLUSEQUAL
         {
             $$ = new Node(Node::Terminal::PLUSEQUAL, Node::NonTerminal::ASSIGN_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | MINUSEQUAL
         {
             $$ = new Node(Node::Terminal::MINUSEQUAL, Node::NonTerminal::ASSIGN_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | TIMESEQUAL
         {
             $$ = new Node(Node::Terminal::TIMESEQUAL, Node::NonTerminal::ASSIGN_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | DIVEQUAL
         {
             $$ = new Node(Node::Terminal::DIVEQUAL, Node::NonTerminal::ASSIGN_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | MODEQUAL
         {
             $$ = new Node(Node::Terminal::MODEQUAL, Node::NonTerminal::ASSIGN_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
 unaryAssignop:
     INCR
         {
             $$ = new Node(Node::Terminal::INCR, Node::NonTerminal::UNARY_ASSIGN_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | DECR
         {
             $$ = new Node(Node::Terminal::DECR, Node::NonTerminal::UNARY_ASSIGN_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
 simpleExpression:
     simpleExpression LOGOR andExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::SIMPLE_EXPRESSION,
-                std::vector<Node*> { $1, $3 });
+                std::vector<Node*> { $1, $3 }, yylloc.first_line);
         }
     | andExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::SIMPLE_EXPRESSION,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
 ;
 andExpression:
     andExpression LOGAND unaryRelExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::AND_EXPRESSION,
-                std::vector<Node*> { $1, $3 });
+                std::vector<Node*> { $1, $3 }, yylloc.first_line);
         }
     | unaryRelExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::AND_EXPRESSION,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
 ;
 unaryRelExpression:
     NOT unaryRelExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::UNARY_REL_EXPRESSION,
-                std::vector<Node*> { $2 });
+                std::vector<Node*> { $2 }, yylloc.first_line);
         }
     | relExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::UNARY_REL_EXPRESSION,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
 ;
 relExpression:
     sumExpression relop sumExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::REL_EXPRESSION,
-                std::vector<Node*> { $1, $2, $3 });
+                std::vector<Node*> { $1, $2, $3 }, yylloc.first_line);
         }
     | sumExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::REL_EXPRESSION,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
 ;
 relop:
     LE
         {
             $$ = new Node(Node::Terminal::LE, Node::NonTerminal::REL_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | LT
         {
             $$ = new Node(Node::Terminal::LT, Node::NonTerminal::REL_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | GT
         {
             $$ = new Node(Node::Terminal::GT, Node::NonTerminal::REL_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | GE
         {
             $$ = new Node(Node::Terminal::GE, Node::NonTerminal::REL_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | ISEQ
         {
             $$ = new Node(Node::Terminal::ISEQ, Node::NonTerminal::REL_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | NOTEQ
         {
             $$ = new Node(Node::Terminal::NOTEQ, Node::NonTerminal::REL_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
 ;
 sumExpression:
     sumExpression sumop mulExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::SUM_EXPRESSION,
-                std::vector<Node*> { $1, $2, $3 });
+                std::vector<Node*> { $1, $2, $3 }, yylloc.first_line);
         }
     | mulExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::SUM_EXPRESSION,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
 ;
 sumop:
     PLUS
         {
             $$ = new Node(Node::Terminal::PLUS, Node::NonTerminal::SUM_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | MINUS
         {
             $$ = new Node(Node::Terminal::MINUS, Node::NonTerminal::SUM_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
 ;
 mulExpression:
     mulExpression mulop unaryExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::MUL_EXPRESSION,
-                std::vector<Node*> { $1, $2, $3 });
+                std::vector<Node*> { $1, $2, $3 }, yylloc.first_line);
         }
     | unaryExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::MUL_EXPRESSION,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
 ;
 mulop:
     TIMES
         {
             $$ = new Node(Node::Terminal::TIMES, Node::NonTerminal::MUL_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | DIVIDE
         {
             $$ = new Node(Node::Terminal::DIVIDE, Node::NonTerminal::MUL_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | MODULO
         {
             $$ = new Node(Node::Terminal::MODULO, Node::NonTerminal::MUL_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
 ;
 unaryExpression:
     unaryop unaryExpression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::UNARY_EXPRESSION,
-                std::vector<Node*> { $1, $2 });
+                std::vector<Node*> { $1, $2 }, yylloc.first_line);
         }
     | factor
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::UNARY_EXPRESSION,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
 ;
 unaryop:
     PLUS
         {
             $$ = new Node(Node::Terminal::PLUS, Node::NonTerminal::UNARY_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | MINUS
         {
             $$ = new Node(Node::Terminal::MINUS, Node::NonTerminal::UNARY_OP,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
 ;
 factor:
     immutable
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::FACTOR,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
     | mutable
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::FACTOR,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
 ;
 immutable:
     LPAREN expression RPAREN
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::IMMUTABLE,
-                std::vector<Node*> { $2 });
+                std::vector<Node*> { $2 }, yylloc.first_line);
         }
     | call
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::IMMUTABLE,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
     | constant
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::IMMUTABLE,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
 ;
 call:
     ID LPAREN args RPAREN
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::CALL,
-                std::vector<Node*> { $3 });
+                std::vector<Node*> { $3 }, yylloc.first_line);
         }
 ;
 args:
     argList
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::ARGS,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
     | %empty
         {
             $$ = new Node(Node::Terminal::EPSILON, Node::NonTerminal::ARGS,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
 ;
 argList:
     argList COMMA expression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::ARG_LIST,
-                std::vector<Node*> { $1, $3 });
+                std::vector<Node*> { $1, $3 }, yylloc.first_line);
         }
     | expression
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::ARG_LIST,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
 ;
 constant:
     STRINGLIT
         {
             $$ = new Node(Node::Terminal::STRINGLIT, Node::NonTerminal::CONSTANT,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | CHARLIT
         {
             $$ = new Node(Node::Terminal::CHARLIT, Node::NonTerminal::CONSTANT,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | FLOATCONST
         {
             $$ = new Node(Node::Terminal::FLOATCONST, Node::NonTerminal::CONSTANT,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | INTCONST
         {
             $$ = new Node(Node::Terminal::INTCONST, Node::NonTerminal::CONSTANT,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
 ;
 compoundStmt:
     LBRACE localDeclarations statementList RBRACE
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::COMPOUND_STMT,
-                std::vector<Node*> { $2, $3 });
+                std::vector<Node*> { $2, $3 }, yylloc.first_line);
         }
 ;
 localDeclarations:
     localDeclarations scopedVarDeclaration
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::LOCAL_DECLARATIONS,
-                std::vector<Node*> { $1, $2 });
+                std::vector<Node*> { $1, $2 }, yylloc.first_line);
         }
     | %empty
         {
             $$ = new Node(Node::Terminal::EPSILON, Node::NonTerminal::LOCAL_DECLARATIONS,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
 ;
 statementList:
     statementList statement
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::STATEMENT_LIST,
-                std::vector<Node*> { $1, $2 });
+                std::vector<Node*> { $1, $2 }, yylloc.first_line);
         }
     | %empty
         {
             $$ = new Node(Node::Terminal::EPSILON, Node::NonTerminal::STATEMENT_LIST,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
 ;
 selectionStmt:
     IF LPAREN simpleExpression RPAREN compoundStmt elseIfList
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::SELECTION_STMT,
-                std::vector<Node*> { $3, $5, $6 });
+                std::vector<Node*> { $3, $5, $6 }, yylloc.first_line);
         }
     | IF LPAREN simpleExpression RPAREN compoundStmt elseIfList ELSE compoundStmt
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::SELECTION_STMT,
-                std::vector<Node*> { $3, $5, $6, $8 });
+                std::vector<Node*> { $3, $5, $6, $8 }, yylloc.first_line);
         }
 ;
 elseIfList:
     elseIfList ELSE IF LPAREN simpleExpression RPAREN compoundStmt
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::ELSE_IF_LIST,
-                std::vector<Node*> { $1, $5, $7 });
+                std::vector<Node*> { $1, $5, $7 }, yylloc.first_line);
         }
     | %empty
         {
             $$ = new Node(Node::Terminal::EPSILON, Node::NonTerminal::ELSE_IF_LIST,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
 ;
 iterationStmt:
     whileStmt
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::ITERATION_STMT,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
     | forStmt
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::ITERATION_STMT,
-                std::vector<Node*> { $1 });
+                std::vector<Node*> { $1 }, yylloc.first_line);
         }
 ;
 whileStmt:
     WHILE LPAREN simpleExpression RPAREN statement
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::WHILE_STMT,
-                std::vector<Node*> { $3, $5 });
+                std::vector<Node*> { $3, $5 }, yylloc.first_line);
         }
 ;
 forStmt:
     FOR LPAREN varDeclaration relExpression SEMICOLON expression RPAREN statement
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::FOR_STMT,
-                std::vector<Node*> { $3, $4, $6, $8 });
+                std::vector<Node*> { $3, $4, $6, $8 }, yylloc.first_line);
         }
 ;
 returnStmt:
     RETURN SEMICOLON
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::RETURN_STMT,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
     | RETURN expression SEMICOLON
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::RETURN_STMT,
-                std::vector<Node*> { $2 });
+                std::vector<Node*> { $2 }, yylloc.first_line);
         }
 ;
 breakStmt:
     BREAK SEMICOLON
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::BREAK_STMT,
-                std::vector<Node*>());
+                std::vector<Node*>(), yylloc.first_line);
         }
 ;
 %%
