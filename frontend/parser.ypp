@@ -29,6 +29,7 @@
     PTNode* pt;
 }
 
+// Non-Terminal symbols
 %type <pt> program
 %type <pt> declarationList
 %type <pt> declaration
@@ -78,7 +79,7 @@
 %type <pt> returnStmt
 %type <pt> breakStmt
 
-//Terminals
+//Terminal symbols
 %token <sval> INT
 %token <sval> FLOAT
 %token <sval> CHAR
@@ -129,7 +130,7 @@
 
 %token <sval> UNKNOWN
 
-//Grammar
+// Grammar productions
 %%
 program:
     declarationList
@@ -204,14 +205,12 @@ varDeclInitialize:
 varDeclId:
     ID
         {
-            $$ = new PTNode(PTNode::Label::ID,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::ID, yylloc.first_line);
             $$->data.sval = $1;
         }
     | ID LBRACK RBRACK
         {
-            $$ = new PTNode(PTNode::Label::ARRAY_ID,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::ARRAY_ID, yylloc.first_line);
         }
     | ID LBRACK constant RBRACK
         {
@@ -229,25 +228,21 @@ scopedTypeSpecifier:
 typeSpecifier:
     INT
         {
-            $$ = new PTNode(PTNode::Label::INT,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::INT, yylloc.first_line);
         }
     | FLOAT
         {
-            $$ = new PTNode(PTNode::Label::FLOAT,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::FLOAT, yylloc.first_line);
         }
     | CHAR
         {
-            $$ = new PTNode(PTNode::Label::CHAR,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::CHAR, yylloc.first_line);
         }
 ;
 funName:
     ID
         {
-            $$ = new PTNode(PTNode::Label::ID,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::ID, yylloc.first_line);
             $$->data.sval = $1;
         }
 funDeclaration:
@@ -283,14 +278,12 @@ paramList:
 paramId:
     ID
         {
-            $$ = new PTNode(PTNode::Label::ID,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::ID, yylloc.first_line);
             $$->data.sval = $1;
         }
     | ID LBRACK RBRACK
         {
-            $$ = new PTNode(PTNode::Label::ID,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::ID, yylloc.first_line);
             $$->data.sval = $1;
         }
 ;
@@ -362,8 +355,7 @@ expression:
 mutable:
     ID
         {
-            $$ = new PTNode(PTNode::Label::ID,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::ID, yylloc.first_line);
             $$->data.sval = $1;
         }
     | mutable LBRACK expression RBRACK
@@ -374,44 +366,36 @@ mutable:
 assignop:
     EQUAL
         {
-            $$ = new PTNode(PTNode::Label::EQUAL,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::EQUAL, yylloc.first_line);
         }
     | PLUSEQUAL
         {
-            $$ = new PTNode(PTNode::Label::PLUSEQUAL,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::PLUSEQUAL, yylloc.first_line);
         }
     | MINUSEQUAL
         {
-            $$ = new PTNode(PTNode::Label::MINUSEQUAL,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::MINUSEQUAL, yylloc.first_line);
         }
     | TIMESEQUAL
         {
-            $$ = new PTNode(PTNode::Label::TIMESEQUAL,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::TIMESEQUAL, yylloc.first_line);
         }
     | DIVEQUAL
         {
-            $$ = new PTNode(PTNode::Label::DIVEQUAL,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::DIVEQUAL, yylloc.first_line);
         }
     | MODEQUAL
         {
-            $$ = new PTNode(PTNode::Label::MODEQUAL,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::MODEQUAL, yylloc.first_line);
         }
 unaryAssignop:
     INCR
         {
-            $$ = new PTNode(PTNode::Label::INCR,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::INCR, yylloc.first_line);
         }
     | DECR
         {
-            $$ = new PTNode(PTNode::Label::DECR,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::DECR, yylloc.first_line);
         }
 simpleExpression:
     simpleExpression LOGOR andExpression
@@ -467,33 +451,27 @@ relExpression:
 relop:
     LE
         {
-            $$ = new PTNode(PTNode::Label::LE,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::LE, yylloc.first_line);
         }
     | LT
         {
-            $$ = new PTNode(PTNode::Label::LT,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::LT, yylloc.first_line);
         }
     | GT
         {
-            $$ = new PTNode(PTNode::Label::GT,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::GT, yylloc.first_line);
         }
     | GE
         {
-            $$ = new PTNode(PTNode::Label::GE,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::GE, yylloc.first_line);
         }
     | ISEQ
         {
-            $$ = new PTNode(PTNode::Label::ISEQ,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::ISEQ, yylloc.first_line);
         }
     | NOTEQ
         {
-            $$ = new PTNode(PTNode::Label::NOTEQ,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::NOTEQ, yylloc.first_line);
         }
 ;
 sumExpression:
@@ -511,13 +489,11 @@ sumExpression:
 sumop:
     PLUS
         {
-            $$ = new PTNode(PTNode::Label::PLUS,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::PLUS, yylloc.first_line);
         }
     | MINUS
         {
-            $$ = new PTNode(PTNode::Label::MINUS,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::MINUS, yylloc.first_line);
         }
 ;
 mulExpression:
@@ -535,18 +511,15 @@ mulExpression:
 mulop:
     TIMES
         {
-            $$ = new PTNode(PTNode::Label::TIMES,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::TIMES, yylloc.first_line);
         }
     | DIVIDE
         {
-            $$ = new PTNode(PTNode::Label::DIVIDE,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::DIVIDE, yylloc.first_line);
         }
     | MODULO
         {
-            $$ = new PTNode(PTNode::Label::MODULO,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::MODULO, yylloc.first_line);
         }
 ;
 unaryExpression:
@@ -564,13 +537,11 @@ unaryExpression:
 unaryop:
     PLUS
         {
-            $$ = new PTNode(PTNode::Label::PLUS,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::PLUS, yylloc.first_line);
         }
     | MINUS
         {
-            $$ = new PTNode(PTNode::Label::MINUS,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::MINUS, yylloc.first_line);
         }
 ;
 factor:
@@ -635,27 +606,23 @@ argList:
 constant:
     STRINGLIT
         {
-            $$ = new PTNode(PTNode::Label::STRINGLIT,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::STRINGLIT, yylloc.first_line);
             $$->data.sval = $1;
         }
     | CHARLIT
         {
-            $$ = new PTNode(PTNode::Label::CHARLIT,
-                std::vector<PTNode*>(), yylloc.first_line);
-            $$->data.cval = yylval.cval;
+            $$ = new PTNode(PTNode::Label::CHARLIT, yylloc.first_line);
+            $$->data.cval = $1;
         }
     | FLOATCONST
         {
-            $$ = new PTNode(PTNode::Label::FLOATCONST,
-                std::vector<PTNode*>(), yylloc.first_line);
-            $$->data.fval = yylval.fval;
+            $$ = new PTNode(PTNode::Label::FLOATCONST, yylloc.first_line);
+            $$->data.fval = $1;
         }
     | INTCONST
         {
-            $$ = new PTNode(PTNode::Label::INTCONST,
-                std::vector<PTNode*>(), yylloc.first_line);
-            $$->data.ival = yylval.ival;
+            $$ = new PTNode(PTNode::Label::INTCONST, yylloc.first_line);
+            $$->data.ival = $1;
         }
 ;
 compoundStmt:
@@ -690,17 +657,14 @@ statementList:
 selectionStmt:
     IF LPAREN simpleExpression RPAREN compoundStmt elseIfList
         {
-            PTNode* tIF = new PTNode(PTNode::Label::IF,
-                std::vector<PTNode*>(), yylloc.first_line);
+            PTNode* tIF = new PTNode(PTNode::Label::IF, yylloc.first_line);
             $$ = new PTNode(PTNode::Label::SELECTION_STMT,
                 std::vector<PTNode*> { tIF, $3, $5, $6 }, yylloc.first_line);
         }
     | IF LPAREN simpleExpression RPAREN compoundStmt elseIfList ELSE compoundStmt
         {
-            PTNode* tIF = new PTNode(PTNode::Label::IF,
-                std::vector<PTNode*>(), yylloc.first_line);
-            PTNode* tELSE = new PTNode(PTNode::Label::ELSE,
-                std::vector<PTNode*>(), yylloc.first_line);
+            PTNode* tIF = new PTNode(PTNode::Label::IF, yylloc.first_line);
+            PTNode* tELSE = new PTNode(PTNode::Label::ELSE, yylloc.first_line);
             $$ = new PTNode(PTNode::Label::SELECTION_STMT,
                 std::vector<PTNode*> { tIF, $3, $5, $6, tELSE, $8 }, yylloc.first_line);
         }
@@ -708,8 +672,7 @@ selectionStmt:
 elseIfList:
     elseIfList ELSE IF LPAREN simpleExpression RPAREN compoundStmt
         {
-            PTNode* tELSE = new PTNode(PTNode::Label::ELSE,
-                std::vector<PTNode*>(), yylloc.first_line);
+            PTNode* tELSE = new PTNode(PTNode::Label::ELSE, yylloc.first_line);
             $$ = new PTNode(PTNode::Label::ELSE_IF_LIST,
                 std::vector<PTNode*> { $1, tELSE, $5, $7 }, yylloc.first_line);
         }
@@ -747,8 +710,7 @@ forStmt:
 returnStmt:
     RETURN SEMICOLON
         {
-            $$ = new PTNode(PTNode::Label::RETURN_STMT,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::RETURN_STMT, yylloc.first_line);
         }
     | RETURN expression SEMICOLON
         {
@@ -759,8 +721,7 @@ returnStmt:
 breakStmt:
     BREAK SEMICOLON
         {
-            $$ = new PTNode(PTNode::Label::BREAK_STMT,
-                std::vector<PTNode*>(), yylloc.first_line);
+            $$ = new PTNode(PTNode::Label::BREAK_STMT, yylloc.first_line);
         }
 ;
 %%

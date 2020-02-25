@@ -6,7 +6,7 @@ class AST
 {
 public:
     std::string label;
-
+    NodeData data;
     std::vector<AST*> children;
 
     AST(std::string label);

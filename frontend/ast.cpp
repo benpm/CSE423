@@ -23,6 +23,7 @@ void traversePT(AST* ast, const PTNode* node)
         } else if (ignoreTerms.find(child->label) == ignoreTerms.end()) {
             AST* next = new AST(child);
             next->label = child->toString();
+            next->data = child->data;
             switch (child->label) {
                 case PTNode::INTCONST:
                     next->label = fmt::format("({})", child->data.ival);

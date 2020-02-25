@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-union PTNodeData
+union NodeData
 {
     int ival;
     float fval;
@@ -47,7 +47,7 @@ public:
     Label label = Label::NONE;
     std::vector<PTNode*> children; // Reference children
     int lineNum = -1;            // Stores line number grammar rule was found on
-    PTNodeData data;
+    NodeData data;
 
 
     PTNode() {};
