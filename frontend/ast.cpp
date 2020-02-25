@@ -2,20 +2,24 @@
 #include <set>
 #include <ast.hpp>
 
-std::set<PTNode::Label> terms{
+std::set<PTNode::Label> keepTerms {
     PTNode::DECLARATION_LIST, PTNode::DECLARATION, PTNode::VAR_DECLARATION,
     PTNode::FUN_DECLARATION, PTNode::PARAM_LIST, PTNode::STATEMENT_LIST,
     PTNode::STATEMENT, PTNode::SCOPED_VAR_DECLARATION, PTNode::REL_EXPRESSION
+};
+
+std::set<PTNode::Label> ignoreTerms {
+    PTNode::EQUAL
 };
 
 void traversePT(AST* ast, const PTNode* node)
 {
     for (const PTNode* child : node->children) {
         // If is non-terminal and is not in set of allowed non-terminals, we can skip
-        if ((!child->terminal && terms.find(child->label) == terms.end())
+        if ((!child->terminal && keepTerms.find(child->label) == keepTerms.end())
             || child->label == PTNode::NONE) {
             traversePT(ast, child);
-        } else {
+        } else if (ignoreTerms.find(child->label) == ignoreTerms.end()) {
             AST* next = new AST(child);
             next->label = child->toString();
             ast->children.emplace_back(next);
