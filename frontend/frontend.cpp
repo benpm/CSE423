@@ -14,7 +14,7 @@
 #include <ast.hpp>
 #include <parsetree.hpp>
 
-extern ParseTree pt;
+extern PTNode* pt;
 extern int yyparse();
 extern FILE *yyin;
 

@@ -12,18 +12,15 @@
 
 class PTNode {
 public:
-    // Enum storing terminals
-    enum Terminal {
+    // Label
+    enum Label {
         INT, FLOAT, CHAR, FOR, WHILE, IF, ELSE, RETURN, BREAK, SEMICOLON,
         COMMA, LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, EQUAL, PLUS,
         MINUS, TIMES, DIVIDE, MODULO, PLUSEQUAL, MINUSEQUAL, TIMESEQUAL,
         DIVEQUAL, MODEQUAL, INCR, DECR, LT, GT, LE, GE, ISEQ, NOTEQ, LOGAND,
         LOGOR, NOT, STRINGLIT, CHARLIT, INTCONST, FLOATCONST, ID, ARRAY_ID,
-        EPSILON, NONE
-    };
+        EPSILON, NONE,
 
-    // Enum storing non terminals
-    enum NonTerminal {
         PROGRAM, DECLARATION_LIST, DECLARATION, VAR_DECLARATION,
         SCOPED_VAR_DECLARATION, VAR_DECL_LIST, VAR_DECL_INITIALIZE,
         VAR_DECL_ID, SCOPED_TYPE_SPECIFIER, TYPE_SPECIFIER,
@@ -37,25 +34,21 @@ public:
         WHILE_STMT, FOR_STMT, RETURN_STMT, BREAK_STMT, FUN_NAME
     };
 
-    Terminal value;              // Stores terminal if this node is a terminal
-    NonTerminal identifier;      // Stores nonterminal if this node is a nonterminal
-    std::vector<Node*> children; // Reference children
+    bool terminal = true;
+    Label label = Label::NONE;
+    std::vector<PTNode*> children; // Reference children
     int lineNum = -1;            // Stores line number grammar rule was found on
 
-    Node(Terminal value, NonTerminal identifier, std::vector<Node*> children, int lineNum) :
-        value(value), identifier(identifier), children(children), lineNum(lineNum) {};
+    PTNode() {};
+    PTNode(Label label, std::vector<PTNode*> children, int lineNum);
 
-    const std::string toTerminal(Terminal t) const; // Convert terminal enum to string
-    const std::string toNonTerminal(NonTerminal nt) const; // Convert nonterminal enum to string
     const std::string toString() const;
     void print(); // Print the parse tree
 
 private:
-    // Map enum to string for nonterminals
-    static std::vector<std::string> nonTerminalStr;
     // Map enum to string for terminal
-    static std::vector<std::string> terminalStr;
+    static std::vector<std::string> str;
 
-    void printNode(Node &node, int depth);
+    void printNode(PTNode &node, int depth);
 
 };

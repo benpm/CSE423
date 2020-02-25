@@ -9,8 +9,8 @@ public:
 
     std::vector<AST*> children;
 
-    AST(std::string value);
-    AST(const Node* pt);
+    AST(std::string label);
+    AST(const PTNode* pt);
 
     void print();
 };

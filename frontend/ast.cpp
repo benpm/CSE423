@@ -2,18 +2,18 @@
 #include <set>
 #include <ast.hpp>
 
-std::set<Node::NonTerminal> terms{
-    Node::DECLARATION_LIST, Node::DECLARATION, Node::VAR_DECLARATION,
-    Node::FUN_DECLARATION, Node::PARAM_LIST, Node::STATEMENT_LIST,
-    Node::STATEMENT, Node::SCOPED_VAR_DECLARATION, Node::REL_EXPRESSION
+std::set<PTNode::Label> terms{
+    PTNode::DECLARATION_LIST, PTNode::DECLARATION, PTNode::VAR_DECLARATION,
+    PTNode::FUN_DECLARATION, PTNode::PARAM_LIST, PTNode::STATEMENT_LIST,
+    PTNode::STATEMENT, PTNode::SCOPED_VAR_DECLARATION, PTNode::REL_EXPRESSION
 };
 
-void traversePT(AST* ast, const Node* node)
+void traversePT(AST* ast, const PTNode* node)
 {
-    for (const Node* child : node->children) {
+    for (const PTNode* child : node->children) {
         // If is non-terminal and is not in set of allowed non-terminals, we can skip
-        if ((child->value == Node::NONE && terms.find(child->identifier) == terms.end())
-            || child->value == Node::EPSILON) {
+        if ((!child->terminal && terms.find(child->label) == terms.end())
+            || child->label == PTNode::NONE) {
             traversePT(ast, child);
         } else {
             AST* next = new AST(child);
@@ -40,7 +40,7 @@ AST::AST(std::string label)
 /**
  * @brief Construct AST from given parse tree
  */
-AST::AST(const Node* pt)
+AST::AST(const PTNode* pt)
 {
     this->label = "PROGRAM";
     traversePT(this, pt);
