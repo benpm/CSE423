@@ -45,8 +45,9 @@ public:
     Node(Terminal value, NonTerminal identifier, std::vector<Node*> children, int lineNum) :
         value(value), identifier(identifier), children(children), lineNum(lineNum) {};
 
-    const std::string toTerminal(Terminal t); // Convert terminal enum to string
-    const std::string toNonTerminal(NonTerminal nt); // Convert nonterminal enum to string
+    const std::string toTerminal(Terminal t) const; // Convert terminal enum to string
+    const std::string toNonTerminal(NonTerminal nt) const; // Convert nonterminal enum to string
+    const std::string toString() const;
     void print(); // Print the parse tree
 
 private:

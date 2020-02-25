@@ -11,6 +11,7 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/fmt/fmt.h>
 #include <flag.hpp>
+#include <ast.hpp>
 #include <parsetree.hpp>
 
 extern ParseTree pt;
@@ -73,9 +74,14 @@ int main(int argc, char **argv) {
 	yyin = myfile;
 	yyparse();
 
+    // Create abstract syntax tree
+    AST ast(pt);
+
     // Print parse tree if requested
-    if (Flag::parserPrint)
+    if (Flag::parserPrint) {
         pt->print();
+        ast.print();
+    }
 
     spdlog::info("Frontend exit");
 

@@ -37,7 +37,7 @@ std::vector<std::string> Node::nonTerminalStr {
 /**
  * @brief Convert an enumerated Terminal symbol to a string
  */
-const std::string Node::toTerminal(Node::Terminal t)
+const std::string Node::toTerminal(Node::Terminal t) const
 {
     return this->terminalStr.at(t);
 }
@@ -45,7 +45,7 @@ const std::string Node::toTerminal(Node::Terminal t)
 /**
  * @brief Convert an enumerated NonTerminal symbol to a string
  */
-const std::string Node::toNonTerminal(Node::NonTerminal nt)
+const std::string Node::toNonTerminal(Node::NonTerminal nt) const
 {
     return this->nonTerminalStr.at(nt);
 }
@@ -57,6 +57,16 @@ const std::string Node::toNonTerminal(Node::NonTerminal nt)
 void Node::print()
 {
     this->printNode(*this, 0);
+}
+
+const std::string Node::toString() const
+{
+    std::string printStr;
+    if (value != Node::Terminal::NONE)
+        printStr = toTerminal(value);
+    else
+        printStr = toNonTerminal(identifier);
+    return printStr;
 }
 
 /**
