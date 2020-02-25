@@ -40,6 +40,7 @@
 %type <pt> scopedTypeSpecifier
 %type <pt> typeSpecifier
 %type <pt> funDeclaration
+%type <pt> funName
 %type <pt> params
 %type <pt> paramList
 %type <pt> paramId
@@ -240,11 +241,17 @@ typeSpecifier:
                 std::vector<Node*>(), yylloc.first_line);
         }
 ;
+funName:
+    ID
+        {
+            $$ = new Node(Node::Terminal::ID, Node::NonTerminal::FUN_NAME,
+                std::vector<Node*>(), yylloc.first_line);
+        }
 funDeclaration:
-    typeSpecifier ID LPAREN params RPAREN statement
+    typeSpecifier funName LPAREN params RPAREN statement
         {
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::FUN_DECLARATION,
-                std::vector<Node*> { $1, $4, $6}, yylloc.first_line);
+                std::vector<Node*> { $1, $2, $4, $6}, yylloc.first_line);
         }
 ;
 params:
@@ -675,20 +682,28 @@ statementList:
 selectionStmt:
     IF LPAREN simpleExpression RPAREN compoundStmt elseIfList
         {
+            Node* ntIF = new Node(Node::Terminal::IF, Node::NonTerminal::SELECTION_STMT,
+                std::vector<Node*>(), yylloc.first_line);
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::SELECTION_STMT,
-                std::vector<Node*> { $3, $5, $6 }, yylloc.first_line);
+                std::vector<Node*> { ntIF, $3, $5, $6 }, yylloc.first_line);
         }
     | IF LPAREN simpleExpression RPAREN compoundStmt elseIfList ELSE compoundStmt
         {
+            Node* ntIF = new Node(Node::Terminal::IF, Node::NonTerminal::SELECTION_STMT,
+                std::vector<Node*>(), yylloc.first_line);
+            Node* ntELSE = new Node(Node::Terminal::ELSE, Node::NonTerminal::SELECTION_STMT,
+                std::vector<Node*>(), yylloc.first_line);
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::SELECTION_STMT,
-                std::vector<Node*> { $3, $5, $6, $8 }, yylloc.first_line);
+                std::vector<Node*> { ntIF, $3, $5, $6, ntELSE, $8 }, yylloc.first_line);
         }
 ;
 elseIfList:
     elseIfList ELSE IF LPAREN simpleExpression RPAREN compoundStmt
         {
+            Node* ntELSE = new Node(Node::Terminal::ELSE, Node::NonTerminal::SELECTION_STMT,
+                std::vector<Node*>(), yylloc.first_line);
             $$ = new Node(Node::Terminal::NONE, Node::NonTerminal::ELSE_IF_LIST,
-                std::vector<Node*> { $1, $5, $7 }, yylloc.first_line);
+                std::vector<Node*> { $1, ntELSE, $5, $7 }, yylloc.first_line);
         }
     | %empty
         {

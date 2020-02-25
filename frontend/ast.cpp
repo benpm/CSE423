@@ -5,7 +5,7 @@
 std::set<Node::NonTerminal> terms{
     Node::DECLARATION_LIST, Node::DECLARATION, Node::VAR_DECLARATION,
     Node::FUN_DECLARATION, Node::PARAM_LIST, Node::STATEMENT_LIST,
-    Node::STATEMENT
+    Node::STATEMENT, Node::SCOPED_VAR_DECLARATION, Node::REL_EXPRESSION
 };
 
 void traversePT(AST* ast, const Node* node)

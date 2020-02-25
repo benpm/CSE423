@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-typedef class Node {
+class PTNode {
 public:
     // Enum storing terminals
     enum Terminal {
@@ -34,7 +34,7 @@ public:
         MUL_OP, UNARY_EXPRESSION, UNARY_OP, FACTOR, IMMUTABLE, CALL,
         ARGS, ARG_LIST, CONSTANT, COMPOUND_STMT, LOCAL_DECLARATIONS,
         STATEMENT_LIST, SELECTION_STMT, ELSE_IF_LIST, ITERATION_STMT,
-        WHILE_STMT, FOR_STMT, RETURN_STMT, BREAK_STMT
+        WHILE_STMT, FOR_STMT, RETURN_STMT, BREAK_STMT, FUN_NAME
     };
 
     Terminal value;              // Stores terminal if this node is a terminal
@@ -58,4 +58,4 @@ private:
 
     void printNode(Node &node, int depth);
 
-} *ParseTree;
+};
