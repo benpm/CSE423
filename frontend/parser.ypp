@@ -196,8 +196,9 @@ varDeclInitialize:
         }
     | varDeclId EQUAL simpleExpression
         {
+            PTNode *nEQUAL = new PTNode(PTNode::Label::EQUAL, yylloc.first_line);
             $$ = new PTNode(PTNode::Label::VAR_DECL_INITIALIZE,
-                std::vector<PTNode*> { $1, $3}, yylloc.first_line);
+                std::vector<PTNode*> { $1, nEQUAL, $3}, yylloc.first_line);
         }
 ;
 varDeclId:
@@ -410,8 +411,9 @@ unaryAssignop:
 simpleExpression:
     simpleExpression LOGOR andExpression
         {
+            PTNode* nLOGOR = new PTNode(PTNode::Label::LOGOR, yylloc.first_line);
             $$ = new PTNode(PTNode::Label::SIMPLE_EXPRESSION,
-                std::vector<PTNode*> { $1, $3 }, yylloc.first_line);
+                std::vector<PTNode*> { $1, nLOGOR, $3 }, yylloc.first_line);
         }
     | andExpression
         {
@@ -422,8 +424,9 @@ simpleExpression:
 andExpression:
     andExpression LOGAND unaryRelExpression
         {
+            PTNode* nLOGAND = new PTNode(PTNode::Label::LOGAND, yylloc.first_line);
             $$ = new PTNode(PTNode::Label::AND_EXPRESSION,
-                std::vector<PTNode*> { $1, $3 }, yylloc.first_line);
+                std::vector<PTNode*> { $1, nLOGAND, $3 }, yylloc.first_line);
         }
     | unaryRelExpression
         {
@@ -434,8 +437,9 @@ andExpression:
 unaryRelExpression:
     NOT unaryRelExpression
         {
+            PTNode* nNOT = new PTNode(PTNode::Label::NOT, yylloc.first_line);
             $$ = new PTNode(PTNode::Label::UNARY_REL_EXPRESSION,
-                std::vector<PTNode*> { $2 }, yylloc.first_line);
+                std::vector<PTNode*> { nNOT, $2 }, yylloc.first_line);
         }
     | relExpression
         {
@@ -677,28 +681,28 @@ statementList:
 selectionStmt:
     IF LPAREN simpleExpression RPAREN compoundStmt elseIfList
         {
-            PTNode* ntIF = new PTNode(PTNode::Label::IF,
+            PTNode* tIF = new PTNode(PTNode::Label::IF,
                 std::vector<PTNode*>(), yylloc.first_line);
             $$ = new PTNode(PTNode::Label::SELECTION_STMT,
-                std::vector<PTNode*> { ntIF, $3, $5, $6 }, yylloc.first_line);
+                std::vector<PTNode*> { tIF, $3, $5, $6 }, yylloc.first_line);
         }
     | IF LPAREN simpleExpression RPAREN compoundStmt elseIfList ELSE compoundStmt
         {
-            PTNode* ntIF = new PTNode(PTNode::Label::IF,
+            PTNode* tIF = new PTNode(PTNode::Label::IF,
                 std::vector<PTNode*>(), yylloc.first_line);
-            PTNode* ntELSE = new PTNode(PTNode::Label::ELSE,
+            PTNode* tELSE = new PTNode(PTNode::Label::ELSE,
                 std::vector<PTNode*>(), yylloc.first_line);
             $$ = new PTNode(PTNode::Label::SELECTION_STMT,
-                std::vector<PTNode*> { ntIF, $3, $5, $6, ntELSE, $8 }, yylloc.first_line);
+                std::vector<PTNode*> { tIF, $3, $5, $6, tELSE, $8 }, yylloc.first_line);
         }
 ;
 elseIfList:
     elseIfList ELSE IF LPAREN simpleExpression RPAREN compoundStmt
         {
-            PTNode* ntELSE = new PTNode(PTNode::Label::ELSE,
+            PTNode* tELSE = new PTNode(PTNode::Label::ELSE,
                 std::vector<PTNode*>(), yylloc.first_line);
             $$ = new PTNode(PTNode::Label::ELSE_IF_LIST,
-                std::vector<PTNode*> { $1, ntELSE, $5, $7 }, yylloc.first_line);
+                std::vector<PTNode*> { $1, tELSE, $5, $7 }, yylloc.first_line);
         }
     | %empty 
         {

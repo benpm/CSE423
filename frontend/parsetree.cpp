@@ -37,6 +37,12 @@ PTNode::PTNode(Label label, std::vector<PTNode*> children, int lineNum)
     terminal = ((int)label <= (int)NONE);
 }
 
+PTNode::PTNode(Label label, int lineNum)
+    : label(label), lineNum(lineNum)
+{
+    terminal = ((int)label <= (int)NONE);
+}
+
 /**
  * @brief Pretty print the parse tree to standard output
  * 

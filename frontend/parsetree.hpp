@@ -41,6 +41,7 @@ public:
 
     PTNode() {};
     PTNode(Label label, std::vector<PTNode*> children, int lineNum);
+    PTNode(Label label, int lineNum);
 
     const std::string toString() const;
     void print(); // Print the parse tree
