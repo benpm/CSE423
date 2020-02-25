@@ -1,5 +1,6 @@
 #include <iostream>
 #include <set>
+#include <spdlog/fmt/fmt.h>
 #include <ast.hpp>
 
 std::set<PTNode::Label> keepTerms {
@@ -22,6 +23,21 @@ void traversePT(AST* ast, const PTNode* node)
         } else if (ignoreTerms.find(child->label) == ignoreTerms.end()) {
             AST* next = new AST(child);
             next->label = child->toString();
+            switch (child->label) {
+                case PTNode::INTCONST:
+                    next->label = fmt::format("({})", child->data.ival);
+                    break;
+                case PTNode::FLOATCONST:
+                    next->label = fmt::format("({})", child->data.fval);
+                    break;
+                case PTNode::CHARLIT:
+                    next->label = fmt::format("({})", child->data.cval);
+                    break;
+                case PTNode::ID:
+                case PTNode::STRINGLIT:
+                    next->label = fmt::format("({})", child->data.sval);
+                    break;
+            }
             ast->children.emplace_back(next);
         }
     }

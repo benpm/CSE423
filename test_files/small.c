@@ -1,12 +1,13 @@
 int main()
 {
-    int a = 1;
-    int b = 2;
-    int c = a + b;
+    int a = 42;
+    int b = 89;
+    int c = a + b * 12;
+    float d = -8.011609;
 
     if (c < 2) {
-        return 0;
+        return 35;
     } else {
-        return 1;
+        return 124;
     }
 }

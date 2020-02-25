@@ -1,5 +1,8 @@
 %{
     #include <cstdio>
+    #include <spdlog/spdlog.h>
+    #include <spdlog/sinks/stdout_color_sinks.h>
+    #include <spdlog/fmt/fmt.h>
     #include <flag.hpp>
     #include <parsetree.hpp>
     #include <parser.tab.hpp>  // to get the token types from Bison
@@ -268,7 +271,7 @@ break {
         printf("<%s, %s>\n", yytext, "INTCONST");
     return INTCONST;
 }
-[0-9]+\.[0-9]? {
+[0-9]+\.[0-9]* {
     yylval.fval = atof(yytext);
     if (Flag::tokenPrint)
         printf("<%s, %s>\n", yytext, "FLOATCONST");

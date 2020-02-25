@@ -206,6 +206,7 @@ varDeclId:
         {
             $$ = new PTNode(PTNode::Label::ID,
                 std::vector<PTNode*>(), yylloc.first_line);
+            $$->data.sval = $1;
         }
     | ID LBRACK RBRACK
         {
@@ -247,6 +248,7 @@ funName:
         {
             $$ = new PTNode(PTNode::Label::ID,
                 std::vector<PTNode*>(), yylloc.first_line);
+            $$->data.sval = $1;
         }
 funDeclaration:
     typeSpecifier funName LPAREN params RPAREN statement
@@ -283,11 +285,13 @@ paramId:
         {
             $$ = new PTNode(PTNode::Label::ID,
                 std::vector<PTNode*>(), yylloc.first_line);
+            $$->data.sval = $1;
         }
     | ID LBRACK RBRACK
         {
             $$ = new PTNode(PTNode::Label::ID,
                 std::vector<PTNode*>(), yylloc.first_line);
+            $$->data.sval = $1;
         }
 ;
 statement:
@@ -360,6 +364,7 @@ mutable:
         {
             $$ = new PTNode(PTNode::Label::ID,
                 std::vector<PTNode*>(), yylloc.first_line);
+            $$->data.sval = $1;
         }
     | mutable LBRACK expression RBRACK
         {
@@ -632,21 +637,25 @@ constant:
         {
             $$ = new PTNode(PTNode::Label::STRINGLIT,
                 std::vector<PTNode*>(), yylloc.first_line);
+            $$->data.sval = $1;
         }
     | CHARLIT
         {
             $$ = new PTNode(PTNode::Label::CHARLIT,
                 std::vector<PTNode*>(), yylloc.first_line);
+            $$->data.cval = yylval.cval;
         }
     | FLOATCONST
         {
             $$ = new PTNode(PTNode::Label::FLOATCONST,
                 std::vector<PTNode*>(), yylloc.first_line);
+            $$->data.fval = yylval.fval;
         }
     | INTCONST
         {
             $$ = new PTNode(PTNode::Label::INTCONST,
                 std::vector<PTNode*>(), yylloc.first_line);
+            $$->data.ival = yylval.ival;
         }
 ;
 compoundStmt:

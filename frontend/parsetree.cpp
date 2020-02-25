@@ -63,12 +63,32 @@ const std::string PTNode::toString() const
  */
 void PTNode::printNode(PTNode &node, int depth)
 {
+    if (node.label == NONE) return;
+
     std::string printStr;
     const std::string padding(depth * 2, ' ');
     const std::string branchStr = (depth == 0) ? "" : "╚═";
 
     // Print a graphical depiction of the node in the tree
-    std::cout << padding << branchStr << node.toString() << " | Line num: " << node.lineNum << std::endl;
+    std::cout << padding << branchStr << node.toString() << " | Line num: " << node.lineNum;
+
+    switch (node.label) {
+        case INTCONST:
+            std::cout << " (" << node.data.ival << ") ";
+            break;
+        case FLOATCONST:
+            std::cout << " (" << node.data.fval << ") ";
+            break;
+        case CHARLIT:
+            std::cout << " (" << node.data.cval << ") ";
+            break;
+        case ID:
+        case STRINGLIT:
+            std::cout << " (" << node.data.sval << ") ";
+            break;
+    }
+
+    std::cout << std::endl;
 
     // Recur on the node's children
     for (auto it : node.children)
