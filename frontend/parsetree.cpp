@@ -49,7 +49,7 @@ PTNode::PTNode(Label label, int lineNum)
  */
 void PTNode::print()
 {
-    this->printNode(*this, 0);
+    this->printNode(*this, 0, 0);
 }
 
 const std::string PTNode::toString() const
@@ -61,17 +61,32 @@ const std::string PTNode::toString() const
  * @brief Pretty print a node and recursively print its children
  * @details Uses a simple prefix DFS tree traversal algorithm
  */
-void PTNode::printNode(PTNode &node, int depth)
+void PTNode::printNode(PTNode &node, int depth, ulong levels)
 {
     if (node.label == NONE) return;
 
-    std::string printStr;
-    const std::string padding(depth * 2, ' ');
-    const std::string branchStr = (depth == 0) ? "" : "╚═";
+    std::string padding;
+
+    // Construct the padding string using bit flags
+    for (int i = 0; i < depth; ++i) {
+        if ((levels >> i) & 1) {
+            if (i < depth - 1)
+                padding += " │";
+            else {
+                padding += " ├─";
+            }
+        } else {
+            if (i < depth - 1)
+                padding += "  ";
+            else
+                padding += " └─";
+        }
+    }
 
     // Print a graphical depiction of the node in the tree
-    std::cout << padding << branchStr << node.toString() << " | Line num: " << node.lineNum;
+    std::cout << padding << node.toString() << " | Line num: " << node.lineNum;
 
+    // Print the values stored at the nodes, if there are any
     switch (node.label) {
         case INTCONST:
             std::cout << " (" << node.data.ival << ") ";
@@ -90,7 +105,13 @@ void PTNode::printNode(PTNode &node, int depth)
 
     std::cout << std::endl;
 
-    // Recur on the node's children
-    for (auto it : node.children)
-        printNode(*it, depth + 1);
+    // Recurse on the node's children, update bit flag as needed
+    int i = 0;
+    for (auto it : node.children) {
+        ulong nlevels = levels;
+        if ((i > 0 || node.children.size() > 1) && i < node.children.size() - 1)
+            nlevels = levels | (1 << depth);
+        printNode(*it, depth + 1, nlevels);
+        i += 1;
+    }
 }

@@ -44,12 +44,37 @@ void traversePT(AST* ast, const PTNode* node)
     }
 }
 
-void printASTNode(const AST* node, int depth)
+void printASTNode(const AST* node, int depth, ulong levels)
 {
-    std::cout << std::string(depth * 2, ' ') << node->label << std::endl;
-    for (const AST* child : node->children)
-    {
-        printASTNode(child, depth + 1);
+    std::string padding;
+
+    // Construct the padding string using bit flags
+    for (int i = 0; i < depth; ++i) {
+        if ((levels >> i) & 1) {
+            if (i < depth - 1)
+                padding += " │";
+            else {
+                padding += " ├─";
+            }
+        } else {
+            if (i < depth - 1)
+                padding += "  ";
+            else
+                padding += " └─";
+        }
+    }
+
+    // Print a graphical depiction of the node in the tree
+    std::cout << padding << node->label << std::endl;
+
+    // Recurse on the node's children, update bit flag as needed
+    int i = 0;
+    for (auto it : node->children) {
+        ulong nlevels = levels;
+        if ((i > 0 || node->children.size() > 1) && i < node->children.size() - 1)
+            nlevels = levels | (1 << depth);
+        printASTNode(it, depth + 1, nlevels);
+        i += 1;
     }
 }
 
@@ -69,5 +94,5 @@ AST::AST(const PTNode* pt)
 
 void AST::print()
 {
-    printASTNode(this, 0);
+    printASTNode(this, 0, 0);
 }

@@ -61,6 +61,6 @@ private:
     // Map enum to string for terminal
     static std::vector<std::string> str;
 
-    void printNode(PTNode &node, int depth);
+    void printNode(PTNode &node, int depth, ulong levels);
 
 };
