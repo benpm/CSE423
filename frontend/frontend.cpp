@@ -20,6 +20,7 @@ extern FILE *yyin;
 
 bool Flag::tokenPrint = false;
 bool Flag::parserPrint = false;
+bool Flag::astPrint = false;
 
 void yyerror(const char *s);
 void usage(char *exec_name);
@@ -42,7 +43,7 @@ int main(int argc, char **argv) {
     // Parse arguments
     for (int i = 2; i < argc; i++) {
         if (!strcmp(argv[i], "-h")) {
-            spdlog::info("Help message\nUsage: {} filepath [-h] [-t] [-p]", argv[0]);
+            spdlog::info("Help message\nUsage: {} filepath [-h] [-t] [-a] [-p]", argv[0]);
             return 0;
         } else if (!strcmp(argv[i], "-t")) {
             Flag::tokenPrint = true;
@@ -50,11 +51,14 @@ int main(int argc, char **argv) {
         } else if (!strcmp(argv[i], "-p")) {
             Flag::parserPrint = true;
             spdlog::info("Parse tree printing enabled");
+        } else if (!strcmp(argv[i], "-a")) {
+            Flag::astPrint = true;
+            spdlog::info("Abstract syntax tree printing enabled");
         } else if (!strcmp(argv[i], "-l")) {
             spdlog::set_level(spdlog::level::err);
         } else {
             spdlog::error("Option not recognized: {}\n"
-                          "Usage: {} filepath [-h] [-t] [-p]", argv[i], argv[0]);
+                          "Usage: {} filepath [-h] [-t] [-a] [-p]", argv[i], argv[0]);
             return -1;
         }
     }
@@ -80,6 +84,8 @@ int main(int argc, char **argv) {
     // Print parse tree if requested
     if (Flag::parserPrint) {
         pt->print();
+    }
+    if (Flag::astPrint) {
         ast.print();
     }
 
@@ -107,5 +113,6 @@ void usage(char *exec_name) {
     std::cout << "  -h\t Print this help message" << std::endl
               << "  -t\t Print the tokens found in the file" << std::endl
               << "  -p\t Print the parse tree" << std::endl
+              << "  -a\t Print the abstract syntax tree" << std::endl
               << "  -l\t Hide logging messages (except errors)" << std::endl;
 }

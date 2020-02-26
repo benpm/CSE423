@@ -1,0 +1,44 @@
+PROGRAM
+ └─declaration_list
+   └─declaration
+     └─fun_declaration
+       ├─INT
+       ├─(main)
+       ├─scoped_var_declaration
+       │ ├─INT
+       │ ├─(a)
+       │ └─rel_expression
+       │   └─(42)
+       ├─scoped_var_declaration
+       │ ├─INT
+       │ ├─(b)
+       │ └─rel_expression
+       │   └─(89)
+       ├─scoped_var_declaration
+       │ ├─INT
+       │ ├─(c)
+       │ └─rel_expression
+       │   ├─(a)
+       │   ├─PLUS
+       │   ├─(b)
+       │   ├─TIMES
+       │   └─(12)
+       ├─scoped_var_declaration
+       │ ├─FLOAT
+       │ ├─(d)
+       │ └─rel_expression
+       │   ├─MINUS
+       │   └─(8.01161)
+       └─statement_list
+         ├─IF
+         ├─rel_expression
+         │ ├─(c)
+         │ ├─LT
+         │ └─(2)
+         ├─statement_list
+         │ └─rel_expression
+         │   └─(35)
+         ├─ELSE
+         └─statement_list
+           └─rel_expression
+             └─(124)
