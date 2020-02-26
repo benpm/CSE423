@@ -54,6 +54,7 @@
 %type <pt> simpleExpression
 %type <pt> andExpression
 %type <pt> unaryRelExpression
+%type <pt> unaryAssignExpr
 %type <pt> relExpression
 %type <pt> relop
 %type <pt> sumExpression
@@ -245,6 +246,7 @@ funName:
             $$ = new PTNode(PTNode::Label::ID, yylloc.first_line);
             $$->data.sval = $1;
         }
+;
 funDeclaration:
     typeSpecifier funName LPAREN params RPAREN statement
         {
@@ -334,22 +336,29 @@ expression:
     mutable assignop expression
         {
             $$ = new PTNode(PTNode::Label::EXPRESSION,
-                std::vector<PTNode*> { $2, $3 }, yylloc.first_line);
+                std::vector<PTNode*> { $1, $2, $3 }, yylloc.first_line);
         }
-    | unaryAssignop mutable
+    | unaryAssignExpr
         {
             $$ = new PTNode(PTNode::Label::EXPRESSION,
                 std::vector<PTNode*> { $1 }, yylloc.first_line);
-        }
-    | mutable unaryAssignop
-        {
-            $$ = new PTNode(PTNode::Label::EXPRESSION,
-                std::vector<PTNode*> { $2 }, yylloc.first_line);
         }
     | simpleExpression
         {
             $$ = new PTNode(PTNode::Label::EXPRESSION,
                 std::vector<PTNode*> { $1 }, yylloc.first_line);
+        }
+;
+unaryAssignExpr:
+    unaryAssignop mutable
+        {
+            $$ = new PTNode(PTNode::Label::UNARY_ASSIGN_EXPRESSION,
+                std::vector<PTNode*> { $1, $2 }, yylloc.first_line);
+        }
+    | mutable unaryAssignop
+        {
+            $$ = new PTNode(PTNode::Label::UNARY_ASSIGN_EXPRESSION,
+                std::vector<PTNode*> { $1, $2 }, yylloc.first_line);
         }
 ;
 mutable:
@@ -363,6 +372,7 @@ mutable:
             $$ = new PTNode(PTNode::Label::MUTABLE,
                 std::vector<PTNode*> { $1, $3 }, yylloc.first_line);
         }
+;
 assignop:
     EQUAL
         {
@@ -388,6 +398,7 @@ assignop:
         {
             $$ = new PTNode(PTNode::Label::MODEQUAL, yylloc.first_line);
         }
+;
 unaryAssignop:
     INCR
         {
@@ -397,6 +408,7 @@ unaryAssignop:
         {
             $$ = new PTNode(PTNode::Label::DECR, yylloc.first_line);
         }
+;
 simpleExpression:
     simpleExpression LOGOR andExpression
         {
@@ -576,8 +588,10 @@ immutable:
 call:
     ID LPAREN args RPAREN
         {
+            PTNode* tID = new PTNode(PTNode::Label::ID, yylloc.first_line);
+            tID->data.sval = $1;
             $$ = new PTNode(PTNode::Label::CALL,
-                std::vector<PTNode*> { $3 }, yylloc.first_line);
+                std::vector<PTNode*> { tID, $3 }, yylloc.first_line);
         }
 ;
 args:
