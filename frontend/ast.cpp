@@ -3,25 +3,15 @@
 #include <spdlog/fmt/fmt.h>
 #include <ast.hpp>
 
-std::set<PTNode::Label> keepTerms {
-    PTNode::DECLARATION_LIST, PTNode::DECLARATION, PTNode::VAR_DECLARATION,
-    PTNode::FUN_DECLARATION, PTNode::PARAM_LIST, PTNode::STATEMENT_LIST,
-    PTNode::SCOPED_VAR_DECLARATION, PTNode::REL_EXPRESSION,
-    PTNode::FOR_STMT, PTNode::WHILE_STMT, PTNode::CALL, PTNode::UNARY_ASSIGN_EXPRESSION
-};
-
-std::set<PTNode::Label> ignoreTerms {
-    PTNode::EQUAL
-};
-
 void traversePT(AST* ast, const PTNode* node)
 {
     for (const PTNode* child : node->children) {
+        if (child->label == PTNode::NONE) continue;
+
+        size_t children = child->children.size();
+
         // If is non-terminal and is not in set of allowed non-terminals, we can skip
-        if ((!child->terminal && keepTerms.find(child->label) == keepTerms.end())
-            || child->label == PTNode::NONE) {
-            traversePT(ast, child);
-        } else if (ignoreTerms.find(child->label) == ignoreTerms.end()) {
+        if ((children > 1 || child->terminal) && (child->label != node->label)) {
             AST* next = new AST(child);
             next->label = child->toString();
             next->data = child->data;
@@ -41,6 +31,8 @@ void traversePT(AST* ast, const PTNode* node)
                     break;
             }
             ast->children.emplace_back(next);
+        } else {
+            traversePT(ast, child);
         }
     }
 }
