@@ -15,3 +15,6 @@ Documentation and User Manual lives on our [Wiki](https://github.com/benpm/CSE42
 - [ ] IR generator
 - [ ] Optimizer
 - [ ] Code generator
+
+## Examples
+Visit the [/examples](/examples) directory for examples of intermediate ouputs.
