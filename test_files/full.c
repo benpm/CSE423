@@ -34,7 +34,7 @@ int main()
             n1 *= 1;
             n1++;
         } else if (n1 <= 2 && (G == 'H' || n2 != 100)) {
-            DF += -.6; // NOTE: the syntax of .6 doesnt work
+            DF += -.6;
             if (DF == 0.00000) {
                 DF = 1.01;
             }
