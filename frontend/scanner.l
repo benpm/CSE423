@@ -271,11 +271,12 @@ break {
         printf("<%s, %s>\n", yytext, "INTCONST");
     return INTCONST;
 }
-[0-9]+\.[0-9]* {
+([0-9]+\.[0-9]*)|([0-9]*\.[0-9]+)  {
     yylval.fval = atof(yytext);
     if (Flag::tokenPrint)
         printf("<%s, %s>\n", yytext, "FLOATCONST");
-    return FLOATCONST;}
+    return FLOATCONST;
+}
 [a-zA-Z_][a-zA-Z0-9_]* {
     yylval.sval = strdup(yytext);
     if (Flag::tokenPrint)
