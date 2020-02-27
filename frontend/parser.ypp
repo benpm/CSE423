@@ -7,11 +7,13 @@
 
     extern int yylex();
     extern int yyparse();
-    extern void yyerror(const char *s);
+    
+    void yyerror(const char *s);
 
     PTNode* pt;
 %}
 %locations
+%define parse.error verbose
 
 // Bison fundamentally works by asking flex to get the next token, which it
 // returns as an object of type "yystype".  Initially (by default), yystype
@@ -739,3 +741,13 @@ breakStmt:
         }
 ;
 %%
+
+/**
+ * @brief Error function called if one is encountered during parsing
+ * 
+ * @param s Error string
+ */
+void yyerror(const char *s) {
+	spdlog::error("{} on line {}", s, yylloc.first_line);
+	exit(-1);
+}

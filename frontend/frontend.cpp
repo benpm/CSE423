@@ -22,7 +22,6 @@ bool Flag::tokenPrint = false;
 bool Flag::parserPrint = false;
 bool Flag::astPrint = false;
 
-void yyerror(const char *s);
 void usage(char *exec_name);
 
 
@@ -94,15 +93,7 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-/**
- * @brief Error function called if one is encountered during parsing
- * 
- * @param s Error string
- */
-void yyerror(const char *s) {
-	spdlog::error("Parser error: {}", s);
-	exit(-1);
-}
+
 /**
  * @brief Prints usage options of frontend
  * 

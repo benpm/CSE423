@@ -13,7 +13,7 @@ public:
         int_const, float_const, string_const, char_const, for_stmt,
         if_stmt, call, int_type, float_type, char_type, bool_expr, unhandled,
         args, return_stmt, le, ge, lt, gt, incr, decr, plus_equal, minus_equal,
-        timesequal, dec_list, else_stmt
+        timesequal, dec_list, else_stmt, params
     };
 
     Label label = Label::unhandled;

@@ -10,7 +10,7 @@ const std::vector<std::string> AST::str {
     "int_const", "float_const", "string_const", "char_const", "for_stmt",
     "if_stmt", "call", "int_type", "float_type", "char_type", "bool_expr", "unhandled",
     "args", "return_stmt", "le", "ge", "lt", "gt", "incr", "decr", "plus_equal", "minus_equal",
-    "timesequal", "dec_list", "else_stmt"
+    "timesequal", "dec_list", "else_stmt", "params"
 };
 
 const std::map<PTNode::Label, AST::Label> labelMap {
@@ -32,11 +32,13 @@ const std::map<PTNode::Label, AST::Label> labelMap {
     {PTNode::FOR_STMT, AST::for_stmt},
     {PTNode::REL_EXPRESSION, AST::bool_expr},
     {PTNode::ARG_LIST, AST::args},
+    {PTNode::PARAM_LIST, AST::params},
     {PTNode::CALL, AST::call},
     {PTNode::INT, AST::int_type},
     {PTNode::FLOAT, AST::float_type},
     {PTNode::CHAR, AST::char_type},
     {PTNode::RETURN_STMT, AST::return_stmt},
+    {PTNode::EXPRESSION, AST::list},
 
     {PTNode::LE, AST::le},
     {PTNode::GE, AST::ge},
@@ -51,7 +53,6 @@ const std::map<PTNode::Label, AST::Label> labelMap {
 
 
     {PTNode::UNARY_ASSIGN_EXPRESSION, AST::unhandled},
-    {PTNode::EXPRESSION, AST::unhandled},
     {PTNode::INCR, AST::unhandled},
     {PTNode::TIMESEQUAL, AST::unhandled},
 };
@@ -77,7 +78,6 @@ void traversePT(AST* ast, const PTNode* node)
         bool noDupeLabel = child->label != node->label;
         
         if (swapNodes.find(child->label) != swapNodes.end()) {
-            spdlog::debug("{} > {}", ast->toString(), child->toString());
             ast->label = labelMap.at(child->label);
             continue;
         }
