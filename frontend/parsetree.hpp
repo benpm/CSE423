@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 
+// Contains data for tree nodes
 union NodeData
 {
     int ival;
@@ -18,10 +19,10 @@ union NodeData
     char cval;
 };
 
-
+// Parsetree node class
 class PTNode {
 public:
-    // Label
+    // Type of node
     enum Label {
         INT, FLOAT, CHAR, FOR, WHILE, IF, ELSE, RETURN, BREAK, SEMICOLON,
         COMMA, LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, EQUAL, PLUS,
@@ -44,10 +45,15 @@ public:
         UNARY_ASSIGN_EXPRESSION
     };
 
+    // Whether or not this represents a terminal symbol from the grammar
     bool terminal = true;
+    // This node's label
     Label label = Label::NONE;
-    std::vector<PTNode*> children; // Reference children
-    int lineNum = -1;            // Stores line number grammar rule was found on
+    // Reference children
+    std::vector<PTNode*> children;
+    // Stores line number grammar rule was found on
+    int lineNum = -1;
+    // Data this node contains
     NodeData data;
 
 
@@ -56,10 +62,9 @@ public:
     PTNode(Label label, int lineNum);
 
     const std::string toString() const;
-    void print(); // Print the parse tree
-
+    void print();
 private:
-    // Map enum to string for terminal
+    // Map label to string
     static std::vector<std::string> str;
 
     void printNode(PTNode &node, int depth, ulong levels);

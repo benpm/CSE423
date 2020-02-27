@@ -67,6 +67,12 @@ const std::set<PTNode::Label> swapNodes {
     PTNode::PLUSEQUAL, PTNode::MINUSEQUAL, PTNode::TIMESEQUAL
 };
 
+/**
+ * @brief Recursively traverses a given parsetree, adding nodes to the given AST
+ * 
+ * @param ast The AST to build upon
+ * @param node The parsetree to traverse
+ */
 void traversePT(AST* ast, const PTNode* node)
 {
     for (const PTNode* child : node->children) {
@@ -95,6 +101,13 @@ void traversePT(AST* ast, const PTNode* node)
     }
 }
 
+/**
+ * @brief Prints the AST node at the given depth, with levels bitflags
+ * 
+ * @param node The AST node to print the label and possibly value of
+ * @param depth The current tree depth
+ * @param levels A bit flag that represents levels of parents, for drawing
+ */
 void printASTNode(const AST* node, int depth, ulong levels)
 {
     std::string padding;
@@ -148,6 +161,11 @@ void printASTNode(const AST* node, int depth, ulong levels)
     }
 }
 
+/**
+ * @brief Construct a new single-node tree object with specified label
+ * 
+ * @param label 
+ */
 AST::AST(AST::Label label)
 {
     this->label = label;
@@ -155,6 +173,8 @@ AST::AST(AST::Label label)
 
 /**
  * @brief Construct AST from given parse tree
+ * 
+ * @param pt Parse tree to constr from
  */
 AST::AST(const PTNode* pt)
 {
@@ -163,11 +183,19 @@ AST::AST(const PTNode* pt)
     traversePT(this, pt);
 }
 
+/**
+ * @brief Print this tree to stdout
+ */
 void AST::print()
 {
     printASTNode(this, 0, 0);
 }
 
+/**
+ * @brief Returns string representation of this AST
+ * 
+ * @return String representation 
+ */
 const std::string AST::toString() const
 {
     return AST::str.at(this->label);

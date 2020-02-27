@@ -9,7 +9,6 @@
 #include <string>
 #include <parsetree.hpp>
 
-// Map enum to string for nonterminals
 std::vector<std::string> PTNode::str {
     "INT", "FLOAT", "CHAR", "FOR", "WHILE", "IF", "ELSE", "RETURN", "BREAK", "SEMICOLON",
     "COMMA", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACK", "RBRACK", "EQUAL", "PLUS",
@@ -32,12 +31,25 @@ std::vector<std::string> PTNode::str {
     "unary_assign_expr"
 };
 
+/**
+ * @brief Construct a new parsetree node from given label, children, and lineno
+ * 
+ * @param label The label for this node
+ * @param children A vector of children (may be empty)
+ * @param lineNum The line number associated with this symbol
+ */
 PTNode::PTNode(Label label, std::vector<PTNode*> children, int lineNum)
     : label(label), children(children), lineNum(lineNum)
 {
     terminal = ((int)label <= (int)NONE);
 }
 
+/**
+ * @brief Construct a new parsetree node object without any children
+ * 
+ * @param label The label for this leaf node
+ * @param lineNum The line number associated with this object
+ */
 PTNode::PTNode(Label label, int lineNum)
     : label(label), lineNum(lineNum)
 {
@@ -46,13 +58,17 @@ PTNode::PTNode(Label label, int lineNum)
 
 /**
  * @brief Pretty print the parse tree to standard output
- * 
  */
 void PTNode::print()
 {
     this->printNode(*this, 0, 0);
 }
 
+/**
+ * @brief Returns string representation of this node
+ * 
+ * @return String representation
+ */
 const std::string PTNode::toString() const
 {
     return this->str.at(this->label);
@@ -61,6 +77,10 @@ const std::string PTNode::toString() const
 /**
  * @brief Pretty print a node and recursively print its children
  * @details Uses a simple prefix DFS tree traversal algorithm
+ * 
+ * @param node Node to recurse on
+ * @param depth Current depth
+ * @param levels Bit flag used to represent nested levels
  */
 void PTNode::printNode(PTNode &node, int depth, ulong levels)
 {

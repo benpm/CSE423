@@ -3,11 +3,14 @@
 #include <map>
 #include <parsetree.hpp>
 
+// Abstract Syntax Tree class
 class AST
 {
 private:
+    // Map from label to string
     static const std::vector<std::string> str;
 public:
+    // Label indicating type of node
     enum Label {
         root, function, id, list, declaration, initialization, sum, mul,
         int_const, float_const, string_const, char_const, for_stmt,
@@ -16,8 +19,11 @@ public:
         timesequal, dec_list, else_stmt, params
     };
 
+    // This node's label (default is "unhandled")
     Label label = Label::unhandled;
+    // This node's contained data
     NodeData data;
+    // Children of this node
     std::vector<AST*> children;
 
     AST(Label label);
