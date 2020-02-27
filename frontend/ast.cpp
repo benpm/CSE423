@@ -1,7 +1,70 @@
 #include <iostream>
 #include <set>
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/fmt/fmt.h>
 #include <ast.hpp>
+
+const std::vector<std::string> AST::str {
+    "root", "function", "id", "list", "declaration", "initialization", "sum", "mul",
+    "int_const", "float_const", "string_const", "char_const", "for_stmt",
+    "if_stmt", "call", "int_type", "float_type", "char_type", "bool_expr", "unhandled",
+    "args", "return_stmt", "le", "ge", "lt", "gt", "incr", "decr", "plus_equal", "minus_equal",
+    "timesequal", "dec_list", "else_stmt"
+};
+
+const std::map<PTNode::Label, AST::Label> labelMap {
+    {PTNode::PROGRAM, AST::root},
+    {PTNode::FUN_DECLARATION, AST::function},
+    {PTNode::ID, AST::id},
+    {PTNode::STATEMENT_LIST, AST::list},
+    {PTNode::LOCAL_DECLARATIONS, AST::dec_list},
+    {PTNode::VAR_DECL_LIST, AST::dec_list},
+    {PTNode::SCOPED_VAR_DECLARATION, AST::declaration},
+    {PTNode::VAR_DECLARATION, AST::declaration},
+    {PTNode::VAR_DECL_INITIALIZE, AST::initialization},
+    {PTNode::SUM_EXPRESSION, AST::sum},
+    {PTNode::MUL_EXPRESSION, AST::mul},
+    {PTNode::INTCONST, AST::int_const},
+    {PTNode::FLOATCONST, AST::float_const},
+    {PTNode::STRINGLIT, AST::string_const},
+    {PTNode::SELECTION_STMT, AST::if_stmt},
+    {PTNode::FOR_STMT, AST::for_stmt},
+    {PTNode::REL_EXPRESSION, AST::bool_expr},
+    {PTNode::ARG_LIST, AST::args},
+    {PTNode::CALL, AST::call},
+    {PTNode::INT, AST::int_type},
+    {PTNode::FLOAT, AST::float_type},
+    {PTNode::CHAR, AST::char_type},
+    {PTNode::RETURN_STMT, AST::return_stmt},
+
+    {PTNode::LE, AST::le},
+    {PTNode::GE, AST::ge},
+    {PTNode::LT, AST::lt},
+    {PTNode::GT, AST::gt},
+    {PTNode::INCR, AST::incr},
+    {PTNode::DECR, AST::decr},
+    {PTNode::PLUSEQUAL, AST::plus_equal},
+    {PTNode::MINUSEQUAL, AST::minus_equal},
+    {PTNode::TIMESEQUAL, AST::timesequal},
+    {PTNode::ELSE, AST::else_stmt},
+
+
+    {PTNode::UNARY_ASSIGN_EXPRESSION, AST::unhandled},
+    {PTNode::EXPRESSION, AST::unhandled},
+    {PTNode::INCR, AST::unhandled},
+    {PTNode::TIMESEQUAL, AST::unhandled},
+};
+
+const std::set<PTNode::Label> keepNodes {
+    PTNode::RETURN_STMT, PTNode::ARG_LIST
+};
+
+const std::set<PTNode::Label> swapNodes {
+    PTNode::LE, PTNode::GE, PTNode::LT, PTNode::GT,
+    PTNode::INCR, PTNode::DECR,
+    PTNode::PLUSEQUAL, PTNode::MINUSEQUAL, PTNode::TIMESEQUAL
+};
 
 void traversePT(AST* ast, const PTNode* node)
 {
@@ -9,27 +72,22 @@ void traversePT(AST* ast, const PTNode* node)
         if (child->label == PTNode::NONE) continue;
 
         size_t children = child->children.size();
+        bool mapped = labelMap.find(child->label) != labelMap.end();
+        bool keep = keepNodes.find(child->label) != keepNodes.end();
+        bool noDupeLabel = child->label != node->label;
+        
+        if (swapNodes.find(child->label) != swapNodes.end()) {
+            spdlog::debug("{} > {}", ast->toString(), child->toString());
+            ast->label = labelMap.at(child->label);
+            continue;
+        }
 
         // If is non-terminal and is not in set of allowed non-terminals, we can skip
-        if ((children > 1 || child->terminal) && (child->label != node->label)) {
+        if (((children > 1 || child->terminal) && noDupeLabel && mapped) || (keep && noDupeLabel)) {
             AST* next = new AST(child);
-            next->label = child->toString();
+            if (next->label == AST::unhandled)
+                next->label = labelMap.at(child->label);
             next->data = child->data;
-            switch (child->label) {
-                case PTNode::INTCONST:
-                    next->label = fmt::format("({})", child->data.ival);
-                    break;
-                case PTNode::FLOATCONST:
-                    next->label = fmt::format("({})", child->data.fval);
-                    break;
-                case PTNode::CHARLIT:
-                    next->label = fmt::format("({})", child->data.cval);
-                    break;
-                case PTNode::ID:
-                case PTNode::STRINGLIT:
-                    next->label = fmt::format("({})", child->data.sval);
-                    break;
-            }
             ast->children.emplace_back(next);
         } else {
             traversePT(ast, child);
@@ -58,7 +116,26 @@ void printASTNode(const AST* node, int depth, ulong levels)
     }
 
     // Print a graphical depiction of the node in the tree
-    std::cout << padding << node->label << std::endl;
+    fmt::print("{}{}", padding, node->toString());
+    switch (node->label) {
+        case AST::int_const:
+            fmt::print(" ({})", node->data.ival);
+            break;
+        case AST::float_const:
+            fmt::print(" ({})", node->data.fval);
+            break;
+        case AST::char_const:
+            fmt::print(" ({})", node->data.cval);
+            break;
+        case AST::id:
+        case AST::string_const:
+            fmt::print(" ({})", node->data.sval);
+            break;
+        case AST::unhandled:
+            fmt::print("<!!>");
+            break;
+    }
+    fmt::print("\n");
 
     // Recurse on the node's children, update bit flag as needed
     int i = 0;
@@ -71,7 +148,7 @@ void printASTNode(const AST* node, int depth, ulong levels)
     }
 }
 
-AST::AST(std::string label)
+AST::AST(AST::Label label)
 {
     this->label = label;
 }
@@ -81,11 +158,17 @@ AST::AST(std::string label)
  */
 AST::AST(const PTNode* pt)
 {
-    this->label = "PROGRAM";
+    if (pt->label == PTNode::PROGRAM)
+        this->label = AST::root;
     traversePT(this, pt);
 }
 
 void AST::print()
 {
     printASTNode(this, 0, 0);
+}
+
+const std::string AST::toString() const
+{
+    return AST::str.at(this->label);
 }
