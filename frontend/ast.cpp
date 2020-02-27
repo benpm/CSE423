@@ -10,7 +10,8 @@ const std::vector<std::string> AST::str {
     "int_const", "float_const", "string_const", "char_const", "for_stmt",
     "if_stmt", "call", "int_type", "float_type", "char_type", "bool_expr", "unhandled",
     "args", "return_stmt", "le", "ge", "lt", "gt", "incr", "decr", "plus_equal", "minus_equal",
-    "timesequal", "dec_list", "else_stmt", "params"
+    "timesequal", "dec_list", "else_stmt", "params", "while_stmt", "break_stmt", "modulo",
+    "divide"
 };
 
 const std::map<PTNode::Label, AST::Label> labelMap {
@@ -25,11 +26,15 @@ const std::map<PTNode::Label, AST::Label> labelMap {
     {PTNode::VAR_DECL_INITIALIZE, AST::initialization},
     {PTNode::SUM_EXPRESSION, AST::sum},
     {PTNode::MUL_EXPRESSION, AST::mul},
+    {PTNode::DIVIDE, AST::divide},
+    {PTNode::MODULO, AST::modulo},
     {PTNode::INTCONST, AST::int_const},
     {PTNode::FLOATCONST, AST::float_const},
+    {PTNode::CHARLIT, AST::char_const},
     {PTNode::STRINGLIT, AST::string_const},
     {PTNode::SELECTION_STMT, AST::if_stmt},
     {PTNode::FOR_STMT, AST::for_stmt},
+    {PTNode::WHILE_STMT, AST::while_stmt},
     {PTNode::REL_EXPRESSION, AST::bool_expr},
     {PTNode::ARG_LIST, AST::args},
     {PTNode::PARAM_LIST, AST::params},
@@ -38,8 +43,8 @@ const std::map<PTNode::Label, AST::Label> labelMap {
     {PTNode::FLOAT, AST::float_type},
     {PTNode::CHAR, AST::char_type},
     {PTNode::RETURN_STMT, AST::return_stmt},
+    {PTNode::BREAK_STMT, AST::break_stmt},
     {PTNode::EXPRESSION, AST::list},
-
     {PTNode::LE, AST::le},
     {PTNode::GE, AST::ge},
     {PTNode::LT, AST::lt},
@@ -50,11 +55,7 @@ const std::map<PTNode::Label, AST::Label> labelMap {
     {PTNode::MINUSEQUAL, AST::minus_equal},
     {PTNode::TIMESEQUAL, AST::timesequal},
     {PTNode::ELSE, AST::else_stmt},
-
-
-    {PTNode::UNARY_ASSIGN_EXPRESSION, AST::unhandled},
-    {PTNode::INCR, AST::unhandled},
-    {PTNode::TIMESEQUAL, AST::unhandled},
+    {PTNode::MODULO, AST::modulo},
 };
 
 const std::set<PTNode::Label> keepNodes {
@@ -64,7 +65,8 @@ const std::set<PTNode::Label> keepNodes {
 const std::set<PTNode::Label> swapNodes {
     PTNode::LE, PTNode::GE, PTNode::LT, PTNode::GT,
     PTNode::INCR, PTNode::DECR,
-    PTNode::PLUSEQUAL, PTNode::MINUSEQUAL, PTNode::TIMESEQUAL
+    PTNode::PLUSEQUAL, PTNode::MINUSEQUAL, PTNode::TIMESEQUAL,
+    PTNode::DIVIDE, PTNode::MODULO
 };
 
 /**

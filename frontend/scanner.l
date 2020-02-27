@@ -260,7 +260,7 @@ break {
     return STRINGLIT;
 }
 '.' {
-    yylval.cval = yytext[0];
+    yylval.cval = yytext[1];
     if (Flag::tokenPrint)
         printf("<%s, %s>\n", yytext, "CHARLIT");
     return CHARLIT;

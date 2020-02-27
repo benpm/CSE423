@@ -13,7 +13,7 @@ int main()
     char G = 'G';
 
     // Testing nested loops of various types
-    for (int i = 0; i < n2 + n1 / 2; i += 1) {
+    for (int i = 0; i < n2 * n1 / 2; i += 1) {
         for (int j = 0; j < n2 + n1 / 2; j += 1) {
             int x = 0;
             while (x < n2) {
