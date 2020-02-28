@@ -91,7 +91,8 @@ void traversePT(AST* ast, const PTNode* node)
         }
 
         // If is non-terminal and is not in set of allowed non-terminals, we can skip
-        if (((children > 1 || child->terminal) && noDupeLabel && mapped) || (keep && noDupeLabel)) {
+        if (((children > 1 || child->terminal) && noDupeLabel && mapped) || (keep && noDupeLabel)
+            || (child->label == PTNode::MUL_EXPRESSION && children > 1)) {
             AST* next = new AST(child);
             if (next->label == AST::unhandled)
                 next->label = labelMap.at(child->label);
