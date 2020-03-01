@@ -737,7 +737,9 @@ returnStmt:
 breakStmt:
     BREAK SEMICOLON
         {
-            $$ = new PTNode(PTNode::BREAK_STMT, yylloc.first_line);
+            PTNode* tBREAK = new PTNode(PTNode::BREAK, yylloc.first_line);
+            $$ = new PTNode(PTNode::BREAK_STMT, 
+                std::vector<PTNode*> { tBREAK }, yylloc.first_line);
         }
 ;
 %%

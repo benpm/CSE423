@@ -43,7 +43,7 @@ const std::map<PTNode::Label, AST::Label> labelMap {
     {PTNode::FLOAT, AST::float_type},
     {PTNode::CHAR, AST::char_type},
     {PTNode::RETURN_STMT, AST::return_stmt},
-    {PTNode::BREAK_STMT, AST::break_stmt},
+    {PTNode::BREAK, AST::break_stmt},
     {PTNode::EXPRESSION, AST::list},
     {PTNode::LE, AST::le},
     {PTNode::GE, AST::ge},
@@ -87,7 +87,7 @@ void traversePT(AST* ast, const PTNode* node)
         bool mapped = labelMap.find(child->label) != labelMap.end();
         bool keep = keepNodes.find(child->label) != keepNodes.end();
         bool noDupeLabel = child->label != node->label;
-        
+
         if (swapNodes.find(child->label) != swapNodes.end()) {
             ast->label = labelMap.at(child->label);
             continue;
