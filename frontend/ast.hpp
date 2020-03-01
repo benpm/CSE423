@@ -17,7 +17,7 @@ public:
         if_stmt, call, int_type, float_type, char_type, bool_expr, unhandled,
         args, return_stmt, le, ge, lt, gt, incr, decr, plus_equal, minus_equal,
         timesequal, dec_list, else_stmt, params, while_stmt, break_stmt,
-        modulo, divide
+        modulo, divide, noteq, equal
     };
 
     // This node's label (default is "unhandled")

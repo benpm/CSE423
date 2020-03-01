@@ -11,7 +11,7 @@ const std::vector<std::string> AST::str {
     "if_stmt", "call", "int_type", "float_type", "char_type", "bool_expr", "unhandled",
     "args", "return_stmt", "le", "ge", "lt", "gt", "incr", "decr", "plus_equal", "minus_equal",
     "timesequal", "dec_list", "else_stmt", "params", "while_stmt", "break_stmt", "modulo",
-    "divide"
+    "divide", "noteq", "equal"
 };
 
 const std::map<PTNode::Label, AST::Label> labelMap {
@@ -49,6 +49,8 @@ const std::map<PTNode::Label, AST::Label> labelMap {
     {PTNode::GE, AST::ge},
     {PTNode::LT, AST::lt},
     {PTNode::GT, AST::gt},
+    {PTNode::NOTEQ, AST::noteq},
+    {PTNode::ISEQ, AST::equal},
     {PTNode::INCR, AST::incr},
     {PTNode::DECR, AST::decr},
     {PTNode::PLUSEQUAL, AST::plus_equal},
@@ -66,7 +68,8 @@ const std::set<PTNode::Label> swapNodes {
     PTNode::LE, PTNode::GE, PTNode::LT, PTNode::GT,
     PTNode::INCR, PTNode::DECR,
     PTNode::PLUSEQUAL, PTNode::MINUSEQUAL, PTNode::TIMESEQUAL,
-    PTNode::DIVIDE, PTNode::MODULO
+    PTNode::DIVIDE, PTNode::MODULO,
+    PTNode::NOTEQ, PTNode::ISEQ
 };
 
 /**
