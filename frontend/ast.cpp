@@ -5,15 +5,17 @@
 #include <spdlog/fmt/fmt.h>
 #include <ast.hpp>
 
+// Map from label to string
 const std::vector<std::string> AST::str {
     "root", "function", "id", "list", "declaration", "initialization", "sum", "mul",
     "int_const", "float_const", "string_const", "char_const", "for_stmt",
     "if_stmt", "call", "int_type", "float_type", "char_type", "bool_expr", "unhandled",
     "args", "return_stmt", "le", "ge", "lt", "gt", "incr", "decr", "plus_equal", "minus_equal",
-    "timesequal", "dec_list", "else_stmt", "params", "while_stmt", "break_stmt", "modulo",
-    "divide", "noteq", "equal", "assignment", "else_if", "log_and", "log_or"
+    "times_equal", "dec_list", "else_stmt", "params", "while_stmt", "break_stmt", "modulo",
+    "divide", "noteq", "equal", "assignment", "else_if", "log_and", "log_or", "div_equal"
 };
 
+// Map from parsetree label to AST label
 const std::map<PTNode::Label, AST::Label> labelMap {
     {PTNode::PROGRAM, AST::root},
     {PTNode::FUN_DECLARATION, AST::function},
@@ -60,7 +62,8 @@ const std::map<PTNode::Label, AST::Label> labelMap {
     {PTNode::DECR, AST::decr},
     {PTNode::PLUSEQUAL, AST::plus_equal},
     {PTNode::MINUSEQUAL, AST::minus_equal},
-    {PTNode::TIMESEQUAL, AST::timesequal},
+    {PTNode::TIMESEQUAL, AST::times_equal},
+    {PTNode::DIVEQUAL, AST::div_equal},
     {PTNode::ELSE_STMT, AST::else_stmt},
     {PTNode::ELSE_IF, AST::else_if},
     {PTNode::IF, AST::if_stmt},
@@ -70,14 +73,16 @@ const std::map<PTNode::Label, AST::Label> labelMap {
     {PTNode::LOGOR, AST::log_or},
 };
 
+// Parsetree nodes that should be kept no matter what
 const std::set<PTNode::Label> keepNodes {
     PTNode::RETURN_STMT, PTNode::ARG_LIST
 };
 
+// Parsetree nodes that should be mapped and swapped with their parent in the AST
 const std::set<PTNode::Label> swapNodes {
     PTNode::LE, PTNode::GE, PTNode::LT, PTNode::GT,
     PTNode::INCR, PTNode::DECR,
-    PTNode::PLUSEQUAL, PTNode::MINUSEQUAL, PTNode::TIMESEQUAL,
+    PTNode::PLUSEQUAL, PTNode::MINUSEQUAL, PTNode::TIMESEQUAL, PTNode::DIVEQUAL,
     PTNode::DIVIDE, PTNode::MODULO,
     PTNode::NOTEQ, PTNode::ISEQ,
     PTNode::EQUAL, PTNode::ELSE_IF, PTNode::IF,
@@ -92,6 +97,7 @@ const std::set<PTNode::Label> swapNodes {
  */
 void traversePT(AST* ast, const PTNode* node)
 {
+    // Some pt nodes direct AST builder to swap with their parents, this must be done first
     for (const PTNode* child : node->children) {
         if (swapNodes.find(child->label) != swapNodes.end()) {
             ast->label = labelMap.at(child->label);
@@ -99,6 +105,7 @@ void traversePT(AST* ast, const PTNode* node)
         }
     }
 
+    // Loop thru children and decide to build or skip
     for (const PTNode* child : node->children) {
         if (child->label == PTNode::NONE) continue;
 
@@ -107,17 +114,20 @@ void traversePT(AST* ast, const PTNode* node)
         bool keep = keepNodes.find(child->label) != keepNodes.end();
         bool noDupeLabel = child->label != node->label;
 
+        // Skip the swap-nodes we found earlier
         if (swapNodes.find(child->label) != swapNodes.end())
             continue;
 
-        // If is non-terminal and is not in set of allowed non-terminals, we can skip
+        // Decide to skip this node or to build AST node from it (see wiki for more info)
         if (((children > 1 || child->terminal) && noDupeLabel && mapped) || (keep && noDupeLabel)
             || (child->label == PTNode::MUL_EXPRESSION && children > 1)
             || (child->label == PTNode::ELSE_IF_LIST && children > 1)) {
+            
+            // Create a new AST node representing this pt node (recursive call)
             AST* next = new AST(child, ast);
-            if (next->label == AST::unhandled)
-                next->label = labelMap.at(child->label);
             next->data = child->data;
+
+            // Else-if lists are a special case where they must be a child of the parent
             if (next->label == AST::else_if && ast->label == AST::else_if)
                 ast->parent->children.emplace_back(next);
             else
