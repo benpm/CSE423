@@ -28,7 +28,7 @@ int main()
     DF = fun(fun(DF, 0.101 * 2), 0.9);
 
     // Testing conditional statements
-    if (DF < (0.8 - DF)) {
+    if (DF < (0.8 - (-DF))) {
         if (n2 != 10) {
             G = 'H';
             n1 *= 1;

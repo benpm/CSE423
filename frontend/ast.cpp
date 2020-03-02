@@ -12,7 +12,8 @@ const std::vector<std::string> AST::str {
     "if_stmt", "call", "int_type", "float_type", "char_type", "bool_expr", "unhandled",
     "args", "return_stmt", "le", "ge", "lt", "gt", "incr", "decr", "plus_equal", "minus_equal",
     "times_equal", "dec_list", "else_stmt", "params", "while_stmt", "break_stmt", "modulo",
-    "divide", "noteq", "equal", "assignment", "else_if", "log_and", "log_or", "div_equal"
+    "divide", "noteq", "equal", "assignment", "else_if", "log_and", "log_or", "div_equal",
+    "unary_minus", "sub"
 };
 
 // Map from parsetree label to AST label
@@ -22,6 +23,7 @@ const std::map<PTNode::Label, AST::Label> labelMap {
     {PTNode::ID, AST::id},
     {PTNode::STATEMENT_LIST, AST::list},
     {PTNode::UNARY_ASSIGN_EXPRESSION, AST::list},
+    {PTNode::UNARY_EXPRESSION, AST::list},
     {PTNode::LOCAL_DECLARATIONS, AST::dec_list},
     {PTNode::SIMPLE_EXPRESSION, AST::list},
     {PTNode::AND_EXPRESSION, AST::list},
@@ -71,11 +73,14 @@ const std::map<PTNode::Label, AST::Label> labelMap {
     {PTNode::MODULO, AST::modulo},
     {PTNode::LOGAND, AST::log_and},
     {PTNode::LOGOR, AST::log_or},
+    {PTNode::MINUS, AST::sub},
+    {PTNode::PLUS, AST::sum},
+    {PTNode::UNARY_MINUS, AST::unary_minus},
 };
 
 // Parsetree nodes that should be kept no matter what
 const std::set<PTNode::Label> keepNodes {
-    PTNode::RETURN_STMT, PTNode::ARG_LIST
+    PTNode::RETURN_STMT, PTNode::ARG_LIST, PTNode::UNARY_MINUS
 };
 
 // Parsetree nodes that should be mapped and swapped with their parent in the AST
@@ -86,7 +91,8 @@ const std::set<PTNode::Label> swapNodes {
     PTNode::DIVIDE, PTNode::MODULO,
     PTNode::NOTEQ, PTNode::ISEQ,
     PTNode::EQUAL, PTNode::ELSE_IF, PTNode::IF,
-    PTNode::LOGAND, PTNode::LOGOR
+    PTNode::LOGAND, PTNode::LOGOR,
+    PTNode::MINUS, PTNode::PLUS
 };
 
 /**

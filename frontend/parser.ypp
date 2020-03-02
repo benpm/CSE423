@@ -64,7 +64,6 @@
 %type <pt> mulExpression
 %type <pt> mulop
 %type <pt> unaryExpression
-%type <pt> unaryop
 %type <pt> factor
 %type <pt> immutable
 %type <pt> call
@@ -82,6 +81,7 @@
 %type <pt> returnStmt
 %type <pt> breakStmt
 %type <pt> elseStmt
+%type <pt> unaryMinus
 
 //Terminal symbols
 %token <sval> INT
@@ -538,10 +538,10 @@ mulop:
         }
 ;
 unaryExpression:
-    unaryop unaryExpression
+    unaryMinus
         {
             $$ = new PTNode(PTNode::UNARY_EXPRESSION,
-                std::vector<PTNode*> { $1, $2 }, yylloc.first_line);
+                std::vector<PTNode*> { $1 }, yylloc.first_line);
         }
     | factor
         {
@@ -549,14 +549,11 @@ unaryExpression:
                 std::vector<PTNode*> { $1 }, yylloc.first_line);
         }
 ;
-unaryop:
-    PLUS
+unaryMinus:
+    MINUS unaryExpression
         {
-            $$ = new PTNode(PTNode::PLUS, yylloc.first_line);
-        }
-    | MINUS
-        {
-            $$ = new PTNode(PTNode::MINUS, yylloc.first_line);
+            $$ = new PTNode(PTNode::UNARY_MINUS,
+                std::vector<PTNode*> { $2 }, yylloc.first_line);
         }
 ;
 factor:
