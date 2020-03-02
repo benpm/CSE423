@@ -28,7 +28,7 @@ std::vector<std::string> PTNode::str {
     "args", "arg_list", "constant", "compound_stmt", "local_declarations",
     "statement_list", "selection_stmt", "else_if_list", "iteration_stmt",
     "while_stmt", "for_stmt", "return_stmt", "break_stmt", "fun_name",
-    "unary_assign_expr"
+    "unary_assign_expr", "else_if", "else_stmt"
 };
 
 /**

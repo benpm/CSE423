@@ -11,7 +11,7 @@ const std::vector<std::string> AST::str {
     "if_stmt", "call", "int_type", "float_type", "char_type", "bool_expr", "unhandled",
     "args", "return_stmt", "le", "ge", "lt", "gt", "incr", "decr", "plus_equal", "minus_equal",
     "timesequal", "dec_list", "else_stmt", "params", "while_stmt", "break_stmt", "modulo",
-    "divide", "noteq", "equal", "assignment"
+    "divide", "noteq", "equal", "assignment", "else_if", "log_and", "log_or"
 };
 
 const std::map<PTNode::Label, AST::Label> labelMap {
@@ -19,7 +19,11 @@ const std::map<PTNode::Label, AST::Label> labelMap {
     {PTNode::FUN_DECLARATION, AST::function},
     {PTNode::ID, AST::id},
     {PTNode::STATEMENT_LIST, AST::list},
+    {PTNode::UNARY_ASSIGN_EXPRESSION, AST::list},
     {PTNode::LOCAL_DECLARATIONS, AST::dec_list},
+    {PTNode::SIMPLE_EXPRESSION, AST::list},
+    {PTNode::AND_EXPRESSION, AST::list},
+    {PTNode::SELECTION_STMT, AST::list},
     {PTNode::VAR_DECL_LIST, AST::dec_list},
     {PTNode::SCOPED_VAR_DECLARATION, AST::declaration},
     {PTNode::VAR_DECLARATION, AST::declaration},
@@ -57,8 +61,13 @@ const std::map<PTNode::Label, AST::Label> labelMap {
     {PTNode::PLUSEQUAL, AST::plus_equal},
     {PTNode::MINUSEQUAL, AST::minus_equal},
     {PTNode::TIMESEQUAL, AST::timesequal},
-    {PTNode::ELSE, AST::else_stmt},
+    {PTNode::ELSE_STMT, AST::else_stmt},
+    {PTNode::ELSE_IF, AST::else_if},
+    {PTNode::IF, AST::if_stmt},
+    {PTNode::ELSE_IF_LIST, AST::list},
     {PTNode::MODULO, AST::modulo},
+    {PTNode::LOGAND, AST::log_and},
+    {PTNode::LOGOR, AST::log_or},
 };
 
 const std::set<PTNode::Label> keepNodes {
@@ -71,7 +80,8 @@ const std::set<PTNode::Label> swapNodes {
     PTNode::PLUSEQUAL, PTNode::MINUSEQUAL, PTNode::TIMESEQUAL,
     PTNode::DIVIDE, PTNode::MODULO,
     PTNode::NOTEQ, PTNode::ISEQ,
-    PTNode::EQUAL
+    PTNode::EQUAL, PTNode::ELSE_IF, PTNode::IF,
+    PTNode::LOGAND, PTNode::LOGOR
 };
 
 /**
@@ -83,6 +93,13 @@ const std::set<PTNode::Label> swapNodes {
 void traversePT(AST* ast, const PTNode* node)
 {
     for (const PTNode* child : node->children) {
+        if (swapNodes.find(child->label) != swapNodes.end()) {
+            ast->label = labelMap.at(child->label);
+            continue;
+        }
+    }
+
+    for (const PTNode* child : node->children) {
         if (child->label == PTNode::NONE) continue;
 
         size_t children = child->children.size();
@@ -90,19 +107,21 @@ void traversePT(AST* ast, const PTNode* node)
         bool keep = keepNodes.find(child->label) != keepNodes.end();
         bool noDupeLabel = child->label != node->label;
 
-        if (swapNodes.find(child->label) != swapNodes.end()) {
-            ast->label = labelMap.at(child->label);
+        if (swapNodes.find(child->label) != swapNodes.end())
             continue;
-        }
 
         // If is non-terminal and is not in set of allowed non-terminals, we can skip
         if (((children > 1 || child->terminal) && noDupeLabel && mapped) || (keep && noDupeLabel)
-            || (child->label == PTNode::MUL_EXPRESSION && children > 1)) {
-            AST* next = new AST(child);
+            || (child->label == PTNode::MUL_EXPRESSION && children > 1)
+            || (child->label == PTNode::ELSE_IF_LIST && children > 1)) {
+            AST* next = new AST(child, ast);
             if (next->label == AST::unhandled)
                 next->label = labelMap.at(child->label);
             next->data = child->data;
-            ast->children.emplace_back(next);
+            if (next->label == AST::else_if && ast->label == AST::else_if)
+                ast->parent->children.emplace_back(next);
+            else
+                ast->children.emplace_back(next);
         } else {
             traversePT(ast, child);
         }
@@ -188,6 +207,18 @@ AST::AST(const PTNode* pt)
 {
     if (pt->label == PTNode::PROGRAM)
         this->label = AST::root;
+    traversePT(this, pt);
+}
+
+/**
+ * @brief Construct AST from given parse tree
+ * 
+ * @param pt Parse tree to constr from
+ */
+AST::AST(const PTNode* pt, AST* parent)
+{
+    this->parent = parent;
+    this->label = labelMap.at(pt->label);
     traversePT(this, pt);
 }
 

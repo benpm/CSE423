@@ -81,6 +81,7 @@
 %type <pt> forStmt
 %type <pt> returnStmt
 %type <pt> breakStmt
+%type <pt> elseStmt
 
 //Terminal symbols
 %token <sval> INT
@@ -677,20 +678,27 @@ selectionStmt:
             $$ = new PTNode(PTNode::SELECTION_STMT,
                 std::vector<PTNode*> { tIF, $3, $5, $6 }, yylloc.first_line);
         }
-    | IF LPAREN simpleExpression RPAREN compoundStmt elseIfList ELSE compoundStmt
+    | IF LPAREN simpleExpression RPAREN compoundStmt elseIfList elseStmt
         {
             PTNode* tIF = new PTNode(PTNode::IF, yylloc.first_line);
-            PTNode* tELSE = new PTNode(PTNode::ELSE, yylloc.first_line);
             $$ = new PTNode(PTNode::SELECTION_STMT,
-                std::vector<PTNode*> { tIF, $3, $5, $6, tELSE, $8 }, yylloc.first_line);
+                std::vector<PTNode*> { tIF, $3, $5, $6, $7 }, yylloc.first_line);
+        }
+;
+elseStmt:
+    ELSE compoundStmt
+        {
+            PTNode* tELSE = new PTNode(PTNode::ELSE, yylloc.first_line);
+            $$ = new PTNode(PTNode::ELSE_STMT,
+                std::vector<PTNode*> { tELSE, $2 }, yylloc.first_line);
         }
 ;
 elseIfList:
     elseIfList ELSE IF LPAREN simpleExpression RPAREN compoundStmt
         {
-            PTNode* tELSE = new PTNode(PTNode::ELSE, yylloc.first_line);
+            PTNode* tELSEIF = new PTNode(PTNode::ELSE_IF, yylloc.first_line);
             $$ = new PTNode(PTNode::ELSE_IF_LIST,
-                std::vector<PTNode*> { $1, tELSE, $5, $7 }, yylloc.first_line);
+                std::vector<PTNode*> { $1, tELSEIF, $5, $7 }, yylloc.first_line);
         }
     | %empty 
         {
