@@ -10,7 +10,7 @@
 #include <parsetree.hpp>
 
 // Mapping from parsetree label to string
-const std::vector<std::string> str {
+const std::vector<std::string> PTNode::str {
     "INT", "FLOAT", "CHAR", "FOR", "WHILE", "IF", "ELSE", "RETURN", "BREAK", "SEMICOLON",
     "COMMA", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACK", "RBRACK", "EQUAL", "PLUS",
     "MINUS", "TIMES", "DIVIDE", "MODULO", "PLUSEQUAL", "MINUSEQUAL", "TIMESEQUAL",
@@ -72,7 +72,7 @@ void PTNode::print()
  */
 const std::string PTNode::toString() const
 {
-    return this->str.at(this->label);
+    return PTNode::str.at(this->label);
 }
 
 /**
