@@ -9,7 +9,8 @@
 #include <string>
 #include <parsetree.hpp>
 
-std::vector<std::string> PTNode::str {
+// Mapping from parsetree label to string
+const std::vector<std::string> str {
     "INT", "FLOAT", "CHAR", "FOR", "WHILE", "IF", "ELSE", "RETURN", "BREAK", "SEMICOLON",
     "COMMA", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACK", "RBRACK", "EQUAL", "PLUS",
     "MINUS", "TIMES", "DIVIDE", "MODULO", "PLUSEQUAL", "MINUSEQUAL", "TIMESEQUAL",
