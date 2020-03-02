@@ -265,7 +265,7 @@ params:
         }
     | %empty 
         {
-            $$ = new PTNode();
+            $$ = new PTNode(PTNode::PARAMS, yylloc.first_line);
         }
 ;
 paramList:
