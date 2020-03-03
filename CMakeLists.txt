@@ -6,7 +6,7 @@ find_package(BISON REQUIRED)
 
 include_directories("frontend")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-include_directories("external/spdlog")
+include_directories("external")
 
 ####################################################################################
 #
