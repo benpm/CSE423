@@ -28,6 +28,7 @@ add_executable(frontend
     frontend/frontend.cpp
     frontend/parsetree.cpp
     frontend/ast.cpp
+    frontend/config.cpp
     ${BISON_parser_OUTPUTS}
     ${FLEX_scanner_OUTPUTS}
 )
