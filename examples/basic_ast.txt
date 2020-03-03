@@ -1,14 +1,14 @@
-PROGRAM
- └─declaration_list
-   └─declaration
-     └─fun_declaration
-       ├─INT
-       ├─(main)
-       ├─scoped_var_declaration
-       │ ├─INT
-       │ ├─(foo)
-       │ └─rel_expression
-       │   └─(420)
-       └─statement_list
-         └─rel_expression
-           └─(0)
+root
+ └─function
+   ├─int_type
+   ├─id (main)
+   ├─params
+   ├─dec_list
+   │ └─declaration
+   │   ├─int_type
+   │   └─assignment
+   │     ├─id (foo)
+   │     └─int_const (420)
+   └─list
+     └─return_stmt
+       └─int_const (0)

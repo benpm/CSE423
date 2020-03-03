@@ -3,7 +3,7 @@
  * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
  * @brief Implementation of tree structure to represent a parse tree
  * @date 2020-02-11
- * 
+ *
  */
 #include <iostream>
 #include <string>
@@ -34,7 +34,7 @@ const std::vector<std::string> PTNode::str {
 
 /**
  * @brief Construct a new parsetree node from given label, children, and lineno
- * 
+ *
  * @param label The label for this node
  * @param children A vector of children (may be empty)
  * @param lineNum The line number associated with this symbol
@@ -47,7 +47,7 @@ PTNode::PTNode(Label label, std::vector<PTNode*> children, int lineNum)
 
 /**
  * @brief Construct a new parsetree node object without any children
- * 
+ *
  * @param label The label for this leaf node
  * @param lineNum The line number associated with this object
  */
@@ -67,7 +67,7 @@ void PTNode::print()
 
 /**
  * @brief Returns string representation of this node
- * 
+ *
  * @return String representation
  */
 const std::string PTNode::toString() const
@@ -78,7 +78,7 @@ const std::string PTNode::toString() const
 /**
  * @brief Pretty print a node and recursively print its children
  * @details Uses a simple prefix DFS tree traversal algorithm
- * 
+ *
  * @param node Node to recurse on
  * @param depth Current depth
  * @param levels Bit flag used to represent nested levels
