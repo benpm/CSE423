@@ -13,7 +13,7 @@ const std::vector<std::string> AST::str {
     "args", "return_stmt", "le", "ge", "lt", "gt", "incr", "decr", "plus_equal", "minus_equal",
     "times_equal", "dec_list", "else_stmt", "params", "while_stmt", "break_stmt", "modulo",
     "divide", "noteq", "equal", "assignment", "else_if", "log_and", "log_or", "div_equal",
-    "unary_minus", "sub", "mod_equal"
+    "unary_minus", "sub", "mod_equal", "log_not"
 };
 
 // Map from parsetree label to AST label
@@ -24,6 +24,7 @@ const std::map<PTNode::Label, AST::Label> labelMap {
     {PTNode::STATEMENT_LIST, AST::list},
     {PTNode::UNARY_ASSIGN_EXPRESSION, AST::list},
     {PTNode::UNARY_EXPRESSION, AST::list},
+    {PTNode::UNARY_REL_EXPRESSION, AST::list},
     {PTNode::LOCAL_DECLARATIONS, AST::dec_list},
     {PTNode::SIMPLE_EXPRESSION, AST::list},
     {PTNode::AND_EXPRESSION, AST::list},
@@ -77,6 +78,7 @@ const std::map<PTNode::Label, AST::Label> labelMap {
     {PTNode::MINUS, AST::sub},
     {PTNode::PLUS, AST::sum},
     {PTNode::UNARY_MINUS, AST::unary_minus},
+    {PTNode::NOT, AST::log_not},
 };
 
 // Parsetree nodes that should be kept no matter what
@@ -94,7 +96,8 @@ const std::set<PTNode::Label> swapNodes {
     PTNode::NOTEQ, PTNode::ISEQ,
     PTNode::EQUAL, PTNode::ELSE_IF, PTNode::IF,
     PTNode::LOGAND, PTNode::LOGOR,
-    PTNode::MINUS, PTNode::PLUS
+    PTNode::MINUS, PTNode::PLUS,
+    PTNode::NOT
 };
 
 /**
