@@ -13,7 +13,7 @@ const std::vector<std::string> AST::str {
     "args", "return_stmt", "le", "ge", "lt", "gt", "incr", "decr", "plus_equal", "minus_equal",
     "times_equal", "dec_list", "else_stmt", "params", "while_stmt", "break_stmt", "modulo",
     "divide", "noteq", "equal", "assignment", "else_if", "log_and", "log_or", "div_equal",
-    "unary_minus", "sub"
+    "unary_minus", "sub", "mod_equal"
 };
 
 // Map from parsetree label to AST label
@@ -47,7 +47,6 @@ const std::map<PTNode::Label, AST::Label> labelMap {
     {PTNode::REL_EXPRESSION, AST::bool_expr},
     {PTNode::ARG_LIST, AST::args},
     {PTNode::PARAMS, AST::params},
-    // {PTNode::PARAM_LIST, AST::params},
     {PTNode::CALL, AST::call},
     {PTNode::INT, AST::int_type},
     {PTNode::FLOAT, AST::float_type},
@@ -66,6 +65,7 @@ const std::map<PTNode::Label, AST::Label> labelMap {
     {PTNode::PLUSEQUAL, AST::plus_equal},
     {PTNode::MINUSEQUAL, AST::minus_equal},
     {PTNode::TIMESEQUAL, AST::times_equal},
+    {PTNode::MODEQUAL, AST::mod_equal},
     {PTNode::DIVEQUAL, AST::div_equal},
     {PTNode::ELSE_STMT, AST::else_stmt},
     {PTNode::ELSE_IF, AST::else_if},
@@ -89,6 +89,7 @@ const std::set<PTNode::Label> swapNodes {
     PTNode::LE, PTNode::GE, PTNode::LT, PTNode::GT,
     PTNode::INCR, PTNode::DECR,
     PTNode::PLUSEQUAL, PTNode::MINUSEQUAL, PTNode::TIMESEQUAL, PTNode::DIVEQUAL,
+    PTNode::MODEQUAL,
     PTNode::DIVIDE, PTNode::MODULO,
     PTNode::NOTEQ, PTNode::ISEQ,
     PTNode::EQUAL, PTNode::ELSE_IF, PTNode::IF,
