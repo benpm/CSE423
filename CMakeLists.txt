@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.0)
 project("CSE423_Compiler")
 
-find_package(spdlog REQUIRED)
 find_package(FLEX REQUIRED)
 find_package(BISON REQUIRED) 
 
 include_directories("frontend")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories("external/spdlog")
 
 ####################################################################################
 #
@@ -32,5 +32,3 @@ add_executable(frontend
     ${BISON_parser_OUTPUTS}
     ${FLEX_scanner_OUTPUTS}
 )
-
-target_link_libraries(frontend spdlog::spdlog)
