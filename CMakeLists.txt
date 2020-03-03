@@ -27,6 +27,7 @@ ADD_FLEX_BISON_DEPENDENCY(scanner parser)
 add_executable(frontend
     frontend/frontend.cpp
     frontend/parsetree.cpp
+    frontend/ast.cpp
     ${BISON_parser_OUTPUTS}
     ${FLEX_scanner_OUTPUTS}
 )

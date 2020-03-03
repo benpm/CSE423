@@ -9,77 +9,131 @@
 #include <string>
 #include <parsetree.hpp>
 
-// Map enum to string for terminals
-std::vector<std::string> Node::terminalStr {
+// Mapping from parsetree label to string
+const std::vector<std::string> PTNode::str {
     "INT", "FLOAT", "CHAR", "FOR", "WHILE", "IF", "ELSE", "RETURN", "BREAK", "SEMICOLON",
     "COMMA", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACK", "RBRACK", "EQUAL", "PLUS",
     "MINUS", "TIMES", "DIVIDE", "MODULO", "PLUSEQUAL", "MINUSEQUAL", "TIMESEQUAL",
     "DIVEQUAL", "MODEQUAL", "INCR", "DECR", "LT", "GT", "LE", "GE", "ISEQ", "NOTEQ", "LOGAND",
     "LOGOR", "NOT", "STRINGLIT", "CHARLIT", "INTCONST", "FLOATCONST", "ID", "ARRAY_ID",
-    "EPSILON", "NONE"
-};
+    "EPSILON", "NONE",
 
-// Map enum to string for nonterminals
-std::vector<std::string> Node::nonTerminalStr {
-    "PROGRAM", "DECLARATION_LIST", "DECLARATION", "VAR_DECLARATION",
-    "SCOPED_VAR_DECLARATION", "VAR_DECL_LIST", "VAR_DECL_INITIALIZE",
-    "VAR_DECL_ID", "SCOPED_TYPE_SPECIFIER", "TYPE_SPECIFIER",
-    "FUN_DECLARATION", "PARAMS", "PARAM_LIST", "PARAM_ID", "STATEMENT",
-    "EXPRESSION_STMT", "EXPRESSION", "MUTABLE", "ASSIGN_OP", "UNARY_ASSIGN_OP",
-    "SIMPLE_EXPRESSION", "AND_EXPRESSION", "UNARY_REL_EXPRESSION",
-    "REL_EXPRESSION", "REL_OP", "SUM_EXPRESSION", "SUM_OP", "MUL_EXPRESSION",
-    "MUL_OP", "UNARY_EXPRESSION", "UNARY_OP", "FACTOR", "IMMUTABLE", "CALL",
-    "ARGS", "ARG_LIST", "CONSTANT", "COMPOUND_STMT", "LOCAL_DECLARATIONS",
-    "STATEMENT_LIST", "SELECTION_STMT", "ELSE_IF_LIST", "ITERATION_STMT",
-    "WHILE_STMT", "FOR_STMT", "RETURN_STMT", "BREAK_STMT"
+    "program", "declaration_list", "declaration", "var_declaration",
+    "scoped_var_declaration", "var_decl_list", "var_decl_initialize",
+    "var_decl_id", "scoped_type_specifier", "type_specifier",
+    "fun_declaration", "params", "param_list", "param_id", "statement",
+    "expression_stmt", "expression", "mutable", "assign_op", "unary_assign_op",
+    "simple_expression", "and_expression", "unary_rel_expression",
+    "rel_expression", "rel_op", "sum_expression", "sum_op", "mul_expression",
+    "mul_op", "unary_expression", "factor", "immutable", "call",
+    "args", "arg_list", "constant", "compound_stmt", "local_declarations",
+    "statement_list", "selection_stmt", "else_if_list", "iteration_stmt",
+    "while_stmt", "for_stmt", "return_stmt", "break_stmt", "fun_name",
+    "unary_assign_expr", "else_if", "else_stmt", "unary_minus"
 };
 
 /**
- * @brief Convert an enumerated Terminal symbol to a string
+ * @brief Construct a new parsetree node from given label, children, and lineno
+ * 
+ * @param label The label for this node
+ * @param children A vector of children (may be empty)
+ * @param lineNum The line number associated with this symbol
  */
-const std::string Node::toTerminal(Node::Terminal t)
+PTNode::PTNode(Label label, std::vector<PTNode*> children, int lineNum)
+    : label(label), children(children), lineNum(lineNum)
 {
-    return this->terminalStr.at(t);
+    terminal = ((int)label <= (int)NONE);
 }
 
 /**
- * @brief Convert an enumerated NonTerminal symbol to a string
+ * @brief Construct a new parsetree node object without any children
+ * 
+ * @param label The label for this leaf node
+ * @param lineNum The line number associated with this object
  */
-const std::string Node::toNonTerminal(Node::NonTerminal nt)
+PTNode::PTNode(Label label, int lineNum)
+    : label(label), lineNum(lineNum)
 {
-    return this->nonTerminalStr.at(nt);
+    terminal = ((int)label <= (int)NONE);
 }
 
 /**
  * @brief Pretty print the parse tree to standard output
- * 
  */
-void Node::print()
+void PTNode::print()
 {
-    this->printNode(*this, 0);
+    this->printNode(*this, 0, 0);
+}
+
+/**
+ * @brief Returns string representation of this node
+ * 
+ * @return String representation
+ */
+const std::string PTNode::toString() const
+{
+    return PTNode::str.at(this->label);
 }
 
 /**
  * @brief Pretty print a node and recursively print its children
  * @details Uses a simple prefix DFS tree traversal algorithm
+ * 
+ * @param node Node to recurse on
+ * @param depth Current depth
+ * @param levels Bit flag used to represent nested levels
  */
-void Node::printNode(Node &node, int depth)
+void PTNode::printNode(PTNode &node, int depth, ulong levels)
 {
-    std::string printStr;
-    const std::string padding(depth * 2, ' ');
-    const std::string branchStr = (depth == 0) ? "" : "╚═ ";
+    if (node.label == NONE) return;
 
-    // Print the terminal string if applicable,
-    // otherwise print the nonterminal string
-    if (node.value != Node::Terminal::NONE)
-        printStr = node.toTerminal(node.value);
-    else
-        printStr = node.toNonTerminal(node.identifier);
+    std::string padding;
+
+    // Construct the padding string using bit flags
+    for (int i = 0; i < depth; ++i) {
+        if ((levels >> i) & 1) {
+            if (i < depth - 1)
+                padding += " │";
+            else {
+                padding += " ├─";
+            }
+        } else {
+            if (i < depth - 1)
+                padding += "  ";
+            else
+                padding += " └─";
+        }
+    }
 
     // Print a graphical depiction of the node in the tree
-    std::cout << padding << branchStr << printStr << " | Line num: " << node.lineNum << std::endl;
+    std::cout << padding << node.toString() << " | Line num: " << node.lineNum;
 
-    // Recur on the node's children
-    for (auto it : node.children)
-        printNode(*it, depth + 1);
+    // Print the values stored at the nodes, if there are any
+    switch (node.label) {
+        case INTCONST:
+            std::cout << " (" << node.data.ival << ") ";
+            break;
+        case FLOATCONST:
+            std::cout << " (" << node.data.fval << ") ";
+            break;
+        case CHARLIT:
+            std::cout << " (" << node.data.cval << ") ";
+            break;
+        case ID:
+        case STRINGLIT:
+            std::cout << " (" << node.data.sval << ") ";
+            break;
+    }
+
+    std::cout << std::endl;
+
+    // Recurse on the node's children, update bit flag as needed
+    int i = 0;
+    for (auto it : node.children) {
+        ulong nlevels = levels;
+        if ((i > 0 || node.children.size() > 1) && i < node.children.size() - 1)
+            nlevels = levels | (1 << depth);
+        printNode(*it, depth + 1, nlevels);
+        i += 1;
+    }
 }

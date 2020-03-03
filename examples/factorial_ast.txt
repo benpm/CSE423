@@ -1,0 +1,59 @@
+PROGRAM
+ └─declaration_list
+   └─declaration
+     └─fun_declaration
+       ├─INT
+       ├─(main)
+       ├─scoped_var_declaration
+       │ ├─INT
+       │ ├─(fact)
+       │ ├─rel_expression
+       │ │ └─(1)
+       │ ├─(n)
+       │ └─rel_expression
+       │   └─(10)
+       └─statement_list
+         ├─statement_list
+         │ ├─IF
+         │ ├─rel_expression
+         │ │ ├─(n)
+         │ │ ├─LT
+         │ │ └─(0)
+         │ ├─statement_list
+         │ │ └─rel_expression
+         │ │   └─call
+         │ │     ├─(printf)
+         │ │     └─rel_expression
+         │ │       └─("Error! Factorial of a negative number doesn't exist.")
+         │ ├─ELSE
+         │ └─statement_list
+         │   ├─statement_list
+         │   │ └─for_stmt
+         │   │   ├─var_declaration
+         │   │   │ ├─INT
+         │   │   │ ├─(i)
+         │   │   │ └─rel_expression
+         │   │   │   └─(1)
+         │   │   ├─rel_expression
+         │   │   │ ├─(i)
+         │   │   │ ├─LE
+         │   │   │ └─(n)
+         │   │   ├─unary_assign_expr
+         │   │   │ ├─INCR
+         │   │   │ └─(i)
+         │   │   └─statement_list
+         │   │     ├─(fact)
+         │   │     ├─TIMESEQUAL
+         │   │     └─rel_expression
+         │   │       └─(i)
+         │   └─rel_expression
+         │     └─call
+         │       ├─(printf)
+         │       ├─rel_expression
+         │       │ └─("Factorial of %d = %d")
+         │       ├─rel_expression
+         │       │ └─(n)
+         │       └─rel_expression
+         │         └─(fact)
+         └─rel_expression
+           └─(0)

@@ -1,0 +1,14 @@
+PROGRAM
+ └─declaration_list
+   └─declaration
+     └─fun_declaration
+       ├─INT
+       ├─(main)
+       ├─scoped_var_declaration
+       │ ├─INT
+       │ ├─(foo)
+       │ └─rel_expression
+       │   └─(420)
+       └─statement_list
+         └─rel_expression
+           └─(0)

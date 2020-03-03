@@ -1,0 +1,40 @@
+program | Line num: 4
+ └─declaration_list | Line num: 4
+   └─declaration | Line num: 4
+     └─fun_declaration | Line num: 4
+       ├─INT | Line num: 1
+       ├─ID | Line num: 1 (main) 
+       └─statement | Line num: 4
+         └─compound_stmt | Line num: 4
+           ├─local_declarations | Line num: 2
+           │ └─scoped_var_declaration | Line num: 2
+           │   ├─scoped_type_specifier | Line num: 2
+           │   │ └─INT | Line num: 2
+           │   └─var_decl_list | Line num: 2
+           │     └─var_decl_initialize | Line num: 2
+           │       ├─ID | Line num: 2 (foo) 
+           │       ├─EQUAL | Line num: 2
+           │       └─simple_expression | Line num: 2
+           │         └─and_expression | Line num: 2
+           │           └─unary_rel_expression | Line num: 2
+           │             └─rel_expression | Line num: 2
+           │               └─sum_expression | Line num: 2
+           │                 └─mul_expression | Line num: 2
+           │                   └─unary_expression | Line num: 2
+           │                     └─factor | Line num: 2
+           │                       └─immutable | Line num: 2
+           │                         └─INTCONST | Line num: 2 (420) 
+           └─statement_list | Line num: 3
+             └─statement | Line num: 3
+               └─return_stmt | Line num: 3
+                 └─expression | Line num: 3
+                   └─simple_expression | Line num: 3
+                     └─and_expression | Line num: 3
+                       └─unary_rel_expression | Line num: 3
+                         └─rel_expression | Line num: 3
+                           └─sum_expression | Line num: 3
+                             └─mul_expression | Line num: 3
+                               └─unary_expression | Line num: 3
+                                 └─factor | Line num: 3
+                                   └─immutable | Line num: 3
+                                     └─INTCONST | Line num: 3 (0) 
