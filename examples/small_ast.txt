@@ -1,44 +1,43 @@
-PROGRAM
- └─declaration_list
-   └─declaration
-     └─fun_declaration
-       ├─INT
-       ├─(main)
-       ├─scoped_var_declaration
-       │ ├─INT
-       │ ├─(a)
-       │ └─rel_expression
-       │   └─(42)
-       ├─scoped_var_declaration
-       │ ├─INT
-       │ ├─(b)
-       │ └─rel_expression
-       │   └─(89)
-       ├─scoped_var_declaration
-       │ ├─INT
-       │ ├─(c)
-       │ └─rel_expression
-       │   ├─(a)
-       │   ├─PLUS
-       │   ├─(b)
-       │   ├─TIMES
-       │   └─(12)
-       ├─scoped_var_declaration
-       │ ├─FLOAT
-       │ ├─(d)
-       │ └─rel_expression
-       │   ├─MINUS
-       │   └─(8.01161)
-       └─statement_list
-         ├─IF
-         ├─rel_expression
-         │ ├─(c)
-         │ ├─LT
-         │ └─(2)
-         ├─statement_list
-         │ └─rel_expression
-         │   └─(35)
-         ├─ELSE
-         └─statement_list
-           └─rel_expression
-             └─(124)
+root
+ └─function
+   ├─int_type
+   ├─id (main)
+   ├─params
+   ├─dec_list
+   │ ├─declaration
+   │ │ ├─int_type
+   │ │ └─assignment
+   │ │   ├─id (a)
+   │ │   └─int_const (42)
+   │ ├─declaration
+   │ │ ├─int_type
+   │ │ └─assignment
+   │ │   ├─id (b)
+   │ │   └─int_const (89)
+   │ ├─declaration
+   │ │ ├─int_type
+   │ │ └─assignment
+   │ │   ├─id (c)
+   │ │   └─sum
+   │ │     ├─id (a)
+   │ │     └─mul
+   │ │       ├─id (b)
+   │ │       └─int_const (12)
+   │ └─declaration
+   │   ├─float_type
+   │   └─assignment
+   │     ├─id (d)
+   │     └─unary_minus
+   │       └─float_const (8.011609)
+   └─list
+     └─if_stmt
+       ├─lt
+       │ ├─id (c)
+       │ └─int_const (2)
+       ├─list
+       │ └─return_stmt
+       │   └─int_const (35)
+       └─else_stmt
+         └─list
+           └─return_stmt
+             └─int_const (124)

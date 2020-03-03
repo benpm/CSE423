@@ -4,6 +4,7 @@ program | Line num: 13
      └─fun_declaration | Line num: 13
        ├─INT | Line num: 1
        ├─ID | Line num: 1 (main) 
+       ├─params | Line num: 1
        └─statement | Line num: 13
          └─compound_stmt | Line num: 13
            ├─local_declarations | Line num: 6
@@ -86,11 +87,11 @@ program | Line num: 13
            │               └─sum_expression | Line num: 6
            │                 └─mul_expression | Line num: 6
            │                   └─unary_expression | Line num: 6
-           │                     ├─MINUS | Line num: 6
-           │                     └─unary_expression | Line num: 6
-           │                       └─factor | Line num: 6
-           │                         └─immutable | Line num: 6
-           │                           └─FLOATCONST | Line num: 6 (8.01161) 
+           │                     └─unary_minus | Line num: 6
+           │                       └─unary_expression | Line num: 6
+           │                         └─factor | Line num: 6
+           │                           └─immutable | Line num: 6
+           │                             └─FLOATCONST | Line num: 6 (8.01161) 
            └─statement_list | Line num: 12
              └─statement | Line num: 12
                └─selection_stmt | Line num: 12
@@ -126,19 +127,20 @@ program | Line num: 13
                  │                       └─factor | Line num: 9
                  │                         └─immutable | Line num: 9
                  │                           └─INTCONST | Line num: 9 (35) 
-                 ├─ELSE | Line num: 12
-                 └─compound_stmt | Line num: 12
-                   └─statement_list | Line num: 11
-                     └─statement | Line num: 11
-                       └─return_stmt | Line num: 11
-                         └─expression | Line num: 11
-                           └─simple_expression | Line num: 11
-                             └─and_expression | Line num: 11
-                               └─unary_rel_expression | Line num: 11
-                                 └─rel_expression | Line num: 11
-                                   └─sum_expression | Line num: 11
-                                     └─mul_expression | Line num: 11
-                                       └─unary_expression | Line num: 11
-                                         └─factor | Line num: 11
-                                           └─immutable | Line num: 11
-                                             └─INTCONST | Line num: 11 (124) 
+                 └─else_stmt | Line num: 12
+                   ├─ELSE | Line num: 12
+                   └─compound_stmt | Line num: 12
+                     └─statement_list | Line num: 11
+                       └─statement | Line num: 11
+                         └─return_stmt | Line num: 11
+                           └─expression | Line num: 11
+                             └─simple_expression | Line num: 11
+                               └─and_expression | Line num: 11
+                                 └─unary_rel_expression | Line num: 11
+                                   └─rel_expression | Line num: 11
+                                     └─sum_expression | Line num: 11
+                                       └─mul_expression | Line num: 11
+                                         └─unary_expression | Line num: 11
+                                           └─factor | Line num: 11
+                                             └─immutable | Line num: 11
+                                               └─INTCONST | Line num: 11 (124) 

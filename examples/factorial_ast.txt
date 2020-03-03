@@ -1,59 +1,50 @@
-PROGRAM
- └─declaration_list
-   └─declaration
-     └─fun_declaration
-       ├─INT
-       ├─(main)
-       ├─scoped_var_declaration
-       │ ├─INT
-       │ ├─(fact)
-       │ ├─rel_expression
-       │ │ └─(1)
-       │ ├─(n)
-       │ └─rel_expression
-       │   └─(10)
-       └─statement_list
-         ├─statement_list
-         │ ├─IF
-         │ ├─rel_expression
-         │ │ ├─(n)
-         │ │ ├─LT
-         │ │ └─(0)
-         │ ├─statement_list
-         │ │ └─rel_expression
-         │ │   └─call
-         │ │     ├─(printf)
-         │ │     └─rel_expression
-         │ │       └─("Error! Factorial of a negative number doesn't exist.")
-         │ ├─ELSE
-         │ └─statement_list
-         │   ├─statement_list
-         │   │ └─for_stmt
-         │   │   ├─var_declaration
-         │   │   │ ├─INT
-         │   │   │ ├─(i)
-         │   │   │ └─rel_expression
-         │   │   │   └─(1)
-         │   │   ├─rel_expression
-         │   │   │ ├─(i)
-         │   │   │ ├─LE
-         │   │   │ └─(n)
-         │   │   ├─unary_assign_expr
-         │   │   │ ├─INCR
-         │   │   │ └─(i)
-         │   │   └─statement_list
-         │   │     ├─(fact)
-         │   │     ├─TIMESEQUAL
-         │   │     └─rel_expression
-         │   │       └─(i)
-         │   └─rel_expression
-         │     └─call
-         │       ├─(printf)
-         │       ├─rel_expression
-         │       │ └─("Factorial of %d = %d")
-         │       ├─rel_expression
-         │       │ └─(n)
-         │       └─rel_expression
-         │         └─(fact)
-         └─rel_expression
-           └─(0)
+root
+ └─function
+   ├─int_type
+   ├─id (main)
+   ├─params
+   ├─dec_list
+   │ └─declaration
+   │   ├─int_type
+   │   └─dec_list
+   │     ├─assignment
+   │     │ ├─id (fact)
+   │     │ └─int_const (1)
+   │     └─assignment
+   │       ├─id (n)
+   │       └─int_const (10)
+   └─list
+     ├─if_stmt
+     │ ├─lt
+     │ │ ├─id (n)
+     │ │ └─int_const (0)
+     │ ├─list
+     │ │ └─call
+     │ │   ├─id (printf)
+     │ │   └─args
+     │ │     └─string_const ("Error! Factorial of a negative number doesn't exist.")
+     │ └─else_stmt
+     │   └─list
+     │     ├─for_stmt
+     │     │ ├─declaration
+     │     │ │ ├─int_type
+     │     │ │ └─assignment
+     │     │ │   ├─id (i)
+     │     │ │   └─int_const (1)
+     │     │ ├─le
+     │     │ │ ├─id (i)
+     │     │ │ └─id (n)
+     │     │ ├─incr
+     │     │ │ └─id (i)
+     │     │ └─list
+     │     │   └─times_equal
+     │     │     ├─id (fact)
+     │     │     └─id (i)
+     │     └─call
+     │       ├─id (printf)
+     │       └─args
+     │         ├─string_const ("Factorial of %d = %d")
+     │         ├─id (n)
+     │         └─id (fact)
+     └─return_stmt
+       └─int_const (0)

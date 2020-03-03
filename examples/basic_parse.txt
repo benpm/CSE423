@@ -4,6 +4,7 @@ program | Line num: 4
      └─fun_declaration | Line num: 4
        ├─INT | Line num: 1
        ├─ID | Line num: 1 (main) 
+       ├─params | Line num: 1
        └─statement | Line num: 4
          └─compound_stmt | Line num: 4
            ├─local_declarations | Line num: 2
