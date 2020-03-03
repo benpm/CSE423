@@ -55,7 +55,7 @@ Config::Config(int argc, char **argv)
 
 /**
  * @brief Prints usage options of frontend
- * 
+ *
  * @param exec_name Generally argv[0]
  */
 void Config::usage(std::string exec_name) {

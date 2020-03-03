@@ -3,7 +3,7 @@
  * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
  * @brief Driver for scanner + parser. Takes in filename as argv[1] and builds parse tree
  * @date 2020-02-11
- * 
+ *
  */
 #include <cstring>
 #include <iostream>
@@ -18,7 +18,8 @@ extern PTNode* pt;
 extern int yyparse();
 extern FILE *yyin;
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     // Logging configuration
     spdlog::set_default_logger(spdlog::stderr_color_mt("console"));
     spdlog::set_level(spdlog::level::debug);

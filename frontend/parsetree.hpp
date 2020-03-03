@@ -3,7 +3,7 @@
  * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
  * @brief Header Tree structure to represent a parse tree
  * @date 2020-02-11
- * 
+ *
  */
 #pragma once
 
