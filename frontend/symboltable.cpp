@@ -1,6 +1,7 @@
 #include <symboltable.hpp>
 #include <set>
 #include <spdlog/fmt/fmt.h>
+#include <iostream>
 
 std::unordered_map<int, std::string> enumToString{
     {Symbol::Int, "Int"},
@@ -24,6 +25,7 @@ Symbol::Symbol(uint scopeID, Symbol::Type symType, Symbol::Category category)
 
 void traverseAST(SymbolTable* table, AST* ast)
 {
+    uint localIDIncrement = 0;
     for (AST* childAST : ast->children) {
         bool traverse = false;
 
@@ -43,12 +45,14 @@ void traverseAST(SymbolTable* table, AST* ast)
             case AST::else_stmt:
             case AST::else_if:
             case AST::while_stmt:{
-                SymbolTable* newChild = new SymbolTable(childAST, table->tableID + 1);
+                SymbolTable* newChild = new SymbolTable(childAST, table->tableID + localIDIncrement);
                 newChild->parent = table;
                 if (newChild->table.size() == 0)
                     delete newChild;
-                else
+                else {
                     table->children.push_back(newChild);
+                    localIDIncrement += 1;
+                }
                 break;}
             case AST::declaration:{
                 // dec_list -> declaration -> type
@@ -104,16 +108,24 @@ void stprint(SymbolTable* st, uint depth, ulong levels)
     for (int i = 0; i < depth; ++i) {
         padding += "  ";
     }
+    // Get longest identifier name
+    size_t maxLen = 0;
+    for (auto item : st->table) {
+        maxLen = std::max(item.first.size(), maxLen);
+    }
+    
     fmt::print("{}+------------------+\n", padding);
+    fmt::print("{}| Table ID: {}\n", padding, st->tableID, padding);
+    fmt::print("{}+------------------+\n", padding);
+
+    std::string fmtstr = "{}| {:" + std::to_string(maxLen) + "} | {}";
 
     for (auto item : st->table) {
         // Print a graphical depiction of the node in the tree
-        fmt::print("{}| {} | {}", padding, item.first, enumToString.at(item.second.symType));
+        fmt::print(fmtstr, padding, item.first, enumToString.at(item.second.symType));
         fmt::print("\n");
     }
     fmt::print("{}+------------------+\n", padding);
-
-
 
     // Recurse on the node's children, update bit flag as needed
     int i = 0;
