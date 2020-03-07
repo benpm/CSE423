@@ -13,6 +13,7 @@
 #include <ast.hpp>
 #include <parsetree.hpp>
 #include <config.hpp>
+#include <symboltable.hpp>
 
 extern PTNode* pt;
 extern int yyparse();
@@ -56,6 +57,8 @@ int main(int argc, char **argv)
         ast.print();
     }
 
+    SymbolTable symbolTable = SymbolTable(&ast, 0);
+    symbolTable.print();
     spdlog::info("Frontend exit");
 
     return 0;

@@ -34,8 +34,8 @@
 /* Undocumented macros, especially those whose name start with YY_,
    are private implementation details.  Do not rely on them.  */
 
-#ifndef YY_YY_HOME_SUPA_LIN_STORAGE_CSE423_FRONTEND_FLEX_BISON_PARSER_TAB_HPP_INCLUDED
-# define YY_YY_HOME_SUPA_LIN_STORAGE_CSE423_FRONTEND_FLEX_BISON_PARSER_TAB_HPP_INCLUDED
+#ifndef YY_YY_HOME_SUPA_DOCUMENTS_CSE423_FRONTEND_FLEX_BISON_PARSER_TAB_HPP_INCLUDED
+# define YY_YY_HOME_SUPA_DOCUMENTS_CSE423_FRONTEND_FLEX_BISON_PARSER_TAB_HPP_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -109,7 +109,7 @@ union YYSTYPE
     char cval;
     PTNode* pt;
 
-#line 113 "/home/supa/lin_storage/CSE423/frontend/flex_bison/parser.tab.hpp"
+#line 113 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -136,4 +136,4 @@ extern YYSTYPE yylval;
 extern YYLTYPE yylloc;
 int yyparse (void);
 
-#endif /* !YY_YY_HOME_SUPA_LIN_STORAGE_CSE423_FRONTEND_FLEX_BISON_PARSER_TAB_HPP_INCLUDED  */
+#endif /* !YY_YY_HOME_SUPA_DOCUMENTS_CSE423_FRONTEND_FLEX_BISON_PARSER_TAB_HPP_INCLUDED  */

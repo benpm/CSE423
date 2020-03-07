@@ -26,6 +26,7 @@ const std::map<PTNode::Label, AST::Label> labelMap {
     {PTNode::UNARY_EXPRESSION, AST::list},
     {PTNode::UNARY_REL_EXPRESSION, AST::list},
     {PTNode::LOCAL_DECLARATIONS, AST::dec_list},
+    {PTNode::DECLARATION_LIST, AST::dec_list},
     {PTNode::SIMPLE_EXPRESSION, AST::list},
     {PTNode::AND_EXPRESSION, AST::list},
     {PTNode::SELECTION_STMT, AST::list},
@@ -83,7 +84,7 @@ const std::map<PTNode::Label, AST::Label> labelMap {
 
 // Parsetree nodes that should be kept no matter what
 const std::set<PTNode::Label> keepNodes {
-    PTNode::RETURN_STMT, PTNode::ARG_LIST, PTNode::UNARY_MINUS, PTNode::PARAMS
+    PTNode::RETURN_STMT, PTNode::ARG_LIST, PTNode::UNARY_MINUS, PTNode::PARAMS, PTNode::DECLARATION_LIST, PTNode::LOCAL_DECLARATIONS
 };
 
 // Parsetree nodes that should be mapped and swapped with their parent in the AST

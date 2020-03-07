@@ -32,6 +32,7 @@ add_executable(frontend
     frontend/parsetree.cpp
     frontend/ast.cpp
     frontend/config.cpp
+    frontend/symboltable.cpp
     ${PROJECT_SOURCE_DIR}/frontend/flex_bison/parser.tab.cpp
     ${PROJECT_SOURCE_DIR}/frontend/flex_bison/lex.yy.cpp
 )
