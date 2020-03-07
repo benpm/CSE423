@@ -23,9 +23,9 @@ Symbol::Symbol(uint scopeID, Symbol::Type symType, Symbol::Category category)
     this->category = category;
 }
 
-void traverseAST(SymbolTable* table, AST* ast)
+uint traverseAST(SymbolTable* table, AST* ast)
 {
-    uint localIDIncrement = 0;
+    uint localIDIncrement = 1;
     for (AST* childAST : ast->children) {
         bool traverse = false;
 
@@ -86,10 +86,12 @@ void traverseAST(SymbolTable* table, AST* ast)
                 break;}
 
             default:
-                traverseAST(table, childAST);
+                localIDIncrement = traverseAST(table, childAST);
                 break;
         }
     }
+
+    return localIDIncrement;
 }
 
 

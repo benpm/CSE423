@@ -1,6 +1,6 @@
-#line 2 "/home/supa/lin_storage/CSE423/frontend/flex_bison/lex.yy.cpp"
+#line 2 "/home/ben/git/CSE423/frontend/flex_bison/lex.yy.cpp"
 
-#line 4 "/home/supa/lin_storage/CSE423/frontend/flex_bison/lex.yy.cpp"
+#line 4 "/home/ben/git/CSE423/frontend/flex_bison/lex.yy.cpp"
 
 #define  YY_INT_ALIGNED short int
 
@@ -547,9 +547,9 @@ char *yytext;
     #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
 
     bool scannerPrintTokens = false;
-#line 551 "/home/supa/lin_storage/CSE423/frontend/flex_bison/lex.yy.cpp"
+#line 551 "/home/ben/git/CSE423/frontend/flex_bison/lex.yy.cpp"
 
-#line 553 "/home/supa/lin_storage/CSE423/frontend/flex_bison/lex.yy.cpp"
+#line 553 "/home/ben/git/CSE423/frontend/flex_bison/lex.yy.cpp"
 
 #define INITIAL 0
 #define C_COMMENT 1
@@ -769,7 +769,7 @@ YY_DECL
 	{
 #line 16 "frontend/flex_bison/scanner.l"
 
-#line 773 "/home/supa/lin_storage/CSE423/frontend/flex_bison/lex.yy.cpp"
+#line 773 "/home/ben/git/CSE423/frontend/flex_bison/lex.yy.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1324,7 +1324,7 @@ YY_RULE_SETUP
 #line 293 "frontend/flex_bison/scanner.l"
 ECHO;
 	YY_BREAK
-#line 1328 "/home/supa/lin_storage/CSE423/frontend/flex_bison/lex.yy.cpp"
+#line 1328 "/home/ben/git/CSE423/frontend/flex_bison/lex.yy.cpp"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(C_COMMENT):
 	yyterminate();
