@@ -178,7 +178,10 @@ void printASTNode(const AST* node, int depth, ulong levels)
     }
 
     // Print a graphical depiction of the node in the tree
-    fmt::print("{}{}", padding, node->toString());
+    fmt::print(padding);
+    if (node->scopeID > -1 && node->label == AST::id)
+        fmt::print("[{}] ", node->scopeID);
+    fmt::print("{}", node->toString());
     switch (node->label) {
         case AST::int_const:
             fmt::print(" ({})", node->data.ival);

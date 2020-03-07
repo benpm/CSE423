@@ -28,6 +28,7 @@ uint traverseAST(SymbolTable* table, AST* ast)
     uint localIDIncrement = 1;
     for (AST* childAST : ast->children) {
         bool traverse = false;
+        childAST->scopeID = table->tableID;
 
         // if declaration
         switch(childAST->label) {
@@ -47,12 +48,8 @@ uint traverseAST(SymbolTable* table, AST* ast)
             case AST::while_stmt:{
                 SymbolTable* newChild = new SymbolTable(childAST, table->tableID + localIDIncrement);
                 newChild->parent = table;
-                if (newChild->table.size() == 0)
-                    delete newChild;
-                else {
-                    table->children.push_back(newChild);
-                    localIDIncrement += 1;
-                }
+                table->children.push_back(newChild);
+                localIDIncrement += 1;
                 break;}
             case AST::declaration:{
                 // dec_list -> declaration -> type
@@ -63,7 +60,7 @@ uint traverseAST(SymbolTable* table, AST* ast)
                 Symbol symbol(
                     table->tableID,
                     (Symbol::Type)symTypeNode->label,
-                    Symbol::Parameter
+                    Symbol::Local
                 );
                 table->table.emplace(
                     symNameNode->data.sval, symbol
@@ -104,9 +101,11 @@ SymbolTable::SymbolTable(AST* ast, uint tableID)
 
 void stprint(SymbolTable* st, uint depth, ulong levels)
 {
-    std::string padding;
+    // Do not print empty tables
+    if (st->table.size() == 0) return;
 
     // Construct the padding string using bit flags
+    std::string padding;
     for (int i = 0; i < depth; ++i) {
         padding += "  ";
     }
@@ -116,18 +115,20 @@ void stprint(SymbolTable* st, uint depth, ulong levels)
         maxLen = std::max(item.first.size(), maxLen);
     }
     
-    fmt::print("{}+------------------+\n", padding);
-    fmt::print("{}| Table ID: {}\n", padding, st->tableID, padding);
-    fmt::print("{}+------------------+\n", padding);
+    fmt::print("{}+----------------------------+\n", padding);
+    fmt::print("{}| Table ID: {:<16} |\n", padding, st->tableID, padding);
+    fmt::print("{}+----------------------------+\n", padding);
 
-    std::string fmtstr = "{}| {:" + std::to_string(maxLen) + "} | {}";
+    std::string fmtstr = "{}| {:" + std::to_string(maxLen) + "} | {:6} | {:" + std::to_string(14 - maxLen) + "} |";
 
     for (auto item : st->table) {
         // Print a graphical depiction of the node in the tree
-        fmt::print(fmtstr, padding, item.first, enumToString.at(item.second.symType));
+        fmt::print(fmtstr, padding, item.first, 
+            enumToString.at(item.second.symType), 
+            enumToString.at(item.second.category));
         fmt::print("\n");
     }
-    fmt::print("{}+------------------+\n", padding);
+    fmt::print("{}+----------------------------+\n", padding);
 
     // Recurse on the node's children, update bit flag as needed
     int i = 0;

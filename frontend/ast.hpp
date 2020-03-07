@@ -31,6 +31,8 @@ public:
     std::vector<AST*> children;
     // Parent of this node
     AST* parent;
+    // Scope (table ID)
+    int scopeID = -1;
 
     AST(Label label);
     AST(const PTNode* pt);

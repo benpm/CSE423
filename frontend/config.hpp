@@ -13,6 +13,7 @@ public:
     bool printAST = false;
     bool printParseTree = false;
     bool printTokens = false;
+    bool printSymbolTable = false;
     bool suppressLogs = false;
     std::string file;
 

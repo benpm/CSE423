@@ -49,16 +49,25 @@ int main(int argc, char **argv)
     AST ast(pt);
     spdlog::info("AST construction done");
 
+    // Create symbol table
+    spdlog::info("Symbol Table population beginning");
+    SymbolTable symbolTable = SymbolTable(&ast, 0);
+    spdlog::info("Symbol Table population done");
+
     // Print parse tree if requested
     if (config.printParseTree) {
+        spdlog::info("Parse tree:");
         pt->print();
     }
     if (config.printAST) {
+        spdlog::info("Abstract syntax tree:");
         ast.print();
     }
+    if (config.printSymbolTable) {
+        spdlog::info("Symbol table:");
+        symbolTable.print();
+    }
 
-    SymbolTable symbolTable = SymbolTable(&ast, 0);
-    symbolTable.print();
     spdlog::info("Frontend exit");
 
     return 0;
