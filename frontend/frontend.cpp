@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 
     // Create symbol table
     spdlog::info("Symbol Table population beginning");
-    SymbolTable symbolTable = SymbolTable(&ast, 0);
+    SymbolTable symbolTable = SymbolTable(&ast);
     spdlog::info("Symbol Table population done");
 
     // Print parse tree if requested

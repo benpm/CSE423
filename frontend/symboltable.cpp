@@ -48,8 +48,14 @@ uint traverseAST(SymbolTable* table, AST* ast)
             case AST::while_stmt:{
                 SymbolTable* newChild = new SymbolTable(childAST, table->tableID + localIDIncrement);
                 newChild->parent = table;
+                if (childAST->label == AST::function){
+                    newChild->name = std::string(childAST->children[1]->data.sval) + "()";
+                } else {
+                    newChild->name = childAST->toString();
+                }
                 table->children.push_back(newChild);
                 localIDIncrement += 1;
+                childAST->ownedScopeID = newChild->tableID;
                 break;}
             case AST::declaration:{
                 // dec_list -> declaration -> type
@@ -91,6 +97,13 @@ uint traverseAST(SymbolTable* table, AST* ast)
     return localIDIncrement;
 }
 
+SymbolTable::SymbolTable(AST* ast)
+{
+    this->tableID = 0;
+    this->name = "_GLOBAL_";
+
+    traverseAST(this, ast);
+}
 
 SymbolTable::SymbolTable(AST* ast, uint tableID)
 {
@@ -99,7 +112,7 @@ SymbolTable::SymbolTable(AST* ast, uint tableID)
     traverseAST(this, ast);
 }
 
-void stprint(SymbolTable* st, uint depth, ulong levels)
+void stprint(SymbolTable* st, uint depth)
 {
     // Do not print empty tables
     if (st->table.size() == 0) return;
@@ -109,20 +122,22 @@ void stprint(SymbolTable* st, uint depth, ulong levels)
     for (int i = 0; i < depth; ++i) {
         padding += "  ";
     }
+
     // Get longest identifier name
     size_t maxLen = 0;
     for (auto item : st->table) {
         maxLen = std::max(item.first.size(), maxLen);
     }
     
+    // Create table layout
     fmt::print("{}+----------------------------+\n", padding);
-    fmt::print("{}| Table ID: {:<16} |\n", padding, st->tableID, padding);
+    fmt::print("{}| Table ID: {:<4} {:>11} |\n", padding, st->tableID, st->name);
     fmt::print("{}+----------------------------+\n", padding);
+    std::string fmtstr = 
+        "{}| {:" + std::to_string(maxLen) + "} | {:6} | {:" + std::to_string(14 - maxLen) + "} |";
 
-    std::string fmtstr = "{}| {:" + std::to_string(maxLen) + "} | {:6} | {:" + std::to_string(14 - maxLen) + "} |";
-
+    // Print table entries
     for (auto item : st->table) {
-        // Print a graphical depiction of the node in the tree
         fmt::print(fmtstr, padding, item.first, 
             enumToString.at(item.second.symType), 
             enumToString.at(item.second.category));
@@ -130,18 +145,13 @@ void stprint(SymbolTable* st, uint depth, ulong levels)
     }
     fmt::print("{}+----------------------------+\n", padding);
 
-    // Recurse on the node's children, update bit flag as needed
-    int i = 0;
+    // Recurse on the table's children
     for (SymbolTable* child : st->children) {
-        ulong nlevels = levels;
-        if ((i > 0 || st->children.size() > 1) && i < st->children.size() - 1)
-            nlevels = levels | (1 << depth);
-        stprint(child, depth + 1, nlevels);
-        i += 1;
+        stprint(child, depth + 1);
     }
 }
 
 void SymbolTable::print()
 {
-    stprint(this, 0, 0);
+    stprint(this, 0);
 }

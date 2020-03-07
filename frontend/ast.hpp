@@ -33,6 +33,8 @@ public:
     AST* parent;
     // Scope (table ID)
     int scopeID = -1;
+    // Owned scope
+    int ownedScopeID = -1;
 
     AST(Label label);
     AST(const PTNode* pt);

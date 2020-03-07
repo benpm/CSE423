@@ -28,7 +28,9 @@ public:
     uint tableID;
     std::unordered_map<std::string, Symbol> table;
     std::vector<SymbolTable*> children;
+    std::string name;
 
+    SymbolTable(AST* ast);
     SymbolTable(AST* ast, uint tableID);
     void print();
 };
