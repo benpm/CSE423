@@ -31,9 +31,9 @@ public:
     std::vector<AST*> children;
     // Parent of this node
     AST* parent;
-    // Scope (table ID)
+    // Scope (table ID) (this is populated by the Symbol Table builder!)
     int scopeID = -1;
-    // Owned scope
+    // Owned scope (also populated by ST builder)
     int ownedScopeID = -1;
 
     AST(Label label);

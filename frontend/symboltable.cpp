@@ -3,19 +3,25 @@
 #include <spdlog/fmt/fmt.h>
 #include <iostream>
 
+// Mapping from symbol types/categories to strings
 std::unordered_map<int, std::string> enumToString{
+    // Types
     {Symbol::Int, "Int"},
     {Symbol::Float, "Float"},
     {Symbol::Char, "Char"},
+    // Categories
     {Symbol::Function, "Function"},
     {Symbol::Local, "Local"},
     {Symbol::Parameter, "Parameter"},
 };
 
-std::set<AST::Label> scopeNodes{
-    AST::root, AST::function, AST::for_stmt, AST::if_stmt, AST::else_stmt, AST::else_if, AST::while_stmt
-};
-
+/**
+ * @brief Construct a new Symbol with given scope, type and category
+ * 
+ * @param scopeID scope identifier number
+ * @param symType type for this symbol (int, float, char)
+ * @param category category for this symbol (function, local, parameter)
+ */
 Symbol::Symbol(uint scopeID, Symbol::Type symType, Symbol::Category category)
 {
     this->scopeID = scopeID;
@@ -23,6 +29,13 @@ Symbol::Symbol(uint scopeID, Symbol::Type symType, Symbol::Category category)
     this->category = category;
 }
 
+/**
+ * @brief Recursive function that traverses an AST building a symbol table in the process
+ * 
+ * @param table The symbol table to continue building upon
+ * @param ast The AST to pull scope and symbol information from, also populates scope field for nodes
+ * @return uint The current table ID to be incremented in further calls
+ */
 uint traverseAST(SymbolTable* table, AST* ast)
 {
     uint localIDIncrement = 1;
@@ -30,8 +43,8 @@ uint traverseAST(SymbolTable* table, AST* ast)
         bool traverse = false;
         childAST->scopeID = table->tableID;
 
-        // if declaration
         switch(childAST->label) {
+            // Node is a function, so we add to table and fallthrough to create scope
             case AST::function:{
                 Symbol symbol(
                     table->tableID,
@@ -40,6 +53,8 @@ uint traverseAST(SymbolTable* table, AST* ast)
                 );
                 table->table.emplace(childAST->children[1]->data.sval, symbol);
             }
+
+            // These nodes only create new scopes, they are not added to table
             case AST::root:
             case AST::for_stmt:
             case AST::if_stmt:
@@ -57,6 +72,8 @@ uint traverseAST(SymbolTable* table, AST* ast)
                 localIDIncrement += 1;
                 childAST->ownedScopeID = newChild->tableID;
                 break;}
+            
+            // Variable declaration add to table
             case AST::declaration:{
                 // dec_list -> declaration -> type
                 AST* symTypeNode = childAST->children[0];
@@ -72,6 +89,8 @@ uint traverseAST(SymbolTable* table, AST* ast)
                     symNameNode->data.sval, symbol
                 );
                 break;}
+            
+            // Add parameters to table
             case AST::params:{
                 for (int i = 0; i < childAST->children.size(); i += 2) {
                     AST* symTypeNode = childAST->children[i + 0];
@@ -88,15 +107,22 @@ uint traverseAST(SymbolTable* table, AST* ast)
                 }
                 break;}
 
+            // Skip this node, it doesn't matter (recurse)
             default:
                 localIDIncrement = traverseAST(table, childAST);
                 break;
         }
     }
 
+    // Return id so we can continue incrementing for new scopes
     return localIDIncrement;
 }
 
+/**
+ * @brief Construct a new Symbol Table from given AST (also updates AST nodes with scope IDs)
+ * 
+ * @param ast The AST to build the table from
+ */
 SymbolTable::SymbolTable(AST* ast)
 {
     this->tableID = 0;
@@ -105,6 +131,12 @@ SymbolTable::SymbolTable(AST* ast)
     traverseAST(this, ast);
 }
 
+/**
+ * @brief Create symbol table with specified ID (don't use this to create from AST root node!)
+ * 
+ * @param ast The AST to build from
+ * @param tableID The ID to assign to this table
+ */
 SymbolTable::SymbolTable(AST* ast, uint tableID)
 {
     this->tableID = tableID;
@@ -112,6 +144,12 @@ SymbolTable::SymbolTable(AST* ast, uint tableID)
     traverseAST(this, ast);
 }
 
+/**
+ * @brief Internal recursive print function
+ * 
+ * @param st Symbol table to print
+ * @param depth Depth of this iteration
+ */
 void stprint(SymbolTable* st, uint depth)
 {
     // Do not print empty tables
@@ -151,6 +189,9 @@ void stprint(SymbolTable* st, uint depth)
     }
 }
 
+/**
+ * @brief Print this symbol table
+ */
 void SymbolTable::print()
 {
     stprint(this, 0);
