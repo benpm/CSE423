@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.0)
 project("CSE423_Compiler")
 
-find_package(FLEX)
-find_package(BISON) 
+find_package(FLEX REQUIRED)
+find_package(BISON REQUIRED) 
 
 include_directories("frontend")
-include_directories("frontend/flex_bison/")
 include_directories("external")
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 ####################################################################################
 #
@@ -14,12 +14,9 @@ include_directories("external")
 #   Results are stored in ${FLEX_scanner_OUTPUTS} and ${BISON_parser_OUTPUTS}
 #
 ####################################################################################
-if(FLEX_FOUND AND BISON_FOUND)
-    message("Flex and Bison found, rebuilding parser if needed")
-    FLEX_TARGET(scanner frontend/flex_bison/scanner.l ${PROJECT_SOURCE_DIR}/frontend/flex_bison/lex.yy.cpp)
-    BISON_TARGET(parser frontend/flex_bison/parser.ypp ${PROJECT_SOURCE_DIR}/frontend/flex_bison/parser.tab.cpp)
-    ADD_FLEX_BISON_DEPENDENCY(scanner parser)
-endif()
+BISON_TARGET(parser frontend/flex_bison/parser.ypp ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.cpp)
+FLEX_TARGET(scanner frontend/flex_bison/scanner.l ${CMAKE_CURRENT_BINARY_DIR}/lex.yy.cpp)
+ADD_FLEX_BISON_DEPENDENCY(scanner parser)
 
 ####################################################################################
 #
@@ -32,6 +29,7 @@ add_executable(frontend
     frontend/parsetree.cpp
     frontend/ast.cpp
     frontend/config.cpp
-    ${PROJECT_SOURCE_DIR}/frontend/flex_bison/parser.tab.cpp
-    ${PROJECT_SOURCE_DIR}/frontend/flex_bison/lex.yy.cpp
+    frontend/symboltable.cpp
+    ${FLEX_scanner_OUTPUTS}
+    ${BISON_parser_OUTPUTS}
 )

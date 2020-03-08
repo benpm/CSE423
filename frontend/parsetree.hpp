@@ -20,7 +20,7 @@ union NodeData
 };
 
 // Parsetree node class
-class PTNode {
+class PT {
 public:
     // Type of node
     enum Label {
@@ -50,16 +50,17 @@ public:
     // This node's label
     Label label = Label::NONE;
     // Reference children
-    std::vector<PTNode*> children;
+    std::vector<PT*> children;
     // Stores line number grammar rule was found on
     int lineNum = -1;
     // Data this node contains
     NodeData data;
 
 
-    PTNode() {};
-    PTNode(Label label, std::vector<PTNode*> children, int lineNum);
-    PTNode(Label label, int lineNum);
+    PT() {};
+    PT(std::string filename);
+    PT(Label label, std::vector<PT*> children, int lineNum);
+    PT(Label label, int lineNum);
 
     const std::string toString() const;
     void print();
@@ -67,6 +68,6 @@ private:
     // Map label to string
     const static std::vector<std::string> str;
 
-    void printNode(PTNode &node, int depth, ulong levels);
+    void printNode(PT &node, int depth, ulong levels);
 
 };

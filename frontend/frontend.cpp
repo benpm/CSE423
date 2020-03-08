@@ -5,7 +5,6 @@
  * @date 2020-02-11
  *
  */
-#include <cstring>
 #include <iostream>
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
@@ -13,10 +12,7 @@
 #include <ast.hpp>
 #include <parsetree.hpp>
 #include <config.hpp>
-
-extern PTNode* pt;
-extern int yyparse();
-extern FILE *yyin;
+#include <symboltable.hpp>
 
 int main(int argc, char **argv)
 {
@@ -25,38 +21,32 @@ int main(int argc, char **argv)
     spdlog::set_level(spdlog::level::debug);
     spdlog::set_pattern("[frontend][%^%l%$] %v");
 
+    spdlog::info("Frontend begin");
+
     // Parse command line options
     Config config(argc, argv);
 
-    // Try to open file
-    FILE *myfile = fopen(config.file.c_str(), "r");
-    if (!myfile) {
-        spdlog::error("Cannot open {}", argv[1]);
-        return -1;
+    PT pt(config.file);
+    if (config.printParseTree) {
+        spdlog::info("Parse tree:");
+        pt.print();
     }
-
-    spdlog::info("Frontend begin");
-
-    // Point FLEX/BISON to file and parse
-    spdlog::info("Tokenization/parsing beginning");
-	yyin = myfile;
-	yyparse();
-    spdlog::info("Tokenization/parsing done");
 
     // Create abstract syntax tree
-    spdlog::info("AST construction beginning");
-    AST ast(pt);
-    spdlog::info("AST construction done");
-
-    // Print parse tree if requested
-    if (config.printParseTree) {
-        pt->print();
-    }
+    AST ast(&pt);
     if (config.printAST) {
+        spdlog::info("Parse tree:");
         ast.print();
     }
 
-    spdlog::info("Frontend exit");
+    // Create symbol table
+    SymbolTable symbolTable(&ast);
+    if (config.printSymbolTable) {
+        spdlog::info("Symbol table:");
+        symbolTable.print();
+    }
+
+    spdlog::info("Frontend end");
 
     return 0;
 }
