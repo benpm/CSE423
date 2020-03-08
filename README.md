@@ -6,12 +6,13 @@ Documentation and User Manual lives on our [Wiki](https://github.com/benpm/CSE42
 ## Progress
 - [x] Scanner (lexical analyzer)
     - [x] Full token set
-    - [ ] Symbol table generation
 - [x] Parser (syntactic analyzer)
     - [x] Parse tree
     - [x] Abstract syntax tree
-    - [ ] Symbol table attribution
+    - [x] Symbol table population
 - [ ] Semantic analyzer
+    - [ ] Type checking
+    - [ ] Scope checking
 - [ ] IR generator
 - [ ] Optimizer
 - [ ] Code generator
