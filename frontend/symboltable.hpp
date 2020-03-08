@@ -1,3 +1,10 @@
+/**
+ * @file symboltable.hpp
+ * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
+ * @brief Header for symbol table
+ * @date 2020-03-07
+ * 
+ */
 #pragma once
 
 #include <string>
@@ -5,6 +12,10 @@
 #include <vector>
 #include <ast.hpp>
 
+/**
+ * @brief represents a single symbol (identifier)
+ * 
+ */
 class Symbol {
 public:
     enum Type {
@@ -25,6 +36,10 @@ public:
     Symbol(uint scopeID, Symbol::Type symType, Symbol::Category category);
 };
 
+/**
+ * @brief Tree of symbol tables that represent scope of the program
+ * 
+ */
 class SymbolTable {
 public:
     // Parent of this table (NULL if root)

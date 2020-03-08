@@ -222,18 +222,19 @@ void printASTNode(const AST* node, int depth, ulong levels)
  */
 void expandNodes(AST* ast)
 {
-    
+    // Recurse
     for (AST* child : ast->children) {
         expandNodes(child);
     }
 
     std::vector<AST*> newNodes;
-
     for (auto it = ast->children.begin(); it != ast->children.end();) {
         AST* child = *it;
+        // If we have a declaration with multiple assignments, add its children as new declarations to parent
         if (child->label == AST::declaration && child->children[1]->label == AST::dec_list) {
             AST::Label typeLabel = child->children[0]->label;
 
+            // Add assignment declaration to parent dec_list
             for (AST* assignment : child->children[1]->children) {
                 AST* declaration = new AST(AST::declaration);
                 declaration->children.push_back(new AST(typeLabel));
@@ -241,6 +242,7 @@ void expandNodes(AST* ast)
                 newNodes.push_back(declaration);
             }
 
+            // Free orphans
             delete child->children[0];
             delete child->children[1];
             it = ast->children.erase(it);
@@ -249,6 +251,7 @@ void expandNodes(AST* ast)
         }
     }
 
+    // Add the new declarations as children to the parent node
     ast->children.insert(ast->children.begin(), newNodes.begin(), newNodes.end());
 }
 
