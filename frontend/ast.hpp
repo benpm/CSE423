@@ -37,8 +37,8 @@ public:
     int ownedScopeID = -1;
 
     AST(Label label);
-    AST(const PTNode* pt);
-    AST(const PTNode* pt, AST* parent);
+    AST(const PT* pt);
+    AST(const PT* pt, AST* parent);
 
     void print();
     const std::string toString() const;

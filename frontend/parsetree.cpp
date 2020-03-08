@@ -8,9 +8,14 @@
 #include <iostream>
 #include <string>
 #include <parsetree.hpp>
+#include <spdlog/spdlog.h>
+
+extern PT* parserYppHandle;
+extern int yyparse();
+extern FILE *yyin;
 
 // Mapping from parsetree label to string
-const std::vector<std::string> PTNode::str {
+const std::vector<std::string> PT::str {
     "INT", "FLOAT", "CHAR", "FOR", "WHILE", "IF", "ELSE", "RETURN", "BREAK", "SEMICOLON",
     "COMMA", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACK", "RBRACK", "EQUAL", "PLUS",
     "MINUS", "TIMES", "DIVIDE", "MODULO", "PLUSEQUAL", "MINUSEQUAL", "TIMESEQUAL",
@@ -32,6 +37,27 @@ const std::vector<std::string> PTNode::str {
     "unary_assign_expr", "else_if", "else_stmt", "unary_minus"
 };
 
+
+PT::PT(std::string filename)
+{
+    // Point FLEX/BISON to file and parse
+    spdlog::info("Tokenization/parsing beginning");
+
+    // Try to open file
+    FILE *myfile = fopen(filename.c_str(), "r");
+    if (!myfile) {
+        spdlog::error("Cannot open {}", filename);
+        exit(EXIT_FAILURE);
+    }
+
+    parserYppHandle = this;
+	yyin = myfile;
+	yyparse();
+
+    fclose(myfile);
+    spdlog::info("Tokenization/parsing done");
+}
+
 /**
  * @brief Construct a new parsetree node from given label, children, and lineno
  *
@@ -39,7 +65,7 @@ const std::vector<std::string> PTNode::str {
  * @param children A vector of children (may be empty)
  * @param lineNum The line number associated with this symbol
  */
-PTNode::PTNode(Label label, std::vector<PTNode*> children, int lineNum)
+PT::PT(Label label, std::vector<PT*> children, int lineNum)
     : label(label), children(children), lineNum(lineNum)
 {
     terminal = ((int)label <= (int)NONE);
@@ -51,7 +77,7 @@ PTNode::PTNode(Label label, std::vector<PTNode*> children, int lineNum)
  * @param label The label for this leaf node
  * @param lineNum The line number associated with this object
  */
-PTNode::PTNode(Label label, int lineNum)
+PT::PT(Label label, int lineNum)
     : label(label), lineNum(lineNum)
 {
     terminal = ((int)label <= (int)NONE);
@@ -60,7 +86,7 @@ PTNode::PTNode(Label label, int lineNum)
 /**
  * @brief Pretty print the parse tree to standard output
  */
-void PTNode::print()
+void PT::print()
 {
     this->printNode(*this, 0, 0);
 }
@@ -70,9 +96,9 @@ void PTNode::print()
  *
  * @return String representation
  */
-const std::string PTNode::toString() const
+const std::string PT::toString() const
 {
-    return PTNode::str.at(this->label);
+    return PT::str.at(this->label);
 }
 
 /**
@@ -83,7 +109,7 @@ const std::string PTNode::toString() const
  * @param depth Current depth
  * @param levels Bit flag used to represent nested levels
  */
-void PTNode::printNode(PTNode &node, int depth, ulong levels)
+void PT::printNode(PT &node, int depth, ulong levels)
 {
     if (node.label == NONE) return;
 

@@ -19,88 +19,88 @@ const std::vector<std::string> AST::str {
 };
 
 // Map from parsetree label to AST label
-const std::map<PTNode::Label, AST::Label> labelMap {
-    {PTNode::PROGRAM, AST::root},
-    {PTNode::FUN_DECLARATION, AST::function},
-    {PTNode::ID, AST::id},
-    {PTNode::STATEMENT_LIST, AST::list},
-    {PTNode::UNARY_ASSIGN_EXPRESSION, AST::list},
-    {PTNode::UNARY_EXPRESSION, AST::list},
-    {PTNode::UNARY_REL_EXPRESSION, AST::list},
-    {PTNode::LOCAL_DECLARATIONS, AST::dec_list},
-    {PTNode::DECLARATION_LIST, AST::dec_list},
-    {PTNode::SIMPLE_EXPRESSION, AST::list},
-    {PTNode::AND_EXPRESSION, AST::list},
-    {PTNode::SELECTION_STMT, AST::list},
-    {PTNode::VAR_DECL_LIST, AST::dec_list},
-    {PTNode::SCOPED_VAR_DECLARATION, AST::declaration},
-    {PTNode::VAR_DECLARATION, AST::declaration},
-    {PTNode::VAR_DECL_INITIALIZE, AST::initialization},
-    {PTNode::EQUAL, AST::assignment},
-    {PTNode::SUM_EXPRESSION, AST::sum},
-    {PTNode::MUL_EXPRESSION, AST::mul},
-    {PTNode::DIVIDE, AST::divide},
-    {PTNode::MODULO, AST::modulo},
-    {PTNode::INTCONST, AST::int_const},
-    {PTNode::FLOATCONST, AST::float_const},
-    {PTNode::CHARLIT, AST::char_const},
-    {PTNode::STRINGLIT, AST::string_const},
-    {PTNode::SELECTION_STMT, AST::if_stmt},
-    {PTNode::FOR_STMT, AST::for_stmt},
-    {PTNode::WHILE_STMT, AST::while_stmt},
-    {PTNode::REL_EXPRESSION, AST::bool_expr},
-    {PTNode::ARG_LIST, AST::args},
-    {PTNode::PARAMS, AST::params},
-    {PTNode::CALL, AST::call},
-    {PTNode::INT, AST::int_type},
-    {PTNode::FLOAT, AST::float_type},
-    {PTNode::CHAR, AST::char_type},
-    {PTNode::RETURN_STMT, AST::return_stmt},
-    {PTNode::BREAK, AST::break_stmt},
-    {PTNode::EXPRESSION, AST::list},
-    {PTNode::LE, AST::le},
-    {PTNode::GE, AST::ge},
-    {PTNode::LT, AST::lt},
-    {PTNode::GT, AST::gt},
-    {PTNode::NOTEQ, AST::noteq},
-    {PTNode::ISEQ, AST::equal},
-    {PTNode::INCR, AST::incr},
-    {PTNode::DECR, AST::decr},
-    {PTNode::PLUSEQUAL, AST::plus_equal},
-    {PTNode::MINUSEQUAL, AST::minus_equal},
-    {PTNode::TIMESEQUAL, AST::times_equal},
-    {PTNode::MODEQUAL, AST::mod_equal},
-    {PTNode::DIVEQUAL, AST::div_equal},
-    {PTNode::ELSE_STMT, AST::else_stmt},
-    {PTNode::ELSE_IF, AST::else_if},
-    {PTNode::IF, AST::if_stmt},
-    {PTNode::ELSE_IF_LIST, AST::list},
-    {PTNode::MODULO, AST::modulo},
-    {PTNode::LOGAND, AST::log_and},
-    {PTNode::LOGOR, AST::log_or},
-    {PTNode::MINUS, AST::sub},
-    {PTNode::PLUS, AST::sum},
-    {PTNode::UNARY_MINUS, AST::unary_minus},
-    {PTNode::NOT, AST::log_not},
+const std::map<PT::Label, AST::Label> labelMap {
+    {PT::PROGRAM, AST::root},
+    {PT::FUN_DECLARATION, AST::function},
+    {PT::ID, AST::id},
+    {PT::STATEMENT_LIST, AST::list},
+    {PT::UNARY_ASSIGN_EXPRESSION, AST::list},
+    {PT::UNARY_EXPRESSION, AST::list},
+    {PT::UNARY_REL_EXPRESSION, AST::list},
+    {PT::LOCAL_DECLARATIONS, AST::dec_list},
+    {PT::DECLARATION_LIST, AST::dec_list},
+    {PT::SIMPLE_EXPRESSION, AST::list},
+    {PT::AND_EXPRESSION, AST::list},
+    {PT::SELECTION_STMT, AST::list},
+    {PT::VAR_DECL_LIST, AST::dec_list},
+    {PT::SCOPED_VAR_DECLARATION, AST::declaration},
+    {PT::VAR_DECLARATION, AST::declaration},
+    {PT::VAR_DECL_INITIALIZE, AST::initialization},
+    {PT::EQUAL, AST::assignment},
+    {PT::SUM_EXPRESSION, AST::sum},
+    {PT::MUL_EXPRESSION, AST::mul},
+    {PT::DIVIDE, AST::divide},
+    {PT::MODULO, AST::modulo},
+    {PT::INTCONST, AST::int_const},
+    {PT::FLOATCONST, AST::float_const},
+    {PT::CHARLIT, AST::char_const},
+    {PT::STRINGLIT, AST::string_const},
+    {PT::SELECTION_STMT, AST::if_stmt},
+    {PT::FOR_STMT, AST::for_stmt},
+    {PT::WHILE_STMT, AST::while_stmt},
+    {PT::REL_EXPRESSION, AST::bool_expr},
+    {PT::ARG_LIST, AST::args},
+    {PT::PARAMS, AST::params},
+    {PT::CALL, AST::call},
+    {PT::INT, AST::int_type},
+    {PT::FLOAT, AST::float_type},
+    {PT::CHAR, AST::char_type},
+    {PT::RETURN_STMT, AST::return_stmt},
+    {PT::BREAK, AST::break_stmt},
+    {PT::EXPRESSION, AST::list},
+    {PT::LE, AST::le},
+    {PT::GE, AST::ge},
+    {PT::LT, AST::lt},
+    {PT::GT, AST::gt},
+    {PT::NOTEQ, AST::noteq},
+    {PT::ISEQ, AST::equal},
+    {PT::INCR, AST::incr},
+    {PT::DECR, AST::decr},
+    {PT::PLUSEQUAL, AST::plus_equal},
+    {PT::MINUSEQUAL, AST::minus_equal},
+    {PT::TIMESEQUAL, AST::times_equal},
+    {PT::MODEQUAL, AST::mod_equal},
+    {PT::DIVEQUAL, AST::div_equal},
+    {PT::ELSE_STMT, AST::else_stmt},
+    {PT::ELSE_IF, AST::else_if},
+    {PT::IF, AST::if_stmt},
+    {PT::ELSE_IF_LIST, AST::list},
+    {PT::MODULO, AST::modulo},
+    {PT::LOGAND, AST::log_and},
+    {PT::LOGOR, AST::log_or},
+    {PT::MINUS, AST::sub},
+    {PT::PLUS, AST::sum},
+    {PT::UNARY_MINUS, AST::unary_minus},
+    {PT::NOT, AST::log_not},
 };
 
 // Parsetree nodes that should be kept no matter what
-const std::set<PTNode::Label> keepNodes {
-    PTNode::RETURN_STMT, PTNode::ARG_LIST, PTNode::UNARY_MINUS, PTNode::PARAMS, PTNode::DECLARATION_LIST, PTNode::LOCAL_DECLARATIONS
+const std::set<PT::Label> keepNodes {
+    PT::RETURN_STMT, PT::ARG_LIST, PT::UNARY_MINUS, PT::PARAMS, PT::DECLARATION_LIST, PT::LOCAL_DECLARATIONS
 };
 
 // Parsetree nodes that should be mapped and swapped with their parent in the AST
-const std::set<PTNode::Label> swapNodes {
-    PTNode::LE, PTNode::GE, PTNode::LT, PTNode::GT,
-    PTNode::INCR, PTNode::DECR,
-    PTNode::PLUSEQUAL, PTNode::MINUSEQUAL, PTNode::TIMESEQUAL, PTNode::DIVEQUAL,
-    PTNode::MODEQUAL,
-    PTNode::DIVIDE, PTNode::MODULO,
-    PTNode::NOTEQ, PTNode::ISEQ,
-    PTNode::EQUAL, PTNode::ELSE_IF, PTNode::IF,
-    PTNode::LOGAND, PTNode::LOGOR,
-    PTNode::MINUS, PTNode::PLUS,
-    PTNode::NOT
+const std::set<PT::Label> swapNodes {
+    PT::LE, PT::GE, PT::LT, PT::GT,
+    PT::INCR, PT::DECR,
+    PT::PLUSEQUAL, PT::MINUSEQUAL, PT::TIMESEQUAL, PT::DIVEQUAL,
+    PT::MODEQUAL,
+    PT::DIVIDE, PT::MODULO,
+    PT::NOTEQ, PT::ISEQ,
+    PT::EQUAL, PT::ELSE_IF, PT::IF,
+    PT::LOGAND, PT::LOGOR,
+    PT::MINUS, PT::PLUS,
+    PT::NOT
 };
 
 /**
@@ -109,10 +109,10 @@ const std::set<PTNode::Label> swapNodes {
  * @param ast The AST to build upon
  * @param node The parsetree to traverse
  */
-void traversePT(AST* ast, const PTNode* node)
+void traversePT(AST* ast, const PT* node)
 {
     // Some pt nodes direct AST builder to swap with their parents, this must be done first
-    for (const PTNode* child : node->children) {
+    for (const PT* child : node->children) {
         if (swapNodes.find(child->label) != swapNodes.end()) {
             ast->label = labelMap.at(child->label);
             continue;
@@ -120,8 +120,8 @@ void traversePT(AST* ast, const PTNode* node)
     }
 
     // Loop thru children and decide to build or skip
-    for (const PTNode* child : node->children) {
-        if (child->label == PTNode::NONE) continue;
+    for (const PT* child : node->children) {
+        if (child->label == PT::NONE) continue;
 
         size_t children = child->children.size();
         bool mapped = labelMap.find(child->label) != labelMap.end();
@@ -134,8 +134,8 @@ void traversePT(AST* ast, const PTNode* node)
 
         // Decide to skip this node or to build AST node from it (see wiki for more info)
         if (((children > 1 || child->terminal) && noDupeLabel && mapped) || (keep && noDupeLabel)
-            || (child->label == PTNode::MUL_EXPRESSION && children > 1)
-            || (child->label == PTNode::ELSE_IF_LIST && children > 1)) {
+            || (child->label == PT::MUL_EXPRESSION && children > 1)
+            || (child->label == PT::ELSE_IF_LIST && children > 1)) {
 
             // Create a new AST node representing this pt node (recursive call)
             AST* next = new AST(child, ast);
@@ -267,12 +267,16 @@ AST::AST(AST::Label label)
  *
  * @param pt Parse tree to constr from
  */
-AST::AST(const PTNode* pt)
+AST::AST(const PT* pt)
 {
-    if (pt->label == PTNode::PROGRAM)
+    spdlog::info("AST construction beginning");
+
+    if (pt->label == PT::PROGRAM)
         this->label = AST::root;
     traversePT(this, pt);
     expandNodes(this);
+
+    spdlog::info("AST construction done");
 }
 
 /**
@@ -280,7 +284,7 @@ AST::AST(const PTNode* pt)
  *
  * @param pt Parse tree to constr from
  */
-AST::AST(const PTNode* pt, AST* parent)
+AST::AST(const PT* pt, AST* parent)
 {
     this->parent = parent;
     this->label = labelMap.at(pt->label);

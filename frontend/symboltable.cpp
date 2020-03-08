@@ -2,6 +2,7 @@
 #include <set>
 #include <spdlog/fmt/fmt.h>
 #include <iostream>
+#include <spdlog/spdlog.h>
 
 // Mapping from symbol types/categories to strings
 std::unordered_map<int, std::string> enumToString{
@@ -129,10 +130,14 @@ uint traverseAST(SymbolTable* table, AST* ast)
  */
 SymbolTable::SymbolTable(AST* ast)
 {
+    spdlog::info("Symbol Table population beginning");
+
     this->tableID = 0;
     this->name = "_GLOBAL_";
 
     traverseAST(this, ast);
+
+    spdlog::info("Symbol Table population done");
 }
 
 /**

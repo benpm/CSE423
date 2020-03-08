@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.4.1.  */
+/* A Bison parser, made by GNU Bison 3.5.1.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2019 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -48,7 +48,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "3.4.1"
+#define YYBISON_VERSION "3.5.1"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -79,10 +79,19 @@
 
     void yyerror(const char *s);
 
-    PTNode* pt;
+    PT* parserYppHandle;
 
 #line 85 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
 
+# ifndef YY_CAST
+#  ifdef __cplusplus
+#   define YY_CAST(Type, Val) static_cast<Type> (Val)
+#   define YY_REINTERPRET_CAST(Type, Val) reinterpret_cast<Type> (Val)
+#  else
+#   define YY_CAST(Type, Val) ((Type) (Val))
+#   define YY_REINTERPRET_CAST(Type, Val) ((Type) (Val))
+#  endif
+# endif
 # ifndef YY_NULLPTR
 #  if defined __cplusplus
 #   if 201103L <= __cplusplus
@@ -178,9 +187,9 @@ union YYSTYPE
     float fval;
     char *sval;
     char cval;
-    PTNode* pt;
+    PT* pt;
 
-#line 184 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 193 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -215,28 +224,75 @@ int yyparse (void);
 # undef short
 #endif
 
-#ifdef YYTYPE_UINT8
-typedef YYTYPE_UINT8 yytype_uint8;
-#else
-typedef unsigned char yytype_uint8;
+/* On compilers that do not define __PTRDIFF_MAX__ etc., make sure
+   <limits.h> and (if available) <stdint.h> are included
+   so that the code can choose integer types of a good width.  */
+
+#ifndef __PTRDIFF_MAX__
+# include <limits.h> /* INFRINGES ON USER NAME SPACE */
+# if defined __STDC_VERSION__ && 199901 <= __STDC_VERSION__
+#  include <stdint.h> /* INFRINGES ON USER NAME SPACE */
+#  define YY_STDINT_H
+# endif
 #endif
 
-#ifdef YYTYPE_INT8
-typedef YYTYPE_INT8 yytype_int8;
+/* Narrow types that promote to a signed type and that can represent a
+   signed or unsigned integer of at least N bits.  In tables they can
+   save space and decrease cache pressure.  Promoting to a signed type
+   helps avoid bugs in integer arithmetic.  */
+
+#ifdef __INT_LEAST8_MAX__
+typedef __INT_LEAST8_TYPE__ yytype_int8;
+#elif defined YY_STDINT_H
+typedef int_least8_t yytype_int8;
 #else
 typedef signed char yytype_int8;
 #endif
 
-#ifdef YYTYPE_UINT16
-typedef YYTYPE_UINT16 yytype_uint16;
-#else
-typedef unsigned short yytype_uint16;
-#endif
-
-#ifdef YYTYPE_INT16
-typedef YYTYPE_INT16 yytype_int16;
+#ifdef __INT_LEAST16_MAX__
+typedef __INT_LEAST16_TYPE__ yytype_int16;
+#elif defined YY_STDINT_H
+typedef int_least16_t yytype_int16;
 #else
 typedef short yytype_int16;
+#endif
+
+#if defined __UINT_LEAST8_MAX__ && __UINT_LEAST8_MAX__ <= __INT_MAX__
+typedef __UINT_LEAST8_TYPE__ yytype_uint8;
+#elif (!defined __UINT_LEAST8_MAX__ && defined YY_STDINT_H \
+       && UINT_LEAST8_MAX <= INT_MAX)
+typedef uint_least8_t yytype_uint8;
+#elif !defined __UINT_LEAST8_MAX__ && UCHAR_MAX <= INT_MAX
+typedef unsigned char yytype_uint8;
+#else
+typedef short yytype_uint8;
+#endif
+
+#if defined __UINT_LEAST16_MAX__ && __UINT_LEAST16_MAX__ <= __INT_MAX__
+typedef __UINT_LEAST16_TYPE__ yytype_uint16;
+#elif (!defined __UINT_LEAST16_MAX__ && defined YY_STDINT_H \
+       && UINT_LEAST16_MAX <= INT_MAX)
+typedef uint_least16_t yytype_uint16;
+#elif !defined __UINT_LEAST16_MAX__ && USHRT_MAX <= INT_MAX
+typedef unsigned short yytype_uint16;
+#else
+typedef int yytype_uint16;
+#endif
+
+#ifndef YYPTRDIFF_T
+# if defined __PTRDIFF_TYPE__ && defined __PTRDIFF_MAX__
+#  define YYPTRDIFF_T __PTRDIFF_TYPE__
+#  define YYPTRDIFF_MAXIMUM __PTRDIFF_MAX__
+# elif defined PTRDIFF_MAX
+#  ifndef ptrdiff_t
+#   include <stddef.h> /* INFRINGES ON USER NAME SPACE */
+#  endif
+#  define YYPTRDIFF_T ptrdiff_t
+#  define YYPTRDIFF_MAXIMUM PTRDIFF_MAX
+# else
+#  define YYPTRDIFF_T long
+#  define YYPTRDIFF_MAXIMUM LONG_MAX
+# endif
 #endif
 
 #ifndef YYSIZE_T
@@ -244,7 +300,7 @@ typedef short yytype_int16;
 #  define YYSIZE_T __SIZE_TYPE__
 # elif defined size_t
 #  define YYSIZE_T size_t
-# elif ! defined YYSIZE_T
+# elif defined __STDC_VERSION__ && 199901 <= __STDC_VERSION__
 #  include <stddef.h> /* INFRINGES ON USER NAME SPACE */
 #  define YYSIZE_T size_t
 # else
@@ -252,7 +308,19 @@ typedef short yytype_int16;
 # endif
 #endif
 
-#define YYSIZE_MAXIMUM ((YYSIZE_T) -1)
+#define YYSIZE_MAXIMUM                                  \
+  YY_CAST (YYPTRDIFF_T,                                 \
+           (YYPTRDIFF_MAXIMUM < YY_CAST (YYSIZE_T, -1)  \
+            ? YYPTRDIFF_MAXIMUM                         \
+            : YY_CAST (YYSIZE_T, -1)))
+
+#define YYSIZEOF(X) YY_CAST (YYPTRDIFF_T, sizeof (X))
+
+/* Stored state numbers (used for stacks). */
+typedef yytype_uint8 yy_state_t;
+
+/* State numbers in computations.  */
+typedef int yy_state_fast_t;
 
 #ifndef YY_
 # if defined YYENABLE_NLS && YYENABLE_NLS
@@ -266,22 +334,20 @@ typedef short yytype_int16;
 # endif
 #endif
 
-#ifndef YY_ATTRIBUTE
-# if (defined __GNUC__                                               \
-      && (2 < __GNUC__ || (__GNUC__ == 2 && 96 <= __GNUC_MINOR__)))  \
-     || defined __SUNPRO_C && 0x5110 <= __SUNPRO_C
-#  define YY_ATTRIBUTE(Spec) __attribute__(Spec)
+#ifndef YY_ATTRIBUTE_PURE
+# if defined __GNUC__ && 2 < __GNUC__ + (96 <= __GNUC_MINOR__)
+#  define YY_ATTRIBUTE_PURE __attribute__ ((__pure__))
 # else
-#  define YY_ATTRIBUTE(Spec) /* empty */
+#  define YY_ATTRIBUTE_PURE
 # endif
 #endif
 
-#ifndef YY_ATTRIBUTE_PURE
-# define YY_ATTRIBUTE_PURE   YY_ATTRIBUTE ((__pure__))
-#endif
-
 #ifndef YY_ATTRIBUTE_UNUSED
-# define YY_ATTRIBUTE_UNUSED YY_ATTRIBUTE ((__unused__))
+# if defined __GNUC__ && 2 < __GNUC__ + (7 <= __GNUC_MINOR__)
+#  define YY_ATTRIBUTE_UNUSED __attribute__ ((__unused__))
+# else
+#  define YY_ATTRIBUTE_UNUSED
+# endif
 #endif
 
 /* Suppress unused-variable warnings by "using" E.  */
@@ -293,11 +359,11 @@ typedef short yytype_int16;
 
 #if defined __GNUC__ && ! defined __ICC && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
 /* Suppress an incorrect diagnostic about yylval being uninitialized.  */
-# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN \
-    _Pragma ("GCC diagnostic push") \
-    _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")\
+# define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN                            \
+    _Pragma ("GCC diagnostic push")                                     \
+    _Pragma ("GCC diagnostic ignored \"-Wuninitialized\"")              \
     _Pragma ("GCC diagnostic ignored \"-Wmaybe-uninitialized\"")
-# define YY_IGNORE_MAYBE_UNINITIALIZED_END \
+# define YY_IGNORE_MAYBE_UNINITIALIZED_END      \
     _Pragma ("GCC diagnostic pop")
 #else
 # define YY_INITIAL_VALUE(Value) Value
@@ -308,6 +374,18 @@ typedef short yytype_int16;
 #endif
 #ifndef YY_INITIAL_VALUE
 # define YY_INITIAL_VALUE(Value) /* Nothing. */
+#endif
+
+#if defined __cplusplus && defined __GNUC__ && ! defined __ICC && 6 <= __GNUC__
+# define YY_IGNORE_USELESS_CAST_BEGIN                          \
+    _Pragma ("GCC diagnostic push")                            \
+    _Pragma ("GCC diagnostic ignored \"-Wuseless-cast\"")
+# define YY_IGNORE_USELESS_CAST_END            \
+    _Pragma ("GCC diagnostic pop")
+#endif
+#ifndef YY_IGNORE_USELESS_CAST_BEGIN
+# define YY_IGNORE_USELESS_CAST_BEGIN
+# define YY_IGNORE_USELESS_CAST_END
 #endif
 
 
@@ -389,18 +467,19 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 /* A type that is properly aligned for any stack member.  */
 union yyalloc
 {
-  yytype_int16 yyss_alloc;
+  yy_state_t yyss_alloc;
   YYSTYPE yyvs_alloc;
   YYLTYPE yyls_alloc;
 };
 
 /* The size of the maximum gap between one aligned stack and the next.  */
-# define YYSTACK_GAP_MAXIMUM (sizeof (union yyalloc) - 1)
+# define YYSTACK_GAP_MAXIMUM (YYSIZEOF (union yyalloc) - 1)
 
 /* The size of an array large to enough to hold all stacks, each with
    N elements.  */
 # define YYSTACK_BYTES(N) \
-     ((N) * (sizeof (yytype_int16) + sizeof (YYSTYPE) + sizeof (YYLTYPE)) \
+     ((N) * (YYSIZEOF (yy_state_t) + YYSIZEOF (YYSTYPE) \
+             + YYSIZEOF (YYLTYPE)) \
       + 2 * YYSTACK_GAP_MAXIMUM)
 
 # define YYCOPY_NEEDED 1
@@ -413,11 +492,11 @@ union yyalloc
 # define YYSTACK_RELOCATE(Stack_alloc, Stack)                           \
     do                                                                  \
       {                                                                 \
-        YYSIZE_T yynewbytes;                                            \
+        YYPTRDIFF_T yynewbytes;                                         \
         YYCOPY (&yyptr->Stack_alloc, Stack, yysize);                    \
         Stack = &yyptr->Stack_alloc;                                    \
-        yynewbytes = yystacksize * sizeof (*Stack) + YYSTACK_GAP_MAXIMUM; \
-        yyptr += yynewbytes / sizeof (*yyptr);                          \
+        yynewbytes = yystacksize * YYSIZEOF (*Stack) + YYSTACK_GAP_MAXIMUM; \
+        yyptr += yynewbytes / YYSIZEOF (*yyptr);                        \
       }                                                                 \
     while (0)
 
@@ -429,12 +508,12 @@ union yyalloc
 # ifndef YYCOPY
 #  if defined __GNUC__ && 1 < __GNUC__
 #   define YYCOPY(Dst, Src, Count) \
-      __builtin_memcpy (Dst, Src, (Count) * sizeof (*(Src)))
+      __builtin_memcpy (Dst, Src, YY_CAST (YYSIZE_T, (Count)) * sizeof (*(Src)))
 #  else
 #   define YYCOPY(Dst, Src, Count)              \
       do                                        \
         {                                       \
-          YYSIZE_T yyi;                         \
+          YYPTRDIFF_T yyi;                      \
           for (yyi = 0; yyi < (Count); yyi++)   \
             (Dst)[yyi] = (Src)[yyi];            \
         }                                       \
@@ -460,14 +539,15 @@ union yyalloc
 #define YYUNDEFTOK  2
 #define YYMAXUTOK   302
 
+
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
    as returned by yylex, with out-of-bounds checking.  */
 #define YYTRANSLATE(YYX)                                                \
-  ((unsigned) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
+  (0 <= (YYX) && (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
 
 /* YYTRANSLATE[TOKEN-NUM] -- Symbol number corresponding to TOKEN-NUM
    as returned by yylex.  */
-static const yytype_uint8 yytranslate[] =
+static const yytype_int8 yytranslate[] =
 {
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -504,19 +584,19 @@ static const yytype_uint8 yytranslate[] =
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_uint16 yyrline[] =
+static const yytype_int16 yyrline[] =
 {
-       0,   140,   140,   147,   152,   159,   164,   171,   178,   185,
-     190,   197,   202,   210,   215,   219,   226,   233,   237,   241,
-     247,   254,   261,   266,   272,   277,   284,   289,   296,   301,
-     306,   311,   316,   321,   328,   333,   339,   344,   349,   356,
-     361,   368,   373,   380,   384,   388,   392,   396,   400,   406,
-     410,   416,   422,   429,   435,   442,   448,   455,   460,   467,
-     471,   475,   479,   483,   487,   493,   498,   505,   509,   515,
-     520,   527,   531,   535,   541,   546,   553,   560,   565,   572,
-     577,   582,   589,   598,   603,   609,   614,   621,   626,   631,
-     636,   643,   650,   655,   661,   666,   672,   678,   686,   694,
-     700,   706,   711,   718,   725,   732,   736,   743
+       0,   140,   140,   148,   153,   160,   165,   172,   179,   186,
+     191,   198,   203,   211,   216,   220,   227,   234,   238,   242,
+     248,   255,   262,   267,   273,   278,   285,   290,   297,   302,
+     307,   312,   317,   322,   329,   334,   340,   345,   350,   357,
+     362,   369,   374,   381,   385,   389,   393,   397,   401,   407,
+     411,   417,   423,   430,   436,   443,   449,   456,   461,   468,
+     472,   476,   480,   484,   488,   494,   499,   506,   510,   516,
+     521,   528,   532,   536,   542,   547,   554,   561,   566,   573,
+     578,   583,   590,   599,   604,   610,   615,   622,   627,   632,
+     637,   644,   651,   656,   662,   667,   673,   679,   687,   695,
+     701,   707,   712,   719,   726,   733,   737,   744
 };
 #endif
 
@@ -549,7 +629,7 @@ static const char *const yytname[] =
 # ifdef YYPRINT
 /* YYTOKNUM[NUM] -- (External) token number corresponding to the
    (internal) symbol number NUM (which must be that of a token).  */
-static const yytype_uint16 yytoknum[] =
+static const yytype_int16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
@@ -559,14 +639,14 @@ static const yytype_uint16 yytoknum[] =
 };
 # endif
 
-#define YYPACT_NINF -105
+#define YYPACT_NINF (-105)
 
-#define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-105)))
+#define yypact_value_is_default(Yyn) \
+  ((Yyn) == YYPACT_NINF)
 
-#define YYTABLE_NINF -21
+#define YYTABLE_NINF (-21)
 
-#define yytable_value_is_error(Yytable_value) \
+#define yytable_value_is_error(Yyn) \
   0
 
   /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
@@ -595,7 +675,7 @@ static const yytype_int16 yypact[] =
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
      Performed when YYTABLE does not specify something else to do.  Zero
      means the default is an error.  */
-static const yytype_uint8 yydefact[] =
+static const yytype_int8 yydefact[] =
 {
        0,    17,    18,    19,     0,     2,     4,     5,     0,     6,
        1,     3,    13,     0,    10,    11,     0,     0,     7,     0,
@@ -691,7 +771,7 @@ static const yytype_int16 yycheck[] =
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
-static const yytype_uint8 yystos[] =
+static const yytype_int8 yystos[] =
 {
        0,     3,     4,     5,    49,    50,    51,    52,    58,    60,
        0,    51,    46,    54,    55,    56,    59,    18,    12,    13,
@@ -713,7 +793,7 @@ static const yytype_uint8 yystos[] =
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
-static const yytype_uint8 yyr1[] =
+static const yytype_int8 yyr1[] =
 {
        0,    48,    49,    50,    50,    51,    51,    52,    53,    54,
       54,    55,    55,    56,    56,    56,    57,    58,    58,    58,
@@ -729,7 +809,7 @@ static const yytype_uint8 yyr1[] =
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
-static const yytype_uint8 yyr2[] =
+static const yytype_int8 yyr2[] =
 {
        0,     2,     1,     2,     1,     1,     1,     3,     3,     3,
        1,     1,     3,     1,     3,     4,     1,     1,     1,     1,
@@ -893,7 +973,9 @@ yy_symbol_value_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep, YY
   if (yytype < YYNTOKENS)
     YYPRINT (yyo, yytoknum[yytype], *yyvaluep);
 # endif
+  YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
   YYUSE (yytype);
+  YY_IGNORE_MAYBE_UNINITIALIZED_END
 }
 
 
@@ -919,7 +1001,7 @@ yy_symbol_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep, YYLTYPE 
 `------------------------------------------------------------------*/
 
 static void
-yy_stack_print (yytype_int16 *yybottom, yytype_int16 *yytop)
+yy_stack_print (yy_state_t *yybottom, yy_state_t *yytop)
 {
   YYFPRINTF (stderr, "Stack now");
   for (; yybottom <= yytop; yybottom++)
@@ -942,19 +1024,19 @@ do {                                                            \
 `------------------------------------------------*/
 
 static void
-yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, YYLTYPE *yylsp, int yyrule)
+yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp, YYLTYPE *yylsp, int yyrule)
 {
-  unsigned long yylno = yyrline[yyrule];
+  int yylno = yyrline[yyrule];
   int yynrhs = yyr2[yyrule];
   int yyi;
-  YYFPRINTF (stderr, "Reducing stack by rule %d (line %lu):\n",
+  YYFPRINTF (stderr, "Reducing stack by rule %d (line %d):\n",
              yyrule - 1, yylno);
   /* The symbols being reduced.  */
   for (yyi = 0; yyi < yynrhs; yyi++)
     {
       YYFPRINTF (stderr, "   $%d = ", yyi + 1);
       yy_symbol_print (stderr,
-                       yystos[yyssp[yyi + 1 - yynrhs]],
+                       yystos[+yyssp[yyi + 1 - yynrhs]],
                        &yyvsp[(yyi + 1) - (yynrhs)]
                        , &(yylsp[(yyi + 1) - (yynrhs)])                       );
       YYFPRINTF (stderr, "\n");
@@ -999,13 +1081,13 @@ int yydebug;
 
 # ifndef yystrlen
 #  if defined __GLIBC__ && defined _STRING_H
-#   define yystrlen strlen
+#   define yystrlen(S) (YY_CAST (YYPTRDIFF_T, strlen (S)))
 #  else
 /* Return the length of YYSTR.  */
-static YYSIZE_T
+static YYPTRDIFF_T
 yystrlen (const char *yystr)
 {
-  YYSIZE_T yylen;
+  YYPTRDIFF_T yylen;
   for (yylen = 0; yystr[yylen]; yylen++)
     continue;
   return yylen;
@@ -1041,12 +1123,12 @@ yystpcpy (char *yydest, const char *yysrc)
    backslash-backslash).  YYSTR is taken from yytname.  If YYRES is
    null, do not copy; instead, return the length of what the result
    would have been.  */
-static YYSIZE_T
+static YYPTRDIFF_T
 yytnamerr (char *yyres, const char *yystr)
 {
   if (*yystr == '"')
     {
-      YYSIZE_T yyn = 0;
+      YYPTRDIFF_T yyn = 0;
       char const *yyp = yystr;
 
       for (;;)
@@ -1077,10 +1159,10 @@ yytnamerr (char *yyres, const char *yystr)
     do_not_strip_quotes: ;
     }
 
-  if (! yyres)
+  if (yyres)
+    return yystpcpy (yyres, yystr) - yyres;
+  else
     return yystrlen (yystr);
-
-  return (YYSIZE_T) (yystpcpy (yyres, yystr) - yyres);
 }
 # endif
 
@@ -1093,19 +1175,19 @@ yytnamerr (char *yyres, const char *yystr)
    *YYMSG_ALLOC to the required number of bytes.  Return 2 if the
    required number of bytes is too large to store.  */
 static int
-yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
-                yytype_int16 *yyssp, int yytoken)
+yysyntax_error (YYPTRDIFF_T *yymsg_alloc, char **yymsg,
+                yy_state_t *yyssp, int yytoken)
 {
-  YYSIZE_T yysize0 = yytnamerr (YY_NULLPTR, yytname[yytoken]);
-  YYSIZE_T yysize = yysize0;
   enum { YYERROR_VERBOSE_ARGS_MAXIMUM = 5 };
   /* Internationalized format string. */
   const char *yyformat = YY_NULLPTR;
-  /* Arguments of yyformat. */
+  /* Arguments of yyformat: reported tokens (one for the "unexpected",
+     one per "expected"). */
   char const *yyarg[YYERROR_VERBOSE_ARGS_MAXIMUM];
-  /* Number of reported tokens (one for the "unexpected", one per
-     "expected"). */
+  /* Actual size of YYARG. */
   int yycount = 0;
+  /* Cumulated lengths of YYARG.  */
+  YYPTRDIFF_T yysize = 0;
 
   /* There are many possibilities here to consider:
      - If this state is a consistent state with a default action, then
@@ -1132,7 +1214,9 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
   */
   if (yytoken != YYEMPTY)
     {
-      int yyn = yypact[*yyssp];
+      int yyn = yypact[+*yyssp];
+      YYPTRDIFF_T yysize0 = yytnamerr (YY_NULLPTR, yytname[yytoken]);
+      yysize = yysize0;
       yyarg[yycount++] = yytname[yytoken];
       if (!yypact_value_is_default (yyn))
         {
@@ -1157,7 +1241,8 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
                   }
                 yyarg[yycount++] = yytname[yyx];
                 {
-                  YYSIZE_T yysize1 = yysize + yytnamerr (YY_NULLPTR, yytname[yyx]);
+                  YYPTRDIFF_T yysize1
+                    = yysize + yytnamerr (YY_NULLPTR, yytname[yyx]);
                   if (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM)
                     yysize = yysize1;
                   else
@@ -1184,7 +1269,9 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
     }
 
   {
-    YYSIZE_T yysize1 = yysize + yystrlen (yyformat);
+    /* Don't count the "%s"s in the final size, but reserve room for
+       the terminator.  */
+    YYPTRDIFF_T yysize1 = yysize + (yystrlen (yyformat) - 2 * yycount) + 1;
     if (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM)
       yysize = yysize1;
     else
@@ -1214,8 +1301,8 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
         }
       else
         {
-          yyp++;
-          yyformat++;
+          ++yyp;
+          ++yyformat;
         }
   }
   return 0;
@@ -1265,7 +1352,7 @@ int yynerrs;
 int
 yyparse (void)
 {
-    int yystate;
+    yy_state_fast_t yystate;
     /* Number of tokens to shift before error messages enabled.  */
     int yyerrstatus;
 
@@ -1278,9 +1365,9 @@ yyparse (void)
        to reallocate them elsewhere.  */
 
     /* The state stack.  */
-    yytype_int16 yyssa[YYINITDEPTH];
-    yytype_int16 *yyss;
-    yytype_int16 *yyssp;
+    yy_state_t yyssa[YYINITDEPTH];
+    yy_state_t *yyss;
+    yy_state_t *yyssp;
 
     /* The semantic value stack.  */
     YYSTYPE yyvsa[YYINITDEPTH];
@@ -1295,7 +1382,7 @@ yyparse (void)
     /* The locations where the error started and ended.  */
     YYLTYPE yyerror_range[3];
 
-    YYSIZE_T yystacksize;
+    YYPTRDIFF_T yystacksize;
 
   int yyn;
   int yyresult;
@@ -1310,7 +1397,7 @@ yyparse (void)
   /* Buffer for error messages, and its allocated size.  */
   char yymsgbuf[128];
   char *yymsg = yymsgbuf;
-  YYSIZE_T yymsg_alloc = sizeof yymsgbuf;
+  YYPTRDIFF_T yymsg_alloc = sizeof yymsgbuf;
 #endif
 
 #define YYPOPSTACK(N)   (yyvsp -= (N), yyssp -= (N), yylsp -= (N))
@@ -1344,12 +1431,14 @@ yynewstate:
 
 
 /*--------------------------------------------------------------------.
-| yynewstate -- set current state (the top of the stack) to yystate.  |
+| yysetstate -- set current state (the top of the stack) to yystate.  |
 `--------------------------------------------------------------------*/
 yysetstate:
   YYDPRINTF ((stderr, "Entering state %d\n", yystate));
   YY_ASSERT (0 <= yystate && yystate < YYNSTATES);
-  *yyssp = (yytype_int16) yystate;
+  YY_IGNORE_USELESS_CAST_BEGIN
+  *yyssp = YY_CAST (yy_state_t, yystate);
+  YY_IGNORE_USELESS_CAST_END
 
   if (yyss + yystacksize - 1 <= yyssp)
 #if !defined yyoverflow && !defined YYSTACK_RELOCATE
@@ -1357,15 +1446,15 @@ yysetstate:
 #else
     {
       /* Get the current used size of the three stacks, in elements.  */
-      YYSIZE_T yysize = (YYSIZE_T) (yyssp - yyss + 1);
+      YYPTRDIFF_T yysize = yyssp - yyss + 1;
 
 # if defined yyoverflow
       {
         /* Give user a chance to reallocate the stack.  Use copies of
            these so that the &'s don't force the real ones into
            memory.  */
+        yy_state_t *yyss1 = yyss;
         YYSTYPE *yyvs1 = yyvs;
-        yytype_int16 *yyss1 = yyss;
         YYLTYPE *yyls1 = yyls;
 
         /* Each stack pointer address is followed by the size of the
@@ -1373,9 +1462,9 @@ yysetstate:
            conditional around just the two extra args, but that might
            be undefined if yyoverflow is a macro.  */
         yyoverflow (YY_("memory exhausted"),
-                    &yyss1, yysize * sizeof (*yyssp),
-                    &yyvs1, yysize * sizeof (*yyvsp),
-                    &yyls1, yysize * sizeof (*yylsp),
+                    &yyss1, yysize * YYSIZEOF (*yyssp),
+                    &yyvs1, yysize * YYSIZEOF (*yyvsp),
+                    &yyls1, yysize * YYSIZEOF (*yylsp),
                     &yystacksize);
         yyss = yyss1;
         yyvs = yyvs1;
@@ -1390,9 +1479,10 @@ yysetstate:
         yystacksize = YYMAXDEPTH;
 
       {
-        yytype_int16 *yyss1 = yyss;
+        yy_state_t *yyss1 = yyss;
         union yyalloc *yyptr =
-          (union yyalloc *) YYSTACK_ALLOC (YYSTACK_BYTES (yystacksize));
+          YY_CAST (union yyalloc *,
+                   YYSTACK_ALLOC (YY_CAST (YYSIZE_T, YYSTACK_BYTES (yystacksize))));
         if (! yyptr)
           goto yyexhaustedlab;
         YYSTACK_RELOCATE (yyss_alloc, yyss);
@@ -1408,8 +1498,10 @@ yysetstate:
       yyvsp = yyvs + yysize - 1;
       yylsp = yyls + yysize - 1;
 
-      YYDPRINTF ((stderr, "Stack size increased to %lu\n",
-                  (unsigned long) yystacksize));
+      YY_IGNORE_USELESS_CAST_BEGIN
+      YYDPRINTF ((stderr, "Stack size increased to %ld\n",
+                  YY_CAST (long, yystacksize)));
+      YY_IGNORE_USELESS_CAST_END
 
       if (yyss + yystacksize - 1 <= yyssp)
         YYABORT;
@@ -1475,15 +1567,14 @@ yybackup:
 
   /* Shift the lookahead token.  */
   YY_SYMBOL_PRINT ("Shifting", yytoken, &yylval, &yylloc);
-
-  /* Discard the shifted token.  */
-  yychar = YYEMPTY;
-
   yystate = yyn;
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
   *++yyvsp = yylval;
   YY_IGNORE_MAYBE_UNINITIALIZED_END
   *++yylsp = yylloc;
+
+  /* Discard the shifted token.  */
+  yychar = YYEMPTY;
   goto yynewstate;
 
 
@@ -1522,941 +1613,942 @@ yyreduce:
     {
   case 2:
 #line 141 "frontend/flex_bison/parser.ypp"
-    {
-            pt = new PTNode(PTNode::PROGRAM,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+        {
+            parserYppHandle->label = PT::PROGRAM;
+            parserYppHandle->children = std::vector<PT*> { (yyvsp[0].pt) };
+            parserYppHandle->lineNum = yylloc.first_line;
         }
-#line 1530 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1622 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 3:
-#line 148 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::DECLARATION_LIST,
-                std::vector<PTNode*> { (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
+#line 149 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::DECLARATION_LIST,
+                std::vector<PT*> { (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1539 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1631 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 4:
-#line 153 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::DECLARATION_LIST,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+#line 154 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::DECLARATION_LIST,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1548 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1640 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 5:
-#line 160 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::DECLARATION,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+#line 161 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::DECLARATION,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1557 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1649 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 6:
-#line 165 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::DECLARATION,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+#line 166 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::DECLARATION,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1566 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1658 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 7:
-#line 172 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::VAR_DECLARATION,
-                std::vector<PTNode*> { (yyvsp[-2].pt), (yyvsp[-1].pt) }, yylloc.first_line);
+#line 173 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::VAR_DECLARATION,
+                std::vector<PT*> { (yyvsp[-2].pt), (yyvsp[-1].pt) }, yylloc.first_line);
         }
-#line 1575 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1667 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 8:
-#line 179 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::SCOPED_VAR_DECLARATION,
-                std::vector<PTNode*> { (yyvsp[-2].pt), (yyvsp[-1].pt) }, yylloc.first_line);
+#line 180 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::SCOPED_VAR_DECLARATION,
+                std::vector<PT*> { (yyvsp[-2].pt), (yyvsp[-1].pt) }, yylloc.first_line);
         }
-#line 1584 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1676 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 9:
-#line 186 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::VAR_DECL_LIST,
-                std::vector<PTNode*> { (yyvsp[-2].pt), (yyvsp[0].pt) }, yylloc.first_line);
+#line 187 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::VAR_DECL_LIST,
+                std::vector<PT*> { (yyvsp[-2].pt), (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1593 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1685 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 10:
-#line 191 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::VAR_DECL_LIST,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+#line 192 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::VAR_DECL_LIST,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1602 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1694 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 11:
-#line 198 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::VAR_DECL_INITIALIZE,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+#line 199 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::VAR_DECL_INITIALIZE,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1611 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1703 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 12:
-#line 203 "frontend/flex_bison/parser.ypp"
-    {
-            PTNode *nEQUAL = new PTNode(PTNode::EQUAL, yylloc.first_line);
-            (yyval.pt) = new PTNode(PTNode::VAR_DECL_INITIALIZE,
-                std::vector<PTNode*> { (yyvsp[-2].pt), nEQUAL, (yyvsp[0].pt)}, yylloc.first_line);
+#line 204 "frontend/flex_bison/parser.ypp"
+        {
+            PT *nEQUAL = new PT(PT::EQUAL, yylloc.first_line);
+            (yyval.pt) = new PT(PT::VAR_DECL_INITIALIZE,
+                std::vector<PT*> { (yyvsp[-2].pt), nEQUAL, (yyvsp[0].pt)}, yylloc.first_line);
         }
-#line 1621 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1713 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 13:
-#line 211 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::ID, yylloc.first_line);
+#line 212 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::ID, yylloc.first_line);
             (yyval.pt)->data.sval = (yyvsp[0].sval);
         }
-#line 1630 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1722 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 14:
-#line 216 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::ARRAY_ID, yylloc.first_line);
+#line 217 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::ARRAY_ID, yylloc.first_line);
         }
-#line 1638 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1730 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 15:
-#line 220 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::VAR_DECL_ID,
-                std::vector<PTNode*> { (yyvsp[-1].pt) }, yylloc.first_line);
+#line 221 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::VAR_DECL_ID,
+                std::vector<PT*> { (yyvsp[-1].pt) }, yylloc.first_line);
         }
-#line 1647 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1739 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 16:
-#line 227 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::SCOPED_TYPE_SPECIFIER,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+#line 228 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::SCOPED_TYPE_SPECIFIER,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1656 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1748 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 17:
-#line 234 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::INT, yylloc.first_line);
+#line 235 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::INT, yylloc.first_line);
         }
-#line 1664 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1756 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 18:
-#line 238 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::FLOAT, yylloc.first_line);
+#line 239 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::FLOAT, yylloc.first_line);
         }
-#line 1672 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1764 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 19:
-#line 242 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::CHAR, yylloc.first_line);
+#line 243 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::CHAR, yylloc.first_line);
         }
-#line 1680 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1772 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 20:
-#line 248 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::ID, yylloc.first_line);
+#line 249 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::ID, yylloc.first_line);
             (yyval.pt)->data.sval = (yyvsp[0].sval);
         }
-#line 1689 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1781 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 21:
-#line 255 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::FUN_DECLARATION,
-                std::vector<PTNode*> { (yyvsp[-5].pt), (yyvsp[-4].pt), (yyvsp[-2].pt), (yyvsp[0].pt)}, yylloc.first_line);
+#line 256 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::FUN_DECLARATION,
+                std::vector<PT*> { (yyvsp[-5].pt), (yyvsp[-4].pt), (yyvsp[-2].pt), (yyvsp[0].pt)}, yylloc.first_line);
         }
-#line 1698 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1790 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 22:
-#line 262 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::PARAMS,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+#line 263 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::PARAMS,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1707 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1799 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 23:
-#line 267 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::PARAMS, yylloc.first_line);
+#line 268 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::PARAMS, yylloc.first_line);
         }
-#line 1715 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1807 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 24:
-#line 273 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::PARAM_LIST,
-                std::vector<PTNode*> { (yyvsp[-3].pt), (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
+#line 274 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::PARAM_LIST,
+                std::vector<PT*> { (yyvsp[-3].pt), (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1724 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1816 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 25:
-#line 278 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::PARAM_LIST,
-                std::vector<PTNode*> { (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
+#line 279 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::PARAM_LIST,
+                std::vector<PT*> { (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1733 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1825 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 26:
-#line 285 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::ID, yylloc.first_line);
+#line 286 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::ID, yylloc.first_line);
             (yyval.pt)->data.sval = (yyvsp[0].sval);
         }
-#line 1742 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1834 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 27:
-#line 290 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::ID, yylloc.first_line);
+#line 291 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::ID, yylloc.first_line);
             (yyval.pt)->data.sval = (yyvsp[-2].sval);
         }
-#line 1751 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1843 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 28:
-#line 297 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::STATEMENT,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+#line 298 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::STATEMENT,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1760 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1852 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 29:
-#line 302 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::STATEMENT,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+#line 303 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::STATEMENT,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1769 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1861 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 30:
-#line 307 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::STATEMENT,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+#line 308 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::STATEMENT,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1778 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1870 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 31:
-#line 312 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::STATEMENT,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+#line 313 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::STATEMENT,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1787 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1879 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 32:
-#line 317 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::STATEMENT,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+#line 318 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::STATEMENT,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1796 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1888 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 33:
-#line 322 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::STATEMENT,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+#line 323 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::STATEMENT,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1805 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1897 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 34:
-#line 329 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::EXPRESSION_STMT,
-                std::vector<PTNode*> { (yyvsp[-1].pt) }, yylloc.first_line);
+#line 330 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::EXPRESSION_STMT,
+                std::vector<PT*> { (yyvsp[-1].pt) }, yylloc.first_line);
         }
-#line 1814 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1906 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 35:
-#line 334 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode();
+#line 335 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT();
         }
-#line 1822 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1914 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 36:
-#line 340 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::EXPRESSION,
-                std::vector<PTNode*> { (yyvsp[-2].pt), (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
+#line 341 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::EXPRESSION,
+                std::vector<PT*> { (yyvsp[-2].pt), (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1831 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1923 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 37:
-#line 345 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::EXPRESSION,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+#line 346 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::EXPRESSION,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1840 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1932 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 38:
-#line 350 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::EXPRESSION,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
-        }
-#line 1849 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 39:
-#line 357 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::UNARY_ASSIGN_EXPRESSION,
-                std::vector<PTNode*> { (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
-        }
-#line 1858 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 40:
-#line 362 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::UNARY_ASSIGN_EXPRESSION,
-                std::vector<PTNode*> { (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
-        }
-#line 1867 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 41:
-#line 369 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::ID, yylloc.first_line);
-            (yyval.pt)->data.sval = (yyvsp[0].sval);
-        }
-#line 1876 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 42:
-#line 374 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::MUTABLE,
-                std::vector<PTNode*> { (yyvsp[-3].pt), (yyvsp[-1].pt) }, yylloc.first_line);
-        }
-#line 1885 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 43:
-#line 381 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::EQUAL, yylloc.first_line);
-        }
-#line 1893 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 44:
-#line 385 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::PLUSEQUAL, yylloc.first_line);
-        }
-#line 1901 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 45:
-#line 389 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::MINUSEQUAL, yylloc.first_line);
-        }
-#line 1909 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 46:
-#line 393 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::TIMESEQUAL, yylloc.first_line);
-        }
-#line 1917 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 47:
-#line 397 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::DIVEQUAL, yylloc.first_line);
-        }
-#line 1925 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 48:
-#line 401 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::MODEQUAL, yylloc.first_line);
-        }
-#line 1933 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 49:
-#line 407 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::INCR, yylloc.first_line);
+#line 351 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::EXPRESSION,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
 #line 1941 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 50:
-#line 411 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::DECR, yylloc.first_line);
+  case 39:
+#line 358 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::UNARY_ASSIGN_EXPRESSION,
+                std::vector<PT*> { (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1949 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1950 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 51:
-#line 417 "frontend/flex_bison/parser.ypp"
-    {
-            PTNode* nLOGOR = new PTNode(PTNode::LOGOR, yylloc.first_line);
-            (yyval.pt) = new PTNode(PTNode::SIMPLE_EXPRESSION,
-                std::vector<PTNode*> { (yyvsp[-2].pt), nLOGOR, (yyvsp[0].pt) }, yylloc.first_line);
+  case 40:
+#line 363 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::UNARY_ASSIGN_EXPRESSION,
+                std::vector<PT*> { (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
         }
 #line 1959 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 52:
-#line 423 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::SIMPLE_EXPRESSION,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+  case 41:
+#line 370 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::ID, yylloc.first_line);
+            (yyval.pt)->data.sval = (yyvsp[0].sval);
         }
 #line 1968 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 53:
-#line 430 "frontend/flex_bison/parser.ypp"
-    {
-            PTNode* nLOGAND = new PTNode(PTNode::LOGAND, yylloc.first_line);
-            (yyval.pt) = new PTNode(PTNode::AND_EXPRESSION,
-                std::vector<PTNode*> { (yyvsp[-2].pt), nLOGAND, (yyvsp[0].pt) }, yylloc.first_line);
+  case 42:
+#line 375 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::MUTABLE,
+                std::vector<PT*> { (yyvsp[-3].pt), (yyvsp[-1].pt) }, yylloc.first_line);
         }
-#line 1978 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 1977 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 43:
+#line 382 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::EQUAL, yylloc.first_line);
+        }
+#line 1985 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 44:
+#line 386 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::PLUSEQUAL, yylloc.first_line);
+        }
+#line 1993 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 45:
+#line 390 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::MINUSEQUAL, yylloc.first_line);
+        }
+#line 2001 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 46:
+#line 394 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::TIMESEQUAL, yylloc.first_line);
+        }
+#line 2009 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 47:
+#line 398 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::DIVEQUAL, yylloc.first_line);
+        }
+#line 2017 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 48:
+#line 402 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::MODEQUAL, yylloc.first_line);
+        }
+#line 2025 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 49:
+#line 408 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::INCR, yylloc.first_line);
+        }
+#line 2033 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 50:
+#line 412 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::DECR, yylloc.first_line);
+        }
+#line 2041 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 51:
+#line 418 "frontend/flex_bison/parser.ypp"
+        {
+            PT* nLOGOR = new PT(PT::LOGOR, yylloc.first_line);
+            (yyval.pt) = new PT(PT::SIMPLE_EXPRESSION,
+                std::vector<PT*> { (yyvsp[-2].pt), nLOGOR, (yyvsp[0].pt) }, yylloc.first_line);
+        }
+#line 2051 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 52:
+#line 424 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::SIMPLE_EXPRESSION,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
+        }
+#line 2060 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 53:
+#line 431 "frontend/flex_bison/parser.ypp"
+        {
+            PT* nLOGAND = new PT(PT::LOGAND, yylloc.first_line);
+            (yyval.pt) = new PT(PT::AND_EXPRESSION,
+                std::vector<PT*> { (yyvsp[-2].pt), nLOGAND, (yyvsp[0].pt) }, yylloc.first_line);
+        }
+#line 2070 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 54:
-#line 436 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::AND_EXPRESSION,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+#line 437 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::AND_EXPRESSION,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1987 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2079 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 55:
-#line 443 "frontend/flex_bison/parser.ypp"
-    {
-            PTNode* nNOT = new PTNode(PTNode::NOT, yylloc.first_line);
-            (yyval.pt) = new PTNode(PTNode::UNARY_REL_EXPRESSION,
-                std::vector<PTNode*> { nNOT, (yyvsp[0].pt) }, yylloc.first_line);
+#line 444 "frontend/flex_bison/parser.ypp"
+        {
+            PT* nNOT = new PT(PT::NOT, yylloc.first_line);
+            (yyval.pt) = new PT(PT::UNARY_REL_EXPRESSION,
+                std::vector<PT*> { nNOT, (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 1997 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2089 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 56:
-#line 449 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::UNARY_REL_EXPRESSION,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
-        }
-#line 2006 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 57:
-#line 456 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::REL_EXPRESSION,
-                std::vector<PTNode*> { (yyvsp[-2].pt), (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
-        }
-#line 2015 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 58:
-#line 461 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::REL_EXPRESSION,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
-        }
-#line 2024 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 59:
-#line 468 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::LE, yylloc.first_line);
-        }
-#line 2032 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 60:
-#line 472 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::LT, yylloc.first_line);
-        }
-#line 2040 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 61:
-#line 476 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::GT, yylloc.first_line);
-        }
-#line 2048 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 62:
-#line 480 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::GE, yylloc.first_line);
-        }
-#line 2056 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 63:
-#line 484 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::ISEQ, yylloc.first_line);
-        }
-#line 2064 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 64:
-#line 488 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::NOTEQ, yylloc.first_line);
-        }
-#line 2072 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 65:
-#line 494 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::SUM_EXPRESSION,
-                std::vector<PTNode*> { (yyvsp[-2].pt), (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
-        }
-#line 2081 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 66:
-#line 499 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::SUM_EXPRESSION,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
-        }
-#line 2090 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 67:
-#line 506 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::PLUS, yylloc.first_line);
+#line 450 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::UNARY_REL_EXPRESSION,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
 #line 2098 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 68:
-#line 510 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::MINUS, yylloc.first_line);
+  case 57:
+#line 457 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::REL_EXPRESSION,
+                std::vector<PT*> { (yyvsp[-2].pt), (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 2106 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2107 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 69:
-#line 516 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::MUL_EXPRESSION,
-                std::vector<PTNode*> { (yyvsp[-2].pt), (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
+  case 58:
+#line 462 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::REL_EXPRESSION,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 2115 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2116 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 70:
-#line 521 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::MUL_EXPRESSION,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+  case 59:
+#line 469 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::LE, yylloc.first_line);
         }
 #line 2124 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 71:
-#line 528 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::TIMES, yylloc.first_line);
+  case 60:
+#line 473 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::LT, yylloc.first_line);
         }
 #line 2132 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 72:
-#line 532 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::DIVIDE, yylloc.first_line);
+  case 61:
+#line 477 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::GT, yylloc.first_line);
         }
 #line 2140 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 73:
-#line 536 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::MODULO, yylloc.first_line);
+  case 62:
+#line 481 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::GE, yylloc.first_line);
         }
 #line 2148 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 74:
-#line 542 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::UNARY_EXPRESSION,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+  case 63:
+#line 485 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::ISEQ, yylloc.first_line);
         }
-#line 2157 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2156 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 75:
-#line 547 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::UNARY_EXPRESSION,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+  case 64:
+#line 489 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::NOTEQ, yylloc.first_line);
         }
-#line 2166 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2164 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 76:
-#line 554 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::UNARY_MINUS,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+  case 65:
+#line 495 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::SUM_EXPRESSION,
+                std::vector<PT*> { (yyvsp[-2].pt), (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 2175 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2173 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 77:
-#line 561 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::FACTOR,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+  case 66:
+#line 500 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::SUM_EXPRESSION,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 2184 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2182 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 78:
-#line 566 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::FACTOR,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+  case 67:
+#line 507 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::PLUS, yylloc.first_line);
         }
-#line 2193 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2190 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 79:
-#line 573 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::IMMUTABLE,
-                std::vector<PTNode*> { (yyvsp[-1].pt) }, yylloc.first_line);
+  case 68:
+#line 511 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::MINUS, yylloc.first_line);
         }
-#line 2202 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2198 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 80:
-#line 578 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::IMMUTABLE,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+  case 69:
+#line 517 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::MUL_EXPRESSION,
+                std::vector<PT*> { (yyvsp[-2].pt), (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 2211 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2207 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 81:
-#line 583 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::IMMUTABLE,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+  case 70:
+#line 522 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::MUL_EXPRESSION,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 2220 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2216 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 82:
-#line 590 "frontend/flex_bison/parser.ypp"
-    {
-            PTNode* tID = new PTNode(PTNode::ID, yylloc.first_line);
-            tID->data.sval = (yyvsp[-3].sval);
-            (yyval.pt) = new PTNode(PTNode::CALL,
-                std::vector<PTNode*> { tID, (yyvsp[-1].pt) }, yylloc.first_line);
+  case 71:
+#line 529 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::TIMES, yylloc.first_line);
         }
-#line 2231 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2224 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 83:
-#line 599 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::ARGS,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+  case 72:
+#line 533 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::DIVIDE, yylloc.first_line);
+        }
+#line 2232 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 73:
+#line 537 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::MODULO, yylloc.first_line);
         }
 #line 2240 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 84:
-#line 604 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode();
+  case 74:
+#line 543 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::UNARY_EXPRESSION,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 2248 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2249 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 75:
+#line 548 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::UNARY_EXPRESSION,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
+        }
+#line 2258 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 76:
+#line 555 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::UNARY_MINUS,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
+        }
+#line 2267 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 77:
+#line 562 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::FACTOR,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
+        }
+#line 2276 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 78:
+#line 567 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::FACTOR,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
+        }
+#line 2285 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 79:
+#line 574 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::IMMUTABLE,
+                std::vector<PT*> { (yyvsp[-1].pt) }, yylloc.first_line);
+        }
+#line 2294 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 80:
+#line 579 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::IMMUTABLE,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
+        }
+#line 2303 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 81:
+#line 584 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::IMMUTABLE,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
+        }
+#line 2312 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 82:
+#line 591 "frontend/flex_bison/parser.ypp"
+        {
+            PT* tID = new PT(PT::ID, yylloc.first_line);
+            tID->data.sval = (yyvsp[-3].sval);
+            (yyval.pt) = new PT(PT::CALL,
+                std::vector<PT*> { tID, (yyvsp[-1].pt) }, yylloc.first_line);
+        }
+#line 2323 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 83:
+#line 600 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::ARGS,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
+        }
+#line 2332 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 84:
+#line 605 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT();
+        }
+#line 2340 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 85:
-#line 610 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::ARG_LIST,
-                std::vector<PTNode*> { (yyvsp[-2].pt), (yyvsp[0].pt) }, yylloc.first_line);
+#line 611 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::ARG_LIST,
+                std::vector<PT*> { (yyvsp[-2].pt), (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 2257 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2349 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 86:
-#line 615 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::ARG_LIST,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+#line 616 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::ARG_LIST,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 2266 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2358 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 87:
-#line 622 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::STRINGLIT, yylloc.first_line);
+#line 623 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::STRINGLIT, yylloc.first_line);
             (yyval.pt)->data.sval = (yyvsp[0].sval);
         }
-#line 2275 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2367 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 88:
-#line 627 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::CHARLIT, yylloc.first_line);
+#line 628 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::CHARLIT, yylloc.first_line);
             (yyval.pt)->data.cval = (yyvsp[0].cval);
         }
-#line 2284 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2376 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 89:
-#line 632 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::FLOATCONST, yylloc.first_line);
+#line 633 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::FLOATCONST, yylloc.first_line);
             (yyval.pt)->data.fval = (yyvsp[0].fval);
-        }
-#line 2293 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 90:
-#line 637 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::INTCONST, yylloc.first_line);
-            (yyval.pt)->data.ival = (yyvsp[0].ival);
-        }
-#line 2302 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 91:
-#line 644 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::COMPOUND_STMT,
-                std::vector<PTNode*> { (yyvsp[-2].pt), (yyvsp[-1].pt) }, yylloc.first_line);
-        }
-#line 2311 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 92:
-#line 651 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::LOCAL_DECLARATIONS,
-                std::vector<PTNode*> { (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
-        }
-#line 2320 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 93:
-#line 656 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::LOCAL_DECLARATIONS, yylloc.first_line);
-        }
-#line 2328 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 94:
-#line 662 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::STATEMENT_LIST,
-                std::vector<PTNode*> { (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
-        }
-#line 2337 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 95:
-#line 667 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode();
-        }
-#line 2345 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 96:
-#line 673 "frontend/flex_bison/parser.ypp"
-    {
-            PTNode* tIF = new PTNode(PTNode::IF, yylloc.first_line);
-            (yyval.pt) = new PTNode(PTNode::SELECTION_STMT,
-                std::vector<PTNode*> { tIF, (yyvsp[-3].pt), (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
-        }
-#line 2355 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 97:
-#line 679 "frontend/flex_bison/parser.ypp"
-    {
-            PTNode* tIF = new PTNode(PTNode::IF, yylloc.first_line);
-            (yyval.pt) = new PTNode(PTNode::SELECTION_STMT,
-                std::vector<PTNode*> { tIF, (yyvsp[-4].pt), (yyvsp[-2].pt), (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
-        }
-#line 2365 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 98:
-#line 687 "frontend/flex_bison/parser.ypp"
-    {
-            PTNode* tELSE = new PTNode(PTNode::ELSE, yylloc.first_line);
-            (yyval.pt) = new PTNode(PTNode::ELSE_STMT,
-                std::vector<PTNode*> { tELSE, (yyvsp[0].pt) }, yylloc.first_line);
-        }
-#line 2375 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
-    break;
-
-  case 99:
-#line 695 "frontend/flex_bison/parser.ypp"
-    {
-            PTNode* tELSEIF = new PTNode(PTNode::ELSE_IF, yylloc.first_line);
-            (yyval.pt) = new PTNode(PTNode::ELSE_IF_LIST,
-                std::vector<PTNode*> { (yyvsp[-6].pt), tELSEIF, (yyvsp[-2].pt), (yyvsp[0].pt) }, yylloc.first_line);
         }
 #line 2385 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 100:
-#line 701 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode();
+  case 90:
+#line 638 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::INTCONST, yylloc.first_line);
+            (yyval.pt)->data.ival = (yyvsp[0].ival);
         }
-#line 2393 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2394 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 101:
-#line 707 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::ITERATION_STMT,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+  case 91:
+#line 645 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::COMPOUND_STMT,
+                std::vector<PT*> { (yyvsp[-2].pt), (yyvsp[-1].pt) }, yylloc.first_line);
         }
-#line 2402 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2403 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 102:
-#line 712 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::ITERATION_STMT,
-                std::vector<PTNode*> { (yyvsp[0].pt) }, yylloc.first_line);
+  case 92:
+#line 652 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::LOCAL_DECLARATIONS,
+                std::vector<PT*> { (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 2411 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2412 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 103:
-#line 719 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::WHILE_STMT,
-                std::vector<PTNode*> { (yyvsp[-2].pt), (yyvsp[0].pt) }, yylloc.first_line);
+  case 93:
+#line 657 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::LOCAL_DECLARATIONS, yylloc.first_line);
         }
 #line 2420 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 104:
-#line 726 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::FOR_STMT,
-                std::vector<PTNode*> { (yyvsp[-5].pt), (yyvsp[-4].pt), (yyvsp[-2].pt), (yyvsp[0].pt) }, yylloc.first_line);
+  case 94:
+#line 663 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::STATEMENT_LIST,
+                std::vector<PT*> { (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
         }
 #line 2429 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 105:
-#line 733 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::RETURN_STMT, yylloc.first_line);
+  case 95:
+#line 668 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT();
         }
 #line 2437 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
-  case 106:
-#line 737 "frontend/flex_bison/parser.ypp"
-    {
-            (yyval.pt) = new PTNode(PTNode::RETURN_STMT,
-                std::vector<PTNode*> { (yyvsp[-1].pt) }, yylloc.first_line);
+  case 96:
+#line 674 "frontend/flex_bison/parser.ypp"
+        {
+            PT* tIF = new PT(PT::IF, yylloc.first_line);
+            (yyval.pt) = new PT(PT::SELECTION_STMT,
+                std::vector<PT*> { tIF, (yyvsp[-3].pt), (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
         }
-#line 2446 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2447 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 97:
+#line 680 "frontend/flex_bison/parser.ypp"
+        {
+            PT* tIF = new PT(PT::IF, yylloc.first_line);
+            (yyval.pt) = new PT(PT::SELECTION_STMT,
+                std::vector<PT*> { tIF, (yyvsp[-4].pt), (yyvsp[-2].pt), (yyvsp[-1].pt), (yyvsp[0].pt) }, yylloc.first_line);
+        }
+#line 2457 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 98:
+#line 688 "frontend/flex_bison/parser.ypp"
+        {
+            PT* tELSE = new PT(PT::ELSE, yylloc.first_line);
+            (yyval.pt) = new PT(PT::ELSE_STMT,
+                std::vector<PT*> { tELSE, (yyvsp[0].pt) }, yylloc.first_line);
+        }
+#line 2467 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 99:
+#line 696 "frontend/flex_bison/parser.ypp"
+        {
+            PT* tELSEIF = new PT(PT::ELSE_IF, yylloc.first_line);
+            (yyval.pt) = new PT(PT::ELSE_IF_LIST,
+                std::vector<PT*> { (yyvsp[-6].pt), tELSEIF, (yyvsp[-2].pt), (yyvsp[0].pt) }, yylloc.first_line);
+        }
+#line 2477 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 100:
+#line 702 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT();
+        }
+#line 2485 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 101:
+#line 708 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::ITERATION_STMT,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
+        }
+#line 2494 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 102:
+#line 713 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::ITERATION_STMT,
+                std::vector<PT*> { (yyvsp[0].pt) }, yylloc.first_line);
+        }
+#line 2503 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 103:
+#line 720 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::WHILE_STMT,
+                std::vector<PT*> { (yyvsp[-2].pt), (yyvsp[0].pt) }, yylloc.first_line);
+        }
+#line 2512 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 104:
+#line 727 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::FOR_STMT,
+                std::vector<PT*> { (yyvsp[-5].pt), (yyvsp[-4].pt), (yyvsp[-2].pt), (yyvsp[0].pt) }, yylloc.first_line);
+        }
+#line 2521 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 105:
+#line 734 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::RETURN_STMT, yylloc.first_line);
+        }
+#line 2529 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+    break;
+
+  case 106:
+#line 738 "frontend/flex_bison/parser.ypp"
+        {
+            (yyval.pt) = new PT(PT::RETURN_STMT,
+                std::vector<PT*> { (yyvsp[-1].pt) }, yylloc.first_line);
+        }
+#line 2538 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
   case 107:
-#line 744 "frontend/flex_bison/parser.ypp"
-    {
-            PTNode* tBREAK = new PTNode(PTNode::BREAK, yylloc.first_line);
-            (yyval.pt) = new PTNode(PTNode::BREAK_STMT,
-                std::vector<PTNode*> { tBREAK }, yylloc.first_line);
+#line 745 "frontend/flex_bison/parser.ypp"
+        {
+            PT* tBREAK = new PT(PT::BREAK, yylloc.first_line);
+            (yyval.pt) = new PT(PT::BREAK_STMT,
+                std::vector<PT*> { tBREAK }, yylloc.first_line);
         }
-#line 2456 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2548 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
     break;
 
 
-#line 2460 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
+#line 2552 "/home/supa/Documents/CSE423/frontend/flex_bison/parser.tab.cpp"
 
       default: break;
     }
@@ -2521,7 +2613,7 @@ yyerrlab:
           {
             if (yymsg != yymsgbuf)
               YYSTACK_FREE (yymsg);
-            yymsg = (char *) YYSTACK_ALLOC (yymsg_alloc);
+            yymsg = YY_CAST (char *, YYSTACK_ALLOC (YY_CAST (YYSIZE_T, yymsg_alloc)));
             if (!yymsg)
               {
                 yymsg = yymsgbuf;
@@ -2681,7 +2773,7 @@ yyreturn:
   while (yyssp != yyss)
     {
       yydestruct ("Cleanup: popping",
-                  yystos[*yyssp], yyvsp, yylsp);
+                  yystos[+*yyssp], yyvsp, yylsp);
       YYPOPSTACK (1);
     }
 #ifndef yyoverflow
@@ -2694,7 +2786,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 750 "frontend/flex_bison/parser.ypp"
+#line 751 "frontend/flex_bison/parser.ypp"
 
 
 /**
