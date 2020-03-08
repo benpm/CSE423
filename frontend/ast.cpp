@@ -5,6 +5,8 @@
 #include <spdlog/fmt/fmt.h>
 #include <ast.hpp>
 
+void expandNodes(AST* ast);
+
 // Map from label to string
 const std::vector<std::string> AST::str {
     "root", "function", "id", "list", "declaration", "initialization", "sum", "mul",
@@ -214,6 +216,43 @@ void printASTNode(const AST* node, int depth, ulong levels)
 }
 
 /**
+ * @brief Recursively expands dec_list lists in ast into normal declarations
+ * 
+ * @param ast 
+ */
+void expandNodes(AST* ast)
+{
+    
+    for (AST* child : ast->children) {
+        expandNodes(child);
+    }
+
+    std::vector<AST*> newNodes;
+
+    for (auto it = ast->children.begin(); it != ast->children.end();) {
+        AST* child = *it;
+        if (child->label == AST::declaration && child->children[1]->label == AST::dec_list) {
+            AST::Label typeLabel = child->children[0]->label;
+
+            for (AST* assignment : child->children[1]->children) {
+                AST* declaration = new AST(AST::declaration);
+                declaration->children.push_back(new AST(typeLabel));
+                declaration->children.push_back(assignment);
+                newNodes.push_back(declaration);
+            }
+
+            delete child->children[0];
+            delete child->children[1];
+            it = ast->children.erase(it);
+        } else {
+            it++;
+        }
+    }
+
+    ast->children.insert(ast->children.begin(), newNodes.begin(), newNodes.end());
+}
+
+/**
  * @brief Construct a new single-node tree object with specified label
  *
  * @param label
@@ -224,7 +263,7 @@ AST::AST(AST::Label label)
 }
 
 /**
- * @brief Construct AST from given parse tree
+ * @brief Construct AST from given parse tree. THIS CONSTRUCTOR SHOULD BE USED FROM MAIN
  *
  * @param pt Parse tree to constr from
  */
@@ -233,6 +272,7 @@ AST::AST(const PTNode* pt)
     if (pt->label == PTNode::PROGRAM)
         this->label = AST::root;
     traversePT(this, pt);
+    expandNodes(this);
 }
 
 /**

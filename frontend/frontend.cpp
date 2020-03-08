@@ -44,25 +44,27 @@ int main(int argc, char **argv)
 	yyparse();
     spdlog::info("Tokenization/parsing done");
 
+    // Print parse tree if requested
+    if (config.printParseTree) {
+        spdlog::info("Parse tree:");
+        pt->print();
+    }
+
     // Create abstract syntax tree
     spdlog::info("AST construction beginning");
     AST ast(pt);
     spdlog::info("AST construction done");
+    // Print parse tree if requested
+    if (config.printAST) {
+        spdlog::info("Parse tree:");
+        ast.print();
+    }
 
     // Create symbol table
     spdlog::info("Symbol Table population beginning");
     SymbolTable symbolTable = SymbolTable(&ast);
     spdlog::info("Symbol Table population done");
 
-    // Print parse tree if requested
-    if (config.printParseTree) {
-        spdlog::info("Parse tree:");
-        pt->print();
-    }
-    if (config.printAST) {
-        spdlog::info("Abstract syntax tree:");
-        ast.print();
-    }
     if (config.printSymbolTable) {
         spdlog::info("Symbol table:");
         symbolTable.print();

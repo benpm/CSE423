@@ -78,7 +78,11 @@ uint traverseAST(SymbolTable* table, AST* ast)
                 // dec_list -> declaration -> type
                 AST* symTypeNode = childAST->children[0];
                 // dec_list -> declaration -> assignment -> id
-                AST* symNameNode = childAST->children[1]->children[0];
+                AST* symNameNode;
+                if (childAST->children[1]->label == AST::assignment)
+                    symNameNode = childAST->children[1]->children[0];
+                else
+                    symNameNode = childAST->children[1];
 
                 Symbol symbol(
                     table->tableID,
