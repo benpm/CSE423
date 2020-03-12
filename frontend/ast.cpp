@@ -135,6 +135,7 @@ void traversePT(AST* ast, const PT* node)
         // Decide to skip this node or to build AST node from it (see wiki for more info)
         if (((children > 1 || child->terminal) && noDupeLabel && mapped) || (keep && noDupeLabel)
             || (child->label == PT::MUL_EXPRESSION && children > 1)
+            || (child->label == PT::SUM_EXPRESSION && children > 1)
             || (child->label == PT::ELSE_IF_LIST && children > 1)) {
 
             // Create a new AST node representing this pt node (recursive call)
