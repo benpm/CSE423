@@ -47,11 +47,15 @@ ADD_FLEX_BISON_DEPENDENCY(scanner parser)
 #
 ###########################################################
 add_executable(frontend
-    frontend/frontend.cpp
-    frontend/parsetree.cpp
-    frontend/ast.cpp
-    frontend/config.cpp
-    frontend/symboltable.cpp
+    "frontend/frontend.cpp"
+    "frontend/parsetree.cpp"
+    "frontend/ast.cpp"
+    "frontend/config.cpp"
+    "frontend/symboltable.cpp"
+    "frontend/ir/statement.cpp"
+    "frontend/ir/basicblock.cpp"
+    "frontend/ir/function.cpp"
+    "frontend/ir/program.cpp"
     ${FLEX_scanner_OUTPUTS}
     ${BISON_parser_OUTPUTS}
 )

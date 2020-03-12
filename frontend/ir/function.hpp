@@ -1,6 +1,6 @@
 #pragma once
 
-#include <basicblock.hpp>
+#include <ir/basicblock.hpp>
 
 class Function
 {

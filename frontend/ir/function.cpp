@@ -1,4 +1,4 @@
-#include <function.hpp>
+#include <ir/function.hpp>
 
 Function::Function(std::string name)
 {

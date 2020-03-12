@@ -2,7 +2,7 @@
 
 #include <unordered_map>
 #include <ast.hpp>
-#include <function.hpp>
+#include <ir/function.hpp>
 
 // Intermediate representation program
 class Program

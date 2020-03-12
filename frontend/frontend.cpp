@@ -13,6 +13,7 @@
 #include <parsetree.hpp>
 #include <config.hpp>
 #include <symboltable.hpp>
+#include <ir/program.hpp>
 
 int main(int argc, char **argv)
 {
@@ -45,6 +46,10 @@ int main(int argc, char **argv)
         spdlog::info("Symbol table:");
         symbolTable.print();
     }
+
+    // Create IR program
+    Program program(ast, symbolTable);
+    program.print();
 
     spdlog::info("Frontend end");
 

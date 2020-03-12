@@ -1,4 +1,4 @@
-#include <basicblock.hpp>
+#include <ir/basicblock.hpp>
 
 BasicBlock::BasicBlock(uint label, std::string name, SymbolTable* scope)
 {

@@ -1,9 +1,12 @@
 #include <iostream>
-#include <program.hpp>
+#include <ir/program.hpp>
+#include <spdlog/spdlog.h>
 
 Program::Program(const AST& ast, const SymbolTable& symTable)
 {
+    spdlog::info("IR Program building beginning");
     // Build IR program from ast and symbol table
+    spdlog::info("IR Program building done");
 }
 
 Program::Program(std::string irCode)

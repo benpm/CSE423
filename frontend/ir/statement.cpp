@@ -1,4 +1,4 @@
-#include <statement.hpp>
+#include <ir/statement.hpp>
 
 Statement::Statement(Type type)
 {

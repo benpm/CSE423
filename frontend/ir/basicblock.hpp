@@ -1,7 +1,7 @@
 #pragma once
 
 #include <symboltable.hpp>
-#include <statement.hpp>
+#include <ir/statement.hpp>
 
 class BasicBlock
 {
