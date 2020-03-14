@@ -28,27 +28,29 @@ int main(int argc, char **argv)
     Config config(argc, argv);
 
     PT pt(config.file);
-    if (config.printParseTree) {
-        spdlog::info("Parse tree:");
-        pt.print();
-    }
 
     // Create abstract syntax tree
     AST ast(&pt);
-    if (config.printAST) {
-        spdlog::info("Parse tree:");
-        ast.print();
-    }
-
+    
     // Create symbol table
     SymbolTable symbolTable(&ast);
+
+    // Create IR program
+    Program program(ast);
+
     if (config.printSymbolTable) {
         spdlog::info("Symbol table:");
         symbolTable.print();
     }
+    if (config.printParseTree) {
+        spdlog::info("Parse tree:");
+        pt.print();
+    }
+    if (config.printAST) {
+    spdlog::info("Parse tree:");
+        ast.print();
+    }
 
-    // Create IR program
-    Program program(ast, symbolTable);
     program.print();
 
     spdlog::info("Frontend end");

@@ -42,7 +42,7 @@ uint traverseAST(SymbolTable* table, AST* ast)
     uint localIDIncrement = 1;
     for (AST* childAST : ast->children) {
         bool traverse = false;
-        childAST->scopeID = table->tableID;
+        childAST->scope = table;
 
         switch(childAST->label) {
             // Node is a function, so we add to table and fallthrough to create scope
@@ -71,7 +71,7 @@ uint traverseAST(SymbolTable* table, AST* ast)
                 }
                 table->children.push_back(newChild);
                 localIDIncrement += 1;
-                childAST->ownedScopeID = newChild->tableID;
+                childAST->ownedScope = newChild;
                 break;}
             
             // Variable declaration add to table
@@ -93,6 +93,7 @@ uint traverseAST(SymbolTable* table, AST* ast)
                 table->table.emplace(
                     symNameNode->data.sval, symbol
                 );
+                traverseAST(table, childAST);
                 break;}
             
             // Add parameters to table
@@ -110,6 +111,7 @@ uint traverseAST(SymbolTable* table, AST* ast)
                         symNameNode->data.sval, symbol
                     );
                 }
+                traverseAST(table, childAST);
                 break;}
 
             // Skip this node, it doesn't matter (recurse)

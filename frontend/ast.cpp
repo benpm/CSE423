@@ -4,6 +4,7 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/fmt/fmt.h>
 #include <ast.hpp>
+#include <symboltable.hpp>
 
 void expandNodes(AST* ast);
 
@@ -182,8 +183,8 @@ void printASTNode(const AST* node, int depth, ulong levels)
 
     // Print a graphical depiction of the node in the tree
     fmt::print(padding);
-    if (node->scopeID > -1 && node->label == AST::id)
-        fmt::print("[{}] ", node->scopeID);
+    if (node->scope != NULL)
+        fmt::print("[{}] ", node->scope->tableID);
     fmt::print("{}", node->toString());
     switch (node->label) {
         case AST::int_const:

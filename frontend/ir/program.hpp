@@ -10,7 +10,7 @@ class Program
 public:
     std::unordered_map<std::string, Function> functions;
 
-    Program(const AST& ast, const SymbolTable& symTable);
+    Program(const AST& ast);
     Program(std::string irCode);
     std::string outputToString();
     void print();

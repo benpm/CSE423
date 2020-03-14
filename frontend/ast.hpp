@@ -5,6 +5,8 @@
 #include <map>
 #include <parsetree.hpp>
 
+class SymbolTable;
+
 // Abstract Syntax Tree class
 class AST
 {
@@ -32,9 +34,9 @@ public:
     // Parent of this node
     AST* parent;
     // Scope (table ID) (this is populated by the Symbol Table builder!)
-    int scopeID = -1;
+    SymbolTable* scope = NULL;
     // Owned scope (also populated by ST builder)
-    int ownedScopeID = -1;
+    SymbolTable* ownedScope = NULL;
 
     AST(Label label);
     AST(const PT* pt);

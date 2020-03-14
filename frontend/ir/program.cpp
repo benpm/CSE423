@@ -2,14 +2,15 @@
 #include <ir/program.hpp>
 #include <spdlog/spdlog.h>
 
-Program::Program(const AST& ast, const SymbolTable& symTable)
+Program::Program(const AST& ast)
 {
     spdlog::info("IR Program building beginning");
     // Build IR program from ast and symbol table
     // Create functions (first child of root should be dec_list)
-    for (const AST* ast : ast.children[0]->children) {
-        if (ast->label == AST::function) {
-            this->functions.emplace(ast);
+    for (const AST* child : ast.children[0]->children) {
+        if (child->label == AST::function) {
+            std::string name = child->children[1]->data.sval;
+            this->functions.emplace(name, Function(child));
         }
     }
     spdlog::info("IR Program building done");
