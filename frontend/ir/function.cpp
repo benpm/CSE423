@@ -1,6 +1,8 @@
 #include <ir/function.hpp>
 
-Function::Function(std::string name)
+Function::Function(const AST& funcNode)
 {
-    this->name = name;
+    // Name of function is second child of function
+    this->name = funcNode.children[1]->data.sval;
+    
 }
