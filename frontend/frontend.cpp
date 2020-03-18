@@ -22,10 +22,10 @@ int main(int argc, char **argv)
     spdlog::set_level(spdlog::level::debug);
     spdlog::set_pattern("[frontend][%^%l%$] %v");
 
-    spdlog::info("Frontend begin");
-
     // Parse command line options
     Config config(argc, argv);
+
+    spdlog::info("Frontend begin");
 
     PT pt(config.file);
 
@@ -47,11 +47,14 @@ int main(int argc, char **argv)
         pt.print();
     }
     if (config.printAST) {
-    spdlog::info("Parse tree:");
+        spdlog::info("Parse tree:");
         ast.print();
     }
+    if (config.printIR) {
+        spdlog::info("IR:");
+        program.print();
+    }
 
-    program.print();
 
     spdlog::info("Frontend end");
 

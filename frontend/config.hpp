@@ -14,7 +14,9 @@ public:
     bool printParseTree = false;
     bool printTokens = false;
     bool printSymbolTable = false;
+    bool printIR = false;
     bool suppressLogs = false;
+
     std::string file;
 
     Config(int argc, char **argv);

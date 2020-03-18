@@ -4,7 +4,7 @@
 
 Program::Program(const AST& ast)
 {
-    spdlog::info("IR Program building beginning");
+    spdlog::info("IR building beginning");
     // Build IR program from ast and symbol table
     // Create functions (first child of root should be dec_list)
     for (const AST* child : ast.children[0]->children) {
@@ -13,7 +13,7 @@ Program::Program(const AST& ast)
             this->functions.emplace(name, Function(child));
         }
     }
-    spdlog::info("IR Program building done");
+    spdlog::info("IR building done");
 }
 
 Program::Program(std::string irCode)
