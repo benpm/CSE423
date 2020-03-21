@@ -74,11 +74,23 @@ break {
         printf("<%s, %s>\n", yytext, "BREAK");
     return BREAK;
 }
+goto {
+    yylval.sval = strdup(yytext);
+    if (scannerPrintTokens)
+        printf("<%s, %s>\n", yytext, "GOTO");
+    return GOTO;
+}
 ; {
     yylval.cval = yytext[0];
     if (scannerPrintTokens)
         printf("<%s, %s>\n", yytext, "SEMICOLON");
     return SEMICOLON;
+}
+: {
+    yylval.cval = yytext[0];
+    if (scannerPrintTokens)
+        printf("<%s, %s>\n", yytext, "COLON");
+    return COLON;
 }
 , {
     yylval.cval = yytext[0];
