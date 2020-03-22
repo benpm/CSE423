@@ -10,7 +10,7 @@ typeSpecifier := INT | FLOAT | CHAR
 funDeclaration := typeSpecifier ID ( params ) statement
 params := paramList | eps
 paramList := paramList , typeSpecifier ID | typeSpecifier ID
-statement := expressionStmt | compoundStmt | selectionStmt | iterationStmt | returnStmt | breakStmt
+statement := expressionStmt | compoundStmt | selectionStmt | iterationStmt | returnStmt | breakStmt | labelStmt | gotoStmt
 expressionStmt := expression ; | ;
 expression := mutable assignop expression | unaryAssignop mutable | mutable unaryAssignop | simpleExpression
 mutable := ID | mutable [ expression ]
@@ -43,6 +43,8 @@ whileStmt := WHILE ( simpleExpression ) { statement }
 forStmt := FOR ( varDeclList ; relExpression ; expression )
 returnStmt := return ; | return expression ;
 breakStmt := break ;
+labelStmt := ID :
+gotoStmt := GOTO ID ;
 
 TERMINALS
 _________
@@ -55,6 +57,8 @@ ELSE
 WHILE
 FOR
 RETURN
+BREAK
+GOTO
 ;
 ,
 =

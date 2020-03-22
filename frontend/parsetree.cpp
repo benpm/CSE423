@@ -16,7 +16,7 @@ extern FILE *yyin;
 
 // Mapping from parsetree label to string
 const std::vector<std::string> PT::str {
-    "INT", "FLOAT", "CHAR", "FOR", "WHILE", "IF", "ELSE", "RETURN", "BREAK", "SEMICOLON",
+    "INT", "FLOAT", "CHAR", "FOR", "WHILE", "IF", "ELSE", "RETURN", "BREAK", "GOTO", "SEMICOLON",
     "COMMA", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACK", "RBRACK", "EQUAL", "PLUS",
     "MINUS", "TIMES", "DIVIDE", "MODULO", "PLUSEQUAL", "MINUSEQUAL", "TIMESEQUAL",
     "DIVEQUAL", "MODEQUAL", "INCR", "DECR", "LT", "GT", "LE", "GE", "ISEQ", "NOTEQ", "LOGAND",
@@ -33,8 +33,8 @@ const std::vector<std::string> PT::str {
     "mul_op", "unary_expression", "factor", "immutable", "call",
     "args", "arg_list", "constant", "compound_stmt", "local_declarations",
     "statement_list", "selection_stmt", "else_if_list", "iteration_stmt",
-    "while_stmt", "for_stmt", "return_stmt", "break_stmt", "fun_name",
-    "unary_assign_expr", "else_if", "else_stmt", "unary_minus"
+    "while_stmt", "for_stmt", "return_stmt", "break_stmt", "label_stmt", "goto_stmt",
+    "fun_name", "unary_assign_expr", "else_if", "else_stmt", "unary_minus"
 };
 
 

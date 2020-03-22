@@ -80,6 +80,8 @@
 %type <pt> forStmt
 %type <pt> returnStmt
 %type <pt> breakStmt
+%type <pt> labelStmt
+%type <pt> gotoStmt
 %type <pt> elseStmt
 %type <pt> unaryMinus
 
@@ -94,8 +96,10 @@
 %token <sval> ELSE
 %token <sval> RETURN
 %token <sval> BREAK
+%token <sval> GOTO
 
 %token <cval> SEMICOLON
+%token <cval> COLON
 %token <cval> COMMA
 %token <cval> LPAREN
 %token <cval> RPAREN
@@ -320,6 +324,16 @@ statement:
                 std::vector<PT*> { $1 }, yylloc.first_line);
         }
     | breakStmt
+        {
+            $$ = new PT(PT::STATEMENT,
+                std::vector<PT*> { $1 }, yylloc.first_line);
+        }
+    | labelStmt
+        {
+            $$ = new PT(PT::STATEMENT,
+                std::vector<PT*> { $1 }, yylloc.first_line);
+        }
+    | gotoStmt
         {
             $$ = new PT(PT::STATEMENT,
                 std::vector<PT*> { $1 }, yylloc.first_line);
@@ -748,6 +762,24 @@ breakStmt:
                 std::vector<PT*> { tBREAK }, yylloc.first_line);
         }
 ;
+labelStmt:
+    ID COLON
+        {
+            PT* tID = new PT(PT::ID, yylloc.first_line);
+            tID->data.sval = $1;
+            $$ = new PT(PT::LABEL_STMT,
+                std::vector<PT*> { tID }, yylloc.first_line);
+        }
+;
+gotoStmt:
+    GOTO ID SEMICOLON
+        {
+            PT* tGOTO = new PT(PT::GOTO, yylloc.first_line);
+            PT* tID = new PT(PT::ID, yylloc.first_line);
+            tID->data.sval = $2;
+            $$ = new PT(PT::GOTO_STMT,
+                std::vector<PT*> { tGOTO, tID }, yylloc.first_line);
+        }
 %%
 
 /**

@@ -13,9 +13,9 @@ const std::vector<std::string> AST::str {
     "int_const", "float_const", "string_const", "char_const", "for_stmt",
     "if_stmt", "call", "int_type", "float_type", "char_type", "bool_expr", "unhandled",
     "args", "return_stmt", "le", "ge", "lt", "gt", "incr", "decr", "plus_equal", "minus_equal",
-    "times_equal", "dec_list", "else_stmt", "params", "while_stmt", "break_stmt", "modulo",
-    "divide", "noteq", "equal", "assignment", "else_if", "log_and", "log_or", "div_equal",
-    "unary_minus", "sub", "mod_equal", "log_not"
+    "times_equal", "dec_list", "else_stmt", "params", "while_stmt", "break_stmt", "label_stmt",
+    "goto_stmt", "modulo", "divide", "noteq", "equal", "assignment", "else_if", "log_and",
+    "log_or", "div_equal", "unary_minus", "sub", "mod_equal", "log_not"
 };
 
 // Map from parsetree label to AST label
@@ -57,6 +57,8 @@ const std::map<PT::Label, AST::Label> labelMap {
     {PT::CHAR, AST::char_type},
     {PT::RETURN_STMT, AST::return_stmt},
     {PT::BREAK, AST::break_stmt},
+    {PT::LABEL_STMT, AST::label_stmt},
+    {PT::GOTO_STMT, AST::goto_stmt},
     {PT::EXPRESSION, AST::list},
     {PT::LE, AST::le},
     {PT::GE, AST::ge},
@@ -86,7 +88,8 @@ const std::map<PT::Label, AST::Label> labelMap {
 
 // Parsetree nodes that should be kept no matter what
 const std::set<PT::Label> keepNodes {
-    PT::RETURN_STMT, PT::ARG_LIST, PT::UNARY_MINUS, PT::PARAMS, PT::DECLARATION_LIST, PT::LOCAL_DECLARATIONS
+    PT::RETURN_STMT, PT::ARG_LIST, PT::UNARY_MINUS, PT::PARAMS, PT::DECLARATION_LIST,
+    PT::LOCAL_DECLARATIONS, PT::LABEL_STMT
 };
 
 // Parsetree nodes that should be mapped and swapped with their parent in the AST
