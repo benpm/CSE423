@@ -3,8 +3,8 @@ int main() {
     float a = 10.1;
     //int 0vaije;
     int hek = 5 * -18;
-    char str[] = "blahlalhlahlhhal\n";
-    char str2[] = "-19.45";
+    char str = 'b';
+    char str2 = 'c';
     int logand = 1 && 2;
     int logor = 1 || 2;
     /*

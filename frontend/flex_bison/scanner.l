@@ -266,12 +266,6 @@ goto {
         printf("<%s, %s>\n", yytext, "NOT");
     return NOT;
 }
-\"(\\.|[^"\\])*\" {
-    yylval.sval = strdup(yytext);
-    if (scannerPrintTokens)
-        printf("<%s, %s>\n", yytext, "STRINGLIT");
-    return STRINGLIT;
-}
 '.' {
     yylval.cval = yytext[1];
     if (scannerPrintTokens)
