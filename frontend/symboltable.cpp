@@ -113,6 +113,7 @@ uint traverseAST(SymbolTable* table, AST* ast)
                     );
                 }
                 break;}
+            // Add GOTO labels to table
             case AST::label_stmt:{
                 AST* symNameNode = childAST->children[0];
                 Symbol symbol(
