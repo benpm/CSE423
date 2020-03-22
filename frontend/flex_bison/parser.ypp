@@ -130,7 +130,6 @@
 %token <sval> LOGOR
 %token <cval> NOT
 
-%token <sval> STRINGLIT
 %token <cval> CHARLIT
 %token <ival> INTCONST
 %token <fval> FLOATCONST
@@ -216,15 +215,6 @@ varDeclId:
         {
             $$ = new PT(PT::ID, yylloc.first_line);
             $$->data.sval = $1;
-        }
-    | ID LBRACK RBRACK
-        {
-            $$ = new PT(PT::ARRAY_ID, yylloc.first_line);
-        }
-    | ID LBRACK constant RBRACK
-        {
-            $$ = new PT(PT::VAR_DECL_ID,
-                std::vector<PT*> { $3 }, yylloc.first_line);
         }
 ;
 scopedTypeSpecifier:
@@ -633,12 +623,7 @@ argList:
         }
 ;
 constant:
-    STRINGLIT
-        {
-            $$ = new PT(PT::STRINGLIT, yylloc.first_line);
-            $$->data.sval = $1;
-        }
-    | CHARLIT
+    CHARLIT
         {
             $$ = new PT(PT::CHARLIT, yylloc.first_line);
             $$->data.cval = $1;

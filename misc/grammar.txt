@@ -32,7 +32,7 @@ immutable := ( expression ) | call | constant
 call := ID ( args )
 args := argList | eps
 argList := argList , expression | expression
-constant := STRINGLIT | CHARLIT | INTCOST | FLOATCONST
+constant := CHARLIT | INTCOST | FLOATCONST
 compoundStmt := { localDeclarations statementList }
 localDeclarations := localDeclarations scopedVarDeclaration | eps
 statementList := statementList statement | eps
@@ -73,7 +73,6 @@ GOTO
 ==
 !=
 !
-STRINGLIT
 CHARLIT
 INTCONST
 FLOATCONST
