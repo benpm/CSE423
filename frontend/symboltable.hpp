@@ -54,6 +54,6 @@ public:
     std::string name;
 
     SymbolTable(AST* ast);
-    SymbolTable(AST* ast, uint tableID);
+    SymbolTable(AST* ast, uint tableID, std::string name);
     void print();
 };

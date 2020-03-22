@@ -62,13 +62,17 @@ uint traverseAST(SymbolTable* table, AST* ast)
             case AST::else_stmt:
             case AST::else_if:
             case AST::while_stmt:{
-                SymbolTable* newChild = new SymbolTable(childAST, table->tableID + localIDIncrement);
-                newChild->parent = table;
+                uint newTableID = table->tableID + localIDIncrement;
+                std::string newTableName;
                 if (childAST->label == AST::function){
-                    newChild->name = std::string(childAST->children[1]->data.sval) + "()";
+                    newTableName = std::string(childAST->children[1]->data.sval) + "()";
                 } else {
-                    newChild->name = childAST->toString();
+                    newTableName = fmt::format("{}0x{:X}", 
+                        table->name.substr(0, table->name.find(')') + 1),
+                        newTableID);
                 }
+                SymbolTable* newChild = new SymbolTable(childAST, newTableID, newTableName);
+                newChild->parent = table;
                 table->children.push_back(newChild);
                 localIDIncrement += 1;
                 childAST->ownedScope = newChild;
@@ -122,7 +126,7 @@ uint traverseAST(SymbolTable* table, AST* ast)
     }
 
     // Return id so we can continue incrementing for new scopes
-    return localIDIncrement;
+    return localIDIncrement + 1;
 }
 
 /**
@@ -148,9 +152,10 @@ SymbolTable::SymbolTable(AST* ast)
  * @param ast The AST to build from
  * @param tableID The ID to assign to this table
  */
-SymbolTable::SymbolTable(AST* ast, uint tableID)
+SymbolTable::SymbolTable(AST* ast, uint tableID, std::string name)
 {
     this->tableID = tableID;
+    this->name = name;
 
     traverseAST(this, ast);
 }
@@ -164,7 +169,7 @@ SymbolTable::SymbolTable(AST* ast, uint tableID)
 void stprint(SymbolTable* st, uint depth)
 {
     // Do not print empty tables
-    if (st->table.size() == 0) return;
+    // if (st->table.size() == 0) return;
 
     // Construct the padding string using bit flags
     std::string padding;

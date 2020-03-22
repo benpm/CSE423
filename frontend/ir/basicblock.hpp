@@ -12,4 +12,5 @@ public:
     std::vector<Statement> statements;
 
     BasicBlock(uint label, std::string name, SymbolTable* scope);
+    std::string toString() const;
 };

@@ -8,8 +8,9 @@ class Function
 {
 public:
     std::string name;
-    std::vector<BasicBlock> basicBlocks;
+    std::vector<BasicBlock*> basicBlocks;
     SymbolTable* scope;
 
     Function(const AST* funcNode);
+    std::string toString() const;
 };

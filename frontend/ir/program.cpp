@@ -24,7 +24,11 @@ Program::Program(std::string irCode)
 std::string Program::outputToString()
 {
     // Create plaintext representation of this IR program
-    return std::string();
+    std::string string;
+    for (auto item : functions) {
+        string += item.second.toString() + "\n";
+    }
+    return string;
 }
 
 void Program::print()
