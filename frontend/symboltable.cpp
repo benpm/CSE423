@@ -10,10 +10,12 @@ std::unordered_map<int, std::string> enumToString{
     {Symbol::Int, "Int"},
     {Symbol::Float, "Float"},
     {Symbol::Char, "Char"},
+    {Symbol::NoneType, "None"},
     // Categories
     {Symbol::Function, "Function"},
     {Symbol::Local, "Local"},
     {Symbol::Parameter, "Parameter"},
+    {Symbol::Label, "Label"}
 };
 
 /**
@@ -111,6 +113,17 @@ uint traverseAST(SymbolTable* table, AST* ast)
                     );
                 }
                 break;}
+            case AST::label_stmt:{
+                AST* symNameNode = childAST->children[0];
+                Symbol symbol(
+                    table->tableID,
+                    Symbol::Type::NoneType,
+                    Symbol::Label
+                );
+                table->table.emplace(
+                    symNameNode->data.sval, symbol
+                );
+            break;}
 
             // Skip this node, it doesn't matter (recurse)
             default:

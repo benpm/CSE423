@@ -19,11 +19,11 @@
 class Symbol {
 public:
     enum Type {
-        Int = AST::int_type, Float = AST::float_type, Char = AST::char_type
+        Int = AST::int_type, Float = AST::float_type, Char = AST::char_type, NoneType
     };
 
     enum Category {
-        Function, Local, Parameter
+        Function, Local, Parameter, Label
     };
 
     // Type of symbol (int, float, char)
