@@ -27,6 +27,7 @@ then
 fi
 
 cd $gitRootDir/build
+make -j
 
 # Loop over subdirectories in examples
 for dir in $(ls -d $examplesDir*/)
@@ -55,3 +56,5 @@ do
         fi
     done
 done
+
+rm diff_tmp.txt
