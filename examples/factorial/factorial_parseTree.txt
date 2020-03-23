@@ -8,6 +8,7 @@ program | Line num: 13
        └─statement | Line num: 12
          └─compound_stmt | Line num: 12
            ├─local_declarations | Line num: 2
+           │ ├─local_declarations | Line num: 1
            │ └─scoped_var_declaration | Line num: 2
            │   ├─scoped_type_specifier | Line num: 2
            │   │ └─INT | Line num: 2
@@ -61,9 +62,10 @@ program | Line num: 13
              │     │               └─immutable | Line num: 3
              │     │                 └─INTCONST | Line num: 3 (0) 
              │     ├─compound_stmt | Line num: 5
+             │     │ ├─local_declarations | Line num: 3
              │     │ └─statement_list | Line num: 4
              │     │   └─statement | Line num: 4
-             │     │     └─expression_stmt | Line num: 4
+             │     │     └─return_stmt | Line num: 4
              │     │       └─expression | Line num: 4
              │     │         └─simple_expression | Line num: 4
              │     │           └─and_expression | Line num: 4
@@ -72,26 +74,15 @@ program | Line num: 13
              │     │                 └─sum_expression | Line num: 4
              │     │                   └─mul_expression | Line num: 4
              │     │                     └─unary_expression | Line num: 4
-             │     │                       └─factor | Line num: 4
-             │     │                         └─immutable | Line num: 4
-             │     │                           └─call | Line num: 4
-             │     │                             ├─ID | Line num: 4 (printf) 
-             │     │                             └─args | Line num: 4
-             │     │                               └─arg_list | Line num: 4
-             │     │                                 └─expression | Line num: 4
-             │     │                                   └─simple_expression | Line num: 4
-             │     │                                     └─and_expression | Line num: 4
-             │     │                                       └─unary_rel_expression | Line num: 4
-             │     │                                         └─rel_expression | Line num: 4
-             │     │                                           └─sum_expression | Line num: 4
-             │     │                                             └─mul_expression | Line num: 4
-             │     │                                               └─unary_expression | Line num: 4
-             │     │                                                 └─factor | Line num: 4
-             │     │                                                   └─immutable | Line num: 4
-             │     │                                                     └─STRINGLIT | Line num: 4 ("Error! Factorial of a negative number doesn't exist.") 
+             │     │                       └─unary_minus | Line num: 4
+             │     │                         └─unary_expression | Line num: 4
+             │     │                           └─factor | Line num: 4
+             │     │                             └─immutable | Line num: 4
+             │     │                               └─INTCONST | Line num: 4 (1) 
              │     └─else_stmt | Line num: 10
              │       ├─ELSE | Line num: 10
              │       └─compound_stmt | Line num: 10
+             │         ├─local_declarations | Line num: 5
              │         └─statement_list | Line num: 9
              │           ├─statement_list | Line num: 8
              │           │ └─statement | Line num: 8
@@ -131,6 +122,7 @@ program | Line num: 13
              │           │       │   └─ID | Line num: 6 (i) 
              │           │       └─statement | Line num: 8
              │           │         └─compound_stmt | Line num: 8
+             │           │           ├─local_declarations | Line num: 6
              │           │           └─statement_list | Line num: 7
              │           │             └─statement | Line num: 7
              │           │               └─expression_stmt | Line num: 7
@@ -148,7 +140,7 @@ program | Line num: 13
              │           │                                   └─factor | Line num: 7
              │           │                                     └─ID | Line num: 7 (i) 
              │           └─statement | Line num: 9
-             │             └─expression_stmt | Line num: 9
+             │             └─return_stmt | Line num: 9
              │               └─expression | Line num: 9
              │                 └─simple_expression | Line num: 9
              │                   └─and_expression | Line num: 9
@@ -158,44 +150,7 @@ program | Line num: 13
              │                           └─mul_expression | Line num: 9
              │                             └─unary_expression | Line num: 9
              │                               └─factor | Line num: 9
-             │                                 └─immutable | Line num: 9
-             │                                   └─call | Line num: 9
-             │                                     ├─ID | Line num: 9 (printf) 
-             │                                     └─args | Line num: 9
-             │                                       └─arg_list | Line num: 9
-             │                                         ├─arg_list | Line num: 9
-             │                                         │ ├─arg_list | Line num: 9
-             │                                         │ │ └─expression | Line num: 9
-             │                                         │ │   └─simple_expression | Line num: 9
-             │                                         │ │     └─and_expression | Line num: 9
-             │                                         │ │       └─unary_rel_expression | Line num: 9
-             │                                         │ │         └─rel_expression | Line num: 9
-             │                                         │ │           └─sum_expression | Line num: 9
-             │                                         │ │             └─mul_expression | Line num: 9
-             │                                         │ │               └─unary_expression | Line num: 9
-             │                                         │ │                 └─factor | Line num: 9
-             │                                         │ │                   └─immutable | Line num: 9
-             │                                         │ │                     └─STRINGLIT | Line num: 9 ("Factorial of %d = %d") 
-             │                                         │ └─expression | Line num: 9
-             │                                         │   └─simple_expression | Line num: 9
-             │                                         │     └─and_expression | Line num: 9
-             │                                         │       └─unary_rel_expression | Line num: 9
-             │                                         │         └─rel_expression | Line num: 9
-             │                                         │           └─sum_expression | Line num: 9
-             │                                         │             └─mul_expression | Line num: 9
-             │                                         │               └─unary_expression | Line num: 9
-             │                                         │                 └─factor | Line num: 9
-             │                                         │                   └─ID | Line num: 9 (n) 
-             │                                         └─expression | Line num: 9
-             │                                           └─simple_expression | Line num: 9
-             │                                             └─and_expression | Line num: 9
-             │                                               └─unary_rel_expression | Line num: 9
-             │                                                 └─rel_expression | Line num: 9
-             │                                                   └─sum_expression | Line num: 9
-             │                                                     └─mul_expression | Line num: 9
-             │                                                       └─unary_expression | Line num: 9
-             │                                                         └─factor | Line num: 9
-             │                                                           └─ID | Line num: 9 (fact) 
+             │                                 └─ID | Line num: 9 (fact) 
              └─statement | Line num: 11
                └─return_stmt | Line num: 11
                  └─expression | Line num: 11

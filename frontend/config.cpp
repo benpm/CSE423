@@ -18,15 +18,12 @@ Config::Config(int argc, char **argv)
         case 't':
             this->printTokens = true;
             scannerPrintTokens = true;
-            spdlog::info("Token printing enabled");
             break;
         case 'a':
             this->printAST = true;
-            spdlog::info("Abstract syntax tree printing enabled");
             break;
         case 'p':
             this->printParseTree = true;
-            spdlog::info("Parse tree printing enabled");
             break;
         case 'l':
             this->suppressLogs = true;
@@ -34,7 +31,6 @@ Config::Config(int argc, char **argv)
             break;
         case 's':
             this->printSymbolTable = true;
-            spdlog::info("Symbol table printing enabled");
             break;
         default:
             std::cerr << "Unknown flag in command line input. Exiting" << std::endl;
@@ -53,6 +49,15 @@ Config::Config(int argc, char **argv)
     }
 
     this->file = argv[optind];
+
+    if (this->printTokens)
+        spdlog::info("Token printing enabled");
+    if (this->printAST)
+        spdlog::info("Abstract syntax tree printing enabled");
+    if (this->printParseTree)
+        spdlog::info("Parse tree printing enabled");
+    if (this->printSymbolTable)
+        spdlog::info("Symbol table printing enabled");
 }
 
 /**

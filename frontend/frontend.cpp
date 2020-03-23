@@ -21,26 +21,28 @@ int main(int argc, char **argv)
     spdlog::set_level(spdlog::level::debug);
     spdlog::set_pattern("[frontend][%^%l%$] %v");
 
-    spdlog::info("Frontend begin");
-
     // Parse command line options
     Config config(argc, argv);
 
+    spdlog::info("Frontend begin");
+
     PT pt(config.file);
+
+    // Create abstract syntax tree
+    AST ast(&pt);
+
+    // Create symbol table
+    SymbolTable symbolTable(&ast);
+
+
     if (config.printParseTree) {
         spdlog::info("Parse tree:");
         pt.print();
     }
-
-    // Create abstract syntax tree
-    AST ast(&pt);
     if (config.printAST) {
         spdlog::info("Parse tree:");
         ast.print();
     }
-
-    // Create symbol table
-    SymbolTable symbolTable(&ast);
     if (config.printSymbolTable) {
         spdlog::info("Symbol table:");
         symbolTable.print();

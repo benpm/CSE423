@@ -11,6 +11,7 @@ program | Line num: 13
            │ ├─local_declarations | Line num: 5
            │ │ ├─local_declarations | Line num: 4
            │ │ │ ├─local_declarations | Line num: 3
+           │ │ │ │ ├─local_declarations | Line num: 2
            │ │ │ │ └─scoped_var_declaration | Line num: 3
            │ │ │ │   ├─scoped_type_specifier | Line num: 3
            │ │ │ │   │ └─INT | Line num: 3
@@ -113,6 +114,7 @@ program | Line num: 13
                  │               └─immutable | Line num: 8
                  │                 └─INTCONST | Line num: 8 (2) 
                  ├─compound_stmt | Line num: 10
+                 │ ├─local_declarations | Line num: 8
                  │ └─statement_list | Line num: 9
                  │   └─statement | Line num: 9
                  │     └─return_stmt | Line num: 9
@@ -130,6 +132,7 @@ program | Line num: 13
                  └─else_stmt | Line num: 12
                    ├─ELSE | Line num: 12
                    └─compound_stmt | Line num: 12
+                     ├─local_declarations | Line num: 10
                      └─statement_list | Line num: 11
                        └─statement | Line num: 11
                          └─return_stmt | Line num: 11
