@@ -130,6 +130,7 @@
 %token <sval> LOGOR
 %token <cval> NOT
 
+%token <sval> STRINGLIT
 %token <cval> CHARLIT
 %token <ival> INTCONST
 %token <fval> FLOATCONST
@@ -615,6 +616,20 @@ argList:
         {
             $$ = new PT(PT::ARG_LIST,
                 std::vector<PT*> { $1, $3 }, yylloc.first_line);
+        }
+    | argList COMMA STRINGLIT
+        {
+            PT* tSTRINGLIT = new PT(PT::STRINGLIT, yylloc.first_line);
+            tSTRINGLIT->data.sval = $3;
+            $$ = new PT(PT::ARG_LIST,
+                std::vector<PT*> { $1, tSTRINGLIT }, yylloc.first_line);
+        }
+    | STRINGLIT
+        {
+            PT* tSTRINGLIT = new PT(PT::STRINGLIT, yylloc.first_line);
+            tSTRINGLIT->data.sval = $1;
+            $$ = new PT(PT::ARG_LIST,
+                std::vector<PT*> { tSTRINGLIT }, yylloc.first_line);
         }
     | expression
         {

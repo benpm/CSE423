@@ -20,7 +20,7 @@ const std::vector<std::string> PT::str {
     "COMMA", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACK", "RBRACK", "EQUAL", "PLUS",
     "MINUS", "TIMES", "DIVIDE", "MODULO", "PLUSEQUAL", "MINUSEQUAL", "TIMESEQUAL",
     "DIVEQUAL", "MODEQUAL", "INCR", "DECR", "LT", "GT", "LE", "GE", "ISEQ", "NOTEQ", "LOGAND",
-    "LOGOR", "NOT", "CHARLIT", "INTCONST", "FLOATCONST", "ID",
+    "LOGOR", "NOT", "STRINGLIT", "CHARLIT", "INTCONST", "FLOATCONST", "ID",
     "EPSILON", "NONE",
 
     "program", "declaration_list", "declaration", "var_declaration",
@@ -143,6 +143,7 @@ void PT::printNode(PT &node, int depth, ulong levels)
             std::cout << " (" << node.data.fval << ") ";
             break;
         case CHARLIT:
+        case STRINGLIT:
             std::cout << " (" << node.data.cval << ") ";
             break;
         case ID:
