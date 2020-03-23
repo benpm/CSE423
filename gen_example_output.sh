@@ -32,6 +32,11 @@ then
     exit -1
 fi
 
+# Build compiler
+cd $gitRootDir/build
+cmake ..
+make -j
+
 cd $gitRootDir/examples
 
 # Loop over subdirectories in examples
