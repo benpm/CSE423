@@ -1,0 +1,222 @@
+root
+ └─dec_list
+   ├─function
+   │ ├─float_type
+   │ ├─[1] id (fun)
+   │ ├─params
+   │ │ ├─float_type
+   │ │ ├─id (XKAD)
+   │ │ ├─float_type
+   │ │ └─id (V)
+   │ ├─dec_list
+   │ │ └─declaration
+   │ │   ├─float_type
+   │ │   └─assignment
+   │ │     ├─id (n1)
+   │ │     └─sum
+   │ │       ├─id (XKAD)
+   │ │       └─id (V)
+   │ └─list
+   │   └─return_stmt
+   │     └─mul
+   │       ├─[1] id (n1)
+   │       └─int_const (80)
+   └─function
+     ├─int_type
+     ├─[2] id (main)
+     ├─params
+     ├─dec_list
+     │ ├─declaration
+     │ │ ├─int_type
+     │ │ └─assignment
+     │ │   ├─id (n1)
+     │ │   └─modulo
+     │ │     ├─mul
+     │ │     │ ├─int_const (15)
+     │ │     │ └─divide
+     │ │     │   ├─int_const (18)
+     │ │     │   └─unary_minus
+     │ │     │     └─int_const (2)
+     │ │     └─int_const (18)
+     │ ├─declaration
+     │ │ ├─int_type
+     │ │ └─assignment
+     │ │   ├─id (n2)
+     │ │   └─mul
+     │ │     ├─id (n1)
+     │ │     └─id (n1)
+     │ ├─declaration
+     │ │ ├─int_type
+     │ │ └─assignment
+     │ │   ├─id (n3)
+     │ │   └─sum
+     │ │     ├─sum
+     │ │     │ ├─sum
+     │ │     │ │ ├─id (n1)
+     │ │     │ │ └─id (n1)
+     │ │     │ └─id (n2)
+     │ │     └─id (n2)
+     │ ├─declaration
+     │ │ ├─float_type
+     │ │ └─assignment
+     │ │   ├─id (DF)
+     │ │   └─mul
+     │ │     ├─float_const (0.8)
+     │ │     └─float_const (3.16)
+     │ └─declaration
+     │   ├─char_type
+     │   └─assignment
+     │     ├─id (G)
+     │     └─char_const (G)
+     └─list
+       ├─for_stmt
+       │ ├─declaration
+       │ │ ├─int_type
+       │ │ └─assignment
+       │ │   ├─id (i)
+       │ │   └─int_const (0)
+       │ ├─lt
+       │ │ ├─[3] id (i)
+       │ │ └─divide
+       │ │   ├─mul
+       │ │   │ ├─[3] id (n2)
+       │ │   │ └─[3] id (n1)
+       │ │   └─int_const (2)
+       │ ├─plus_equal
+       │ │ ├─[3] id (i)
+       │ │ └─int_const (1)
+       │ ├─dec_list
+       │ └─list
+       │   ├─for_stmt
+       │   │ ├─declaration
+       │   │ │ ├─int_type
+       │   │ │ └─assignment
+       │   │ │   ├─id (j)
+       │   │ │   └─int_const (0)
+       │   │ ├─lt
+       │   │ │ ├─[4] id (j)
+       │   │ │ └─sum
+       │   │ │   ├─[4] id (n2)
+       │   │ │   └─divide
+       │   │ │     ├─[4] id (n1)
+       │   │ │     └─int_const (2)
+       │   │ ├─plus_equal
+       │   │ │ ├─[4] id (j)
+       │   │ │ └─int_const (1)
+       │   │ ├─dec_list
+       │   │ │ └─declaration
+       │   │ │   ├─int_type
+       │   │ │   └─assignment
+       │   │ │     ├─id (x)
+       │   │ │     └─int_const (0)
+       │   │ └─list
+       │   │   └─while_stmt
+       │   │     ├─log_or
+       │   │     │ ├─lt
+       │   │     │ │ ├─[5] id (x)
+       │   │     │ │ └─[5] id (n2)
+       │   │     │ └─log_not
+       │   │     │   └─ge
+       │   │     │     ├─[5] id (x)
+       │   │     │     └─[5] id (n2)
+       │   │     ├─dec_list
+       │   │     └─list
+       │   │       ├─plus_equal
+       │   │       │ ├─[5] id (x)
+       │   │       │ └─[5] id (x)
+       │   │       └─break_stmt
+       │   └─break_stmt
+       ├─assignment
+       │ ├─[2] id (DF)
+       │ └─call
+       │   ├─[2] id (fun)
+       │   └─args
+       │     ├─call
+       │     │ ├─[2] id (fun)
+       │     │ └─args
+       │     │   ├─[2] id (DF)
+       │     │   └─mul
+       │     │     ├─float_const (0.101)
+       │     │     └─int_const (2)
+       │     └─float_const (0.9)
+       ├─if_stmt
+       │ ├─lt
+       │ │ ├─[3] id (DF)
+       │ │ └─sub
+       │ │   ├─float_const (0.8)
+       │ │   └─unary_minus
+       │ │     └─[3] id (DF)
+       │ ├─dec_list
+       │ └─list
+       │   └─if_stmt
+       │     ├─noteq
+       │     │ ├─[4] id (n2)
+       │     │ └─int_const (10)
+       │     ├─dec_list
+       │     ├─list
+       │     │ ├─assignment
+       │     │ │ ├─[4] id (G)
+       │     │ │ └─char_const (H)
+       │     │ ├─times_equal
+       │     │ │ ├─[4] id (n1)
+       │     │ │ └─int_const (1)
+       │     │ ├─mod_equal
+       │     │ │ ├─[4] id (n1)
+       │     │ │ └─int_const (10)
+       │     │ └─incr
+       │     │   └─[4] id (n1)
+       │     ├─else_if
+       │     │ ├─log_and
+       │     │ │ ├─le
+       │     │ │ │ ├─[5] id (n1)
+       │     │ │ │ └─int_const (2)
+       │     │ │ └─log_or
+       │     │ │   ├─equal
+       │     │ │   │ ├─[5] id (G)
+       │     │ │   │ └─char_const (H)
+       │     │ │   └─noteq
+       │     │ │     ├─[5] id (n2)
+       │     │ │     └─int_const (100)
+       │     │ ├─dec_list
+       │     │ └─list
+       │     │   ├─plus_equal
+       │     │   │ ├─[5] id (DF)
+       │     │   │ └─unary_minus
+       │     │   │   └─float_const (0.6)
+       │     │   └─if_stmt
+       │     │     ├─equal
+       │     │     │ ├─[6] id (DF)
+       │     │     │ └─float_const (0.0)
+       │     │     ├─dec_list
+       │     │     └─list
+       │     │       └─assignment
+       │     │         ├─[6] id (DF)
+       │     │         └─float_const (1.01)
+       │     ├─else_if
+       │     │ ├─ge
+       │     │ │ ├─[6] id (G)
+       │     │ │ └─char_const (H)
+       │     │ ├─dec_list
+       │     │ └─list
+       │     │   ├─minus_equal
+       │     │   │ ├─[6] id (n2)
+       │     │   │ └─int_const (16)
+       │     │   └─decr
+       │     │     └─[6] id (n2)
+       │     └─else_stmt
+       │       ├─dec_list
+       │       └─list
+       │         └─div_equal
+       │           ├─[7] id (n1)
+       │           └─int_const (2)
+       ├─goto_stmt
+       │ └─[2] id (label)
+       ├─return_stmt
+       │ └─unary_minus
+       │   └─int_const (1)
+       ├─label_stmt
+       │ └─id (label)
+       └─return_stmt
+         └─mul
+           ├─[2] id (n1)
+           └─int_const (2)

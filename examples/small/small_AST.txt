@@ -1,0 +1,46 @@
+root
+ └─dec_list
+   └─function
+     ├─int_type
+     ├─[1] id (main)
+     ├─params
+     ├─dec_list
+     │ ├─declaration
+     │ │ ├─int_type
+     │ │ └─assignment
+     │ │   ├─id (a)
+     │ │   └─int_const (42)
+     │ ├─declaration
+     │ │ ├─int_type
+     │ │ └─assignment
+     │ │   ├─id (b)
+     │ │   └─int_const (89)
+     │ ├─declaration
+     │ │ ├─int_type
+     │ │ └─assignment
+     │ │   ├─id (c)
+     │ │   └─sum
+     │ │     ├─id (a)
+     │ │     └─mul
+     │ │       ├─id (b)
+     │ │       └─int_const (12)
+     │ └─declaration
+     │   ├─float_type
+     │   └─assignment
+     │     ├─id (d)
+     │     └─unary_minus
+     │       └─float_const (8.011609)
+     └─list
+       └─if_stmt
+         ├─lt
+         │ ├─[2] id (c)
+         │ └─int_const (2)
+         ├─dec_list
+         ├─list
+         │ └─return_stmt
+         │   └─int_const (35)
+         └─else_stmt
+           ├─dec_list
+           └─list
+             └─return_stmt
+               └─int_const (124)

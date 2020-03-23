@@ -1,0 +1,282 @@
+program | Line num: 20
+ └─declaration_list | Line num: 20
+   └─declaration | Line num: 20
+     └─fun_declaration | Line num: 20
+       ├─INT | Line num: 1
+       ├─ID | Line num: 1 (main) 
+       ├─params | Line num: 1
+       └─statement | Line num: 20
+         └─compound_stmt | Line num: 20
+           ├─local_declarations | Line num: 13
+           │ ├─local_declarations | Line num: 9
+           │ │ ├─local_declarations | Line num: 8
+           │ │ │ ├─local_declarations | Line num: 7
+           │ │ │ │ ├─local_declarations | Line num: 6
+           │ │ │ │ │ ├─local_declarations | Line num: 5
+           │ │ │ │ │ │ ├─local_declarations | Line num: 3
+           │ │ │ │ │ │ │ ├─local_declarations | Line num: 2
+           │ │ │ │ │ │ │ │ ├─local_declarations | Line num: 1
+           │ │ │ │ │ │ │ │ └─scoped_var_declaration | Line num: 2
+           │ │ │ │ │ │ │ │   ├─scoped_type_specifier | Line num: 2
+           │ │ │ │ │ │ │ │   │ └─INT | Line num: 2
+           │ │ │ │ │ │ │ │   └─var_decl_list | Line num: 2
+           │ │ │ │ │ │ │ │     └─var_decl_initialize | Line num: 2
+           │ │ │ │ │ │ │ │       ├─ID | Line num: 2 (value) 
+           │ │ │ │ │ │ │ │       ├─EQUAL | Line num: 2
+           │ │ │ │ │ │ │ │       └─simple_expression | Line num: 2
+           │ │ │ │ │ │ │ │         └─and_expression | Line num: 2
+           │ │ │ │ │ │ │ │           └─unary_rel_expression | Line num: 2
+           │ │ │ │ │ │ │ │             └─rel_expression | Line num: 2
+           │ │ │ │ │ │ │ │               └─sum_expression | Line num: 2
+           │ │ │ │ │ │ │ │                 └─mul_expression | Line num: 2
+           │ │ │ │ │ │ │ │                   └─unary_expression | Line num: 2
+           │ │ │ │ │ │ │ │                     └─unary_minus | Line num: 2
+           │ │ │ │ │ │ │ │                       └─unary_expression | Line num: 2
+           │ │ │ │ │ │ │ │                         └─factor | Line num: 2
+           │ │ │ │ │ │ │ │                           └─immutable | Line num: 2
+           │ │ │ │ │ │ │ │                             └─INTCONST | Line num: 2 (5) 
+           │ │ │ │ │ │ │ └─scoped_var_declaration | Line num: 3
+           │ │ │ │ │ │ │   ├─scoped_type_specifier | Line num: 3
+           │ │ │ │ │ │ │   │ └─FLOAT | Line num: 3
+           │ │ │ │ │ │ │   └─var_decl_list | Line num: 3
+           │ │ │ │ │ │ │     └─var_decl_initialize | Line num: 3
+           │ │ │ │ │ │ │       ├─ID | Line num: 3 (a) 
+           │ │ │ │ │ │ │       ├─EQUAL | Line num: 3
+           │ │ │ │ │ │ │       └─simple_expression | Line num: 3
+           │ │ │ │ │ │ │         └─and_expression | Line num: 3
+           │ │ │ │ │ │ │           └─unary_rel_expression | Line num: 3
+           │ │ │ │ │ │ │             └─rel_expression | Line num: 3
+           │ │ │ │ │ │ │               └─sum_expression | Line num: 3
+           │ │ │ │ │ │ │                 └─mul_expression | Line num: 3
+           │ │ │ │ │ │ │                   └─unary_expression | Line num: 3
+           │ │ │ │ │ │ │                     └─factor | Line num: 3
+           │ │ │ │ │ │ │                       └─immutable | Line num: 3
+           │ │ │ │ │ │ │                         └─FLOATCONST | Line num: 3 (10.1) 
+           │ │ │ │ │ │ └─scoped_var_declaration | Line num: 5
+           │ │ │ │ │ │   ├─scoped_type_specifier | Line num: 5
+           │ │ │ │ │ │   │ └─INT | Line num: 5
+           │ │ │ │ │ │   └─var_decl_list | Line num: 5
+           │ │ │ │ │ │     └─var_decl_initialize | Line num: 5
+           │ │ │ │ │ │       ├─ID | Line num: 5 (hek) 
+           │ │ │ │ │ │       ├─EQUAL | Line num: 5
+           │ │ │ │ │ │       └─simple_expression | Line num: 5
+           │ │ │ │ │ │         └─and_expression | Line num: 5
+           │ │ │ │ │ │           └─unary_rel_expression | Line num: 5
+           │ │ │ │ │ │             └─rel_expression | Line num: 5
+           │ │ │ │ │ │               └─sum_expression | Line num: 5
+           │ │ │ │ │ │                 └─mul_expression | Line num: 5
+           │ │ │ │ │ │                   ├─mul_expression | Line num: 5
+           │ │ │ │ │ │                   │ └─unary_expression | Line num: 5
+           │ │ │ │ │ │                   │   └─factor | Line num: 5
+           │ │ │ │ │ │                   │     └─immutable | Line num: 5
+           │ │ │ │ │ │                   │       └─INTCONST | Line num: 5 (5) 
+           │ │ │ │ │ │                   ├─TIMES | Line num: 5
+           │ │ │ │ │ │                   └─unary_expression | Line num: 5
+           │ │ │ │ │ │                     └─unary_minus | Line num: 5
+           │ │ │ │ │ │                       └─unary_expression | Line num: 5
+           │ │ │ │ │ │                         └─factor | Line num: 5
+           │ │ │ │ │ │                           └─immutable | Line num: 5
+           │ │ │ │ │ │                             └─INTCONST | Line num: 5 (18) 
+           │ │ │ │ │ └─scoped_var_declaration | Line num: 6
+           │ │ │ │ │   ├─scoped_type_specifier | Line num: 6
+           │ │ │ │ │   │ └─CHAR | Line num: 6
+           │ │ │ │ │   └─var_decl_list | Line num: 6
+           │ │ │ │ │     └─var_decl_initialize | Line num: 6
+           │ │ │ │ │       ├─ID | Line num: 6 (str) 
+           │ │ │ │ │       ├─EQUAL | Line num: 6
+           │ │ │ │ │       └─simple_expression | Line num: 6
+           │ │ │ │ │         └─and_expression | Line num: 6
+           │ │ │ │ │           └─unary_rel_expression | Line num: 6
+           │ │ │ │ │             └─rel_expression | Line num: 6
+           │ │ │ │ │               └─sum_expression | Line num: 6
+           │ │ │ │ │                 └─mul_expression | Line num: 6
+           │ │ │ │ │                   └─unary_expression | Line num: 6
+           │ │ │ │ │                     └─factor | Line num: 6
+           │ │ │ │ │                       └─immutable | Line num: 6
+           │ │ │ │ │                         └─CHARLIT | Line num: 6 (b) 
+           │ │ │ │ └─scoped_var_declaration | Line num: 7
+           │ │ │ │   ├─scoped_type_specifier | Line num: 7
+           │ │ │ │   │ └─CHAR | Line num: 7
+           │ │ │ │   └─var_decl_list | Line num: 7
+           │ │ │ │     └─var_decl_initialize | Line num: 7
+           │ │ │ │       ├─ID | Line num: 7 (str2) 
+           │ │ │ │       ├─EQUAL | Line num: 7
+           │ │ │ │       └─simple_expression | Line num: 7
+           │ │ │ │         └─and_expression | Line num: 7
+           │ │ │ │           └─unary_rel_expression | Line num: 7
+           │ │ │ │             └─rel_expression | Line num: 7
+           │ │ │ │               └─sum_expression | Line num: 7
+           │ │ │ │                 └─mul_expression | Line num: 7
+           │ │ │ │                   └─unary_expression | Line num: 7
+           │ │ │ │                     └─factor | Line num: 7
+           │ │ │ │                       └─immutable | Line num: 7
+           │ │ │ │                         └─CHARLIT | Line num: 7 (c) 
+           │ │ │ └─scoped_var_declaration | Line num: 8
+           │ │ │   ├─scoped_type_specifier | Line num: 8
+           │ │ │   │ └─INT | Line num: 8
+           │ │ │   └─var_decl_list | Line num: 8
+           │ │ │     └─var_decl_initialize | Line num: 8
+           │ │ │       ├─ID | Line num: 8 (logand) 
+           │ │ │       ├─EQUAL | Line num: 8
+           │ │ │       └─simple_expression | Line num: 8
+           │ │ │         └─and_expression | Line num: 8
+           │ │ │           ├─and_expression | Line num: 8
+           │ │ │           │ └─unary_rel_expression | Line num: 8
+           │ │ │           │   └─rel_expression | Line num: 8
+           │ │ │           │     └─sum_expression | Line num: 8
+           │ │ │           │       └─mul_expression | Line num: 8
+           │ │ │           │         └─unary_expression | Line num: 8
+           │ │ │           │           └─factor | Line num: 8
+           │ │ │           │             └─immutable | Line num: 8
+           │ │ │           │               └─INTCONST | Line num: 8 (1) 
+           │ │ │           ├─LOGAND | Line num: 8
+           │ │ │           └─unary_rel_expression | Line num: 8
+           │ │ │             └─rel_expression | Line num: 8
+           │ │ │               └─sum_expression | Line num: 8
+           │ │ │                 └─mul_expression | Line num: 8
+           │ │ │                   └─unary_expression | Line num: 8
+           │ │ │                     └─factor | Line num: 8
+           │ │ │                       └─immutable | Line num: 8
+           │ │ │                         └─INTCONST | Line num: 8 (2) 
+           │ │ └─scoped_var_declaration | Line num: 9
+           │ │   ├─scoped_type_specifier | Line num: 9
+           │ │   │ └─INT | Line num: 9
+           │ │   └─var_decl_list | Line num: 9
+           │ │     └─var_decl_initialize | Line num: 9
+           │ │       ├─ID | Line num: 9 (logor) 
+           │ │       ├─EQUAL | Line num: 9
+           │ │       └─simple_expression | Line num: 9
+           │ │         ├─simple_expression | Line num: 9
+           │ │         │ └─and_expression | Line num: 9
+           │ │         │   └─unary_rel_expression | Line num: 9
+           │ │         │     └─rel_expression | Line num: 9
+           │ │         │       └─sum_expression | Line num: 9
+           │ │         │         └─mul_expression | Line num: 9
+           │ │         │           └─unary_expression | Line num: 9
+           │ │         │             └─factor | Line num: 9
+           │ │         │               └─immutable | Line num: 9
+           │ │         │                 └─INTCONST | Line num: 9 (1) 
+           │ │         ├─LOGOR | Line num: 9
+           │ │         └─and_expression | Line num: 9
+           │ │           └─unary_rel_expression | Line num: 9
+           │ │             └─rel_expression | Line num: 9
+           │ │               └─sum_expression | Line num: 9
+           │ │                 └─mul_expression | Line num: 9
+           │ │                   └─unary_expression | Line num: 9
+           │ │                     └─factor | Line num: 9
+           │ │                       └─immutable | Line num: 9
+           │ │                         └─INTCONST | Line num: 9 (2) 
+           │ └─scoped_var_declaration | Line num: 13
+           │   ├─scoped_type_specifier | Line num: 13
+           │   │ └─CHAR | Line num: 13
+           │   └─var_decl_list | Line num: 13
+           │     └─var_decl_initialize | Line num: 13
+           │       ├─ID | Line num: 13 (a) 
+           │       ├─EQUAL | Line num: 13
+           │       └─simple_expression | Line num: 13
+           │         └─and_expression | Line num: 13
+           │           └─unary_rel_expression | Line num: 13
+           │             └─rel_expression | Line num: 13
+           │               └─sum_expression | Line num: 13
+           │                 └─mul_expression | Line num: 13
+           │                   └─unary_expression | Line num: 13
+           │                     └─factor | Line num: 13
+           │                       └─immutable | Line num: 13
+           │                         └─CHARLIT | Line num: 13 (	) 
+           └─statement_list | Line num: 19
+             ├─statement_list | Line num: 18
+             │ └─statement | Line num: 18
+             │   └─iteration_stmt | Line num: 18
+             │     └─for_stmt | Line num: 18
+             │       ├─var_declaration | Line num: 14
+             │       │ ├─INT | Line num: 14
+             │       │ └─var_decl_list | Line num: 14
+             │       │   └─var_decl_initialize | Line num: 14
+             │       │     ├─ID | Line num: 14 (i) 
+             │       │     ├─EQUAL | Line num: 14
+             │       │     └─simple_expression | Line num: 14
+             │       │       └─and_expression | Line num: 14
+             │       │         └─unary_rel_expression | Line num: 14
+             │       │           └─rel_expression | Line num: 14
+             │       │             └─sum_expression | Line num: 14
+             │       │               └─mul_expression | Line num: 14
+             │       │                 └─unary_expression | Line num: 14
+             │       │                   └─factor | Line num: 14
+             │       │                     └─immutable | Line num: 14
+             │       │                       └─INTCONST | Line num: 14 (0) 
+             │       ├─rel_expression | Line num: 14
+             │       │ ├─sum_expression | Line num: 14
+             │       │ │ └─mul_expression | Line num: 14
+             │       │ │   └─unary_expression | Line num: 14
+             │       │ │     └─factor | Line num: 14
+             │       │ │       └─ID | Line num: 14 (i) 
+             │       │ ├─LT | Line num: 14
+             │       │ └─sum_expression | Line num: 14
+             │       │   └─mul_expression | Line num: 14
+             │       │     └─unary_expression | Line num: 14
+             │       │       └─factor | Line num: 14
+             │       │         └─immutable | Line num: 14
+             │       │           └─INTCONST | Line num: 14 (111) 
+             │       ├─expression | Line num: 14
+             │       │ └─unary_assign_expr | Line num: 14
+             │       │   ├─ID | Line num: 14 (i) 
+             │       │   └─INCR | Line num: 14
+             │       └─statement | Line num: 18
+             │         └─compound_stmt | Line num: 18
+             │           ├─local_declarations | Line num: 14
+             │           └─statement_list | Line num: 18
+             │             └─statement | Line num: 18
+             │               └─selection_stmt | Line num: 18
+             │                 ├─IF | Line num: 18
+             │                 ├─simple_expression | Line num: 15
+             │                 │ └─and_expression | Line num: 15
+             │                 │   └─unary_rel_expression | Line num: 15
+             │                 │     └─rel_expression | Line num: 15
+             │                 │       ├─sum_expression | Line num: 15
+             │                 │       │ └─mul_expression | Line num: 15
+             │                 │       │   ├─mul_expression | Line num: 15
+             │                 │       │   │ └─unary_expression | Line num: 15
+             │                 │       │   │   └─factor | Line num: 15
+             │                 │       │   │     └─ID | Line num: 15 (i) 
+             │                 │       │   ├─MODULO | Line num: 15
+             │                 │       │   └─unary_expression | Line num: 15
+             │                 │       │     └─factor | Line num: 15
+             │                 │       │       └─immutable | Line num: 15
+             │                 │       │         └─INTCONST | Line num: 15 (10) 
+             │                 │       ├─ISEQ | Line num: 15
+             │                 │       └─sum_expression | Line num: 15
+             │                 │         └─mul_expression | Line num: 15
+             │                 │           └─unary_expression | Line num: 15
+             │                 │             └─factor | Line num: 15
+             │                 │               └─immutable | Line num: 15
+             │                 │                 └─INTCONST | Line num: 15 (5) 
+             │                 ├─compound_stmt | Line num: 17
+             │                 │ ├─local_declarations | Line num: 15
+             │                 │ └─statement_list | Line num: 16
+             │                 │   └─statement | Line num: 16
+             │                 │     └─expression_stmt | Line num: 16
+             │                 │       └─expression | Line num: 16
+             │                 │         ├─ID | Line num: 16 (value) 
+             │                 │         ├─PLUSEQUAL | Line num: 16
+             │                 │         └─expression | Line num: 16
+             │                 │           └─simple_expression | Line num: 16
+             │                 │             └─and_expression | Line num: 16
+             │                 │               └─unary_rel_expression | Line num: 16
+             │                 │                 └─rel_expression | Line num: 16
+             │                 │                   └─sum_expression | Line num: 16
+             │                 │                     └─mul_expression | Line num: 16
+             │                 │                       └─unary_expression | Line num: 16
+             │                 │                         └─factor | Line num: 16
+             │                 │                           └─ID | Line num: 16 (i) 
+             └─statement | Line num: 19
+               └─return_stmt | Line num: 19
+                 └─expression | Line num: 19
+                   └─simple_expression | Line num: 19
+                     └─and_expression | Line num: 19
+                       └─unary_rel_expression | Line num: 19
+                         └─rel_expression | Line num: 19
+                           └─sum_expression | Line num: 19
+                             └─mul_expression | Line num: 19
+                               └─unary_expression | Line num: 19
+                                 └─factor | Line num: 19
+                                   └─ID | Line num: 19 (value) 

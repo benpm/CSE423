@@ -1,0 +1,45 @@
+root
+ └─dec_list
+   ├─declaration
+   │ ├─int_type
+   │ └─assignment
+   │   ├─id (a)
+   │   └─int_const (4)
+   ├─declaration
+   │ ├─int_type
+   │ └─assignment
+   │   ├─id (b)
+   │   └─int_const (5)
+   ├─declaration
+   │ ├─int_type
+   │ └─id (c)
+   ├─declaration
+   │ ├─int_type
+   │ └─assignment
+   │   ├─id (d)
+   │   └─int_const (5)
+   ├─declaration
+   │ ├─int_type
+   │ └─assignment
+   │   ├─id (e)
+   │   └─int_const (3)
+   ├─declaration
+   │ ├─int_type
+   │ └─assignment
+   │   ├─id (f)
+   │   └─int_const (5)
+   └─function
+     ├─int_type
+     ├─[1] id (main)
+     ├─params
+     └─dec_list
+       ├─declaration
+       │ ├─int_type
+       │ └─assignment
+       │   ├─id (g)
+       │   └─int_const (3)
+       └─declaration
+         ├─int_type
+         └─assignment
+           ├─id (h)
+           └─int_const (3)

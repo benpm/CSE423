@@ -1,5 +1,17 @@
 #!/bin/bash
 # Flags to output examples for
+indent() { sed 's/^/  /'; }
+
+echo "THIS FILE GENERATES **NEW** REFERENCE FILES"
+echo "DO YOU WISH TO OVERWRITE THE REFERENCE FILES? (y/n): "
+read response
+
+if [ "$response" != "y" ]
+then
+    echo "Not updating files. Exiting..."
+    exit 0
+fi
+
 compilerFlags=(
     t # Tokens
     p # Parse tree
@@ -24,7 +36,7 @@ do
     cd $dir
     cFile=$(find . -type f -name "*.c")
     cFile=${cFile:2}
-	printf "Generating output for: %s\n" $cFile
+	printf "%s:\n" $cFile
 
     # Loop over compiler flags
     for (( i=0; i<${#compilerFlags[@]}; i++ ));
@@ -33,7 +45,10 @@ do
         flagName=${compilerFlagNames[i]}
         outName=${cFile%".c"}_$flagName.txt
 
-        $($compilerExecutable -l -$flag $cFile > $outName)
+        printf "\tGenerating %s\n" $flagName
+
+        # Bash magic to get sterr indented on output
+        $compilerExecutable -l -$flag $cFile > $outName 2>&1
     done
 
     cd ../
