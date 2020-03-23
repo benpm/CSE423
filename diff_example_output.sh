@@ -32,6 +32,8 @@ cmake ..
 make -j
 
 # Loop over subdirectories in examples
+failed=0
+total=0
 for dir in $(ls -d $examplesDir*/)
 do
     cFile=$(find $dir -type f -name "*.c")
@@ -53,10 +55,19 @@ do
         if [ "$?" != "0" ]
         then
             printf "${RED}FAILED!${NC}\n"
+            failed=$((failed+1))
         else 
             printf "${GREEN}PASSED!${NC}\n"
         fi
     done
+    total=$((total+1))
 done
+
+if [ "$failed" != "0" ]
+then
+    printf "${RED}$failed/$total FAILED!${NC}\n"
+else 
+    printf "${GREEN}$total/$total PASSED!${NC}\n"
+fi
 
 rm diff_tmp.txt
