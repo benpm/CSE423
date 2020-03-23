@@ -2,6 +2,7 @@
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
+
 # Flags to output examples for
 compilerFlags=(
     t # Tokens
@@ -27,6 +28,7 @@ then
 fi
 
 cd $gitRootDir/build
+cmake ..
 make -j
 
 # Loop over subdirectories in examples

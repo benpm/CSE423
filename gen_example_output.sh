@@ -1,7 +1,4 @@
 #!/bin/bash
-# Flags to output examples for
-indent() { sed 's/^/  /'; }
-
 echo "THIS FILE GENERATES **NEW** REFERENCE FILES"
 echo "DO YOU WISH TO OVERWRITE THE REFERENCE FILES? (y/n): "
 read response
@@ -12,6 +9,7 @@ then
     exit 0
 fi
 
+# Flags to output examples for
 compilerFlags=(
     t # Tokens
     p # Parse tree
