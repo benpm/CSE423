@@ -272,6 +272,12 @@ goto {
         printf("<%s, %s>\n", yytext, "CHARLIT");
     return CHARLIT;
 }
+\"(\\.|[^"\\])*\" {
+    yylval.sval = strdup(yytext);
+    if (scannerPrintTokens)
+        printf("<%s, %s>\n", yytext, "STRINGLIT");
+    return STRINGLIT;
+}
 [0-9]+ {
     yylval.ival = atoi(yytext);
     if (scannerPrintTokens)

@@ -10,7 +10,7 @@ void expandNodes(AST* ast);
 // Map from label to string
 const std::vector<std::string> AST::str {
     "root", "function", "id", "list", "declaration", "initialization", "sum", "mul",
-    "int_const", "float_const", "char_const", "for_stmt",
+    "int_const", "float_const", "string_const", "char_const", "for_stmt",
     "if_stmt", "call", "int_type", "float_type", "char_type", "bool_expr", "unhandled",
     "args", "return_stmt", "le", "ge", "lt", "gt", "incr", "decr", "plus_equal", "minus_equal",
     "times_equal", "dec_list", "else_stmt", "params", "while_stmt", "break_stmt", "label_stmt",
@@ -44,6 +44,7 @@ const std::map<PT::Label, AST::Label> labelMap {
     {PT::INTCONST, AST::int_const},
     {PT::FLOATCONST, AST::float_const},
     {PT::CHARLIT, AST::char_const},
+    {PT::STRINGLIT, AST::string_const},
     {PT::SELECTION_STMT, AST::if_stmt},
     {PT::FOR_STMT, AST::for_stmt},
     {PT::WHILE_STMT, AST::while_stmt},
@@ -198,10 +199,13 @@ void printASTNode(const AST* node, int depth, ulong levels)
             fmt::print(" ({})", node->data.cval);
             break;
         case AST::id:
+        case AST::string_const:
             fmt::print(" ({})", node->data.sval);
             break;
         case AST::unhandled:
             fmt::print("<!!>");
+            break;
+        default:
             break;
     }
     fmt::print("\n");
