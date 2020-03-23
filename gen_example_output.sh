@@ -28,6 +28,12 @@ compilerFlagNames=(
 gitRootDir=$(git rev-parse --show-toplevel)
 compilerExecutable=$gitRootDir/build/frontend
 
+if [ ! -d "$gitRootDir/build" ]
+then
+    echo "Please create build dir at $gitRootDir/"
+    exit -1
+fi
+
 cd $gitRootDir/examples
 
 # Loop over subdirectories in examples
