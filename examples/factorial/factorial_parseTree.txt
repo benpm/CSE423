@@ -80,7 +80,7 @@ program | Line num: 13
              │     │                             ├─ID | Line num: 4 (printf) 
              │     │                             └─args | Line num: 4
              │     │                               └─arg_list | Line num: 4
-             │     │                                 └─STRINGLIT | Line num: 4 (�) 
+             │     │                                 └─STRINGLIT | Line num: 4 ("Error! Factorial of a negative number doesn't exist.") 
              │     └─else_stmt | Line num: 10
              │       ├─ELSE | Line num: 10
              │       └─compound_stmt | Line num: 10
@@ -159,7 +159,7 @@ program | Line num: 13
              │                                       └─arg_list | Line num: 9
              │                                         ├─arg_list | Line num: 9
              │                                         │ ├─arg_list | Line num: 9
-             │                                         │ │ └─STRINGLIT | Line num: 9 (�) 
+             │                                         │ │ └─STRINGLIT | Line num: 9 ("Factorial of %d = %d") 
              │                                         │ └─expression | Line num: 9
              │                                         │   └─simple_expression | Line num: 9
              │                                         │     └─and_expression | Line num: 9

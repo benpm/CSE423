@@ -143,9 +143,9 @@ void PT::printNode(PT &node, int depth, ulong levels)
             std::cout << " (" << node.data.fval << ") ";
             break;
         case CHARLIT:
-        case STRINGLIT:
             std::cout << " (" << node.data.cval << ") ";
             break;
+        case STRINGLIT:
         case ID:
             std::cout << " (" << node.data.sval << ") ";
             break;
