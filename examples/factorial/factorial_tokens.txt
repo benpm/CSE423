@@ -19,9 +19,10 @@
 <0, INTCONST>
 <), RPAREN>
 <{, LBRACE>
-<return, RETURN>
-<-, MINUS>
-<1, INTCONST>
+<printf, ID>
+<(, LPAREN>
+<"Error! Factorial of a negative number doesn't exist.", STRINGLIT>
+<), RPAREN>
 <;, SEMICOLON>
 <}, RBRACE>
 <else, ELSE>
@@ -46,8 +47,14 @@
 <i, ID>
 <;, SEMICOLON>
 <}, RBRACE>
-<return, RETURN>
+<printf, ID>
+<(, LPAREN>
+<"Factorial of %d = %d", STRINGLIT>
+<,, COMMA>
+<n, ID>
+<,, COMMA>
 <fact, ID>
+<), RPAREN>
 <;, SEMICOLON>
 <}, RBRACE>
 <return, RETURN>

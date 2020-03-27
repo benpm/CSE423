@@ -15,7 +15,7 @@ public:
     // Label indicating type of node
     enum Label {
         root, function, id, list, declaration, initialization, sum, mul,
-        int_const, float_const, char_const, for_stmt,
+        int_const, float_const, string_const, char_const, for_stmt,
         if_stmt, call, int_type, float_type, char_type, bool_expr, unhandled,
         args, return_stmt, le, ge, lt, gt, incr, decr, plus_equal, minus_equal,
         times_equal, dec_list, else_stmt, params, while_stmt, break_stmt, label_stmt,
