@@ -71,8 +71,7 @@ uint traverseAST(SymbolTable* table, AST* ast)
                         table->name.substr(0, table->name.find(')') + 1),
                         newTableID);
                 }
-                SymbolTable* newChild = new SymbolTable(childAST, newTableID, newTableName);
-                newChild->parent = table;
+                SymbolTable* newChild = new SymbolTable(table, childAST, newTableID, newTableName);
                 table->children.push_back(newChild);
                 localIDIncrement += 1;
                 childAST->ownedScope = newChild;
@@ -140,6 +139,7 @@ SymbolTable::SymbolTable(AST* ast)
 
     this->tableID = 0;
     this->name = "_GLOBAL_";
+    this->depth = 0;
 
     traverseAST(this, ast);
 
@@ -152,10 +152,12 @@ SymbolTable::SymbolTable(AST* ast)
  * @param ast The AST to build from
  * @param tableID The ID to assign to this table
  */
-SymbolTable::SymbolTable(AST* ast, uint tableID, std::string name)
+SymbolTable::SymbolTable(SymbolTable* parent, AST* ast, uint tableID, std::string name)
 {
     this->tableID = tableID;
     this->name = name;
+    this->parent = parent;
+    this->depth = parent->depth + 1;
 
     traverseAST(this, ast);
 }
@@ -173,7 +175,7 @@ void stprint(SymbolTable* st, uint depth)
 
     // Construct the padding string using bit flags
     std::string padding;
-    for (int i = 0; i < depth; ++i) {
+    for (int i = 0; i < st->depth; ++i) {
         padding += "  ";
     }
 

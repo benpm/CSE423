@@ -77,12 +77,8 @@ void populateBB(Function* fun, const AST* list)
     uint tempn = 0;
     for (const AST* child : list->children) {
         switch (child->label) {
+            case AST::return_stmt:
             case AST::assignment: {
-                BasicBlock* block = new BasicBlock(0, child->toString(), child->scope);
-                assignment(block, child);
-                fun->basicBlocks.push_back(block);
-                break; }
-            case AST::return_stmt: {
                 BasicBlock* block = new BasicBlock(0, child->toString(), child->scope);
                 assignment(block, child);
                 fun->basicBlocks.push_back(block);

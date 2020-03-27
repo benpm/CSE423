@@ -52,8 +52,10 @@ public:
     std::vector<SymbolTable*> children;
     // Convenience name, used for pretty-printing
     std::string name;
+    // Convenience depth, used for pretty-printing
+    uint depth;
 
     SymbolTable(AST* ast);
-    SymbolTable(AST* ast, uint tableID, std::string name);
+    SymbolTable(SymbolTable* parent, AST* ast, uint tableID, std::string name);
     void print();
 };
