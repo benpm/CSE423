@@ -11,7 +11,8 @@ const std::unordered_map<AST::Label, Statement::Type> labelMap {
     {AST::modulo,       Statement::MOD},
     {AST::unary_minus,  Statement::MINUS},
     {AST::log_not,      Statement::NOT},
-    {AST::assignment,   Statement::ASSIGN}
+    {AST::assignment,   Statement::ASSIGN},
+    {AST::return_stmt,  Statement::RETURN}
 };
 
 Arg assignment(BasicBlock* block, const AST* ast, uint tempn=0)
@@ -57,7 +58,7 @@ Arg assignment(BasicBlock* block, const AST* ast, uint tempn=0)
     }
 
     // Create temporary if this is an operation
-    if (ast->label != AST::assignment) {
+    if (ast->label != AST::assignment && ast->label != AST::return_stmt) {
         std::string tempName = fmt::format("_{}", tempn);
         result.type = Arg::Type::NAME;
         result.val.sval = strdup(tempName.c_str());
@@ -73,13 +74,19 @@ Arg assignment(BasicBlock* block, const AST* ast, uint tempn=0)
 void populateBB(Function* fun, const AST* list)
 {
     // Create basic blocks
+    uint tempn = 0;
     for (const AST* child : list->children) {
         switch (child->label) {
-            case AST::assignment:{
-                BasicBlock* block = new BasicBlock(0, "", child->scope);
+            case AST::assignment: {
+                BasicBlock* block = new BasicBlock(0, child->toString(), child->scope);
                 assignment(block, child);
                 fun->basicBlocks.push_back(block);
-                break;}
+                break; }
+            case AST::return_stmt: {
+                BasicBlock* block = new BasicBlock(0, child->toString(), child->scope);
+                assignment(block, child);
+                fun->basicBlocks.push_back(block);
+                break; }
             default:
                 populateBB(fun, child);
                 break;
