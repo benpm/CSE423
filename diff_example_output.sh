@@ -46,7 +46,7 @@ do
     do 
         flag=${compilerFlags[i]}
         flagName=${compilerFlagNames[i]}
-        outName=${cFile%".c"}_$flagName.txt
+        outName=$dir/$flagName.txt
 
         printf "\tDiffing %s... " $flagName
 
@@ -60,8 +60,8 @@ do
         else 
             printf "${GREEN}PASSED!${NC}\n"
         fi
+        total=$((total+1))
     done
-    total=$((total+1))
 done
 
 if [ "$failed" != "0" ]
