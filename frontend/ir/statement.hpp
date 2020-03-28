@@ -48,7 +48,7 @@ public:
         RETURN,
         // Break statement
         BREAK,
-        // Function call with arguments [function] [args...]
+        // Function call with arguments [result] [function] [args...]
         CALL,
         // Do nothing
         NO_OP

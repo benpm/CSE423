@@ -28,6 +28,7 @@ const std::unordered_map<AST::Label, Statement::Type> labelMap {
     {AST::incr,         Statement::ADD},
     {AST::decr,         Statement::MINUS},
     {AST::assignment,   Statement::ASSIGN},
+    {AST::args,         Statement::CALL},
     {AST::return_stmt,  Statement::RETURN}
 };
 
@@ -54,7 +55,14 @@ Arg expand(BasicBlock* block, const AST* ast, uint tempn=0)
     // Bail if node not supported
     if (labelMap.find(ast->label) == labelMap.end()) {
         spdlog::warn("AST node {} not supported for IR generation", ast->toString());
-        return result;
+    }
+
+    // Function calls
+    if (ast->label == AST::call) {
+        // Add function identifier to args
+        args.push_back(Arg(ast->children[0]->data.sval));
+        // Set current ast node to the args child so that function args can be added properly
+        ast = ast->children[1];
     }
 
     // Loop through children and add statement arguments
@@ -76,6 +84,7 @@ Arg expand(BasicBlock* block, const AST* ast, uint tempn=0)
             case AST::ge:
             case AST::equal:
             case AST::noteq:
+            case AST::call:
                 args.push_back(expand(block, child, tempn + 1));
                 break;
             
@@ -124,7 +133,8 @@ Arg expand(BasicBlock* block, const AST* ast, uint tempn=0)
     }
 
     // Generate statement
-    block->statements.emplace_back(labelMap.at(ast->label), args);
+    if (labelMap.find(ast->label) != labelMap.end())
+        block->statements.emplace_back(labelMap.at(ast->label), args);
 
     return result;
 }
