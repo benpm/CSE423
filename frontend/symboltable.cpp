@@ -42,11 +42,15 @@ Symbol::Symbol(uint scopeID, int symType, Symbol::Category category)
  */
 SymbolTable::SymbolTable(AST* ast)
 {
+    spdlog::info("Symbol Table population beginning");
+
     this->tableID = this->globalTableID;
     this->globalTableID++;
     this->name = "__GLOBAL__";
 
     this->populateChildren(ast);
+
+    spdlog::info("Symbol Table population done");
 }
 
 /**
