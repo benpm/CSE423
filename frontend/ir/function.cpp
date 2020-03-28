@@ -111,6 +111,14 @@ Arg expand(BasicBlock* block, const AST* ast, uint tempn=0)
         case AST::times_equal:
             args.insert(args.begin(), args.at(0));
             break;
+        case AST::lt:
+        case AST::gt:
+        case AST::le:
+        case AST::ge:
+        case AST::equal:
+        case AST::noteq:
+            args.insert(args.begin(), Arg(block->label + 2u));
+            break;
     }
 
     // Generate statement
@@ -119,11 +127,14 @@ Arg expand(BasicBlock* block, const AST* ast, uint tempn=0)
     return result;
 }
 
-void populateBB(Function* fun, const AST* list)
+uint populateBB(Function* fun, const AST* ast, uint tempn=0)
 {
+    // Keep track of beginning and end of this new chunk of basic blocks
+    int head = fun->blocks.size();
+    int tail = head;
+
     // Create basic blocks
-    uint tempn = 0;
-    for (const AST* child : list->children) {
+    for (const AST* child : ast->children) {
         switch (child->label) {
             // Simple, compound statements
             case AST::return_stmt:
@@ -137,7 +148,8 @@ void populateBB(Function* fun, const AST* list)
             case AST::assignment: {
                 BasicBlock* block = new BasicBlock(tempn, child->toString(), child->scope);
                 expand(block, child);
-                fun->basicBlocks.push_back(block);
+                fun->blocks.push_back(block);
+                tempn += 1;
                 break; }
             
             // Conditions
@@ -147,14 +159,33 @@ void populateBB(Function* fun, const AST* list)
             case AST::le: {
                 BasicBlock* block = new BasicBlock(tempn, "cond", child->scope);
                 expand(block, child);
-                fun->basicBlocks.push_back(block);
+                fun->blocks.push_back(block);
+                tempn += 1;
                 break; }
+
+            // Recurse
             default:
-                populateBB(fun, child);
+                tempn = populateBB(fun, child, tempn);
                 break;
         }
-        tempn += 1;
+        tail = fun->blocks.size() - 1;
     }
+
+    // Back-populate jumps
+    switch (ast->label) {
+        case AST::for_stmt:
+            // Jump from body to post-execution statement
+            BasicBlock* jumpStmt = new BasicBlock(tempn, "for_loop_jump", ast->ownedScope);
+            jumpStmt->statements.push_back(
+                Statement(Statement::JUMP, fun->blocks.at(head + 2)->label));
+            fun->blocks.push_back(jumpStmt);
+            // Jump from post-exec statement to condition
+            fun->blocks.at(head + 2)->statements.push_back(
+                Statement(Statement::JUMP, fun->blocks.at(head + 1)->label));
+            break;
+    }
+
+    return tempn;
 }
 
 Function::Function(const AST* funcNode)
@@ -170,7 +201,7 @@ std::string Function::toString() const
 {
     std::string string;
     string += fmt::format("{}()\n", this->name);
-    for (const BasicBlock* block : basicBlocks) {
+    for (const BasicBlock* block : blocks) {
         string += " " + block->toString();
     }
     return string;
