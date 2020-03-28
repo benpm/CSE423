@@ -47,7 +47,7 @@ const std::unordered_set<AST::Label> endStatements {
  * @param tempn A counter for generating contiguous temporary var names
  * @return Arg A temporary variable that is intended to be the result of the op in the given AST
  */
-Arg expand(BasicBlock* block, const AST* ast, uint tempn=0)
+Arg expand(BasicBlock* block, const AST* ast, uint& tempn)
 {
     std::vector<Arg> args;
     Arg result(0u);
@@ -85,7 +85,7 @@ Arg expand(BasicBlock* block, const AST* ast, uint tempn=0)
             case AST::equal:
             case AST::noteq:
             case AST::call:
-                args.push_back(expand(block, child, tempn + 1));
+                args.push_back(expand(block, child, tempn));
                 break;
             
             // Identifier or constant value arguments
@@ -116,6 +116,7 @@ Arg expand(BasicBlock* block, const AST* ast, uint tempn=0)
         result.type = Arg::Type::NAME;
         result.val.sval = strdup(tempName.c_str());
         args.insert(args.begin(), result);
+        tempn += 1;
     }
 
     // Special behavior for specific types of statements
@@ -144,6 +145,8 @@ uint populateBB(Function* fun, const AST* ast, uint tempn=0)
     // Keep track of beginning and end of this new chunk of basic blocks
     int head = fun->blocks.size();
     int tail = head;
+    // Next number to be used for temporary variable names
+    uint nextTemp = 0;
 
     // Create basic blocks
     for (const AST* child : ast->children) {
@@ -159,7 +162,7 @@ uint populateBB(Function* fun, const AST* ast, uint tempn=0)
             case AST::times_equal:
             case AST::assignment: {
                 BasicBlock* block = new BasicBlock(tempn++, child->toString(), child->scope);
-                expand(block, child);
+                expand(block, child, nextTemp);
                 fun->blocks.push_back(block);
                 break; }
             
@@ -172,7 +175,7 @@ uint populateBB(Function* fun, const AST* ast, uint tempn=0)
             case AST::log_or:
             case AST::log_not: {
                 BasicBlock* block = new BasicBlock(tempn++, "cond", child->scope);
-                expand(block, child);
+                expand(block, child, nextTemp);
                 fun->blocks.push_back(block);
                 break; }
 
@@ -191,7 +194,7 @@ uint populateBB(Function* fun, const AST* ast, uint tempn=0)
             fun->blocks.at(head + 1)->statements.push_back(
                 Statement(Statement::JUMP_IF_TRUE,
                 fun->blocks.at(head + 3)->label,
-                (char*)"_0"));
+                strdup(fmt::format("_{}", nextTemp - 1).c_str())));
             // Jump from body to post-execution statement
             BasicBlock* jumpStmt = new BasicBlock(tempn++, "for_loop_jump", ast->ownedScope);
             jumpStmt->statements.push_back(
@@ -214,7 +217,7 @@ uint populateBB(Function* fun, const AST* ast, uint tempn=0)
             fun->blocks.at(head)->statements.push_back(
                 Statement(Statement::JUMP_IF_FALSE,
                 exitBlock->label,
-                (char*)"_0"));
+                strdup(fmt::format("_{}", nextTemp - 1).c_str())));
             break; }
     }
 
