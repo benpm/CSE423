@@ -42,7 +42,6 @@ Symbol::Symbol(uint scopeID, int symType, Symbol::Category category)
  */
 SymbolTable::SymbolTable(AST* ast)
 {
-    
     this->tableID = this->globalTableID;
     this->globalTableID++;
     this->name = "__GLOBAL__";
@@ -56,11 +55,12 @@ SymbolTable::SymbolTable(AST* ast)
  * @param ast AST node that created the new scope
  * @param name Name of new table (function name, etc)
  */
-SymbolTable::SymbolTable(AST* ast, std::string name)
+SymbolTable::SymbolTable(AST* ast, SymbolTable* parent, std::string name)
 {
     this->tableID = this->globalTableID;
     this->globalTableID++;
     this->name = name;
+    this->parent = parent;
 
     this->populateChildren(ast);
 }
@@ -82,16 +82,20 @@ void SymbolTable::populateChildren(AST* ast)
         }
         // Scope creators (includes functions) DO NOT RECURSE ON THESE AS THEY CREATE NEW SCOPE
         if (this->scopeCreators.count(childAST->label)) {
-            std::string name;
+            std::string name = childAST->toString();
             if (childAST->label == AST::function)
                 name = std::string(childAST->children[1]->data.sval) + "()";
-            else
-                name = childAST->toString();
         
-            SymbolTable* newChild = new SymbolTable(childAST, name);
-            newChild->parent = this;
-            this->children.push_back(newChild);
+            SymbolTable* newChild = new SymbolTable(childAST, this, name);
+            if ((childAST->label == AST::else_if) || (childAST->label == AST::else_stmt)) {
+                this->parent->children.push_back(newChild);
+                childAST->scopeID = this->parent->tableID;
+            } else {
+                this->children.push_back(newChild);
+            }
+
             childAST->ownedScopeID = newChild->tableID;
+            continue;
         }
         // Variable declarations
         if (childAST->label == AST::declaration) {
@@ -120,12 +124,8 @@ void SymbolTable::populateChildren(AST* ast)
             Symbol symbol(this->tableID, Symbol::NoneType, Symbol::Label);
             this->table.emplace(symNameNode->data.sval, symbol);
         }
-    }
 
-    for (AST* childAST : ast->children) {
-        if (this->scopeCreators.count(childAST->label) == 0) {
-            this->populateChildren(childAST);
-        }
+        this->populateChildren(childAST);
     }
 }
 

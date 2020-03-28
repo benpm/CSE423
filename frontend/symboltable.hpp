@@ -48,7 +48,7 @@ private:
 public:
     static std::set<int> scopeCreators;
     // Parent of this table (NULL if root)
-    SymbolTable* parent;
+    SymbolTable* parent = NULL;
     // The ID of this table (root is always 0)
     uint tableID;
     // The actual mapping (table) from symbol names to symbol information
@@ -58,8 +58,9 @@ public:
     // Convenience name, used for pretty-printing
     std::string name;
 
-    SymbolTable(AST* ast, std::string name);
+    SymbolTable(AST* ast, SymbolTable* parent, std::string name);
     SymbolTable(AST* ast);
+
     void populateChildren(AST* ast);
     void print();
 };
