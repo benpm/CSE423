@@ -4,6 +4,7 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/fmt.h>
 
+// Mapping from ast nodes to IR statements
 const std::unordered_map<AST::Label, Statement::Type> labelMap {
     {AST::sum,          Statement::ADD},
     {AST::mul,          Statement::MUL},
@@ -50,12 +51,7 @@ const std::unordered_set<AST::Label> endStatements {
 Arg expand(BasicBlock* block, const AST* ast, uint& tempn)
 {
     std::vector<Arg> args;
-    Arg result(0u);
-
-    // Bail if node not supported
-    if (labelMap.find(ast->label) == labelMap.end()) {
-        spdlog::warn("AST node {} not supported for IR generation", ast->toString());
-    }
+    Arg temporary(0u);
 
     // Function calls
     if (ast->label == AST::call) {
@@ -110,20 +106,23 @@ Arg expand(BasicBlock* block, const AST* ast, uint& tempn)
         }
     }
 
-    // Create temporary if this is an operation
+    // Create temporary if this is not a final statement
     if (endStatements.find(ast->label) == endStatements.end()) {
         std::string tempName = fmt::format("_{}", tempn);
-        result.type = Arg::Type::NAME;
-        result.val.sval = strdup(tempName.c_str());
-        args.insert(args.begin(), result);
+        temporary.type = Arg::Type::NAME;
+        temporary.val.sval = strdup(tempName.c_str());
+        args.insert(args.begin(), temporary);
         tempn += 1;
     }
 
     // Special behavior for specific types of statements
     switch (ast->label) {
+        // Add a one to increment, decrement, as they are mapped to add and sub
         case AST::incr:
         case AST::decr:
             args.push_back(Arg(1));
+        
+        // Make these assign var to self
         case AST::plus_equal:
         case AST::minus_equal:
         case AST::mod_equal:
@@ -137,9 +136,17 @@ Arg expand(BasicBlock* block, const AST* ast, uint& tempn)
     if (labelMap.find(ast->label) != labelMap.end())
         block->statements.emplace_back(labelMap.at(ast->label), args);
 
-    return result;
+    return temporary;
 }
 
+/**
+ * @brief Recursively populates a function with basic blocks using a given AST
+ * 
+ * @param fun The function to populate
+ * @param ast The AST to use
+ * @param tempn A convenience variable used to create contiguous basic block IDs
+ * @return uint The next number to use for basic block ID
+ */
 uint populateBB(Function* fun, const AST* ast, uint tempn=0)
 {
     // Keep track of beginning and end of this new chunk of basic blocks
@@ -160,13 +167,7 @@ uint populateBB(Function* fun, const AST* ast, uint tempn=0)
             case AST::mod_equal:
             case AST::div_equal:
             case AST::times_equal:
-            case AST::assignment: {
-                BasicBlock* block = new BasicBlock(tempn++, child->toString(), child->scope);
-                expand(block, child, nextTemp);
-                fun->blocks.push_back(block);
-                break; }
-            
-            // Conditions
+            case AST::assignment:
             case AST::lt:
             case AST::gt:
             case AST::ge:
@@ -174,7 +175,7 @@ uint populateBB(Function* fun, const AST* ast, uint tempn=0)
             case AST::log_and:
             case AST::log_or:
             case AST::log_not: {
-                BasicBlock* block = new BasicBlock(tempn++, "cond", child->scope);
+                BasicBlock* block = new BasicBlock(tempn++, child->toString(), child->scope);
                 expand(block, child, nextTemp);
                 fun->blocks.push_back(block);
                 break; }
@@ -224,8 +225,15 @@ uint populateBB(Function* fun, const AST* ast, uint tempn=0)
     return tempn;
 }
 
+/**
+ * @brief Construct a new Function, populating with basic blocks using the given AST
+ * 
+ * @param funcNode AST node, must be of type "function"
+ */
 Function::Function(const AST* funcNode)
 {
+    assert(funcNode->label == AST::function);
+
     // Name of function is second child of function
     this->name = funcNode->children[1]->data.sval;
     this->scope = funcNode->ownedScope;
