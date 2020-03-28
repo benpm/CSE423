@@ -1,9 +1,10 @@
 #include <iostream>
 #include <set>
 #include <spdlog/spdlog.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/fmt/fmt.h>
+#include <spdlog/fmt/bundled/color.h>
 #include <ast.hpp>
+#include <symboltable.hpp>
 
 void expandNodes(AST* ast);
 
@@ -185,8 +186,11 @@ void printASTNode(const AST* node, int depth, ulong levels)
 
     // Print a graphical depiction of the node in the tree
     fmt::print(padding);
-    if (node->scopeID > -1 && node->label == AST::id)
-        fmt::print("[{}] ", node->scopeID);
+    if (node->label != AST::root)
+        fmt::print(fmt::fg(fmt::color::pale_violet_red), "[{}] ", node->scopeID);
+    if ((node->label != AST::root) && SymbolTable::scopeCreators.count(node->label))
+        fmt::print(fmt::fg(fmt::color::lawn_green), "[{}] ", node->ownedScopeID);
+
     fmt::print("{}", node->toString());
     switch (node->label) {
         case AST::int_const:
@@ -229,9 +233,8 @@ void printASTNode(const AST* node, int depth, ulong levels)
 void expandNodes(AST* ast)
 {
     // Recurse
-    for (AST* child : ast->children) {
+    for (AST* child : ast->children)
         expandNodes(child);
-    }
 
     std::vector<AST*> newNodes;
     for (auto it = ast->children.begin(); it != ast->children.end();) {
