@@ -20,7 +20,7 @@
 class Symbol {
 public:
     enum Type {
-        Int = AST::int_type, Float = AST::float_type, Char = AST::char_type, NoneType
+        Int = AST::int_type, Float = AST::float_type, Char = AST::char_type, None
     };
 
     enum Category {

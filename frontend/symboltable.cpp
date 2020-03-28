@@ -108,7 +108,7 @@ void SymbolTable::populateChildren(AST* ast)
         // GOTO labels
         if (childAST->label == AST::label_stmt) {
             AST* symNameNode = childAST->children[0];
-            Symbol symbol(this->tableID, Symbol::NoneType, Symbol::Label);
+            Symbol symbol(this->tableID, Symbol::None, Symbol::Label);
             this->table.emplace(symNameNode->data.sval, symbol);
         }
 
