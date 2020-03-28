@@ -1,0 +1,55 @@
+root
+ └─[0] dec_list
+   └─[1] function
+     ├─[1] int_type
+     ├─[1] id (main)
+     ├─[1] params
+     ├─[1] dec_list
+     │ ├─[1] declaration
+     │ │ ├─[1] int_type
+     │ │ └─[1] assignment
+     │ │   ├─[1] id (fact)
+     │ │   └─[1] int_const (1)
+     │ └─[1] declaration
+     │   ├─[1] int_type
+     │   └─[1] assignment
+     │     ├─[1] id (n)
+     │     └─[1] int_const (10)
+     └─[1] list
+       ├─[2] if_stmt
+       │ ├─[2] lt
+       │ │ ├─[2] id (n)
+       │ │ └─[2] int_const (0)
+       │ ├─[2] dec_list
+       │ ├─[2] list
+       │ │ └─[2] call
+       │ │   ├─[2] id (printf)
+       │ │   └─[2] args
+       │ │     └─[2] string_const ("Error! Factorial of a negative number doesn't exist.")
+       │ └─[3] else_stmt
+       │   ├─[3] dec_list
+       │   └─[3] list
+       │     ├─[4] for_stmt
+       │     │ ├─[4] declaration
+       │     │ │ ├─[4] int_type
+       │     │ │ └─[4] assignment
+       │     │ │   ├─[4] id (i)
+       │     │ │   └─[4] int_const (1)
+       │     │ ├─[4] le
+       │     │ │ ├─[4] id (i)
+       │     │ │ └─[4] id (n)
+       │     │ ├─[4] incr
+       │     │ │ └─[4] id (i)
+       │     │ ├─[4] dec_list
+       │     │ └─[4] list
+       │     │   └─[4] times_equal
+       │     │     ├─[4] id (fact)
+       │     │     └─[4] id (i)
+       │     └─[3] call
+       │       ├─[3] id (printf)
+       │       └─[3] args
+       │         ├─[3] string_const ("Factorial of %d = %d")
+       │         ├─[3] id (n)
+       │         └─[3] id (fact)
+       └─[1] return_stmt
+         └─[1] int_const (0)

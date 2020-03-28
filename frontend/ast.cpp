@@ -187,9 +187,9 @@ void printASTNode(const AST* node, int depth, ulong levels)
     // Print a graphical depiction of the node in the tree
     fmt::print(padding);
     if ((node->label != AST::root) && SymbolTable::scopeCreators.count(node->label))
-        fmt::print(fmt::fg(fmt::color::lawn_green), "[{}] ", node->ownedScopeID);
+        fmt::print("[{}] ", node->ownedScopeID);
     else if (node->label != AST::root)
-        fmt::print(fmt::fg(fmt::color::pale_violet_red), "[{}] ", node->scopeID);
+        fmt::print("[{}] ", node->scopeID);
 
     fmt::print("{}", node->toString());
     switch (node->label) {

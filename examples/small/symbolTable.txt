@@ -1,21 +1,21 @@
 +----------------------------+
-| Table ID: 0       _GLOBAL_ |
+| Table ID: 0     __GLOBAL__ |
 +----------------------------+
 | main | Int    | Function   |
 +----------------------------+
   +----------------------------+
   | Table ID: 1         main() |
   +----------------------------+
-  | logor  | Int    | Local    |
-  | logand | Int    | Local    |
-  | str2   | Char   | Local    |
-  | str    | Char   | Local    |
-  | hek    | Int    | Local    |
-  | a      | Float  | Local    |
-  | value  | Int    | Local    |
+  | c | Int    | Local         |
+  | b | Int    | Local         |
+  | d | Float  | Local         |
+  | a | Int    | Local         |
   +----------------------------+
     +----------------------------+
-    | Table ID: 2       for_stmt |
+    | Table ID: 3      else_stmt |
     +----------------------------+
-    | i | Int    | Local         |
+    +----------------------------+
+    +----------------------------+
+    | Table ID: 2        if_stmt |
+    +----------------------------+
     +----------------------------+
