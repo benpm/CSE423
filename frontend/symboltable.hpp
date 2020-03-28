@@ -32,9 +32,9 @@ public:
     // Category of symbol (function, local, parameter)
     Symbol::Category category;
     // Table-scope identifier of this symbol
-    uint scopeID;
+    uint inScopeID;
 
-    Symbol(uint scopeID, int symType, Symbol::Category category);
+    Symbol(uint inScopeID, int symType, Symbol::Category category);
     Symbol(AST* node);
 };
 

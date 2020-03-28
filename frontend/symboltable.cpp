@@ -24,13 +24,13 @@ std::unordered_map<int, std::string> enumToString{
 /**
  * @brief Construct a new Symbol::Symbol object
  * 
- * @param scopeID scope that the symbol is in (tableID)
+ * @param inScopeID scope that the symbol is in (tableID)
  * @param symType type of symbol (int, float, char)
  * @param category category (Function, Local, Parameter, Label)
  */
-Symbol::Symbol(uint scopeID, int symType, Symbol::Category category)
+Symbol::Symbol(uint inScopeID, int symType, Symbol::Category category)
 {
-    this->scopeID = scopeID;
+    this->inScopeID = inScopeID;
     this->symType = (Symbol::Type)symType;
     this->category = category;
 }
@@ -77,7 +77,7 @@ SymbolTable::SymbolTable(AST* ast, SymbolTable* parent, std::string name)
 void SymbolTable::populateChildren(AST* ast)
 {
     for (AST* childAST : ast->children) {
-        childAST->scopeID = this->tableID;
+        childAST->inScopeID = this->tableID;
 
         // Functions create symbols and scopes
         if (childAST->label == AST::function) {
@@ -89,17 +89,16 @@ void SymbolTable::populateChildren(AST* ast)
             std::string name = childAST->toString();
             if (childAST->label == AST::function)
                 name = std::string(childAST->children[1]->data.sval) + "()";
-        
-            SymbolTable* newChild = new SymbolTable(childAST, this, name);
+
+            SymbolTable* newChild = new SymbolTable(childAST, this, name); 
             if ((childAST->label == AST::else_if) || (childAST->label == AST::else_stmt)) {
                 this->parent->children.push_back(newChild);
-                childAST->scopeID = this->parent->tableID;
+                childAST->inScopeID = this->parent->tableID;
             } else {
                 this->children.push_back(newChild);
             }
 
-            childAST->ownedScopeID = newChild->tableID;
-            continue;
+            childAST->ownsScopeID = newChild->tableID;
         }
         // Variable declarations
         if (childAST->label == AST::declaration) {
@@ -128,8 +127,11 @@ void SymbolTable::populateChildren(AST* ast)
             Symbol symbol(this->tableID, Symbol::NoneType, Symbol::Label);
             this->table.emplace(symNameNode->data.sval, symbol);
         }
+    }
 
-        this->populateChildren(childAST);
+    for (AST* childAST : ast->children) {
+        if (!SymbolTable::scopeCreators.count(childAST->label))
+            this->populateChildren(childAST);
     }
 }
 

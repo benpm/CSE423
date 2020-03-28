@@ -32,9 +32,9 @@ public:
     // Parent of this node
     AST* parent = NULL;
     // Scope (table ID) (this is populated by the Symbol Table builder!)
-    int scopeID = -1;
+    int inScopeID = -1;
     // Owned scope (also populated by ST builder)
-    int ownedScopeID = -1;
+    int ownsScopeID = -1;
 
     AST(Label label);
     AST(const PT* pt);
