@@ -2,15 +2,13 @@
 
 #include <string>
 #include <vector>
-#include <map>
 #include <parsetree.hpp>
+#include <magic_enum.hpp>
+#include <map>
 
 // Abstract Syntax Tree class
 class AST
 {
-private:
-    // Map from label to string
-    static const std::vector<std::string> str;
 public:
     // Label indicating type of node
     enum Label {
@@ -42,5 +40,5 @@ public:
 
 
     void print();
-    const std::string toString() const;
+    std::string toString() const;
 };

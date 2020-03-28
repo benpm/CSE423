@@ -65,9 +65,5 @@ public:
     const std::string toString() const;
     void print();
 private:
-    // Map label to string
-    const static std::vector<std::string> str;
-
     void printNode(PT &node, int depth, ulong levels);
-
 };

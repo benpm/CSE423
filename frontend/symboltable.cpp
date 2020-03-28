@@ -3,23 +3,10 @@
 #include <spdlog/fmt/fmt.h>
 #include <iostream>
 #include <spdlog/spdlog.h>
+#include <magic_enum.hpp>
 
 uint SymbolTable::globalTableID = 0;
 std::set<int> SymbolTable::scopeCreators{AST::root, AST::for_stmt, AST::if_stmt, AST::else_stmt, AST::else_if, AST::while_stmt, AST::function};
-
-// Mapping from symbol types/categories to strings
-std::unordered_map<int, std::string> enumToString{
-    // Types
-    {Symbol::Int, "Int"},
-    {Symbol::Float, "Float"},
-    {Symbol::Char, "Char"},
-    {Symbol::NoneType, "None"},
-    // Categories
-    {Symbol::Function, "Function"},
-    {Symbol::Local, "Local"},
-    {Symbol::Parameter, "Parameter"},
-    {Symbol::Label, "Label"}
-};
 
 /**
  * @brief Construct a new Symbol::Symbol object
@@ -154,8 +141,8 @@ void stprint(SymbolTable* st, uint depth)
     // Print table entries
     for (auto item : st->table) {
         fmt::print(fmtstr, padding, item.first, 
-            enumToString.at(item.second.symType), 
-            enumToString.at(item.second.category)
+            std::string(magic_enum::enum_name(item.second.symType)), 
+            std::string(magic_enum::enum_name(item.second.category))
         );
     }
     fmt::print("{}+----------------------------+\n", padding);

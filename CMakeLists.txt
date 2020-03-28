@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 project("CSE423_Compiler")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 ##########################################################
 #
@@ -9,6 +12,8 @@ project("CSE423_Compiler")
 find_package(FLEX REQUIRED)
 find_package(BISON REQUIRED)
 find_package(spdlog QUIET)
+include_directories("external/magic_enum")
+
 if(NOT spdlog_FOUND)
     message("-- Static Spdlog not found, falling back to headers. Note that compiling with release will not work")
     include_directories("external")
