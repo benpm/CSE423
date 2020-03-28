@@ -12,12 +12,14 @@ const std::unordered_map<AST::Label, Statement::Type> labelMap {
     {AST::modulo,       Statement::MOD},
     {AST::unary_minus,  Statement::MINUS},
     {AST::log_not,      Statement::NOT},
-    {AST::gt,           Statement::JUMP_IF_GT},
-    {AST::ge,           Statement::JUMP_IF_GE},
-    {AST::lt,           Statement::JUMP_IF_LT},
-    {AST::le,           Statement::JUMP_IF_LE},
-    {AST::equal,        Statement::JUMP_IF_EQ},
-    {AST::noteq,        Statement::JUMP_IF_NEQ},
+    {AST::log_or,       Statement::LOG_OR},
+    {AST::log_and,      Statement::LOG_AND},
+    {AST::gt,           Statement::COMP_GT},
+    {AST::ge,           Statement::COMP_GE},
+    {AST::lt,           Statement::COMP_LT},
+    {AST::le,           Statement::COMP_LE},
+    {AST::equal,        Statement::COMP_EQ},
+    {AST::noteq,        Statement::COMP_NEQ},
     {AST::plus_equal,   Statement::ADD},
     {AST::minus_equal,  Statement::MINUS},
     {AST::mod_equal,    Statement::MOD},
@@ -31,8 +33,8 @@ const std::unordered_map<AST::Label, Statement::Type> labelMap {
 
 // AST nodes that will not create temporaries (as opposed to intermediate statements, which do)
 const std::unordered_set<AST::Label> endStatements {
-    AST::assignment, AST::return_stmt, AST::lt, AST::gt, AST::le, AST::ge,
-    AST::equal, AST::noteq, AST::plus_equal, AST::minus_equal, AST::incr, AST::decr,
+    AST::assignment, AST::return_stmt,
+    AST::plus_equal, AST::minus_equal, AST::incr, AST::decr,
     AST::mod_equal, AST::times_equal, AST::mod_equal, AST::div_equal
 };
 
@@ -66,6 +68,14 @@ Arg expand(BasicBlock* block, const AST* ast, uint tempn=0)
             case AST::divide:
             case AST::unary_minus:
             case AST::log_not:
+            case AST::log_or:
+            case AST::log_and:
+            case AST::lt:
+            case AST::gt:
+            case AST::le:
+            case AST::ge:
+            case AST::equal:
+            case AST::noteq:
                 args.push_back(expand(block, child, tempn + 1));
                 break;
             
@@ -111,14 +121,6 @@ Arg expand(BasicBlock* block, const AST* ast, uint tempn=0)
         case AST::times_equal:
             args.insert(args.begin(), args.at(0));
             break;
-        case AST::lt:
-        case AST::gt:
-        case AST::le:
-        case AST::ge:
-        case AST::equal:
-        case AST::noteq:
-            args.insert(args.begin(), Arg(block->label + 2u));
-            break;
     }
 
     // Generate statement
@@ -146,21 +148,22 @@ uint populateBB(Function* fun, const AST* ast, uint tempn=0)
             case AST::div_equal:
             case AST::times_equal:
             case AST::assignment: {
-                BasicBlock* block = new BasicBlock(tempn, child->toString(), child->scope);
+                BasicBlock* block = new BasicBlock(tempn++, child->toString(), child->scope);
                 expand(block, child);
                 fun->blocks.push_back(block);
-                tempn += 1;
                 break; }
             
             // Conditions
             case AST::lt:
             case AST::gt:
             case AST::ge:
-            case AST::le: {
-                BasicBlock* block = new BasicBlock(tempn, "cond", child->scope);
+            case AST::le:
+            case AST::log_and:
+            case AST::log_or:
+            case AST::log_not: {
+                BasicBlock* block = new BasicBlock(tempn++, "cond", child->scope);
                 expand(block, child);
                 fun->blocks.push_back(block);
-                tempn += 1;
                 break; }
 
             // Recurse
@@ -173,16 +176,36 @@ uint populateBB(Function* fun, const AST* ast, uint tempn=0)
 
     // Back-populate jumps
     switch (ast->label) {
-        case AST::for_stmt:
+        case AST::for_stmt: {
+            // Jump from condition to body
+            fun->blocks.at(head + 1)->statements.push_back(
+                Statement(Statement::JUMP_IF_TRUE,
+                fun->blocks.at(head + 3)->label,
+                (char*)"_0"));
             // Jump from body to post-execution statement
-            BasicBlock* jumpStmt = new BasicBlock(tempn, "for_loop_jump", ast->ownedScope);
+            BasicBlock* jumpStmt = new BasicBlock(tempn++, "for_loop_jump", ast->ownedScope);
             jumpStmt->statements.push_back(
                 Statement(Statement::JUMP, fun->blocks.at(head + 2)->label));
             fun->blocks.push_back(jumpStmt);
             // Jump from post-exec statement to condition
             fun->blocks.at(head + 2)->statements.push_back(
                 Statement(Statement::JUMP, fun->blocks.at(head + 1)->label));
-            break;
+            break; }
+        case AST::while_stmt: {
+            // Jump from body to post-execution statement
+            BasicBlock* jumpStmt = new BasicBlock(tempn++, "while_loop_jump", ast->ownedScope);
+            jumpStmt->statements.push_back(
+                Statement(Statement::JUMP, fun->blocks.at(head)->label));
+            fun->blocks.push_back(jumpStmt);
+            // No-op statement
+            BasicBlock* exitBlock = new BasicBlock(tempn++, "break", ast->ownedScope);
+            fun->blocks.push_back(exitBlock);
+            // Jump from condition out
+            fun->blocks.at(head)->statements.push_back(
+                Statement(Statement::JUMP_IF_FALSE,
+                exitBlock->label,
+                (char*)"_0"));
+            break; }
     }
 
     return tempn;

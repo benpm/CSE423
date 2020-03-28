@@ -40,10 +40,10 @@ public:
         MINUS, NOT, ASSIGN,
         // Unconditional jump to basic block label [BB label]
         JUMP,
-        // Conditional comparison jump to basic block label [BB label] [A] [B]
-        JUMP_IF_LT, JUMP_IF_GT, JUMP_IF_LE, JUMP_IF_GE, JUMP_IF_EQ, JUMP_IF_NEQ,
+        // Boolean comparison, store result [result] [operand A] [operand B]
+        COMP_LT, COMP_GT, COMP_LE, COMP_GE, COMP_EQ, COMP_NEQ, LOG_OR, LOG_AND,
         // Conditional true/false jump to basic block label [BB label] [check]
-        JUMP_IF_TRUE,
+        JUMP_IF_TRUE, JUMP_IF_FALSE,
         // Return statement [return value]
         RETURN,
         // Break statement
