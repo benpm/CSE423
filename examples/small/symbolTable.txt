@@ -6,10 +6,10 @@
   +----------------------------+
   | Table ID: 1         main() |
   +----------------------------+
-  | c | Int    | Local         |
-  | b | Int    | Local         |
-  | d | Float  | Local         |
   | a | Int    | Local         |
+  | b | Int    | Local         |
+  | c | Int    | Local         |
+  | d | Float  | Local         |
   +----------------------------+
     +----------------------------+
     | Table ID: 2        if_stmt |
