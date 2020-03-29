@@ -7,8 +7,8 @@
  */
 #pragma once
 
+#include <map>
 #include <string>
-#include <unordered_map>
 #include <vector>
 #include <ast.hpp>
 #include <set>
@@ -52,7 +52,7 @@ public:
     // The ID of this table (root is always 0)
     uint tableID;
     // The actual mapping (table) from symbol names to symbol information
-    std::unordered_map<std::string, Symbol> table;
+    std::map<std::string, Symbol> table;
     // The children tables, representing nested scopes
     std::vector<SymbolTable*> children;
     // Convenience name, used for pretty-printing
