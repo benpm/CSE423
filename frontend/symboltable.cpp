@@ -90,14 +90,17 @@ void SymbolTable::populateChildren(AST* ast)
             if (childAST->label == AST::function)
                 name = std::string(childAST->children[1]->data.sval) + "()";
 
-            SymbolTable* newChild = new SymbolTable(childAST, this, name); 
+            SymbolTable* parent = NULL;
             if ((childAST->label == AST::else_if) || (childAST->label == AST::else_stmt)) {
-                this->parent->children.push_back(newChild);
-                childAST->inScopeID = this->parent->tableID;
+                parent = this->parent;
             } else {
-                this->children.push_back(newChild);
+                parent = this;
             }
 
+            int insertIndex = parent->children.size();
+            SymbolTable* newChild = new SymbolTable(childAST, this, name);
+            parent->children.insert(parent->children.begin() + insertIndex, newChild);
+            childAST->inScopeID = parent->tableID;
             childAST->ownsScopeID = newChild->tableID;
         }
         // Variable declarations
@@ -164,6 +167,9 @@ void stprint(SymbolTable* st, uint depth)
             enumToString.at(item.second.category)
         );
     }
+    if (st->table.empty())
+        fmt::print("{}|                            |\n", padding);
+
     fmt::print("{}+----------------------------+\n", padding);
 
     // Recurse on the table's children
