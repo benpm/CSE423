@@ -1,8 +1,5 @@
 %{
     #include <cstdio>
-    #include <spdlog/spdlog.h>
-    #include <spdlog/sinks/stdout_color_sinks.h>
-    #include <spdlog/fmt/fmt.h>
     #include <parsetree.hpp>
     #include <parser.tab.hpp>  // to get the token types from Bison
     #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
