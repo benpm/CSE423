@@ -120,8 +120,8 @@ program | Line num: 13
              │           │       │         └─ID | Line num: 6 (n) 
              │           │       ├─expression | Line num: 6
              │           │       │ └─unary_assign_expr | Line num: 6
-             │           │       │   ├─INCR | Line num: 6
-             │           │       │   └─ID | Line num: 6 (i) 
+             │           │       │   ├─ID | Line num: 6 (i) 
+             │           │       │   └─INCR | Line num: 6
              │           │       └─statement | Line num: 8
              │           │         └─compound_stmt | Line num: 8
              │           │           ├─local_declarations | Line num: 6

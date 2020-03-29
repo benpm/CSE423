@@ -38,8 +38,8 @@
 <<=, LE>
 <n, ID>
 <;, SEMICOLON>
-<++, INCR>
 <i, ID>
+<++, INCR>
 <), RPAREN>
 <{, LBRACE>
 <fact, ID>
