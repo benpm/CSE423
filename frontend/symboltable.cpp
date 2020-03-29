@@ -2,7 +2,7 @@
  * @file symboltable.cpp
  * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
  * @brief Implementation of symbol table functionalities
- * @date 2020-03-29
+ * @date 2020-03-07
  * 
  */
 #include <symboltable.hpp>
