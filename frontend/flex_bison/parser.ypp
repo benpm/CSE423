@@ -237,18 +237,18 @@ typeSpecifier:
             $$ = new PT(PT::CHAR, yylloc.first_line);
         }
 ;
-funName:
-    ID
-        {
-            $$ = new PT(PT::ID, yylloc.first_line);
-            $$->data.sval = $1;
-        }
-;
 funDeclaration:
     typeSpecifier funName LPAREN params RPAREN statement
         {
             $$ = new PT(PT::FUN_DECLARATION,
                 std::vector<PT*> { $1, $2, $4, $6}, yylloc.first_line);
+        }
+;
+funName:
+    ID
+        {
+            $$ = new PT(PT::ID, yylloc.first_line);
+            $$->data.sval = $1;
         }
 ;
 params:
@@ -276,11 +276,6 @@ paramList:
 ;
 paramId:
     ID
-        {
-            $$ = new PT(PT::ID, yylloc.first_line);
-            $$->data.sval = $1;
-        }
-    | ID LBRACK RBRACK
         {
             $$ = new PT(PT::ID, yylloc.first_line);
             $$->data.sval = $1;
@@ -357,12 +352,7 @@ expression:
         }
 ;
 unaryAssignExpr:
-    unaryAssignop mutable
-        {
-            $$ = new PT(PT::UNARY_ASSIGN_EXPRESSION,
-                std::vector<PT*> { $1, $2 }, yylloc.first_line);
-        }
-    | mutable unaryAssignop
+    mutable unaryAssignop
         {
             $$ = new PT(PT::UNARY_ASSIGN_EXPRESSION,
                 std::vector<PT*> { $1, $2 }, yylloc.first_line);
@@ -373,11 +363,6 @@ mutable:
         {
             $$ = new PT(PT::ID, yylloc.first_line);
             $$->data.sval = $1;
-        }
-    | mutable LBRACK expression RBRACK
-        {
-            $$ = new PT(PT::MUTABLE,
-                std::vector<PT*> { $1, $3 }, yylloc.first_line);
         }
 ;
 assignop:
@@ -695,14 +680,6 @@ selectionStmt:
                 std::vector<PT*> { tIF, $3, $5, $6, $7 }, yylloc.first_line);
         }
 ;
-elseStmt:
-    ELSE compoundStmt
-        {
-            PT* tELSE = new PT(PT::ELSE, yylloc.first_line);
-            $$ = new PT(PT::ELSE_STMT,
-                std::vector<PT*> { tELSE, $2 }, yylloc.first_line);
-        }
-;
 elseIfList:
     elseIfList ELSE IF LPAREN simpleExpression RPAREN compoundStmt
         {
@@ -713,6 +690,14 @@ elseIfList:
     | %empty
         {
             $$ = new PT();
+        }
+;
+elseStmt:
+    ELSE compoundStmt
+        {
+            PT* tELSE = new PT(PT::ELSE, yylloc.first_line);
+            $$ = new PT(PT::ELSE_STMT,
+                std::vector<PT*> { tELSE, $2 }, yylloc.first_line);
         }
 ;
 iterationStmt:
