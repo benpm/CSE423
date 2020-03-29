@@ -3,7 +3,7 @@ echo "THIS FILE GENERATES **NEW** REFERENCE FILES"
 echo "DO YOU WISH TO OVERWRITE THE REFERENCE FILES? (y/n): "
 read response
 
-if [ "$response" != "y" ]
+if [ "$response" != "y" && "$response" != "Y" ]
 then
     echo "Not updating files. Exiting..."
     exit 0
