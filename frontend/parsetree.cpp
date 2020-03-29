@@ -7,8 +7,8 @@
  */
 #include <iostream>
 #include <string>
-#include <parsetree.hpp>
 #include <spdlog/spdlog.h>
+#include <parsetree.hpp>
 
 extern PT* parserYppHandle;
 extern int yyparse();

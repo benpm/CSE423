@@ -8,10 +8,10 @@
 #pragma once
 
 #include <map>
+#include <set>
 #include <string>
 #include <vector>
 #include <ast.hpp>
-#include <set>
 
 /**
  * @brief represents a single symbol (identifier)

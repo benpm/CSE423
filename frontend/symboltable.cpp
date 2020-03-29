@@ -5,11 +5,11 @@
  * @date 2020-03-07
  * 
  */
-#include <symboltable.hpp>
-#include <set>
-#include <spdlog/fmt/fmt.h>
 #include <iostream>
+#include <set>
 #include <spdlog/spdlog.h>
+#include <spdlog/fmt/fmt.h>
+#include <symboltable.hpp>
 
 uint SymbolTable::globalTableID = 0;
 std::set<int> SymbolTable::scopeCreators{AST::root, AST::for_stmt, AST::if_stmt, AST::else_stmt, AST::else_if, AST::while_stmt, AST::function};

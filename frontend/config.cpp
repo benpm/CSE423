@@ -1,7 +1,7 @@
-#include <config.hpp>
 #include <iostream>
-#include <spdlog/spdlog.h>
 #include <unistd.h>
+#include <spdlog/spdlog.h>
+#include <config.hpp>
 
 // Global to enable scanner token printing
 extern bool scannerPrintTokens;

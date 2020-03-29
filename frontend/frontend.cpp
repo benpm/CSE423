@@ -10,8 +10,8 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/fmt/fmt.h>
 #include <ast.hpp>
-#include <parsetree.hpp>
 #include <config.hpp>
+#include <parsetree.hpp>
 #include <symboltable.hpp>
 
 int main(int argc, char **argv)
