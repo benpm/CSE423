@@ -1,0 +1,24 @@
+root
+ └─[0] dec_list
+   └─[1] function
+     ├─[1] int_type
+     ├─[1] id (main)
+     ├─[1] params
+     ├─[1] dec_list
+     │ └─[1] declaration
+     │   ├─[1] int_type
+     │   └─[1] assignment
+     │     ├─[1] id (foo)
+     │     └─[1] int_const (420)
+     └─[1] list
+       ├─[2] if_stmt
+       │ ├─[2] gt
+       │ │ ├─[2] id (foo)
+       │ │ └─[2] int_const (10)
+       │ ├─[2] dec_list
+       │ └─[2] list
+       │   └─[2] assignment
+       │     ├─[2] id (foo)
+       │     └─[2] int_const (19)
+       └─[1] return_stmt
+         └─[1] int_const (0)

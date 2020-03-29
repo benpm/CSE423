@@ -52,7 +52,7 @@ do
     do 
         flag=${compilerFlags[i]}
         flagName=${compilerFlagNames[i]}
-        outName=${cFile%".c"}_$flagName.txt
+        outName=$flagName.txt
 
         printf "\tGenerating %s\n" $flagName
 

@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <vector>
 #include <ast.hpp>
+#include <set>
 
 /**
  * @brief represents a single symbol (identifier)
@@ -31,9 +32,10 @@ public:
     // Category of symbol (function, local, parameter)
     Symbol::Category category;
     // Table-scope identifier of this symbol
-    uint scopeID;
+    uint inScopeID;
 
-    Symbol(uint scopeID, Symbol::Type symType, Symbol::Category category);
+    Symbol(uint inScopeID, int symType, Symbol::Category category);
+    Symbol(AST* node);
 };
 
 /**
@@ -41,9 +43,12 @@ public:
  * 
  */
 class SymbolTable {
+private:
+    static uint globalTableID;
 public:
+    static std::set<int> scopeCreators;
     // Parent of this table (NULL if root)
-    SymbolTable* parent;
+    SymbolTable* parent = NULL;
     // The ID of this table (root is always 0)
     uint tableID;
     // The actual mapping (table) from symbol names to symbol information
@@ -53,7 +58,9 @@ public:
     // Convenience name, used for pretty-printing
     std::string name;
 
+    SymbolTable(AST* ast, SymbolTable* parent, std::string name);
     SymbolTable(AST* ast);
-    SymbolTable(AST* ast, uint tableID);
+
+    void populateChildren(AST* ast);
     void print();
 };
