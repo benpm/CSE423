@@ -2,7 +2,6 @@
 #include <set>
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/fmt.h>
-#include <spdlog/fmt/bundled/color.h>
 #include <ast.hpp>
 #include <symboltable.hpp>
 
