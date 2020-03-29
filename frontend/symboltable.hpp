@@ -2,7 +2,7 @@
  * @file symboltable.hpp
  * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
  * @brief Header for symbol table
- * @date 2020-03-07
+ * @date 2020-03-29
  * 
  */
 #pragma once

@@ -1,3 +1,10 @@
+/**
+ * @file symboltable.cpp
+ * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
+ * @brief Implementation of symbol table functionalities
+ * @date 2020-03-29
+ * 
+ */
 #include <symboltable.hpp>
 #include <set>
 #include <spdlog/fmt/fmt.h>
@@ -56,7 +63,7 @@ SymbolTable::SymbolTable(AST* ast)
 /**
  * @brief Construct a new child symbol table (called internally)
  * 
- * @param ast AST node that created the new scope
+ * @param ast Pointer to AST node that created the new scope
  * @param name Name of new table (function name, etc)
  */
 SymbolTable::SymbolTable(AST* ast, SymbolTable* parent, std::string name)
@@ -70,9 +77,9 @@ SymbolTable::SymbolTable(AST* ast, SymbolTable* parent, std::string name)
 }
 
 /**
- * @brief Add symbols to symbol table (and construct new if necessary)
+ * @brief Recursively add symbols to symbol table (and construct new if necessary)
  * 
- * @param ast 
+ * @param ast Pointer to root AST node
  */
 void SymbolTable::populateChildren(AST* ast)
 {
@@ -141,7 +148,7 @@ void SymbolTable::populateChildren(AST* ast)
 /**
  * @brief Internal recursive print function
  * 
- * @param st Symbol table to print
+ * @param st Pointer to symbol table to print
  * @param depth Depth of this iteration
  */
 void stprint(SymbolTable* st, uint depth)
