@@ -19,7 +19,7 @@ compilerFlagNames=(
 
 gitRootDir=$(git rev-parse --show-toplevel)
 examplesDir=$gitRootDir/examples/
-compilerExecutable=$gitRootDir/build/frontend
+compilerExecutable=$gitRootDir/build/sc64
 
 if [ ! -d "$gitRootDir/build" ]
 then

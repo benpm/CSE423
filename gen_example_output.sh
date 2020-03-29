@@ -3,7 +3,7 @@ echo "THIS FILE GENERATES **NEW** REFERENCE FILES"
 echo "DO YOU WISH TO OVERWRITE THE REFERENCE FILES? (y/n): "
 read response
 
-if [ "$response" != "y" && "$response" != "Y" ]
+if [ "$response" != "y" ] && [ "$response" != "Y" ]
 then
     echo "Not updating files. Exiting..."
     exit 0
@@ -24,7 +24,7 @@ compilerFlagNames=(
 )
 
 gitRootDir=$(git rev-parse --show-toplevel)
-compilerExecutable=$gitRootDir/build/frontend
+compilerExecutable=$gitRootDir/build/sc64
 
 if [ ! -d "$gitRootDir/build" ]
 then
