@@ -40,7 +40,6 @@ public:
     AST(const PT* pt);
     AST(const PT* pt, AST* parent);
 
-
     void print();
     const std::string toString() const;
 };

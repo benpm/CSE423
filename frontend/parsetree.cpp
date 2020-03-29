@@ -59,7 +59,7 @@ PT::PT(std::string filename)
 }
 
 /**
- * @brief Construct a new parsetree node from given label, children, and lineno
+ * Construct a new parsetree node from given label, children, and lineno
  *
  * @param label The label for this node
  * @param children A vector of children (may be empty)

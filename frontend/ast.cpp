@@ -107,7 +107,7 @@ const std::set<PT::Label> swapNodes {
 };
 
 /**
- * @brief Recursively traverses a given parsetree, adding nodes to the given AST
+ * Recursively traverses a given parsetree, adding nodes to the given AST
  *
  * @param ast The AST to build upon
  * @param node The parsetree to traverse
@@ -157,7 +157,7 @@ void traversePT(AST* ast, const PT* node)
 }
 
 /**
- * @brief Prints the AST node at the given depth, with levels bitflags
+ * Prints the AST node at the given depth, with levels bitflags
  *
  * @param node The AST node to print the label and possibly value of
  * @param depth The current tree depth
@@ -225,7 +225,7 @@ void printASTNode(const AST* node, int depth, ulong levels)
 }
 
 /**
- * @brief Recursively expands dec_list lists in ast into normal declarations
+ * Recursively expands dec_list lists in ast into normal declarations
  * 
  * @param ast 
  */
@@ -264,7 +264,7 @@ void expandNodes(AST* ast)
 }
 
 /**
- * @brief Construct a new single-node tree object with specified label
+ * Construct a new single-node tree object with specified label
  *
  * @param label
  */
@@ -274,7 +274,7 @@ AST::AST(AST::Label label)
 }
 
 /**
- * @brief Construct AST from given parse tree. THIS CONSTRUCTOR SHOULD BE USED FROM MAIN
+ * Construct AST from given parse tree. THIS CONSTRUCTOR SHOULD BE USED FROM MAIN
  *
  * @param pt Parse tree to constr from
  */

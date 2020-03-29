@@ -29,7 +29,7 @@ std::unordered_map<int, std::string> enumToString{
 };
 
 /**
- * @brief Construct a new Symbol::Symbol object
+ * Construct a new Symbol::Symbol object
  * 
  * @param inScopeID scope that the symbol is in (tableID)
  * @param symType type of symbol (int, float, char)
@@ -43,7 +43,7 @@ Symbol::Symbol(uint inScopeID, int symType, Symbol::Category category)
 }
 
 /**
- * @brief Construct a new Symbol table from AST
+ * Construct a new Symbol table from AST
  * 
  * @param ast Root node of AST
  */
@@ -61,7 +61,7 @@ SymbolTable::SymbolTable(AST* ast)
 }
 
 /**
- * @brief Construct a new child symbol table (called internally)
+ * Construct a new child symbol table (called internally)
  * 
  * @param ast Pointer to AST node that created the new scope
  * @param name Name of new table (function name, etc)
@@ -77,7 +77,7 @@ SymbolTable::SymbolTable(AST* ast, SymbolTable* parent, std::string name)
 }
 
 /**
- * @brief Recursively add symbols to symbol table (and construct new if necessary)
+ * Recursively add symbols to symbol table (and construct new if necessary)
  * 
  * @param ast Pointer to root AST node
  */
@@ -146,7 +146,7 @@ void SymbolTable::populateChildren(AST* ast)
 }
 
 /**
- * @brief Internal recursive print function
+ * Internal recursive print function
  * 
  * @param st Pointer to symbol table to print
  * @param depth Depth of this iteration
@@ -186,7 +186,7 @@ void stprint(SymbolTable* st, uint depth)
 }
 
 /**
- * @brief Print this symbol table
+ * Print this symbol table
  */
 void SymbolTable::print()
 {
