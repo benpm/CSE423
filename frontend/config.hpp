@@ -8,8 +8,7 @@
 #pragma once
 #include <string>
 
-class Config {
-public:
+typedef struct Config {
     bool printAST = false;
     bool printParseTree = false;
     bool printTokens = false;
@@ -19,4 +18,4 @@ public:
 
     Config(int argc, char **argv);
     void usage(std::string exec_name);
-};
+} Config;
