@@ -46,8 +46,6 @@ public:
         JUMP_IF_TRUE, JUMP_IF_FALSE,
         // Return statement [return value]
         RETURN,
-        // Break statement
-        BREAK,
         // Function call with arguments [result] [function] [args...]
         CALL,
         // Do nothing

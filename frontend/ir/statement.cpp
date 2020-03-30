@@ -23,7 +23,6 @@ std::unordered_map<Statement::Type, std::string> typeMap {
     {Statement::LOG_OR, "LOG_OR"},
     {Statement::LOG_AND, "LOG_AND"},
     {Statement::RETURN, "RETURN"},
-    {Statement::BREAK, "BREAK"},
     {Statement::CALL, "CALL"},
     {Statement::NO_OP, "NO_OP"}
 };

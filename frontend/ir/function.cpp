@@ -142,11 +142,25 @@ Arg expand(BasicBlock* block, const AST* ast, uint& tempn)
     return temporary;
 }
 
+void addJumpsToBreaks(
+    std::vector<BasicBlock*>::iterator start, 
+    std::vector<BasicBlock*>::iterator end,
+    uint label)
+{
+    for (auto it = start; it != end; ++it) {
+        BasicBlock* block = *it;
+        if (block->name == "break" && block->statements.size() == 0) {
+            block->statements.emplace_back(Statement::JUMP, Arg(label));
+        }
+    }
+}
+
 uint constructWhile(Function* fun, const AST* ast, uint tempn)
 {
     assert(ast->label == AST::while_stmt);
     assert(ast->children.size() == 3);
 
+    size_t begin = fun->blocks.size();
     const AST* condNode = ast->children[0];
     const AST* declNode = ast->children[1];
     const AST* bodyNode = ast->children[2];
@@ -169,6 +183,9 @@ uint constructWhile(Function* fun, const AST* ast, uint tempn)
         condResult
     );
 
+    // Populate break statements with jumps
+    addJumpsToBreaks(fun->blocks.begin() + begin, fun->blocks.end(), lastBlock->label + 1);
+
     return tempn;
 }
 
@@ -177,6 +194,7 @@ uint constructFor(Function* fun, const AST* ast, uint tempn)
     assert(ast->label == AST::for_stmt);
     assert(ast->children.size() == 5);
 
+    size_t begin = fun->blocks.size();
     const AST* initNode = ast->children[0];
     const AST* condNode = ast->children[1];
     const AST* postNode = ast->children[2];
@@ -212,6 +230,9 @@ uint constructFor(Function* fun, const AST* ast, uint tempn)
         Statement::JUMP,
         Arg(condBlock->label)
     );
+
+    // Populate break statements with jumps
+    addJumpsToBreaks(fun->blocks.begin() + begin, fun->blocks.end(), postBlock->label + 1);
 
     return tempn;
 }
@@ -264,6 +285,10 @@ uint populateBB(Function* fun, const AST* ast, uint tempn=0)
             case AST::for_stmt:
                 tempn = constructFor(fun, child, tempn);
                 break;
+            case AST::break_stmt: {
+                BasicBlock* block = new BasicBlock(tempn++, "break", child->scope);
+                fun->blocks.push_back(block);
+                break; }
 
             // Recur
             default:
