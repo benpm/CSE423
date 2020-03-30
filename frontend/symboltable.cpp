@@ -1,216 +1,192 @@
-#include <symboltable.hpp>
-#include <set>
-#include <spdlog/fmt/fmt.h>
+/**
+ * @file symboltable.cpp
+ * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
+ * @brief Implementation of SymbolTable
+ * @date 2020-03-07
+ *
+ */
 #include <iostream>
+#include <set>
+#include <magic_enum.hpp>
 #include <spdlog/spdlog.h>
+#include <spdlog/fmt/fmt.h>
+#include <symboltable.hpp>
 
-// Mapping from symbol types/categories to strings
-std::unordered_map<int, std::string> enumToString{
-    // Types
-    {Symbol::Int, "Int"},
-    {Symbol::Float, "Float"},
-    {Symbol::Char, "Char"},
-    // Categories
-    {Symbol::Function, "Function"},
-    {Symbol::Local, "Local"},
-    {Symbol::Parameter, "Parameter"},
+uint SymbolTable::globalTableID = 0;
+std::set<int> SymbolTable::scopeCreators {
+    AST::root, AST::for_stmt, AST::if_stmt, AST::else_stmt, AST::else_if, AST::while_stmt,
+    AST::function
 };
 
 /**
- * @brief Construct a new Symbol with given scope, type and category
- * 
- * @param scopeID scope identifier number
- * @param symType type for this symbol (int, float, char)
- * @param category category for this symbol (function, local, parameter)
+ * Construct a new Symbol::Symbol object
+ *
+ * @param inScopeID scope that the symbol is in (tableID)
+ * @param symType type of symbol (int, float, char)
+ * @param category category (Function, Local, Parameter, Label)
+ *
  */
-Symbol::Symbol(uint scopeID, Symbol::Type symType, Symbol::Category category)
+Symbol::Symbol(uint inScopeID, int symType, Symbol::Category category)
 {
-    this->scopeID = scopeID;
-    this->symType = symType;
+    this->inScopeID = inScopeID;
+    this->symType = (Symbol::Type)symType;
     this->category = category;
 }
 
 /**
- * @brief Recursive function that traverses an AST building a symbol table in the process
- * 
- * @param table The symbol table to continue building upon
- * @param ast The AST to pull scope and symbol information from, also populates scope field for nodes
- * @return uint The current table ID to be incremented in further calls
- */
-uint traverseAST(SymbolTable* table, AST* ast)
-{
-    uint localIDIncrement = 1;
-    for (AST* childAST : ast->children) {
-        bool traverse = false;
-        childAST->scope = table;
-
-        switch(childAST->label) {
-            // Node is a function, so we add to table and fallthrough to create scope
-            case AST::function:{
-                Symbol symbol(
-                    table->tableID,
-                    (Symbol::Type)childAST->children[0]->label,
-                    Symbol::Function
-                );
-                table->table.emplace(childAST->children[1]->data.sval, symbol);
-            }
-
-            // These nodes only create new scopes, they are not added to table
-            case AST::root:
-            case AST::for_stmt:
-            case AST::if_stmt:
-            case AST::else_stmt:
-            case AST::else_if:
-            case AST::while_stmt:{
-                uint newTableID = table->tableID + localIDIncrement;
-                std::string newTableName;
-                if (childAST->label == AST::function){
-                    newTableName = std::string(childAST->children[1]->data.sval) + "()";
-                } else {
-                    newTableName = fmt::format("{}0x{:X}", 
-                        table->name.substr(0, table->name.find(')') + 1),
-                        newTableID);
-                }
-                SymbolTable* newChild = new SymbolTable(table, childAST, newTableID, newTableName);
-                table->children.push_back(newChild);
-                localIDIncrement += 1;
-                childAST->ownedScope = newChild;
-                break;}
-            
-            // Variable declaration add to table
-            case AST::declaration:{
-                // dec_list -> declaration -> type
-                AST* symTypeNode = childAST->children[0];
-                // dec_list -> declaration -> assignment -> id
-                AST* symNameNode;
-                if (childAST->children[1]->label == AST::assignment)
-                    symNameNode = childAST->children[1]->children[0];
-                else
-                    symNameNode = childAST->children[1];
-
-                Symbol symbol(
-                    table->tableID,
-                    (Symbol::Type)symTypeNode->label,
-                    Symbol::Local
-                );
-                table->table.emplace(
-                    symNameNode->data.sval, symbol
-                );
-                traverseAST(table, childAST);
-                break;}
-            
-            // Add parameters to table
-            case AST::params:{
-                for (int i = 0; i < childAST->children.size(); i += 2) {
-                    AST* symTypeNode = childAST->children[i + 0];
-                    AST* symNameNode = childAST->children[i + 1];
-
-                    Symbol symbol(
-                        table->tableID,
-                        (Symbol::Type)symTypeNode->label, 
-                        Symbol::Parameter
-                    );
-                    table->table.emplace(
-                        symNameNode->data.sval, symbol
-                    );
-                }
-                traverseAST(table, childAST);
-                break;}
-
-            // Skip this node, it doesn't matter (recurse)
-            default:
-                localIDIncrement = traverseAST(table, childAST);
-                break;
-        }
-    }
-
-    // Return id so we can continue incrementing for new scopes
-    return localIDIncrement + 1;
-}
-
-/**
- * @brief Construct a new Symbol Table from given AST (also updates AST nodes with scope IDs)
- * 
- * @param ast The AST to build the table from
+ * Construct a new Symbol table from AST
+ *
+ * @param ast Root node of AST
+ *
  */
 SymbolTable::SymbolTable(AST* ast)
 {
     spdlog::info("Symbol Table population beginning");
 
-    this->tableID = 0;
-    this->name = "_GLOBAL_";
-    this->depth = 0;
+    this->tableID = this->globalTableID;
+    this->globalTableID++;
+    this->name = "__GLOBAL__";
 
-    traverseAST(this, ast);
+    this->populateChildren(ast);
 
     spdlog::info("Symbol Table population done");
 }
 
 /**
- * @brief Create symbol table with specified ID (don't use this to create from AST root node!)
- * 
- * @param ast The AST to build from
- * @param tableID The ID to assign to this table
+ * Construct a new child symbol table (called internally)
+ *
+ * @param ast Pointer to AST node that created the new scope
+ * @param parent Pointer to the parent (scope) of the current symbol table
+ * @param name Name of new table (function name, etc)
+ *
  */
-SymbolTable::SymbolTable(SymbolTable* parent, AST* ast, uint tableID, std::string name)
+SymbolTable::SymbolTable(AST* ast, SymbolTable* parent, std::string name)
 {
-    this->tableID = tableID;
+    this->tableID = this->globalTableID;
+    this->globalTableID++;
     this->name = name;
     this->parent = parent;
-    this->depth = parent->depth + 1;
 
-    traverseAST(this, ast);
+    this->populateChildren(ast);
 }
 
 /**
- * @brief Internal recursive print function
- * 
- * @param st Symbol table to print
- * @param depth Depth of this iteration
+ * Recursively add symbols to symbol table (and construct new if necessary)
+ *
+ * @param ast Pointer to root AST node
+ *
  */
-void stprint(SymbolTable* st, uint depth)
+void SymbolTable::populateChildren(AST* ast)
 {
-    // Do not print empty tables
-    // if (st->table.size() == 0) return;
+    for (AST* childAST : ast->children) {
+        childAST->inScope = this;
 
-    // Construct the padding string using bit flags
-    std::string padding;
-    for (int i = 0; i < st->depth; ++i) {
-        padding += "  ";
+        // Functions create symbols and scopes
+        if (childAST->label == AST::function) {
+            Symbol tmp(this->tableID, childAST->children[0]->label, Symbol::Function);
+            this->table.emplace(childAST->children[1]->data.sval, tmp);
+        }
+        // Scope creators (includes functions) DO NOT RECURSE ON THESE AS THEY CREATE NEW SCOPE
+        if (this->scopeCreators.count(childAST->label)) {
+            std::string name = childAST->toString();
+            if (childAST->label == AST::function)
+                name = std::string(childAST->children[1]->data.sval) + "()";
+
+            SymbolTable* parent = NULL;
+            if ((childAST->label == AST::else_if) || (childAST->label == AST::else_stmt)) {
+                parent = this->parent;
+            } else {
+                parent = this;
+            }
+
+            int insertIndex = parent->children.size();
+            SymbolTable* newChild = new SymbolTable(childAST, this, name);
+            parent->children.insert(parent->children.begin() + insertIndex, newChild);
+            childAST->inScope = parent;
+            childAST->ownsScope = newChild;
+        }
+        // Variable declarations
+        if (childAST->label == AST::declaration) {
+            AST* symTypeNode = childAST->children[0];
+            AST* symNameNode;
+            if (childAST->children[1]->label == AST::assignment)
+                symNameNode = childAST->children[1]->children[0];
+            else
+                symNameNode = childAST->children[1];
+
+            Symbol symbol(this->tableID, symTypeNode->label, Symbol::Local);
+            this->table.emplace(symNameNode->data.sval, symbol);
+        }
+        // Function paramaters in declaration
+        if (childAST->label == AST::params) {
+            for (int i = 0; i < childAST->children.size(); i += 2) {
+                AST* symTypeNode = childAST->children[i + 0];
+                AST* symNameNode = childAST->children[i + 1];
+                Symbol symbol(this->tableID, symTypeNode->label, Symbol::Parameter);
+                this->table.emplace(symNameNode->data.sval, symbol);
+            }
+        }
+        // GOTO labels
+        if (childAST->label == AST::label_stmt) {
+            AST* symNameNode = childAST->children[0];
+            Symbol symbol(this->tableID, Symbol::None, Symbol::Label);
+            this->table.emplace(symNameNode->data.sval, symbol);
+        }
     }
+
+    for (AST* childAST : ast->children) {
+        if (!SymbolTable::scopeCreators.count(childAST->label))
+            this->populateChildren(childAST);
+    }
+}
+
+/**
+ * Internal recursive print function
+ *
+ * @param st Pointer to symbol table to print
+ * @param depth Depth of this iteration
+ *
+ */
+void SymbolTable::printTable(SymbolTable* st, uint depth)
+{
+    // Construct the padding string using bit flags
+    std::string padding(depth * 2, ' ');
 
     // Get longest identifier name
     size_t maxLen = 0;
-    for (auto item : st->table) {
+    for (auto item : st->table)
         maxLen = std::max(item.first.size(), maxLen);
-    }
     
     // Create table layout
     fmt::print("{}+----------------------------+\n", padding);
     fmt::print("{}| Table ID: {:<4} {:>11} |\n", padding, st->tableID, st->name);
     fmt::print("{}+----------------------------+\n", padding);
-    std::string fmtstr = 
-        "{}| {:" + std::to_string(maxLen) + "} | {:6} | {:" + std::to_string(14 - maxLen) + "} |";
+    std::string fmtstr = "{}| {:" + std::to_string(maxLen) + "} | {:6} | {:" +
+        std::to_string(14 - maxLen) + "} |\n";
 
     // Print table entries
     for (auto item : st->table) {
         fmt::print(fmtstr, padding, item.first, 
-            enumToString.at(item.second.symType), 
-            enumToString.at(item.second.category));
-        fmt::print("\n");
+            std::string(magic_enum::enum_name(item.second.symType)),
+            std::string(magic_enum::enum_name(item.second.category))
+        );
     }
+    if (st->table.empty())
+        fmt::print("{}|                            |\n", padding);
+
     fmt::print("{}+----------------------------+\n", padding);
 
     // Recurse on the table's children
     for (SymbolTable* child : st->children) {
-        stprint(child, depth + 1);
+        printTable(child, depth + 1);
     }
 }
 
 /**
- * @brief Print this symbol table
+ * Print the symbol table
+ *
  */
 void SymbolTable::print()
 {
-    stprint(this, 0);
+    printTable(this, 0);
 }

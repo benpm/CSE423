@@ -4,18 +4,22 @@ declaration := varDeclaration | funDeclaration
 varDeclaration := typeSpecifier varDeclList ;
 scopedVarDeclaration := scopedTypeSpecifier varDeclList ;
 varDeclList := varDeclList , varDeclInitialize | varDeclInitialize
-varDeclInitialize := ID | ID = simpleExpression
+varDeclInitialize := varDeclId | varDeclId = simpleExpression
+varDeclId := ID
 scopedTypeSpecifier := typeSpecifier
 typeSpecifier := INT | FLOAT | CHAR
-funDeclaration := typeSpecifier ID ( params ) statement
+funDeclaration := typeSpecifier funName ( params ) statement
+funName := ID
 params := paramList | eps
-paramList := paramList , typeSpecifier ID | typeSpecifier ID
-statement := expressionStmt | compoundStmt | selectionStmt | iterationStmt | returnStmt | breakStmt
+paramList := paramList , typeSpecifier paramId | typeSpecifier paramId
+paramId := ID
+statement := expressionStmt | compoundStmt | selectionStmt | iterationStmt | returnStmt | breakStmt | labelStmt | gotoStmt
 expressionStmt := expression ; | ;
-expression := mutable assignop expression | unaryAssignop mutable | mutable unaryAssignop | simpleExpression
-mutable := ID | mutable [ expression ]
+expression := mutable assignop expression | unaryAssigExpr | simpleExpression
+unaryAssigExpr := unaryAssignop mutable | mutable unaryAssignop
+mutable := ID
 assignop := = | += | -= | *= | /= | %=
-unaryAssignOp := ++ | --
+unaryAssignop := ++ | --
 simpleExpression := simpleExpression || andExpression | andExpression
 andExpression := andExpression && unaryRelExpression | unaryRelExpression
 unaryRelExpression := ! unaryRelExpression | relExpression
@@ -25,24 +29,27 @@ sumExpression := sumExpression sumop mulExpression | mulExpression
 sumop := + | -
 mulExpression := mulExpression mulop unaryExpression | unaryExpression
 mulop := * | / | %
-unaryExpression := unaryop unaryExpression | factor
-unaryop := + | -
+unaryExpression := unaryMinus | factor
+unaryMinus := - unaryExpression
 factor := immutable | mutable
 immutable := ( expression ) | call | constant
 call := ID ( args )
 args := argList | eps
-argList := argList , expression | expression
-constant := STRINGLIT | CHARLIT | INTCOST | FLOATCONST
+argList := argList , expression | argList , STRINGLIT | STRINGLIT | expression
+constant := CHARLIT | FLOATCONST | INTCONST
 compoundStmt := { localDeclarations statementList }
 localDeclarations := localDeclarations scopedVarDeclaration | eps
 statementList := statementList statement | eps
-selectionStmt := IF ( simpleExpression ) compoundStmt elseIfList | IF ( simpleExpression ) compoundStmt elseIfList ELSE compoundStmt
+selectionStmt := IF ( simpleExpression ) compoundStmt elseIfList | IF ( simpleExpression ) compoundStmt elseIfList elseStmt
 elseIfList := elseIfList ELSE IF ( simpleExpression ) compoundStmt | eps
+elseStmt := ELSE compoundStmt
 iterationStmt := whileStmt | forStmt
-whileStmt := WHILE ( simpleExpression ) { statement }
-forStmt := FOR ( varDeclList ; relExpression ; expression )
-returnStmt := return ; | return expression ;
-breakStmt := break ;
+whileStmt := WHILE ( simpleExpression ) statement
+forStmt := FOR ( varDeclaration relExpression ; expression ) statement
+returnStmt := RETURN ; | RETURN expression ;
+breakStmt := BREAK ;
+labelStmt := ID :
+gotoStmt := GOTO ID ;
 
 TERMINALS
 _________
@@ -55,6 +62,8 @@ ELSE
 WHILE
 FOR
 RETURN
+BREAK
+GOTO
 ;
 ,
 =
@@ -69,7 +78,6 @@ RETURN
 ==
 !=
 !
-STRINGLIT
 CHARLIT
 INTCONST
 FLOATCONST

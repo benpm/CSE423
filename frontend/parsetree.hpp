@@ -10,7 +10,10 @@
 #include <string>
 #include <vector>
 
-// Contains data for tree nodes
+/**
+ * @brief Contains data for tree nodes
+ *
+ */
 union NodeData
 {
     int ival;
@@ -19,17 +22,22 @@ union NodeData
     char cval;
 };
 
-// Parsetree node class
+/**
+ * @brief Parsetree node data structure
+ *
+ */
 class PT {
+private:
+    void printNode(PT &node, int depth, ulong levels);
+
 public:
     // Type of node
     enum Label {
-        INT, FLOAT, CHAR, FOR, WHILE, IF, ELSE, RETURN, BREAK, SEMICOLON,
-        COMMA, LPAREN, RPAREN, LBRACE, RBRACE, LBRACK, RBRACK, EQUAL, PLUS,
-        MINUS, TIMES, DIVIDE, MODULO, PLUSEQUAL, MINUSEQUAL, TIMESEQUAL,
-        DIVEQUAL, MODEQUAL, INCR, DECR, LT, GT, LE, GE, ISEQ, NOTEQ, LOGAND,
-        LOGOR, NOT, STRINGLIT, CHARLIT, INTCONST, FLOATCONST, ID, ARRAY_ID,
-        EPSILON, NONE,
+        INT, FLOAT, CHAR, FOR, WHILE, IF, ELSE, RETURN, BREAK, GOTO, SEMICOLON,
+        COMMA, LPAREN, RPAREN, LBRACE, RBRACE, EQUAL, PLUS, MINUS, TIMES, DIVIDE,
+        MODULO, PLUSEQUAL, MINUSEQUAL, TIMESEQUAL, DIVEQUAL, MODEQUAL, INCR, DECR,
+        LT, GT, LE, GE, ISEQ, NOTEQ, LOGAND, LOGOR, NOT, STRINGLIT, CHARLIT,
+        INTCONST, FLOATCONST, ID, EPSILON, NONE,
 
         PROGRAM, DECLARATION_LIST, DECLARATION, VAR_DECLARATION,
         SCOPED_VAR_DECLARATION, VAR_DECL_LIST, VAR_DECL_INITIALIZE,
@@ -41,8 +49,8 @@ public:
         MUL_OP, UNARY_EXPRESSION, FACTOR, IMMUTABLE, CALL,
         ARGS, ARG_LIST, CONSTANT, COMPOUND_STMT, LOCAL_DECLARATIONS,
         STATEMENT_LIST, SELECTION_STMT, ELSE_IF_LIST, ITERATION_STMT,
-        WHILE_STMT, FOR_STMT, RETURN_STMT, BREAK_STMT, FUN_NAME,
-        UNARY_ASSIGN_EXPRESSION, ELSE_IF, ELSE_STMT, UNARY_MINUS
+        WHILE_STMT, FOR_STMT, RETURN_STMT, BREAK_STMT, LABEL_STMT, GOTO_STMT,
+        FUN_NAME, UNARY_ASSIGN_EXPRESSION, ELSE_IF, ELSE_STMT, UNARY_MINUS
     };
 
     // Whether or not this represents a terminal symbol from the grammar
@@ -62,12 +70,6 @@ public:
     PT(Label label, std::vector<PT*> children, int lineNum);
     PT(Label label, int lineNum);
 
-    const std::string toString() const;
+    std::string toString() const;
     void print();
-private:
-    // Map label to string
-    const static std::vector<std::string> str;
-
-    void printNode(PT &node, int depth, ulong levels);
-
 };

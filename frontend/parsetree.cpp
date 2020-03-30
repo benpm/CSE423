@@ -7,37 +7,20 @@
  */
 #include <iostream>
 #include <string>
-#include <parsetree.hpp>
+#include <magic_enum.hpp>
 #include <spdlog/spdlog.h>
+#include <parsetree.hpp>
 
 extern PT* parserYppHandle;
 extern int yyparse();
 extern FILE *yyin;
 
-// Mapping from parsetree label to string
-const std::vector<std::string> PT::str {
-    "INT", "FLOAT", "CHAR", "FOR", "WHILE", "IF", "ELSE", "RETURN", "BREAK", "SEMICOLON",
-    "COMMA", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACK", "RBRACK", "EQUAL", "PLUS",
-    "MINUS", "TIMES", "DIVIDE", "MODULO", "PLUSEQUAL", "MINUSEQUAL", "TIMESEQUAL",
-    "DIVEQUAL", "MODEQUAL", "INCR", "DECR", "LT", "GT", "LE", "GE", "ISEQ", "NOTEQ", "LOGAND",
-    "LOGOR", "NOT", "STRINGLIT", "CHARLIT", "INTCONST", "FLOATCONST", "ID", "ARRAY_ID",
-    "EPSILON", "NONE",
-
-    "program", "declaration_list", "declaration", "var_declaration",
-    "scoped_var_declaration", "var_decl_list", "var_decl_initialize",
-    "var_decl_id", "scoped_type_specifier", "type_specifier",
-    "fun_declaration", "params", "param_list", "param_id", "statement",
-    "expression_stmt", "expression", "mutable", "assign_op", "unary_assign_op",
-    "simple_expression", "and_expression", "unary_rel_expression",
-    "rel_expression", "rel_op", "sum_expression", "sum_op", "mul_expression",
-    "mul_op", "unary_expression", "factor", "immutable", "call",
-    "args", "arg_list", "constant", "compound_stmt", "local_declarations",
-    "statement_list", "selection_stmt", "else_if_list", "iteration_stmt",
-    "while_stmt", "for_stmt", "return_stmt", "break_stmt", "fun_name",
-    "unary_assign_expr", "else_if", "else_stmt", "unary_minus"
-};
-
-
+/**
+ * Constuct a parsetree from a C program file
+ *
+ * @param filename The filename of the C program
+ *
+ */
 PT::PT(std::string filename)
 {
     // Point FLEX/BISON to file and parse
@@ -59,11 +42,12 @@ PT::PT(std::string filename)
 }
 
 /**
- * @brief Construct a new parsetree node from given label, children, and lineno
+ * Construct a parsetree node from given label, children, and line number
  *
  * @param label The label for this node
  * @param children A vector of children (may be empty)
  * @param lineNum The line number associated with this symbol
+ *
  */
 PT::PT(Label label, std::vector<PT*> children, int lineNum)
     : label(label), children(children), lineNum(lineNum)
@@ -72,10 +56,11 @@ PT::PT(Label label, std::vector<PT*> children, int lineNum)
 }
 
 /**
- * @brief Construct a new parsetree node object without any children
+ * Construct a parsetree node without any children
  *
  * @param label The label for this leaf node
  * @param lineNum The line number associated with this object
+ *
  */
 PT::PT(Label label, int lineNum)
     : label(label), lineNum(lineNum)
@@ -84,7 +69,8 @@ PT::PT(Label label, int lineNum)
 }
 
 /**
- * @brief Pretty print the parse tree to standard output
+ * Pretty print the parse tree to standard output
+ *
  */
 void PT::print()
 {
@@ -92,26 +78,29 @@ void PT::print()
 }
 
 /**
- * @brief Returns string representation of this node
+ * Return the string representation of this node
  *
- * @return String representation
+ * @return The string representation
+ *
  */
-const std::string PT::toString() const
+std::string PT::toString() const
 {
-    return PT::str.at(this->label);
+    return std::string(magic_enum::enum_name(this->label));
 }
 
 /**
- * @brief Pretty print a node and recursively print its children
+ * Pretty print a node and recursively print its children
  * @details Uses a simple prefix DFS tree traversal algorithm
  *
  * @param node Node to recurse on
  * @param depth Current depth
  * @param levels Bit flag used to represent nested levels
+ *
  */
 void PT::printNode(PT &node, int depth, ulong levels)
 {
-    if (node.label == NONE) return;
+    if (node.label == NONE)
+        return;
 
     std::string padding;
 
@@ -145,15 +134,15 @@ void PT::printNode(PT &node, int depth, ulong levels)
         case CHARLIT:
             std::cout << " (" << node.data.cval << ") ";
             break;
-        case ID:
         case STRINGLIT:
+        case ID:
             std::cout << " (" << node.data.sval << ") ";
             break;
     }
 
     std::cout << std::endl;
 
-    // Recurse on the node's children, update bit flag as needed
+    // Recur on the node's children, update bit flag as needed
     int i = 0;
     for (auto it : node.children) {
         ulong nlevels = levels;

@@ -1,8 +1,5 @@
 %{
     #include <cstdio>
-    #include <spdlog/spdlog.h>
-    #include <spdlog/sinks/stdout_color_sinks.h>
-    #include <spdlog/fmt/fmt.h>
     #include <parsetree.hpp>
     #include <parser.tab.hpp>  // to get the token types from Bison
     #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
@@ -74,11 +71,23 @@ break {
         printf("<%s, %s>\n", yytext, "BREAK");
     return BREAK;
 }
+goto {
+    yylval.sval = strdup(yytext);
+    if (scannerPrintTokens)
+        printf("<%s, %s>\n", yytext, "GOTO");
+    return GOTO;
+}
 ; {
     yylval.cval = yytext[0];
     if (scannerPrintTokens)
         printf("<%s, %s>\n", yytext, "SEMICOLON");
     return SEMICOLON;
+}
+: {
+    yylval.cval = yytext[0];
+    if (scannerPrintTokens)
+        printf("<%s, %s>\n", yytext, "COLON");
+    return COLON;
 }
 , {
     yylval.cval = yytext[0];
@@ -109,18 +118,6 @@ break {
     if (scannerPrintTokens)
         printf("<%s, %s>\n", yytext, "RBRACE");
     return RBRACE;
-}
-\[ {
-    yylval.cval = yytext[0];
-    if (scannerPrintTokens)
-        printf("<%s, %s>\n", yytext, "LBRACK");
-    return LBRACK;
-}
-\] {
-    yylval.cval = yytext[0];
-    if (scannerPrintTokens)
-        printf("<%s, %s>\n", yytext, "RBRACK");
-    return RBRACK;
 }
 = {
     yylval.cval = yytext[0];
@@ -254,17 +251,17 @@ break {
         printf("<%s, %s>\n", yytext, "NOT");
     return NOT;
 }
-\"(\\.|[^"\\])*\" {
-    yylval.sval = strdup(yytext);
-    if (scannerPrintTokens)
-        printf("<%s, %s>\n", yytext, "STRINGLIT");
-    return STRINGLIT;
-}
 '.' {
     yylval.cval = yytext[1];
     if (scannerPrintTokens)
         printf("<%s, %s>\n", yytext, "CHARLIT");
     return CHARLIT;
+}
+\"(\\.|[^"\\])*\" {
+    yylval.sval = strdup(yytext);
+    if (scannerPrintTokens)
+        printf("<%s, %s>\n", yytext, "STRINGLIT");
+    return STRINGLIT;
 }
 [0-9]+ {
     yylval.ival = atoi(yytext);

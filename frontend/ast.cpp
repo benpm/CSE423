@@ -1,23 +1,19 @@
+/**
+ * @file ast.cpp
+ * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
+ * @brief Implementation of tree structure to represent an AST
+ * @date 2020-02-25
+ *
+ */
 #include <iostream>
 #include <set>
+#include <magic_enum.hpp>
 #include <spdlog/spdlog.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/fmt/fmt.h>
 #include <ast.hpp>
 #include <symboltable.hpp>
 
 void expandNodes(AST* ast);
-
-// Map from label to string
-const std::vector<std::string> AST::str {
-    "root", "function", "id", "list", "declaration", "initialization", "sum", "mul",
-    "int_const", "float_const", "string_const", "char_const", "for_stmt",
-    "if_stmt", "call", "int_type", "float_type", "char_type", "bool_expr", "unhandled",
-    "args", "return_stmt", "le", "ge", "lt", "gt", "incr", "decr", "plus_equal", "minus_equal",
-    "times_equal", "dec_list", "else_stmt", "params", "while_stmt", "break_stmt", "modulo",
-    "divide", "noteq", "equal", "assignment", "else_if", "log_and", "log_or", "div_equal",
-    "unary_minus", "sub", "mod_equal", "log_not"
-};
 
 // Map from parsetree label to AST label
 const std::map<PT::Label, AST::Label> labelMap {
@@ -44,8 +40,8 @@ const std::map<PT::Label, AST::Label> labelMap {
     {PT::MODULO, AST::modulo},
     {PT::INTCONST, AST::int_const},
     {PT::FLOATCONST, AST::float_const},
-    {PT::CHARLIT, AST::char_const},
     {PT::STRINGLIT, AST::string_const},
+    {PT::CHARLIT, AST::char_const},
     {PT::SELECTION_STMT, AST::if_stmt},
     {PT::FOR_STMT, AST::for_stmt},
     {PT::WHILE_STMT, AST::while_stmt},
@@ -58,6 +54,8 @@ const std::map<PT::Label, AST::Label> labelMap {
     {PT::CHAR, AST::char_type},
     {PT::RETURN_STMT, AST::return_stmt},
     {PT::BREAK, AST::break_stmt},
+    {PT::LABEL_STMT, AST::label_stmt},
+    {PT::GOTO_STMT, AST::goto_stmt},
     {PT::EXPRESSION, AST::list},
     {PT::LE, AST::le},
     {PT::GE, AST::ge},
@@ -87,7 +85,8 @@ const std::map<PT::Label, AST::Label> labelMap {
 
 // Parsetree nodes that should be kept no matter what
 const std::set<PT::Label> keepNodes {
-    PT::RETURN_STMT, PT::ARG_LIST, PT::UNARY_MINUS, PT::PARAMS, PT::DECLARATION_LIST, PT::LOCAL_DECLARATIONS
+    PT::RETURN_STMT, PT::ARG_LIST, PT::UNARY_MINUS, PT::PARAMS, PT::DECLARATION_LIST,
+    PT::LOCAL_DECLARATIONS, PT::LABEL_STMT
 };
 
 // Parsetree nodes that should be mapped and swapped with their parent in the AST
@@ -105,10 +104,11 @@ const std::set<PT::Label> swapNodes {
 };
 
 /**
- * @brief Recursively traverses a given parsetree, adding nodes to the given AST
+ * Recursively traverses a given parsetree, adding nodes to the given AST
  *
- * @param ast The AST to build upon
- * @param node The parsetree to traverse
+ * @param ast Pointer to the AST to build upon
+ * @param node Pointer to the parsetree to traverse
+ *
  */
 void traversePT(AST* ast, const PT* node)
 {
@@ -155,13 +155,14 @@ void traversePT(AST* ast, const PT* node)
 }
 
 /**
- * @brief Prints the AST node at the given depth, with levels bitflags
+ * Prints the AST node at the given depth, with levels bitflags
  *
  * @param node The AST node to print the label and possibly value of
  * @param depth The current tree depth
  * @param levels A bit flag that represents levels of parents, for drawing
+ *
  */
-void printASTNode(const AST* node, int depth, ulong levels)
+void AST::printNode(const AST* node, int depth, ulong levels)
 {
     std::string padding;
 
@@ -183,8 +184,11 @@ void printASTNode(const AST* node, int depth, ulong levels)
 
     // Print a graphical depiction of the node in the tree
     fmt::print(padding);
-    if (node->scope != NULL)
-        fmt::print("[{}] ", node->scope->tableID);
+    if ((node->label != AST::root) && SymbolTable::scopeCreators.count(node->label))
+        fmt::print("[{}] ", node->ownsScope->tableID);
+    else if (node->label != AST::root)
+        fmt::print("[{}] ", node->inScope->tableID);
+
     fmt::print("{}", node->toString());
     switch (node->label) {
         case AST::int_const:
@@ -203,6 +207,8 @@ void printASTNode(const AST* node, int depth, ulong levels)
         case AST::unhandled:
             fmt::print("<!!>");
             break;
+        default:
+            break;
     }
     fmt::print("\n");
 
@@ -212,22 +218,22 @@ void printASTNode(const AST* node, int depth, ulong levels)
         ulong nlevels = levels;
         if ((i > 0 || node->children.size() > 1) && i < node->children.size() - 1)
             nlevels = levels | (1 << depth);
-        printASTNode(it, depth + 1, nlevels);
+        printNode(it, depth + 1, nlevels);
         i += 1;
     }
 }
 
 /**
- * @brief Recursively expands dec_list lists in ast into normal declarations
- * 
- * @param ast 
+ * Recursively expands dec_list lists in ast into normal declarations
+ *
+ * @param ast Pointer to the AST to modify
+ *
  */
 void expandNodes(AST* ast)
 {
     // Recurse
-    for (AST* child : ast->children) {
+    for (AST* child : ast->children)
         expandNodes(child);
-    }
 
     std::vector<AST*> newNodes;
     for (auto it = ast->children.begin(); it != ast->children.end();) {
@@ -258,9 +264,10 @@ void expandNodes(AST* ast)
 }
 
 /**
- * @brief Construct a new single-node tree object with specified label
+ * Construct a new single-node tree object with specified label
  *
- * @param label
+ * @param label The label of the type of node to construct
+ *
  */
 AST::AST(AST::Label label)
 {
@@ -268,9 +275,11 @@ AST::AST(AST::Label label)
 }
 
 /**
- * @brief Construct AST from given parse tree. THIS CONSTRUCTOR SHOULD BE USED FROM MAIN
+ * Construct AST from given parsetree
+ * @details This constructor should be used from main.
  *
- * @param pt Parse tree to constr from
+ * @param pt Pointer to the parsetree from which to construct the AST
+ *
  */
 AST::AST(const PT* pt)
 {
@@ -285,9 +294,11 @@ AST::AST(const PT* pt)
 }
 
 /**
- * @brief Construct AST from given parse tree
+ * Construct AST from given parsetree
  *
- * @param pt Parse tree to constr from
+ * @param pt Pointer to the parsetree from which to construct the AST
+ * @param parent The parent node of the AST node being constructed
+ *
  */
 AST::AST(const PT* pt, AST* parent)
 {
@@ -297,19 +308,21 @@ AST::AST(const PT* pt, AST* parent)
 }
 
 /**
- * @brief Print this tree to stdout
+ * Print this tree to stdout
+ *
  */
 void AST::print()
 {
-    printASTNode(this, 0, 0);
+    printNode(this, 0, 0);
 }
 
 /**
- * @brief Returns string representation of this AST
+ * Return the string representation of this AST
  *
- * @return String representation
+ * @return The string representation
+ *
  */
-const std::string AST::toString() const
+std::string AST::toString() const
 {
-    return AST::str.at(this->label);
+    return std::string(magic_enum::enum_name(this->label));
 }

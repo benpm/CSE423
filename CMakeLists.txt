@@ -46,7 +46,7 @@ ADD_FLEX_BISON_DEPENDENCY(scanner parser)
 #   Builds the frontend driver.
 #
 ###########################################################
-add_executable(frontend
+add_executable(sc64
     "frontend/frontend.cpp"
     "frontend/parsetree.cpp"
     "frontend/ast.cpp"

@@ -1,15 +1,15 @@
 /**
  * @file config.hpp
  * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
- * @brief Configuration class for compiler. Parses command line options
+ * @brief Header Config class for compiler. Parses command line options.
  * @date 2020-03-02
- * 
+ *
  */
 #pragma once
+
 #include <string>
 
-class Config {
-public:
+struct Config {
     bool printAST = false;
     bool printParseTree = false;
     bool printTokens = false;

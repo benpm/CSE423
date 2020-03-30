@@ -48,6 +48,8 @@ int main()
             n1 /= 2;
         }
     }
-
+    goto label;
+    return -1;
+label:
     return (n1 * 2);
 }

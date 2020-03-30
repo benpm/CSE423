@@ -1,0 +1,82 @@
+root
+ └─[0] dec_list
+   └─[1] function
+     ├─[1] int_type
+     ├─[1] id (main)
+     ├─[1] params
+     ├─[1] dec_list
+     │ ├─[1] declaration
+     │ │ ├─[1] int_type
+     │ │ └─[1] assignment
+     │ │   ├─[1] id (value)
+     │ │   └─[1] unary_minus
+     │ │     └─[1] int_const (5)
+     │ ├─[1] declaration
+     │ │ ├─[1] float_type
+     │ │ └─[1] assignment
+     │ │   ├─[1] id (a)
+     │ │   └─[1] float_const (10.1)
+     │ ├─[1] declaration
+     │ │ ├─[1] int_type
+     │ │ └─[1] assignment
+     │ │   ├─[1] id (hek)
+     │ │   └─[1] mul
+     │ │     ├─[1] int_const (5)
+     │ │     └─[1] unary_minus
+     │ │       └─[1] int_const (18)
+     │ ├─[1] declaration
+     │ │ ├─[1] char_type
+     │ │ └─[1] assignment
+     │ │   ├─[1] id (str)
+     │ │   └─[1] char_const (b)
+     │ ├─[1] declaration
+     │ │ ├─[1] char_type
+     │ │ └─[1] assignment
+     │ │   ├─[1] id (str2)
+     │ │   └─[1] char_const (c)
+     │ ├─[1] declaration
+     │ │ ├─[1] int_type
+     │ │ └─[1] assignment
+     │ │   ├─[1] id (logand)
+     │ │   └─[1] log_and
+     │ │     ├─[1] int_const (1)
+     │ │     └─[1] int_const (2)
+     │ ├─[1] declaration
+     │ │ ├─[1] int_type
+     │ │ └─[1] assignment
+     │ │   ├─[1] id (logor)
+     │ │   └─[1] log_or
+     │ │     ├─[1] int_const (1)
+     │ │     └─[1] int_const (2)
+     │ └─[1] declaration
+     │   ├─[1] char_type
+     │   └─[1] assignment
+     │     ├─[1] id (a)
+     │     └─[1] char_const (	)
+     └─[1] list
+       ├─[2] for_stmt
+       │ ├─[2] declaration
+       │ │ ├─[2] int_type
+       │ │ └─[2] assignment
+       │ │   ├─[2] id (i)
+       │ │   └─[2] int_const (0)
+       │ ├─[2] lt
+       │ │ ├─[2] id (i)
+       │ │ └─[2] int_const (111)
+       │ ├─[2] incr
+       │ │ └─[2] id (i)
+       │ ├─[2] dec_list
+       │ └─[2] list
+       │   └─[3] if_stmt
+       │     ├─[3] equal
+       │     │ ├─[3] modulo
+       │     │ │ ├─[3] id (i)
+       │     │ │ └─[3] int_const (10)
+       │     │ └─[3] int_const (5)
+       │     ├─[3] dec_list
+       │     └─[3] list
+       │       └─[3] plus_equal
+       │         ├─[3] id (value)
+       │         └─[3] id (i)
+       └─[1] return_stmt
+         └─[1] id (value)
