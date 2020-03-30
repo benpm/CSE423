@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 project("CSE423_Compiler")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 ##########################################################
 #
@@ -22,6 +25,7 @@ endif()
 #
 ##########################################################
 include_directories("frontend")
+include_directories("external/magic_enum")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 ##########################################################
@@ -60,5 +64,5 @@ add_executable(sc64
     ${BISON_parser_OUTPUTS}
 )
 if(spdlog_FOUND)
-    target_link_libraries(frontend spdlog::spdlog)
+    target_link_libraries(sc64 spdlog::spdlog)
 endif()
