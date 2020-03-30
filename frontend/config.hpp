@@ -9,7 +9,7 @@
 
 #include <string>
 
-typedef struct Config {
+struct Config {
     bool printAST = false;
     bool printParseTree = false;
     bool printTokens = false;
@@ -19,4 +19,4 @@ typedef struct Config {
 
     Config(int argc, char **argv);
     void usage(std::string exec_name);
-} Config;
+};

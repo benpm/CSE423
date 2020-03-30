@@ -17,7 +17,7 @@
  * @brief Data structure to represent a symbol (identifier)
  *
  */
-typedef struct Symbol {
+struct Symbol {
     enum Type {
         Int = AST::int_type, Float = AST::float_type, Char = AST::char_type, None
     };
@@ -35,7 +35,7 @@ typedef struct Symbol {
 
     Symbol(uint inScopeID, int symType, Symbol::Category category);
     Symbol(AST* node);
-} Symbol;
+};
 
 /**
  * @brief Tree of symbol tables that represent the scope of a program
