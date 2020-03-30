@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 project("CSE423_Compiler")
-
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 ##########################################################
 #
 #   Locate packages (flex, bison, spdlog)
@@ -22,6 +24,7 @@ endif()
 #
 ##########################################################
 include_directories("frontend")
+include_directories("external/magic_enum")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 ##########################################################

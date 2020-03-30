@@ -19,11 +19,10 @@ class SymbolTable;
  * @brief Abstract Syntax Tree node data structure
  *
  */
-class AST
-{
+class AST {
 private:
-    // Map from label to string
-    static const std::vector<std::string> str;
+    void printNode(const AST* node, int depth, ulong levels);
+
 public:
     // Label indicating type of node
     enum Label {
@@ -54,5 +53,5 @@ public:
     AST(const PT* pt, AST* parent);
 
     void print();
-    const std::string toString() const;
+    std::string toString() const;
 };

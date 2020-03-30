@@ -27,6 +27,9 @@ union NodeData
  *
  */
 class PT {
+private:
+    void printNode(PT &node, int depth, ulong levels);
+
 public:
     // Type of node
     enum Label {
@@ -68,12 +71,6 @@ public:
     PT(Label label, std::vector<PT*> children, int lineNum);
     PT(Label label, int lineNum);
 
-    const std::string toString() const;
+    std::string toString() const;
     void print();
-private:
-    // Map label to string
-    const static std::vector<std::string> str;
-
-    void printNode(PT &node, int depth, ulong levels);
-
 };

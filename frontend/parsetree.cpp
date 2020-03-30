@@ -7,35 +7,13 @@
  */
 #include <iostream>
 #include <string>
+#include <magic_enum.hpp>
 #include <spdlog/spdlog.h>
 #include <parsetree.hpp>
 
 extern PT* parserYppHandle;
 extern int yyparse();
 extern FILE *yyin;
-
-// Mapping from parsetree label to string
-const std::vector<std::string> PT::str {
-    "INT", "FLOAT", "CHAR", "FOR", "WHILE", "IF", "ELSE", "RETURN", "BREAK", "GOTO", "SEMICOLON",
-    "COMMA", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACK", "RBRACK", "EQUAL", "PLUS",
-    "MINUS", "TIMES", "DIVIDE", "MODULO", "PLUSEQUAL", "MINUSEQUAL", "TIMESEQUAL",
-    "DIVEQUAL", "MODEQUAL", "INCR", "DECR", "LT", "GT", "LE", "GE", "ISEQ", "NOTEQ", "LOGAND",
-    "LOGOR", "NOT", "STRINGLIT", "CHARLIT", "INTCONST", "FLOATCONST", "ID",
-    "EPSILON", "NONE",
-
-    "program", "declaration_list", "declaration", "var_declaration",
-    "scoped_var_declaration", "var_decl_list", "var_decl_initialize",
-    "var_decl_id", "scoped_type_specifier", "type_specifier",
-    "fun_declaration", "params", "param_list", "param_id", "statement",
-    "expression_stmt", "expression", "mutable", "assign_op", "unary_assign_op",
-    "simple_expression", "and_expression", "unary_rel_expression",
-    "rel_expression", "rel_op", "sum_expression", "sum_op", "mul_expression",
-    "mul_op", "unary_expression", "factor", "immutable", "call",
-    "args", "arg_list", "constant", "compound_stmt", "local_declarations",
-    "statement_list", "selection_stmt", "else_if_list", "iteration_stmt",
-    "while_stmt", "for_stmt", "return_stmt", "break_stmt", "label_stmt", "goto_stmt",
-    "fun_name", "unary_assign_expr", "else_if", "else_stmt", "unary_minus"
-};
 
 /**
  * Constuct a parsetree from a C program file
@@ -105,9 +83,9 @@ void PT::print()
  * @return The string representation
  *
  */
-const std::string PT::toString() const
+std::string PT::toString() const
 {
-    return PT::str.at(this->label);
+    return std::string(magic_enum::enum_name(this->label));
 }
 
 /**

@@ -17,10 +17,9 @@
  * @brief Data structure to represent a symbol (identifier)
  *
  */
-class Symbol {
-public:
+typedef struct Symbol {
     enum Type {
-        Int = AST::int_type, Float = AST::float_type, Char = AST::char_type, NoneType
+        Int = AST::int_type, Float = AST::float_type, Char = AST::char_type, None
     };
 
     enum Category {
@@ -36,7 +35,7 @@ public:
 
     Symbol(uint inScopeID, int symType, Symbol::Category category);
     Symbol(AST* node);
-};
+} Symbol;
 
 /**
  * @brief Tree of symbol tables that represent the scope of a program
@@ -45,6 +44,8 @@ public:
 class SymbolTable {
 private:
     static uint globalTableID;
+
+    void printTable(SymbolTable* st, uint depth);
 public:
     static std::set<int> scopeCreators;
     // Parent of this table (NULL if root)

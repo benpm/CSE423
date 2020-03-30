@@ -7,23 +7,13 @@
  */
 #include <iostream>
 #include <set>
+#include <magic_enum.hpp>
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/fmt.h>
 #include <ast.hpp>
 #include <symboltable.hpp>
 
 void expandNodes(AST* ast);
-
-// Map from label to string
-const std::vector<std::string> AST::str {
-    "root", "function", "id", "list", "declaration", "initialization", "sum", "mul",
-    "int_const", "float_const", "string_const", "char_const", "for_stmt",
-    "if_stmt", "call", "int_type", "float_type", "char_type", "bool_expr", "unhandled",
-    "args", "return_stmt", "le", "ge", "lt", "gt", "incr", "decr", "plus_equal", "minus_equal",
-    "times_equal", "dec_list", "else_stmt", "params", "while_stmt", "break_stmt", "label_stmt",
-    "goto_stmt", "modulo", "divide", "noteq", "equal", "assignment", "else_if", "log_and",
-    "log_or", "div_equal", "unary_minus", "sub", "mod_equal", "log_not"
-};
 
 // Map from parsetree label to AST label
 const std::map<PT::Label, AST::Label> labelMap {
@@ -172,7 +162,7 @@ void traversePT(AST* ast, const PT* node)
  * @param levels A bit flag that represents levels of parents, for drawing
  *
  */
-void printASTNode(const AST* node, int depth, ulong levels)
+void AST::printNode(const AST* node, int depth, ulong levels)
 {
     std::string padding;
 
@@ -228,7 +218,7 @@ void printASTNode(const AST* node, int depth, ulong levels)
         ulong nlevels = levels;
         if ((i > 0 || node->children.size() > 1) && i < node->children.size() - 1)
             nlevels = levels | (1 << depth);
-        printASTNode(it, depth + 1, nlevels);
+        printNode(it, depth + 1, nlevels);
         i += 1;
     }
 }
@@ -323,7 +313,7 @@ AST::AST(const PT* pt, AST* parent)
  */
 void AST::print()
 {
-    printASTNode(this, 0, 0);
+    printNode(this, 0, 0);
 }
 
 /**
@@ -332,7 +322,7 @@ void AST::print()
  * @return The string representation
  *
  */
-const std::string AST::toString() const
+std::string AST::toString() const
 {
-    return AST::str.at(this->label);
+    return std::string(magic_enum::enum_name(this->label));
 }

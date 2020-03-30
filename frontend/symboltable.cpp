@@ -7,6 +7,7 @@
  */
 #include <iostream>
 #include <set>
+#include <magic_enum.hpp>
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/fmt.h>
 #include <symboltable.hpp>
@@ -15,20 +16,6 @@ uint SymbolTable::globalTableID = 0;
 std::set<int> SymbolTable::scopeCreators {
     AST::root, AST::for_stmt, AST::if_stmt, AST::else_stmt, AST::else_if, AST::while_stmt,
     AST::function
-};
-
-// Mapping from symbol types/categories to strings
-std::unordered_map<int, std::string> enumToString{
-    // Types
-    {Symbol::Int, "Int"},
-    {Symbol::Float, "Float"},
-    {Symbol::Char, "Char"},
-    {Symbol::NoneType, "None"},
-    // Categories
-    {Symbol::Function, "Function"},
-    {Symbol::Local, "Local"},
-    {Symbol::Parameter, "Parameter"},
-    {Symbol::Label, "Label"}
 };
 
 /**
@@ -142,7 +129,7 @@ void SymbolTable::populateChildren(AST* ast)
         // GOTO labels
         if (childAST->label == AST::label_stmt) {
             AST* symNameNode = childAST->children[0];
-            Symbol symbol(this->tableID, Symbol::NoneType, Symbol::Label);
+            Symbol symbol(this->tableID, Symbol::None, Symbol::Label);
             this->table.emplace(symNameNode->data.sval, symbol);
         }
     }
@@ -160,7 +147,7 @@ void SymbolTable::populateChildren(AST* ast)
  * @param depth Depth of this iteration
  *
  */
-void stprint(SymbolTable* st, uint depth)
+void SymbolTable::printTable(SymbolTable* st, uint depth)
 {
     // Construct the padding string using bit flags
     std::string padding(depth * 2, ' ');
@@ -174,13 +161,14 @@ void stprint(SymbolTable* st, uint depth)
     fmt::print("{}+----------------------------+\n", padding);
     fmt::print("{}| Table ID: {:<4} {:>11} |\n", padding, st->tableID, st->name);
     fmt::print("{}+----------------------------+\n", padding);
-    std::string fmtstr = "{}| {:" + std::to_string(maxLen) + "} | {:6} | {:" + std::to_string(14 - maxLen) + "} |\n";
+    std::string fmtstr = "{}| {:" + std::to_string(maxLen) + "} | {:6} | {:" +
+        std::to_string(14 - maxLen) + "} |\n";
 
     // Print table entries
     for (auto item : st->table) {
         fmt::print(fmtstr, padding, item.first, 
-            enumToString.at(item.second.symType), 
-            enumToString.at(item.second.category)
+            std::string(magic_enum::enum_name(item.second.symType)),
+            std::string(magic_enum::enum_name(item.second.category))
         );
     }
     if (st->table.empty())
@@ -190,7 +178,7 @@ void stprint(SymbolTable* st, uint depth)
 
     // Recurse on the table's children
     for (SymbolTable* child : st->children) {
-        stprint(child, depth + 1);
+        printTable(child, depth + 1);
     }
 }
 
@@ -200,5 +188,5 @@ void stprint(SymbolTable* st, uint depth)
  */
 void SymbolTable::print()
 {
-    stprint(this, 0);
+    printTable(this, 0);
 }
