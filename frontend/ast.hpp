@@ -1,3 +1,10 @@
+/**
+ * @file ast.hpp
+ * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
+ * @brief Header Tree structure to represent an AST
+ * @date 2020-02-25
+ *
+ */
 #pragma once
 
 #include <map>
@@ -5,9 +12,13 @@
 #include <vector>
 #include <parsetree.hpp>
 
+// Declare SymbolTable here for pointers to it in AST
 class SymbolTable;
 
-// Abstract Syntax Tree class
+/**
+ * @brief Abstract Syntax Tree node data structure
+ *
+ */
 class AST
 {
 private:

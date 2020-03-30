@@ -1,9 +1,9 @@
 /**
  * @file symboltable.cpp
  * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
- * @brief Implementation of symbol table functionalities
+ * @brief Implementation of SymbolTable
  * @date 2020-03-07
- * 
+ *
  */
 #include <iostream>
 #include <set>
@@ -12,7 +12,10 @@
 #include <symboltable.hpp>
 
 uint SymbolTable::globalTableID = 0;
-std::set<int> SymbolTable::scopeCreators{AST::root, AST::for_stmt, AST::if_stmt, AST::else_stmt, AST::else_if, AST::while_stmt, AST::function};
+std::set<int> SymbolTable::scopeCreators {
+    AST::root, AST::for_stmt, AST::if_stmt, AST::else_stmt, AST::else_if, AST::while_stmt,
+    AST::function
+};
 
 // Mapping from symbol types/categories to strings
 std::unordered_map<int, std::string> enumToString{
@@ -30,10 +33,11 @@ std::unordered_map<int, std::string> enumToString{
 
 /**
  * Construct a new Symbol::Symbol object
- * 
+ *
  * @param inScopeID scope that the symbol is in (tableID)
  * @param symType type of symbol (int, float, char)
  * @param category category (Function, Local, Parameter, Label)
+ *
  */
 Symbol::Symbol(uint inScopeID, int symType, Symbol::Category category)
 {
@@ -44,8 +48,9 @@ Symbol::Symbol(uint inScopeID, int symType, Symbol::Category category)
 
 /**
  * Construct a new Symbol table from AST
- * 
+ *
  * @param ast Root node of AST
+ *
  */
 SymbolTable::SymbolTable(AST* ast)
 {
@@ -62,9 +67,11 @@ SymbolTable::SymbolTable(AST* ast)
 
 /**
  * Construct a new child symbol table (called internally)
- * 
+ *
  * @param ast Pointer to AST node that created the new scope
+ * @param parent Pointer to the parent (scope) of the current symbol table
  * @param name Name of new table (function name, etc)
+ *
  */
 SymbolTable::SymbolTable(AST* ast, SymbolTable* parent, std::string name)
 {
@@ -78,8 +85,9 @@ SymbolTable::SymbolTable(AST* ast, SymbolTable* parent, std::string name)
 
 /**
  * Recursively add symbols to symbol table (and construct new if necessary)
- * 
+ *
  * @param ast Pointer to root AST node
+ *
  */
 void SymbolTable::populateChildren(AST* ast)
 {
@@ -147,9 +155,10 @@ void SymbolTable::populateChildren(AST* ast)
 
 /**
  * Internal recursive print function
- * 
+ *
  * @param st Pointer to symbol table to print
  * @param depth Depth of this iteration
+ *
  */
 void stprint(SymbolTable* st, uint depth)
 {
@@ -186,7 +195,8 @@ void stprint(SymbolTable* st, uint depth)
 }
 
 /**
- * Print this symbol table
+ * Print the symbol table
+ *
  */
 void SymbolTable::print()
 {

@@ -10,7 +10,10 @@
 #include <string>
 #include <vector>
 
-// Contains data for tree nodes
+/**
+ * @brief Contains data for tree nodes
+ *
+ */
 union NodeData
 {
     int ival;
@@ -19,7 +22,10 @@ union NodeData
     char cval;
 };
 
-// Parsetree node class
+/**
+ * @brief Parsetree node data structure
+ *
+ */
 class PT {
 public:
     // Type of node

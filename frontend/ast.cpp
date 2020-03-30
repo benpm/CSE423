@@ -1,3 +1,10 @@
+/**
+ * @file ast.cpp
+ * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
+ * @brief Implementation of tree structure to represent an AST
+ * @date 2020-02-25
+ *
+ */
 #include <iostream>
 #include <set>
 #include <spdlog/spdlog.h>
@@ -109,8 +116,9 @@ const std::set<PT::Label> swapNodes {
 /**
  * Recursively traverses a given parsetree, adding nodes to the given AST
  *
- * @param ast The AST to build upon
- * @param node The parsetree to traverse
+ * @param ast Pointer to the AST to build upon
+ * @param node Pointer to the parsetree to traverse
+ *
  */
 void traversePT(AST* ast, const PT* node)
 {
@@ -162,6 +170,7 @@ void traversePT(AST* ast, const PT* node)
  * @param node The AST node to print the label and possibly value of
  * @param depth The current tree depth
  * @param levels A bit flag that represents levels of parents, for drawing
+ *
  */
 void printASTNode(const AST* node, int depth, ulong levels)
 {
@@ -226,8 +235,9 @@ void printASTNode(const AST* node, int depth, ulong levels)
 
 /**
  * Recursively expands dec_list lists in ast into normal declarations
- * 
- * @param ast 
+ *
+ * @param ast Pointer to the AST to modify
+ *
  */
 void expandNodes(AST* ast)
 {
@@ -266,7 +276,8 @@ void expandNodes(AST* ast)
 /**
  * Construct a new single-node tree object with specified label
  *
- * @param label
+ * @param label The label of the type of node to construct
+ *
  */
 AST::AST(AST::Label label)
 {
@@ -274,9 +285,11 @@ AST::AST(AST::Label label)
 }
 
 /**
- * Construct AST from given parse tree. THIS CONSTRUCTOR SHOULD BE USED FROM MAIN
+ * Construct AST from given parsetree
+ * @details This constructor should be used from main.
  *
- * @param pt Parse tree to constr from
+ * @param pt Pointer to the parsetree from which to construct the AST
+ *
  */
 AST::AST(const PT* pt)
 {
@@ -291,9 +304,11 @@ AST::AST(const PT* pt)
 }
 
 /**
- * @brief Construct AST from given parse tree
+ * Construct AST from given parsetree
  *
- * @param pt Parse tree to constr from
+ * @param pt Pointer to the parsetree from which to construct the AST
+ * @param parent The parent node of the AST node being constructed
+ *
  */
 AST::AST(const PT* pt, AST* parent)
 {
@@ -303,7 +318,8 @@ AST::AST(const PT* pt, AST* parent)
 }
 
 /**
- * @brief Print this tree to stdout
+ * Print this tree to stdout
+ *
  */
 void AST::print()
 {
@@ -311,9 +327,10 @@ void AST::print()
 }
 
 /**
- * @brief Returns string representation of this AST
+ * Return the string representation of this AST
  *
- * @return String representation
+ * @return The string representation
+ *
  */
 const std::string AST::toString() const
 {

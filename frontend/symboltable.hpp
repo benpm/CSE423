@@ -1,9 +1,9 @@
 /**
  * @file symboltable.hpp
  * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
- * @brief Header for symbol table
+ * @brief Header for SymbolTable data structure
  * @date 2020-03-07
- * 
+ *
  */
 #pragma once
 
@@ -14,8 +14,8 @@
 #include <ast.hpp>
 
 /**
- * @brief represents a single symbol (identifier)
- * 
+ * @brief Data structure to represent a symbol (identifier)
+ *
  */
 class Symbol {
 public:
@@ -39,8 +39,8 @@ public:
 };
 
 /**
- * @brief Tree of symbol tables that represent scope of the program
- * 
+ * @brief Tree of symbol tables that represent the scope of a program
+ *
  */
 class SymbolTable {
 private:

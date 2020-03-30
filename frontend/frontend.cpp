@@ -1,7 +1,7 @@
 /**
  * @file frontend.cpp
  * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
- * @brief Driver for scanner + parser. Takes in filename as argv[1] and builds parse tree
+ * @brief Main frontend entry point for Super Compiler 64
  * @date 2020-02-11
  *
  */
@@ -13,6 +13,7 @@
 #include <parsetree.hpp>
 #include <symboltable.hpp>
 
+// Main entry point for compiler
 int main(int argc, char **argv)
 {
     // Logging configuration
@@ -25,6 +26,7 @@ int main(int argc, char **argv)
 
     spdlog::info("Frontend begin");
 
+    // Create parsetree from input file
     PT pt(config.file);
 
     // Create abstract syntax tree
@@ -38,10 +40,12 @@ int main(int argc, char **argv)
         spdlog::info("Parse tree:");
         pt.print();
     }
+
     if (config.printAST) {
         spdlog::info("Parse tree:");
         ast.print();
     }
+
     if (config.printSymbolTable) {
         spdlog::info("Symbol table:");
         symbolTable.print();
