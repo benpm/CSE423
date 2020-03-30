@@ -1,32 +1,30 @@
-#include <symboltable.hpp>
-#include <set>
-#include <spdlog/fmt/fmt.h>
+/**
+ * @file symboltable.cpp
+ * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
+ * @brief Implementation of SymbolTable
+ * @date 2020-03-07
+ *
+ */
 #include <iostream>
+#include <set>
+#include <magic_enum.hpp>
 #include <spdlog/spdlog.h>
+#include <spdlog/fmt/fmt.h>
+#include <symboltable.hpp>
 
 uint SymbolTable::globalTableID = 0;
-std::set<int> SymbolTable::scopeCreators{AST::root, AST::for_stmt, AST::if_stmt, AST::else_stmt, AST::else_if, AST::while_stmt, AST::function};
-
-// Mapping from symbol types/categories to strings
-std::unordered_map<int, std::string> enumToString{
-    // Types
-    {Symbol::Int, "Int"},
-    {Symbol::Float, "Float"},
-    {Symbol::Char, "Char"},
-    {Symbol::NoneType, "None"},
-    // Categories
-    {Symbol::Function, "Function"},
-    {Symbol::Local, "Local"},
-    {Symbol::Parameter, "Parameter"},
-    {Symbol::Label, "Label"}
+std::set<int> SymbolTable::scopeCreators {
+    AST::root, AST::for_stmt, AST::if_stmt, AST::else_stmt, AST::else_if, AST::while_stmt,
+    AST::function
 };
 
 /**
- * @brief Construct a new Symbol::Symbol object
- * 
+ * Construct a new Symbol::Symbol object
+ *
  * @param inScopeID scope that the symbol is in (tableID)
  * @param symType type of symbol (int, float, char)
  * @param category category (Function, Local, Parameter, Label)
+ *
  */
 Symbol::Symbol(uint inScopeID, int symType, Symbol::Category category)
 {
@@ -36,9 +34,10 @@ Symbol::Symbol(uint inScopeID, int symType, Symbol::Category category)
 }
 
 /**
- * @brief Construct a new Symbol table from AST
- * 
+ * Construct a new Symbol table from AST
+ *
  * @param ast Root node of AST
+ *
  */
 SymbolTable::SymbolTable(AST* ast)
 {
@@ -54,10 +53,12 @@ SymbolTable::SymbolTable(AST* ast)
 }
 
 /**
- * @brief Construct a new child symbol table (called internally)
- * 
- * @param ast AST node that created the new scope
+ * Construct a new child symbol table (called internally)
+ *
+ * @param ast Pointer to AST node that created the new scope
+ * @param parent Pointer to the parent (scope) of the current symbol table
  * @param name Name of new table (function name, etc)
+ *
  */
 SymbolTable::SymbolTable(AST* ast, SymbolTable* parent, std::string name)
 {
@@ -70,14 +71,15 @@ SymbolTable::SymbolTable(AST* ast, SymbolTable* parent, std::string name)
 }
 
 /**
- * @brief Add symbols to symbol table (and construct new if necessary)
- * 
- * @param ast 
+ * Recursively add symbols to symbol table (and construct new if necessary)
+ *
+ * @param ast Pointer to root AST node
+ *
  */
 void SymbolTable::populateChildren(AST* ast)
 {
     for (AST* childAST : ast->children) {
-        childAST->inScopeID = this->tableID;
+        childAST->inScope = this;
 
         // Functions create symbols and scopes
         if (childAST->label == AST::function) {
@@ -100,8 +102,8 @@ void SymbolTable::populateChildren(AST* ast)
             int insertIndex = parent->children.size();
             SymbolTable* newChild = new SymbolTable(childAST, this, name);
             parent->children.insert(parent->children.begin() + insertIndex, newChild);
-            childAST->inScopeID = parent->tableID;
-            childAST->ownsScopeID = newChild->tableID;
+            childAST->inScope = parent;
+            childAST->ownsScope = newChild;
         }
         // Variable declarations
         if (childAST->label == AST::declaration) {
@@ -127,7 +129,7 @@ void SymbolTable::populateChildren(AST* ast)
         // GOTO labels
         if (childAST->label == AST::label_stmt) {
             AST* symNameNode = childAST->children[0];
-            Symbol symbol(this->tableID, Symbol::NoneType, Symbol::Label);
+            Symbol symbol(this->tableID, Symbol::None, Symbol::Label);
             this->table.emplace(symNameNode->data.sval, symbol);
         }
     }
@@ -139,12 +141,13 @@ void SymbolTable::populateChildren(AST* ast)
 }
 
 /**
- * @brief Internal recursive print function
- * 
- * @param st Symbol table to print
+ * Internal recursive print function
+ *
+ * @param st Pointer to symbol table to print
  * @param depth Depth of this iteration
+ *
  */
-void stprint(SymbolTable* st, uint depth)
+void SymbolTable::printTable(SymbolTable* st, uint depth)
 {
     // Construct the padding string using bit flags
     std::string padding(depth * 2, ' ');
@@ -158,13 +161,14 @@ void stprint(SymbolTable* st, uint depth)
     fmt::print("{}+----------------------------+\n", padding);
     fmt::print("{}| Table ID: {:<4} {:>11} |\n", padding, st->tableID, st->name);
     fmt::print("{}+----------------------------+\n", padding);
-    std::string fmtstr = "{}| {:" + std::to_string(maxLen) + "} | {:6} | {:" + std::to_string(14 - maxLen) + "} |\n";
+    std::string fmtstr = "{}| {:" + std::to_string(maxLen) + "} | {:6} | {:" +
+        std::to_string(14 - maxLen) + "} |\n";
 
     // Print table entries
     for (auto item : st->table) {
         fmt::print(fmtstr, padding, item.first, 
-            enumToString.at(item.second.symType), 
-            enumToString.at(item.second.category)
+            std::string(magic_enum::enum_name(item.second.symType)),
+            std::string(magic_enum::enum_name(item.second.category))
         );
     }
     if (st->table.empty())
@@ -174,14 +178,15 @@ void stprint(SymbolTable* st, uint depth)
 
     // Recurse on the table's children
     for (SymbolTable* child : st->children) {
-        stprint(child, depth + 1);
+        printTable(child, depth + 1);
     }
 }
 
 /**
- * @brief Print this symbol table
+ * Print the symbol table
+ *
  */
 void SymbolTable::print()
 {
-    stprint(this, 0);
+    printTable(this, 0);
 }

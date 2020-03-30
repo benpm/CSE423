@@ -1,16 +1,28 @@
+/**
+ * @file ast.hpp
+ * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
+ * @brief Header Tree structure to represent an AST
+ * @date 2020-02-25
+ *
+ */
 #pragma once
 
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
 #include <parsetree.hpp>
 
-// Abstract Syntax Tree class
-class AST
-{
+// Declare SymbolTable here for pointers to it in AST
+class SymbolTable;
+
+/**
+ * @brief Abstract Syntax Tree node data structure
+ *
+ */
+class AST {
 private:
-    // Map from label to string
-    static const std::vector<std::string> str;
+    void printNode(const AST* node, int depth, ulong levels);
+
 public:
     // Label indicating type of node
     enum Label {
@@ -32,15 +44,14 @@ public:
     // Parent of this node
     AST* parent = NULL;
     // Scope (table ID) (this is populated by the Symbol Table builder!)
-    int inScopeID = -1;
+    SymbolTable* inScope = NULL;
     // Owned scope (also populated by ST builder)
-    int ownsScopeID = -1;
+    SymbolTable* ownsScope = NULL;
 
     AST(Label label);
     AST(const PT* pt);
     AST(const PT* pt, AST* parent);
 
-
     void print();
-    const std::string toString() const;
+    std::string toString() const;
 };

@@ -1,26 +1,25 @@
 /**
  * @file symboltable.hpp
  * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
- * @brief Header for symbol table
+ * @brief Header for SymbolTable data structure
  * @date 2020-03-07
- * 
+ *
  */
 #pragma once
 
+#include <map>
+#include <set>
 #include <string>
-#include <unordered_map>
 #include <vector>
 #include <ast.hpp>
-#include <set>
 
 /**
- * @brief represents a single symbol (identifier)
- * 
+ * @brief Data structure to represent a symbol (identifier)
+ *
  */
-class Symbol {
-public:
+struct Symbol {
     enum Type {
-        Int = AST::int_type, Float = AST::float_type, Char = AST::char_type, NoneType
+        Int = AST::int_type, Float = AST::float_type, Char = AST::char_type, None
     };
 
     enum Category {
@@ -39,12 +38,14 @@ public:
 };
 
 /**
- * @brief Tree of symbol tables that represent scope of the program
- * 
+ * @brief Tree of symbol tables that represent the scope of a program
+ *
  */
 class SymbolTable {
 private:
     static uint globalTableID;
+
+    void printTable(SymbolTable* st, uint depth);
 public:
     static std::set<int> scopeCreators;
     // Parent of this table (NULL if root)
@@ -52,7 +53,7 @@ public:
     // The ID of this table (root is always 0)
     uint tableID;
     // The actual mapping (table) from symbol names to symbol information
-    std::unordered_map<std::string, Symbol> table;
+    std::map<std::string, Symbol> table;
     // The children tables, representing nested scopes
     std::vector<SymbolTable*> children;
     // Convenience name, used for pretty-printing

@@ -1,17 +1,17 @@
 +----------------------------+
 | Table ID: 0     __GLOBAL__ |
 +----------------------------+
-| main | Int    | Function   |
-| f    | Int    | Local      |
-| e    | Int    | Local      |
-| c    | Int    | Local      |
-| b    | Int    | Local      |
-| d    | Int    | Local      |
 | a    | Int    | Local      |
+| b    | Int    | Local      |
+| c    | Int    | Local      |
+| d    | Int    | Local      |
+| e    | Int    | Local      |
+| f    | Int    | Local      |
+| main | Int    | Function   |
 +----------------------------+
   +----------------------------+
   | Table ID: 1         main() |
   +----------------------------+
-  | h | Int    | Local         |
   | g | Int    | Local         |
+  | h | Int    | Local         |
   +----------------------------+

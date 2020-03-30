@@ -1,195 +1,195 @@
-program | Line num: 13
- └─declaration_list | Line num: 12
-   └─declaration | Line num: 12
-     └─fun_declaration | Line num: 12
+PROGRAM | Line num: 13
+ └─DECLARATION_LIST | Line num: 12
+   └─DECLARATION | Line num: 12
+     └─FUN_DECLARATION | Line num: 12
        ├─INT | Line num: 1
        ├─ID | Line num: 1 (main) 
-       ├─params | Line num: 1
-       └─statement | Line num: 12
-         └─compound_stmt | Line num: 12
-           ├─local_declarations | Line num: 2
-           │ ├─local_declarations | Line num: 1
-           │ └─scoped_var_declaration | Line num: 2
-           │   ├─scoped_type_specifier | Line num: 2
+       ├─PARAMS | Line num: 1
+       └─STATEMENT | Line num: 12
+         └─COMPOUND_STMT | Line num: 12
+           ├─LOCAL_DECLARATIONS | Line num: 2
+           │ ├─LOCAL_DECLARATIONS | Line num: 1
+           │ └─SCOPED_VAR_DECLARATION | Line num: 2
+           │   ├─SCOPED_TYPE_SPECIFIER | Line num: 2
            │   │ └─INT | Line num: 2
-           │   └─var_decl_list | Line num: 2
-           │     ├─var_decl_list | Line num: 2
-           │     │ └─var_decl_initialize | Line num: 2
+           │   └─VAR_DECL_LIST | Line num: 2
+           │     ├─VAR_DECL_LIST | Line num: 2
+           │     │ └─VAR_DECL_INITIALIZE | Line num: 2
            │     │   ├─ID | Line num: 2 (fact) 
            │     │   ├─EQUAL | Line num: 2
-           │     │   └─simple_expression | Line num: 2
-           │     │     └─and_expression | Line num: 2
-           │     │       └─unary_rel_expression | Line num: 2
-           │     │         └─rel_expression | Line num: 2
-           │     │           └─sum_expression | Line num: 2
-           │     │             └─mul_expression | Line num: 2
-           │     │               └─unary_expression | Line num: 2
-           │     │                 └─factor | Line num: 2
-           │     │                   └─immutable | Line num: 2
+           │     │   └─SIMPLE_EXPRESSION | Line num: 2
+           │     │     └─AND_EXPRESSION | Line num: 2
+           │     │       └─UNARY_REL_EXPRESSION | Line num: 2
+           │     │         └─REL_EXPRESSION | Line num: 2
+           │     │           └─SUM_EXPRESSION | Line num: 2
+           │     │             └─MUL_EXPRESSION | Line num: 2
+           │     │               └─UNARY_EXPRESSION | Line num: 2
+           │     │                 └─FACTOR | Line num: 2
+           │     │                   └─IMMUTABLE | Line num: 2
            │     │                     └─INTCONST | Line num: 2 (1) 
-           │     └─var_decl_initialize | Line num: 2
+           │     └─VAR_DECL_INITIALIZE | Line num: 2
            │       ├─ID | Line num: 2 (n) 
            │       ├─EQUAL | Line num: 2
-           │       └─simple_expression | Line num: 2
-           │         └─and_expression | Line num: 2
-           │           └─unary_rel_expression | Line num: 2
-           │             └─rel_expression | Line num: 2
-           │               └─sum_expression | Line num: 2
-           │                 └─mul_expression | Line num: 2
-           │                   └─unary_expression | Line num: 2
-           │                     └─factor | Line num: 2
-           │                       └─immutable | Line num: 2
+           │       └─SIMPLE_EXPRESSION | Line num: 2
+           │         └─AND_EXPRESSION | Line num: 2
+           │           └─UNARY_REL_EXPRESSION | Line num: 2
+           │             └─REL_EXPRESSION | Line num: 2
+           │               └─SUM_EXPRESSION | Line num: 2
+           │                 └─MUL_EXPRESSION | Line num: 2
+           │                   └─UNARY_EXPRESSION | Line num: 2
+           │                     └─FACTOR | Line num: 2
+           │                       └─IMMUTABLE | Line num: 2
            │                         └─INTCONST | Line num: 2 (10) 
-           └─statement_list | Line num: 11
-             ├─statement_list | Line num: 10
-             │ └─statement | Line num: 10
-             │   └─selection_stmt | Line num: 10
+           └─STATEMENT_LIST | Line num: 11
+             ├─STATEMENT_LIST | Line num: 10
+             │ └─STATEMENT | Line num: 10
+             │   └─SELECTION_STMT | Line num: 10
              │     ├─IF | Line num: 10
-             │     ├─simple_expression | Line num: 3
-             │     │ └─and_expression | Line num: 3
-             │     │   └─unary_rel_expression | Line num: 3
-             │     │     └─rel_expression | Line num: 3
-             │     │       ├─sum_expression | Line num: 3
-             │     │       │ └─mul_expression | Line num: 3
-             │     │       │   └─unary_expression | Line num: 3
-             │     │       │     └─factor | Line num: 3
+             │     ├─SIMPLE_EXPRESSION | Line num: 3
+             │     │ └─AND_EXPRESSION | Line num: 3
+             │     │   └─UNARY_REL_EXPRESSION | Line num: 3
+             │     │     └─REL_EXPRESSION | Line num: 3
+             │     │       ├─SUM_EXPRESSION | Line num: 3
+             │     │       │ └─MUL_EXPRESSION | Line num: 3
+             │     │       │   └─UNARY_EXPRESSION | Line num: 3
+             │     │       │     └─FACTOR | Line num: 3
              │     │       │       └─ID | Line num: 3 (n) 
              │     │       ├─LT | Line num: 3
-             │     │       └─sum_expression | Line num: 3
-             │     │         └─mul_expression | Line num: 3
-             │     │           └─unary_expression | Line num: 3
-             │     │             └─factor | Line num: 3
-             │     │               └─immutable | Line num: 3
+             │     │       └─SUM_EXPRESSION | Line num: 3
+             │     │         └─MUL_EXPRESSION | Line num: 3
+             │     │           └─UNARY_EXPRESSION | Line num: 3
+             │     │             └─FACTOR | Line num: 3
+             │     │               └─IMMUTABLE | Line num: 3
              │     │                 └─INTCONST | Line num: 3 (0) 
-             │     ├─compound_stmt | Line num: 5
-             │     │ ├─local_declarations | Line num: 3
-             │     │ └─statement_list | Line num: 4
-             │     │   └─statement | Line num: 4
-             │     │     └─expression_stmt | Line num: 4
-             │     │       └─expression | Line num: 4
-             │     │         └─simple_expression | Line num: 4
-             │     │           └─and_expression | Line num: 4
-             │     │             └─unary_rel_expression | Line num: 4
-             │     │               └─rel_expression | Line num: 4
-             │     │                 └─sum_expression | Line num: 4
-             │     │                   └─mul_expression | Line num: 4
-             │     │                     └─unary_expression | Line num: 4
-             │     │                       └─factor | Line num: 4
-             │     │                         └─immutable | Line num: 4
-             │     │                           └─call | Line num: 4
+             │     ├─COMPOUND_STMT | Line num: 5
+             │     │ ├─LOCAL_DECLARATIONS | Line num: 3
+             │     │ └─STATEMENT_LIST | Line num: 4
+             │     │   └─STATEMENT | Line num: 4
+             │     │     └─EXPRESSION_STMT | Line num: 4
+             │     │       └─EXPRESSION | Line num: 4
+             │     │         └─SIMPLE_EXPRESSION | Line num: 4
+             │     │           └─AND_EXPRESSION | Line num: 4
+             │     │             └─UNARY_REL_EXPRESSION | Line num: 4
+             │     │               └─REL_EXPRESSION | Line num: 4
+             │     │                 └─SUM_EXPRESSION | Line num: 4
+             │     │                   └─MUL_EXPRESSION | Line num: 4
+             │     │                     └─UNARY_EXPRESSION | Line num: 4
+             │     │                       └─FACTOR | Line num: 4
+             │     │                         └─IMMUTABLE | Line num: 4
+             │     │                           └─CALL | Line num: 4
              │     │                             ├─ID | Line num: 4 (printf) 
-             │     │                             └─args | Line num: 4
-             │     │                               └─arg_list | Line num: 4
+             │     │                             └─ARGS | Line num: 4
+             │     │                               └─ARG_LIST | Line num: 4
              │     │                                 └─STRINGLIT | Line num: 4 ("Error! Factorial of a negative number doesn't exist.") 
-             │     └─else_stmt | Line num: 10
+             │     └─ELSE_STMT | Line num: 10
              │       ├─ELSE | Line num: 10
-             │       └─compound_stmt | Line num: 10
-             │         ├─local_declarations | Line num: 5
-             │         └─statement_list | Line num: 9
-             │           ├─statement_list | Line num: 8
-             │           │ └─statement | Line num: 8
-             │           │   └─iteration_stmt | Line num: 8
-             │           │     └─for_stmt | Line num: 8
-             │           │       ├─var_declaration | Line num: 6
+             │       └─COMPOUND_STMT | Line num: 10
+             │         ├─LOCAL_DECLARATIONS | Line num: 5
+             │         └─STATEMENT_LIST | Line num: 9
+             │           ├─STATEMENT_LIST | Line num: 8
+             │           │ └─STATEMENT | Line num: 8
+             │           │   └─ITERATION_STMT | Line num: 8
+             │           │     └─FOR_STMT | Line num: 8
+             │           │       ├─VAR_DECLARATION | Line num: 6
              │           │       │ ├─INT | Line num: 6
-             │           │       │ └─var_decl_list | Line num: 6
-             │           │       │   └─var_decl_initialize | Line num: 6
+             │           │       │ └─VAR_DECL_LIST | Line num: 6
+             │           │       │   └─VAR_DECL_INITIALIZE | Line num: 6
              │           │       │     ├─ID | Line num: 6 (i) 
              │           │       │     ├─EQUAL | Line num: 6
-             │           │       │     └─simple_expression | Line num: 6
-             │           │       │       └─and_expression | Line num: 6
-             │           │       │         └─unary_rel_expression | Line num: 6
-             │           │       │           └─rel_expression | Line num: 6
-             │           │       │             └─sum_expression | Line num: 6
-             │           │       │               └─mul_expression | Line num: 6
-             │           │       │                 └─unary_expression | Line num: 6
-             │           │       │                   └─factor | Line num: 6
-             │           │       │                     └─immutable | Line num: 6
+             │           │       │     └─SIMPLE_EXPRESSION | Line num: 6
+             │           │       │       └─AND_EXPRESSION | Line num: 6
+             │           │       │         └─UNARY_REL_EXPRESSION | Line num: 6
+             │           │       │           └─REL_EXPRESSION | Line num: 6
+             │           │       │             └─SUM_EXPRESSION | Line num: 6
+             │           │       │               └─MUL_EXPRESSION | Line num: 6
+             │           │       │                 └─UNARY_EXPRESSION | Line num: 6
+             │           │       │                   └─FACTOR | Line num: 6
+             │           │       │                     └─IMMUTABLE | Line num: 6
              │           │       │                       └─INTCONST | Line num: 6 (1) 
-             │           │       ├─rel_expression | Line num: 6
-             │           │       │ ├─sum_expression | Line num: 6
-             │           │       │ │ └─mul_expression | Line num: 6
-             │           │       │ │   └─unary_expression | Line num: 6
-             │           │       │ │     └─factor | Line num: 6
+             │           │       ├─REL_EXPRESSION | Line num: 6
+             │           │       │ ├─SUM_EXPRESSION | Line num: 6
+             │           │       │ │ └─MUL_EXPRESSION | Line num: 6
+             │           │       │ │   └─UNARY_EXPRESSION | Line num: 6
+             │           │       │ │     └─FACTOR | Line num: 6
              │           │       │ │       └─ID | Line num: 6 (i) 
              │           │       │ ├─LE | Line num: 6
-             │           │       │ └─sum_expression | Line num: 6
-             │           │       │   └─mul_expression | Line num: 6
-             │           │       │     └─unary_expression | Line num: 6
-             │           │       │       └─factor | Line num: 6
+             │           │       │ └─SUM_EXPRESSION | Line num: 6
+             │           │       │   └─MUL_EXPRESSION | Line num: 6
+             │           │       │     └─UNARY_EXPRESSION | Line num: 6
+             │           │       │       └─FACTOR | Line num: 6
              │           │       │         └─ID | Line num: 6 (n) 
-             │           │       ├─expression | Line num: 6
-             │           │       │ └─unary_assign_expr | Line num: 6
-             │           │       │   ├─INCR | Line num: 6
-             │           │       │   └─ID | Line num: 6 (i) 
-             │           │       └─statement | Line num: 8
-             │           │         └─compound_stmt | Line num: 8
-             │           │           ├─local_declarations | Line num: 6
-             │           │           └─statement_list | Line num: 7
-             │           │             └─statement | Line num: 7
-             │           │               └─expression_stmt | Line num: 7
-             │           │                 └─expression | Line num: 7
+             │           │       ├─EXPRESSION | Line num: 6
+             │           │       │ └─UNARY_ASSIGN_EXPRESSION | Line num: 6
+             │           │       │   ├─ID | Line num: 6 (i) 
+             │           │       │   └─INCR | Line num: 6
+             │           │       └─STATEMENT | Line num: 8
+             │           │         └─COMPOUND_STMT | Line num: 8
+             │           │           ├─LOCAL_DECLARATIONS | Line num: 6
+             │           │           └─STATEMENT_LIST | Line num: 7
+             │           │             └─STATEMENT | Line num: 7
+             │           │               └─EXPRESSION_STMT | Line num: 7
+             │           │                 └─EXPRESSION | Line num: 7
              │           │                   ├─ID | Line num: 7 (fact) 
              │           │                   ├─TIMESEQUAL | Line num: 7
-             │           │                   └─expression | Line num: 7
-             │           │                     └─simple_expression | Line num: 7
-             │           │                       └─and_expression | Line num: 7
-             │           │                         └─unary_rel_expression | Line num: 7
-             │           │                           └─rel_expression | Line num: 7
-             │           │                             └─sum_expression | Line num: 7
-             │           │                               └─mul_expression | Line num: 7
-             │           │                                 └─unary_expression | Line num: 7
-             │           │                                   └─factor | Line num: 7
+             │           │                   └─EXPRESSION | Line num: 7
+             │           │                     └─SIMPLE_EXPRESSION | Line num: 7
+             │           │                       └─AND_EXPRESSION | Line num: 7
+             │           │                         └─UNARY_REL_EXPRESSION | Line num: 7
+             │           │                           └─REL_EXPRESSION | Line num: 7
+             │           │                             └─SUM_EXPRESSION | Line num: 7
+             │           │                               └─MUL_EXPRESSION | Line num: 7
+             │           │                                 └─UNARY_EXPRESSION | Line num: 7
+             │           │                                   └─FACTOR | Line num: 7
              │           │                                     └─ID | Line num: 7 (i) 
-             │           └─statement | Line num: 9
-             │             └─expression_stmt | Line num: 9
-             │               └─expression | Line num: 9
-             │                 └─simple_expression | Line num: 9
-             │                   └─and_expression | Line num: 9
-             │                     └─unary_rel_expression | Line num: 9
-             │                       └─rel_expression | Line num: 9
-             │                         └─sum_expression | Line num: 9
-             │                           └─mul_expression | Line num: 9
-             │                             └─unary_expression | Line num: 9
-             │                               └─factor | Line num: 9
-             │                                 └─immutable | Line num: 9
-             │                                   └─call | Line num: 9
+             │           └─STATEMENT | Line num: 9
+             │             └─EXPRESSION_STMT | Line num: 9
+             │               └─EXPRESSION | Line num: 9
+             │                 └─SIMPLE_EXPRESSION | Line num: 9
+             │                   └─AND_EXPRESSION | Line num: 9
+             │                     └─UNARY_REL_EXPRESSION | Line num: 9
+             │                       └─REL_EXPRESSION | Line num: 9
+             │                         └─SUM_EXPRESSION | Line num: 9
+             │                           └─MUL_EXPRESSION | Line num: 9
+             │                             └─UNARY_EXPRESSION | Line num: 9
+             │                               └─FACTOR | Line num: 9
+             │                                 └─IMMUTABLE | Line num: 9
+             │                                   └─CALL | Line num: 9
              │                                     ├─ID | Line num: 9 (printf) 
-             │                                     └─args | Line num: 9
-             │                                       └─arg_list | Line num: 9
-             │                                         ├─arg_list | Line num: 9
-             │                                         │ ├─arg_list | Line num: 9
+             │                                     └─ARGS | Line num: 9
+             │                                       └─ARG_LIST | Line num: 9
+             │                                         ├─ARG_LIST | Line num: 9
+             │                                         │ ├─ARG_LIST | Line num: 9
              │                                         │ │ └─STRINGLIT | Line num: 9 ("Factorial of %d = %d") 
-             │                                         │ └─expression | Line num: 9
-             │                                         │   └─simple_expression | Line num: 9
-             │                                         │     └─and_expression | Line num: 9
-             │                                         │       └─unary_rel_expression | Line num: 9
-             │                                         │         └─rel_expression | Line num: 9
-             │                                         │           └─sum_expression | Line num: 9
-             │                                         │             └─mul_expression | Line num: 9
-             │                                         │               └─unary_expression | Line num: 9
-             │                                         │                 └─factor | Line num: 9
+             │                                         │ └─EXPRESSION | Line num: 9
+             │                                         │   └─SIMPLE_EXPRESSION | Line num: 9
+             │                                         │     └─AND_EXPRESSION | Line num: 9
+             │                                         │       └─UNARY_REL_EXPRESSION | Line num: 9
+             │                                         │         └─REL_EXPRESSION | Line num: 9
+             │                                         │           └─SUM_EXPRESSION | Line num: 9
+             │                                         │             └─MUL_EXPRESSION | Line num: 9
+             │                                         │               └─UNARY_EXPRESSION | Line num: 9
+             │                                         │                 └─FACTOR | Line num: 9
              │                                         │                   └─ID | Line num: 9 (n) 
-             │                                         └─expression | Line num: 9
-             │                                           └─simple_expression | Line num: 9
-             │                                             └─and_expression | Line num: 9
-             │                                               └─unary_rel_expression | Line num: 9
-             │                                                 └─rel_expression | Line num: 9
-             │                                                   └─sum_expression | Line num: 9
-             │                                                     └─mul_expression | Line num: 9
-             │                                                       └─unary_expression | Line num: 9
-             │                                                         └─factor | Line num: 9
+             │                                         └─EXPRESSION | Line num: 9
+             │                                           └─SIMPLE_EXPRESSION | Line num: 9
+             │                                             └─AND_EXPRESSION | Line num: 9
+             │                                               └─UNARY_REL_EXPRESSION | Line num: 9
+             │                                                 └─REL_EXPRESSION | Line num: 9
+             │                                                   └─SUM_EXPRESSION | Line num: 9
+             │                                                     └─MUL_EXPRESSION | Line num: 9
+             │                                                       └─UNARY_EXPRESSION | Line num: 9
+             │                                                         └─FACTOR | Line num: 9
              │                                                           └─ID | Line num: 9 (fact) 
-             └─statement | Line num: 11
-               └─return_stmt | Line num: 11
-                 └─expression | Line num: 11
-                   └─simple_expression | Line num: 11
-                     └─and_expression | Line num: 11
-                       └─unary_rel_expression | Line num: 11
-                         └─rel_expression | Line num: 11
-                           └─sum_expression | Line num: 11
-                             └─mul_expression | Line num: 11
-                               └─unary_expression | Line num: 11
-                                 └─factor | Line num: 11
-                                   └─immutable | Line num: 11
+             └─STATEMENT | Line num: 11
+               └─RETURN_STMT | Line num: 11
+                 └─EXPRESSION | Line num: 11
+                   └─SIMPLE_EXPRESSION | Line num: 11
+                     └─AND_EXPRESSION | Line num: 11
+                       └─UNARY_REL_EXPRESSION | Line num: 11
+                         └─REL_EXPRESSION | Line num: 11
+                           └─SUM_EXPRESSION | Line num: 11
+                             └─MUL_EXPRESSION | Line num: 11
+                               └─UNARY_EXPRESSION | Line num: 11
+                                 └─FACTOR | Line num: 11
+                                   └─IMMUTABLE | Line num: 11
                                      └─INTCONST | Line num: 11 (0) 

@@ -1,25 +1,25 @@
 +----------------------------+
 | Table ID: 0     __GLOBAL__ |
 +----------------------------+
-| main | Int    | Function   |
 | fun  | Float  | Function   |
+| main | Int    | Function   |
 +----------------------------+
   +----------------------------+
   | Table ID: 1          fun() |
   +----------------------------+
-  | n1   | Float  | Local      |
   | V    | Float  | Parameter  |
   | XKAD | Float  | Parameter  |
+  | n1   | Float  | Local      |
   +----------------------------+
   +----------------------------+
   | Table ID: 2         main() |
   +----------------------------+
-  | label | None   | Label     |
-  | G     | Char   | Local     |
   | DF    | Float  | Local     |
-  | n3    | Int    | Local     |
-  | n2    | Int    | Local     |
+  | G     | Char   | Local     |
+  | label | None   | Label     |
   | n1    | Int    | Local     |
+  | n2    | Int    | Local     |
+  | n3    | Int    | Local     |
   +----------------------------+
     +----------------------------+
     | Table ID: 3       for_stmt |
@@ -29,8 +29,8 @@
       +----------------------------+
       | Table ID: 4       for_stmt |
       +----------------------------+
-      | x | Int    | Local         |
       | j | Int    | Local         |
+      | x | Int    | Local         |
       +----------------------------+
         +----------------------------+
         | Table ID: 5     while_stmt |

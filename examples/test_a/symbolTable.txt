@@ -6,12 +6,12 @@
   +----------------------------+
   | Table ID: 1         main() |
   +----------------------------+
-  | logor  | Int    | Local    |
-  | logand | Int    | Local    |
-  | str2   | Char   | Local    |
-  | str    | Char   | Local    |
-  | hek    | Int    | Local    |
   | a      | Float  | Local    |
+  | hek    | Int    | Local    |
+  | logand | Int    | Local    |
+  | logor  | Int    | Local    |
+  | str    | Char   | Local    |
+  | str2   | Char   | Local    |
   | value  | Int    | Local    |
   +----------------------------+
     +----------------------------+

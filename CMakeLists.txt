@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 project("CSE423_Compiler")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 ##########################################################
 #
@@ -22,6 +25,7 @@ endif()
 #
 ##########################################################
 include_directories("frontend")
+include_directories("external/magic_enum")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 ##########################################################
@@ -46,7 +50,7 @@ ADD_FLEX_BISON_DEPENDENCY(scanner parser)
 #   Builds the frontend driver.
 #
 ###########################################################
-add_executable(frontend
+add_executable(sc64
     frontend/frontend.cpp
     frontend/parsetree.cpp
     frontend/ast.cpp
@@ -55,6 +59,7 @@ add_executable(frontend
     ${FLEX_scanner_OUTPUTS}
     ${BISON_parser_OUTPUTS}
 )
+
 if(spdlog_FOUND)
-    target_link_libraries(frontend spdlog::spdlog)
+    target_link_libraries(sc64 spdlog::spdlog)
 endif()
