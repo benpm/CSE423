@@ -84,7 +84,7 @@ SymbolTable::SymbolTable(AST* ast, SymbolTable* parent, std::string name)
 void SymbolTable::populateChildren(AST* ast)
 {
     for (AST* childAST : ast->children) {
-        childAST->inScopeID = this->tableID;
+        childAST->inScope = this;
 
         // Functions create symbols and scopes
         if (childAST->label == AST::function) {
@@ -107,8 +107,8 @@ void SymbolTable::populateChildren(AST* ast)
             int insertIndex = parent->children.size();
             SymbolTable* newChild = new SymbolTable(childAST, this, name);
             parent->children.insert(parent->children.begin() + insertIndex, newChild);
-            childAST->inScopeID = parent->tableID;
-            childAST->ownsScopeID = newChild->tableID;
+            childAST->inScope = parent;
+            childAST->ownsScope = newChild;
         }
         // Variable declarations
         if (childAST->label == AST::declaration) {
