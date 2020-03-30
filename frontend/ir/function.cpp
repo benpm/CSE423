@@ -4,8 +4,11 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/fmt.h>
 
-uint populateBB(Function* fun, const AST* ast, uint tempn);
-uint constructWhile(Function* fun, const AST* ast, uint tempn);
+void addJumpsToBreaks(
+    std::vector<BasicBlock*>::iterator start, 
+    std::vector<BasicBlock*>::iterator end,
+    uint label);
+Arg expand(BasicBlock* block, const AST* ast, uint& tempn);
 
 // Mapping from ast nodes to IR statements
 const std::unordered_map<AST::Label, Statement::Type> labelMap {
@@ -44,12 +47,12 @@ const std::unordered_set<AST::Label> endStatements {
 };
 
 /**
- * @brief Populates a basic block by expanding nested operations in a given AST
+ * @brief Populates a basic block by expanding nested operations in a given AST, creating temporaries
  * 
  * @param block The basic block to add statements to
  * @param ast The AST to generate statements from
  * @param tempn A counter for generating contiguous temporary var names
- * @return Arg A temporary variable that is intended to be the result of the op in the given AST
+ * @return Arg A temporary variable that is intended to store the result of the op in the given AST
  */
 Arg expand(BasicBlock* block, const AST* ast, uint& tempn)
 {
@@ -142,6 +145,13 @@ Arg expand(BasicBlock* block, const AST* ast, uint& tempn)
     return temporary;
 }
 
+/**
+ * @brief Search for break blocks that need jump statements added to them
+ * 
+ * @param start An iterator for the first block to search through
+ * @param end An iterator for the last block to search through
+ * @param label The label we want to jump to (should be the block after the last loop block)
+ */
 void addJumpsToBreaks(
     std::vector<BasicBlock*>::iterator start, 
     std::vector<BasicBlock*>::iterator end,
@@ -155,12 +165,19 @@ void addJumpsToBreaks(
     }
 }
 
-uint constructWhile(Function* fun, const AST* ast, uint tempn)
+/**
+ * @brief Create basic blocks representing a while loop from given AST
+ * 
+ * @param ast The AST to produce blocks from
+ * @param tempn A number used to keep track of block IDs, should be the number after the last added block
+ * @return uint The new tempn
+ */
+uint Function::constructWhile(const AST* ast, uint tempn)
 {
     assert(ast->label == AST::while_stmt);
     assert(ast->children.size() == 3);
 
-    size_t begin = fun->blocks.size();
+    size_t begin = this->blocks.size();
     const AST* condNode = ast->children[0];
     const AST* declNode = ast->children[1];
     const AST* bodyNode = ast->children[2];
@@ -169,32 +186,47 @@ uint constructWhile(Function* fun, const AST* ast, uint tempn)
     uint lastTemp = 0;
     BasicBlock* condBlock = new BasicBlock(tempn++, "while_cond", condNode->scope);
     Arg condResult = expand(condBlock, condNode, lastTemp);
-    fun->blocks.push_back(condBlock);
+    this->blocks.push_back(condBlock);
 
     // Create declaration and body blocks
-    tempn = populateBB(fun, declNode, tempn);
-    tempn = populateBB(fun, bodyNode, tempn);
-    BasicBlock* lastBlock = fun->blocks.back();
+    tempn = populateBB(declNode, tempn);
+    tempn = populateBB(bodyNode, tempn);
+
+    // Create post-execution block
+    lastTemp = 0;
+    BasicBlock* postBlock = new BasicBlock(tempn++, "while_post", condNode->scope);
+    postBlock->statements.emplace_back(
+        Statement::JUMP,
+        Arg(condBlock->label)
+    );
+    this->blocks.push_back(postBlock);
 
     // Add jumps
     condBlock->statements.emplace_back(
         Statement::JUMP_IF_FALSE,
-        Arg(lastBlock->label + 1),
+        Arg(postBlock->label + 1),
         condResult
     );
 
     // Populate break statements with jumps
-    addJumpsToBreaks(fun->blocks.begin() + begin, fun->blocks.end(), lastBlock->label + 1);
+    addJumpsToBreaks(this->blocks.begin() + begin, this->blocks.end(), postBlock->label + 1);
 
     return tempn;
 }
 
-uint constructFor(Function* fun, const AST* ast, uint tempn)
+/**
+ * @brief Create basic blocks representing a for loop from given AST
+ * 
+ * @param ast The AST to produce blocks from
+ * @param tempn A number used to keep track of block IDs, should be the number after the last added block
+ * @return uint The new tempn
+ */
+uint Function::constructFor(const AST* ast, uint tempn)
 {
     assert(ast->label == AST::for_stmt);
     assert(ast->children.size() == 5);
 
-    size_t begin = fun->blocks.size();
+    size_t begin = this->blocks.size();
     const AST* initNode = ast->children[0];
     const AST* condNode = ast->children[1];
     const AST* postNode = ast->children[2];
@@ -202,23 +234,23 @@ uint constructFor(Function* fun, const AST* ast, uint tempn)
     const AST* bodyNode = ast->children[4];
 
     // Create initialization block
-    tempn = populateBB(fun, initNode, tempn);
+    tempn = populateBB(initNode, tempn);
 
     // Create condition block
     uint lastTemp = 0;
     BasicBlock* condBlock = new BasicBlock(tempn++, "for_cond", condNode->scope);
     Arg condResult = expand(condBlock, condNode, lastTemp);
-    fun->blocks.push_back(condBlock);
+    this->blocks.push_back(condBlock);
 
     // Create declaration and body blocks
-    tempn = populateBB(fun, declNode, tempn);
-    tempn = populateBB(fun, bodyNode, tempn);
+    tempn = populateBB(declNode, tempn);
+    tempn = populateBB(bodyNode, tempn);
 
     // Create post-execution block
     lastTemp = 0;
     BasicBlock* postBlock = new BasicBlock(tempn++, "for_post", postNode->scope);
     expand(postBlock, postNode, lastTemp);
-    fun->blocks.push_back(postBlock);
+    this->blocks.push_back(postBlock);
 
     // Add jumps
     condBlock->statements.emplace_back(
@@ -232,7 +264,7 @@ uint constructFor(Function* fun, const AST* ast, uint tempn)
     );
 
     // Populate break statements with jumps
-    addJumpsToBreaks(fun->blocks.begin() + begin, fun->blocks.end(), postBlock->label + 1);
+    addJumpsToBreaks(this->blocks.begin() + begin, this->blocks.end(), postBlock->label + 1);
 
     return tempn;
 }
@@ -245,10 +277,10 @@ uint constructFor(Function* fun, const AST* ast, uint tempn)
  * @param tempn A convenience variable used to create contiguous basic block IDs
  * @return uint The next number to use for basic block ID
  */
-uint populateBB(Function* fun, const AST* ast, uint tempn=0)
+uint Function::populateBB(const AST* ast, uint tempn=0)
 {
     // Keep track of beginning and end of this new chunk of basic blocks
-    int head = fun->blocks.size();
+    int head = this->blocks.size();
     int tail = head;
     // Next number to be used for temporary variable names
     uint nextTemp = 0;
@@ -275,27 +307,27 @@ uint populateBB(Function* fun, const AST* ast, uint tempn=0)
             case AST::log_not: {
                 BasicBlock* block = new BasicBlock(tempn++, child->toString(), child->scope);
                 expand(block, child, nextTemp);
-                fun->blocks.push_back(block);
+                this->blocks.push_back(block);
                 break; }
             
             // These statements require a little more work
             case AST::while_stmt:
-                tempn = constructWhile(fun, child, tempn);
+                tempn = constructWhile(child, tempn);
                 break;
             case AST::for_stmt:
-                tempn = constructFor(fun, child, tempn);
+                tempn = constructFor(child, tempn);
                 break;
             case AST::break_stmt: {
                 BasicBlock* block = new BasicBlock(tempn++, "break", child->scope);
-                fun->blocks.push_back(block);
+                this->blocks.push_back(block);
                 break; }
 
             // Recur
             default:
-                tempn = populateBB(fun, child, tempn);
+                tempn = populateBB(child, tempn);
                 break;
         }
-        tail = fun->blocks.size() - 1;
+        tail = this->blocks.size() - 1;
     }
 
     return tempn;
@@ -314,9 +346,14 @@ Function::Function(const AST* funcNode)
     this->name = funcNode->children[1]->data.sval;
     this->scope = funcNode->ownedScope;
 
-    populateBB(this, funcNode);
+    populateBB(funcNode);
 }
 
+/**
+ * @brief Produces a plaintext representation of the IR
+ * 
+ * @return std::string The plaintext representation
+ */
 std::string Function::toString() const
 {
     std::string string;

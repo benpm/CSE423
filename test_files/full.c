@@ -19,7 +19,8 @@ int main()
         for (int j = 0; j < n2 + n1 / 2; j += 1) {
             int x = 0;
             while ((x < n2) || !(x >= n2)) {
-                x += x;
+				int z = 10;
+                x += x + z;
                 break;
             }
         }
