@@ -172,6 +172,50 @@ uint constructWhile(Function* fun, const AST* ast, uint tempn)
     return tempn;
 }
 
+uint constructFor(Function* fun, const AST* ast, uint tempn)
+{
+    assert(ast->label == AST::for_stmt);
+    assert(ast->children.size() == 5);
+
+    const AST* initNode = ast->children[0];
+    const AST* condNode = ast->children[1];
+    const AST* postNode = ast->children[2];
+    const AST* declNode = ast->children[3];
+    const AST* bodyNode = ast->children[4];
+
+    // Create initialization block
+    tempn = populateBB(fun, initNode, tempn);
+
+    // Create condition block
+    uint lastTemp = 0;
+    BasicBlock* condBlock = new BasicBlock(tempn++, "for_cond", condNode->scope);
+    Arg condResult = expand(condBlock, condNode, lastTemp);
+    fun->blocks.push_back(condBlock);
+
+    // Create declaration and body blocks
+    tempn = populateBB(fun, declNode, tempn);
+    tempn = populateBB(fun, bodyNode, tempn);
+
+    // Create post-execution block
+    lastTemp = 0;
+    BasicBlock* postBlock = new BasicBlock(tempn++, "for_post", postNode->scope);
+    expand(postBlock, postNode, lastTemp);
+    fun->blocks.push_back(postBlock);
+
+    // Add jumps
+    condBlock->statements.emplace_back(
+        Statement::JUMP_IF_FALSE,
+        Arg(postBlock->label + 1),
+        condResult
+    );
+    postBlock->statements.emplace_back(
+        Statement::JUMP,
+        Arg(condBlock->label)
+    );
+
+    return tempn;
+}
+
 /**
  * @brief Recursively populates a function with basic blocks using a given AST
  * 
@@ -212,35 +256,21 @@ uint populateBB(Function* fun, const AST* ast, uint tempn=0)
                 expand(block, child, nextTemp);
                 fun->blocks.push_back(block);
                 break; }
+            
+            // These statements require a little more work
             case AST::while_stmt:
                 tempn = constructWhile(fun, child, tempn);
                 break;
+            case AST::for_stmt:
+                tempn = constructFor(fun, child, tempn);
+                break;
 
-            // Recurse
+            // Recur
             default:
                 tempn = populateBB(fun, child, tempn);
                 break;
         }
         tail = fun->blocks.size() - 1;
-    }
-
-    // Back-populate jumps
-    switch (ast->label) {
-        case AST::for_stmt: {
-            // Jump from condition to body
-            fun->blocks.at(head + 1)->statements.push_back(
-                Statement(Statement::JUMP_IF_TRUE,
-                fun->blocks.at(head + 3)->label,
-                strdup(fmt::format("_{}", nextTemp - 1).c_str())));
-            // Jump from body to post-execution statement
-            BasicBlock* jumpStmt = new BasicBlock(tempn++, "for_loop_jump", ast->ownedScope);
-            jumpStmt->statements.push_back(
-                Statement(Statement::JUMP, fun->blocks.at(head + 2)->label));
-            fun->blocks.push_back(jumpStmt);
-            // Jump from post-exec statement to condition
-            fun->blocks.at(head + 2)->statements.push_back(
-                Statement(Statement::JUMP, fun->blocks.at(head + 1)->label));
-            break; }
     }
 
     return tempn;
