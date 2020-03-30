@@ -4,6 +4,9 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/fmt.h>
 
+uint populateBB(Function* fun, const AST* ast, uint tempn);
+uint constructWhile(Function* fun, const AST* ast, uint tempn);
+
 // Mapping from ast nodes to IR statements
 const std::unordered_map<AST::Label, Statement::Type> labelMap {
     {AST::sum,          Statement::ADD},
@@ -107,10 +110,10 @@ Arg expand(BasicBlock* block, const AST* ast, uint& tempn)
     }
 
     // Create temporary if this is not a final statement
+    std::string tempName = fmt::format("_{}", tempn);
+    temporary.type = Arg::Type::NAME;
+    temporary.val.sval = strdup(tempName.c_str());
     if (endStatements.find(ast->label) == endStatements.end()) {
-        std::string tempName = fmt::format("_{}", tempn);
-        temporary.type = Arg::Type::NAME;
-        temporary.val.sval = strdup(tempName.c_str());
         args.insert(args.begin(), temporary);
         tempn += 1;
     }
@@ -137,6 +140,36 @@ Arg expand(BasicBlock* block, const AST* ast, uint& tempn)
         block->statements.emplace_back(labelMap.at(ast->label), args);
 
     return temporary;
+}
+
+uint constructWhile(Function* fun, const AST* ast, uint tempn)
+{
+    assert(ast->label == AST::while_stmt);
+    assert(ast->children.size() == 3);
+
+    const AST* condNode = ast->children[0];
+    const AST* declNode = ast->children[1];
+    const AST* bodyNode = ast->children[2];
+
+    // Create condition block
+    uint lastTemp = 0;
+    BasicBlock* condBlock = new BasicBlock(tempn++, "while_cond", condNode->scope);
+    Arg condResult = expand(condBlock, condNode, lastTemp);
+    fun->blocks.push_back(condBlock);
+
+    // Create declaration and body blocks
+    tempn = populateBB(fun, declNode, tempn);
+    tempn = populateBB(fun, bodyNode, tempn);
+    BasicBlock* lastBlock = fun->blocks.back();
+
+    // Add jumps
+    condBlock->statements.emplace_back(
+        Statement::JUMP_IF_FALSE,
+        Arg(lastBlock->label + 1),
+        condResult
+    );
+
+    return tempn;
 }
 
 /**
@@ -179,6 +212,9 @@ uint populateBB(Function* fun, const AST* ast, uint tempn=0)
                 expand(block, child, nextTemp);
                 fun->blocks.push_back(block);
                 break; }
+            case AST::while_stmt:
+                tempn = constructWhile(fun, child, tempn);
+                break;
 
             // Recurse
             default:
@@ -204,21 +240,6 @@ uint populateBB(Function* fun, const AST* ast, uint tempn=0)
             // Jump from post-exec statement to condition
             fun->blocks.at(head + 2)->statements.push_back(
                 Statement(Statement::JUMP, fun->blocks.at(head + 1)->label));
-            break; }
-        case AST::while_stmt: {
-            // Jump from body to post-execution statement
-            BasicBlock* jumpStmt = new BasicBlock(tempn++, "while_loop_jump", ast->ownedScope);
-            jumpStmt->statements.push_back(
-                Statement(Statement::JUMP, fun->blocks.at(head)->label));
-            fun->blocks.push_back(jumpStmt);
-            // No-op statement
-            BasicBlock* exitBlock = new BasicBlock(tempn++, "break", ast->ownedScope);
-            fun->blocks.push_back(exitBlock);
-            // Jump from condition out
-            fun->blocks.at(head)->statements.push_back(
-                Statement(Statement::JUMP_IF_FALSE,
-                exitBlock->label,
-                strdup(fmt::format("_{}", nextTemp - 1).c_str())));
             break; }
     }
 
