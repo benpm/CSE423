@@ -103,8 +103,6 @@
 %token <cval> RPAREN
 %token <cval> LBRACE
 %token <cval> RBRACE
-%token <cval> LBRACK
-%token <cval> RBRACK
 %token <cval> EQUAL
 %token <cval> PLUS
 %token <cval> MINUS

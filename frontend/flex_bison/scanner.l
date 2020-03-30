@@ -119,18 +119,6 @@ goto {
         printf("<%s, %s>\n", yytext, "RBRACE");
     return RBRACE;
 }
-\[ {
-    yylval.cval = yytext[0];
-    if (scannerPrintTokens)
-        printf("<%s, %s>\n", yytext, "LBRACK");
-    return LBRACK;
-}
-\] {
-    yylval.cval = yytext[0];
-    if (scannerPrintTokens)
-        printf("<%s, %s>\n", yytext, "RBRACK");
-    return RBRACK;
-}
 = {
     yylval.cval = yytext[0];
     if (scannerPrintTokens)
