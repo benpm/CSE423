@@ -190,3 +190,16 @@ void SymbolTable::print()
 {
     printTable(this, 0);
 }
+
+size_t SymbolTable::getDepth()
+{
+    size_t depth = 0;
+    SymbolTable* parent = this->parent;
+
+    while (parent != NULL) {
+        parent = parent->parent;
+        depth++;
+    }
+
+    return depth;
+}

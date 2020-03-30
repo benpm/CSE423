@@ -184,7 +184,7 @@ uint Function::constructWhile(const AST* ast, uint tempn)
 
     // Create condition block
     uint lastTemp = 0;
-    BasicBlock* condBlock = new BasicBlock(tempn++, "while_cond", condNode->scope);
+    BasicBlock* condBlock = new BasicBlock(tempn++, "while_cond", condNode->inScope);
     Arg condResult = expand(condBlock, condNode, lastTemp);
     this->blocks.push_back(condBlock);
 
@@ -194,7 +194,7 @@ uint Function::constructWhile(const AST* ast, uint tempn)
 
     // Create post-execution block
     lastTemp = 0;
-    BasicBlock* postBlock = new BasicBlock(tempn++, "while_post", condNode->scope);
+    BasicBlock* postBlock = new BasicBlock(tempn++, "while_post", condNode->inScope);
     postBlock->statements.emplace_back(
         Statement::JUMP,
         Arg(condBlock->label)
@@ -238,7 +238,7 @@ uint Function::constructFor(const AST* ast, uint tempn)
 
     // Create condition block
     uint lastTemp = 0;
-    BasicBlock* condBlock = new BasicBlock(tempn++, "for_cond", condNode->scope);
+    BasicBlock* condBlock = new BasicBlock(tempn++, "for_cond", condNode->inScope);
     Arg condResult = expand(condBlock, condNode, lastTemp);
     this->blocks.push_back(condBlock);
 
@@ -248,7 +248,7 @@ uint Function::constructFor(const AST* ast, uint tempn)
 
     // Create post-execution block
     lastTemp = 0;
-    BasicBlock* postBlock = new BasicBlock(tempn++, "for_post", postNode->scope);
+    BasicBlock* postBlock = new BasicBlock(tempn++, "for_post", postNode->inScope);
     expand(postBlock, postNode, lastTemp);
     this->blocks.push_back(postBlock);
 
@@ -305,7 +305,7 @@ uint Function::populateBB(const AST* ast, uint tempn=0)
             case AST::log_and:
             case AST::log_or:
             case AST::log_not: {
-                BasicBlock* block = new BasicBlock(tempn++, child->toString(), child->scope);
+                BasicBlock* block = new BasicBlock(tempn++, child->toString(), child->inScope);
                 expand(block, child, nextTemp);
                 this->blocks.push_back(block);
                 break; }
@@ -318,7 +318,7 @@ uint Function::populateBB(const AST* ast, uint tempn=0)
                 tempn = constructFor(child, tempn);
                 break;
             case AST::break_stmt: {
-                BasicBlock* block = new BasicBlock(tempn++, "break", child->scope);
+                BasicBlock* block = new BasicBlock(tempn++, "break", child->inScope);
                 this->blocks.push_back(block);
                 break; }
 
@@ -344,7 +344,7 @@ Function::Function(const AST* funcNode)
 
     // Name of function is second child of function
     this->name = funcNode->children[1]->data.sval;
-    this->scope = funcNode->ownedScope;
+    this->scope = funcNode->ownsScope;
 
     populateBB(funcNode);
 }
