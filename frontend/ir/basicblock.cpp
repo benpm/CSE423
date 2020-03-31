@@ -1,8 +1,9 @@
 #include <ir/basicblock.hpp>
 #include <spdlog/fmt/fmt.h>
 
-BasicBlock::BasicBlock(uint label, std::string name, SymbolTable* scope)
+BasicBlock::BasicBlock(int lineNum, uint label, std::string name, SymbolTable* scope)
 {
+    this->lineNum = lineNum;
     this->scope = scope;
     this->label = label;
     this->name = name;

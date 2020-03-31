@@ -54,6 +54,7 @@ public:
 
     Type type = Type::NO_OP;
     std::vector<Arg> args;
+    int lineNum = -1;
 
     Statement(Type type);
     Statement(Type type, Arg a);

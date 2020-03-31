@@ -9,6 +9,7 @@ class Function
 private:
     uint constructWhile(const AST* ast, uint tempn);
     uint constructFor(const AST* ast, uint tempn);
+    uint constructIf(const AST* ast, uint tempn);
     uint populateBB(const AST* ast, uint tempn);
 public:
     std::string name;

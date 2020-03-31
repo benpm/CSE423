@@ -89,7 +89,6 @@ Arg expand(BasicBlock* block, const AST* ast, uint& tempn)
             case AST::call:
                 args.push_back(expand(block, child, tempn));
                 break;
-            
             // Identifier or constant value arguments
             case AST::id:
                 args.emplace_back(child->data.sval);
@@ -113,7 +112,7 @@ Arg expand(BasicBlock* block, const AST* ast, uint& tempn)
     }
 
     // Create temporary if this is not a final statement
-    std::string tempName = fmt::format("_{}", tempn);
+    std::string tempName = fmt::format("#{}", tempn);
     temporary.type = Arg::Type::NAME;
     temporary.val.sval = strdup(tempName.c_str());
     if (endStatements.find(ast->label) == endStatements.end()) {
@@ -184,7 +183,7 @@ uint Function::constructWhile(const AST* ast, uint tempn)
 
     // Create condition block
     uint lastTemp = 0;
-    BasicBlock* condBlock = new BasicBlock(tempn++, "while_cond", condNode->inScope);
+    BasicBlock* condBlock = new BasicBlock(ast->lineNum, tempn++, "while_cond", condNode->inScope);
     Arg condResult = expand(condBlock, condNode, lastTemp);
     this->blocks.push_back(condBlock);
 
@@ -194,7 +193,7 @@ uint Function::constructWhile(const AST* ast, uint tempn)
 
     // Create post-execution block
     lastTemp = 0;
-    BasicBlock* postBlock = new BasicBlock(tempn++, "while_post", condNode->inScope);
+    BasicBlock* postBlock = new BasicBlock(ast->lineNum, tempn++, "while_post", condNode->inScope);
     postBlock->statements.emplace_back(
         Statement::JUMP,
         Arg(condBlock->label)
@@ -213,6 +212,8 @@ uint Function::constructWhile(const AST* ast, uint tempn)
 
     return tempn;
 }
+
+
 
 /**
  * @brief Create basic blocks representing a for loop from given AST
@@ -238,7 +239,7 @@ uint Function::constructFor(const AST* ast, uint tempn)
 
     // Create condition block
     uint lastTemp = 0;
-    BasicBlock* condBlock = new BasicBlock(tempn++, "for_cond", condNode->inScope);
+    BasicBlock* condBlock = new BasicBlock(ast->lineNum, tempn++, "for_cond", condNode->inScope);
     Arg condResult = expand(condBlock, condNode, lastTemp);
     this->blocks.push_back(condBlock);
 
@@ -248,7 +249,7 @@ uint Function::constructFor(const AST* ast, uint tempn)
 
     // Create post-execution block
     lastTemp = 0;
-    BasicBlock* postBlock = new BasicBlock(tempn++, "for_post", postNode->inScope);
+    BasicBlock* postBlock = new BasicBlock(ast->lineNum, tempn++, "for_post", postNode->inScope);
     expand(postBlock, postNode, lastTemp);
     this->blocks.push_back(postBlock);
 
@@ -265,6 +266,78 @@ uint Function::constructFor(const AST* ast, uint tempn)
 
     // Populate break statements with jumps
     addJumpsToBreaks(this->blocks.begin() + begin, this->blocks.end(), postBlock->label + 1);
+
+    return tempn;
+}
+
+/**
+       │   └─[7] if_stmt
+       │     ├─[7] noteq
+       │     │ ├─[7] id (n2)
+       │     │ └─[7] int_const (10)
+       │     ├─[7] dec_list
+       │     ├─[7] list
+       │     ├─[8] else_if
+       │     │ ├─[8] log_and
+       │     │ │ ├─[8] le
+       │     │ │ │ ├─[8] id (n1)
+       │     │ │ │ └─[8] int_const (2)
+       │     │ │ └─[8] log_or
+       │     │ │   ├─[8] equal
+       │     │ │   │ ├─[8] id (G)
+       │     │ │   │ └─[8] char_const (H)
+       │     │ │   └─[8] noteq
+       │     │ │     ├─[8] id (n2)
+       │     │ │     └─[8] int_const (100)
+       │     │ ├─[8] dec_list
+       │     │ └─[8] list
+       │     ├─[10] else_if
+       │     │ ├─[10] ge
+       │     │ │ ├─[10] id (G)
+       │     │ │ └─[10] char_const (H)
+       │     │ ├─[10] dec_list
+       │     │ └─[10] list
+       │     └─[11] else_stmt
+       │       ├─[11] dec_list
+       │       └─[11] list
+ **/
+
+uint Function::constructIf(const AST* ast, uint tempn)
+{
+    assert(ast->label == AST::if_stmt || ast->label == AST::else_if);
+
+    const AST* condNode = ast->children[0];
+    const AST* declNode = ast->children[1];
+    const AST* bodyNode = ast->children[2];
+
+    // Create condition block
+    uint lastTemp = 0;
+    BasicBlock* condBlock = new BasicBlock(ast->lineNum, tempn++, ast->toString(), condNode->inScope);
+    Arg condResult = expand(condBlock, condNode, lastTemp);
+    this->blocks.push_back(condBlock);
+    
+    // Create body and declarations
+    tempn = populateBB(declNode, tempn);
+    tempn = populateBB(bodyNode, tempn);
+    uint outBlock = tempn;
+
+    for (auto it = ast->children.begin() + 3; it != ast->children.end(); it++) {
+        const AST* child = *it;
+        if (child->label == AST::else_if) {
+            tempn = constructIf(child, tempn);
+        } else if (child->label == AST::else_stmt) {
+            tempn = populateBB(child, tempn);
+        } else {
+            spdlog::error("what");
+        }
+    }
+
+    // Add the jump
+    condBlock->statements.emplace_back(
+        Statement::JUMP_IF_FALSE,
+        Arg(outBlock),
+        condResult
+    );
 
     return tempn;
 }
@@ -305,11 +378,10 @@ uint Function::populateBB(const AST* ast, uint tempn=0)
             case AST::log_and:
             case AST::log_or:
             case AST::log_not: {
-                BasicBlock* block = new BasicBlock(tempn++, child->toString(), child->inScope);
+                BasicBlock* block = new BasicBlock(child->lineNum, tempn++, child->toString(), child->inScope);
                 expand(block, child, nextTemp);
                 this->blocks.push_back(block);
                 break; }
-            
             // These statements require a little more work
             case AST::while_stmt:
                 tempn = constructWhile(child, tempn);
@@ -317,8 +389,11 @@ uint Function::populateBB(const AST* ast, uint tempn=0)
             case AST::for_stmt:
                 tempn = constructFor(child, tempn);
                 break;
+            case AST::if_stmt:
+                tempn = constructIf(child, tempn);
+                break;
             case AST::break_stmt: {
-                BasicBlock* block = new BasicBlock(tempn++, "break", child->inScope);
+                BasicBlock* block = new BasicBlock(child->lineNum, tempn++, child->toString(), child->inScope);
                 this->blocks.push_back(block);
                 break; }
 

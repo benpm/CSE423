@@ -32,7 +32,7 @@ std::string Arg::toString() const
     switch (this->type) {
         case LABEL:     return fmt::format("<{}>", val.label);
         case INT:       return fmt::format("{}", val.ival);
-        case CHAR:      return fmt::format("{}", val.cval);
+        case CHAR:      return fmt::format("'{}'", val.cval);
         case FLOAT:     return fmt::format("{}", val.fval);
         case NAME:      return fmt::format("{}", val.sval);
         default:        return "???";
@@ -74,9 +74,9 @@ Statement::Statement(Type type, std::vector<Arg>& args)
 std::string Statement::toString() const
 {
     std::string string;
-    string += fmt::format("<[{}]", typeMap.at(this->type));
+    string += fmt::format("({}) <[{}]", lineNum, typeMap.at(this->type));
     for (const Arg& arg : args) {
-        string += fmt::format(",{}", arg.toString());
+        string += fmt::format(", {}", arg.toString());
     }
     string += ">";
     return string;

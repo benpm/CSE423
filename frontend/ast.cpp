@@ -142,6 +142,7 @@ void traversePT(AST* ast, const PT* node)
             // Create a new AST node representing this pt node (recursive call)
             AST* next = new AST(child, ast);
             next->data = child->data;
+            next->lineNum = child->lineNum;
 
             // Else-if lists are a special case where they must be a child of the parent
             if (next->label == AST::else_if && ast->label == AST::else_if)
@@ -245,7 +246,11 @@ void expandNodes(AST* ast)
             // Add assignment declaration to parent dec_list
             for (AST* assignment : child->children[1]->children) {
                 AST* declaration = new AST(AST::declaration);
-                declaration->children.push_back(new AST(typeLabel));
+                AST* typeNode = new AST(typeLabel);
+                declaration->lineNum = assignment->lineNum;
+                typeNode->lineNum = assignment->lineNum;
+
+                declaration->children.push_back(typeNode);
                 declaration->children.push_back(assignment);
                 newNodes.push_back(declaration);
             }

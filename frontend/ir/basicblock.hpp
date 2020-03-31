@@ -10,7 +10,8 @@ public:
     std::string name;
     SymbolTable* scope;
     std::vector<Statement> statements;
+    int lineNum = -1;
 
-    BasicBlock(uint label, std::string name, SymbolTable* scope);
+    BasicBlock(int lineNum, uint label, std::string name, SymbolTable* scope);
     std::string toString() const;
 };
