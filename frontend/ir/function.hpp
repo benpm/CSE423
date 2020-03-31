@@ -13,7 +13,7 @@ private:
     uint populateBB(const AST* ast, uint tempn);
 public:
     std::string name;
-    std::vector<BasicBlock*> blocks;
+    std::vector<BasicBlock> blocks;
     SymbolTable* scope;
 
     Function(const AST* funcNode);

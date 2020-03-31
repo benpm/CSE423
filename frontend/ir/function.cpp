@@ -5,10 +5,10 @@
 #include <spdlog/fmt/fmt.h>
 
 void addJumpsToBreaks(
-    std::vector<BasicBlock*>::iterator start, 
-    std::vector<BasicBlock*>::iterator end,
+    std::vector<BasicBlock>::iterator start, 
+    std::vector<BasicBlock>::iterator end,
     uint label);
-Arg expand(BasicBlock* block, const AST* ast, uint& tempn);
+Arg expand(BasicBlock& block, const AST* ast, uint& tempn);
 
 // Mapping from ast nodes to IR statements
 const std::unordered_map<AST::Label, Statement::Type> labelMap {
@@ -54,7 +54,7 @@ const std::unordered_set<AST::Label> endStatements {
  * @param tempn A counter for generating contiguous temporary var names
  * @return Arg A temporary variable that is intended to store the result of the op in the given AST
  */
-Arg expand(BasicBlock* block, const AST* ast, uint& tempn)
+Arg expand(BasicBlock& block, const AST* ast, uint& tempn)
 {
     std::vector<Arg> args;
     Arg temporary(0u);
@@ -139,7 +139,7 @@ Arg expand(BasicBlock* block, const AST* ast, uint& tempn)
 
     // Generate statement
     if (labelMap.find(ast->label) != labelMap.end())
-        block->statements.emplace_back(labelMap.at(ast->label), args);
+        block.statements.emplace_back(labelMap.at(ast->label), args);
 
     return temporary;
 }
@@ -152,14 +152,14 @@ Arg expand(BasicBlock* block, const AST* ast, uint& tempn)
  * @param label The label we want to jump to (should be the block after the last loop block)
  */
 void addJumpsToBreaks(
-    std::vector<BasicBlock*>::iterator start, 
-    std::vector<BasicBlock*>::iterator end,
+    std::vector<BasicBlock>::iterator start, 
+    std::vector<BasicBlock>::iterator end,
     uint label)
 {
     for (auto it = start; it != end; ++it) {
-        BasicBlock* block = *it;
-        if (block->name == "break" && block->statements.size() == 0) {
-            block->statements.emplace_back(Statement::JUMP, Arg(label));
+        BasicBlock& block = *it;
+        if (block.name == "break" && block.statements.size() == 0) {
+            block.statements.emplace_back(Statement::JUMP, Arg(label));
         }
     }
 }
@@ -183,7 +183,7 @@ uint Function::constructWhile(const AST* ast, uint tempn)
 
     // Create condition block
     uint lastTemp = 0;
-    BasicBlock* condBlock = new BasicBlock(ast->lineNum, tempn++, "while_cond", condNode->inScope);
+    BasicBlock condBlock(ast->lineNum, tempn++, "while_cond", condNode->inScope);
     Arg condResult = expand(condBlock, condNode, lastTemp);
     this->blocks.push_back(condBlock);
 
@@ -193,22 +193,22 @@ uint Function::constructWhile(const AST* ast, uint tempn)
 
     // Create post-execution block
     lastTemp = 0;
-    BasicBlock* postBlock = new BasicBlock(ast->lineNum, tempn++, "while_post", condNode->inScope);
-    postBlock->statements.emplace_back(
+    BasicBlock postBlock(ast->lineNum, tempn++, "while_post", condNode->inScope);
+    postBlock.statements.emplace_back(
         Statement::JUMP,
-        Arg(condBlock->label)
+        Arg(condBlock.label)
     );
     this->blocks.push_back(postBlock);
 
     // Add jumps
-    condBlock->statements.emplace_back(
+    condBlock.statements.emplace_back(
         Statement::JUMP_IF_FALSE,
-        Arg(postBlock->label + 1),
+        Arg(postBlock.label + 1),
         condResult
     );
 
     // Populate break statements with jumps
-    addJumpsToBreaks(this->blocks.begin() + begin, this->blocks.end(), postBlock->label + 1);
+    addJumpsToBreaks(this->blocks.begin() + begin, this->blocks.end(), postBlock.label + 1);
 
     return tempn;
 }
@@ -239,7 +239,7 @@ uint Function::constructFor(const AST* ast, uint tempn)
 
     // Create condition block
     uint lastTemp = 0;
-    BasicBlock* condBlock = new BasicBlock(ast->lineNum, tempn++, "for_cond", condNode->inScope);
+    BasicBlock condBlock(ast->lineNum, tempn++, "for_cond", condNode->inScope);
     Arg condResult = expand(condBlock, condNode, lastTemp);
     this->blocks.push_back(condBlock);
 
@@ -249,58 +249,26 @@ uint Function::constructFor(const AST* ast, uint tempn)
 
     // Create post-execution block
     lastTemp = 0;
-    BasicBlock* postBlock = new BasicBlock(ast->lineNum, tempn++, "for_post", postNode->inScope);
+    BasicBlock postBlock(ast->lineNum, tempn++, "for_post", postNode->inScope);
     expand(postBlock, postNode, lastTemp);
     this->blocks.push_back(postBlock);
 
     // Add jumps
-    condBlock->statements.emplace_back(
+    condBlock.statements.emplace_back(
         Statement::JUMP_IF_FALSE,
-        Arg(postBlock->label + 1),
+        Arg(postBlock.label + 1),
         condResult
     );
-    postBlock->statements.emplace_back(
+    postBlock.statements.emplace_back(
         Statement::JUMP,
-        Arg(condBlock->label)
+        Arg(condBlock.label)
     );
 
     // Populate break statements with jumps
-    addJumpsToBreaks(this->blocks.begin() + begin, this->blocks.end(), postBlock->label + 1);
+    addJumpsToBreaks(this->blocks.begin() + begin, this->blocks.end(), postBlock.label + 1);
 
     return tempn;
 }
-
-/**
-       │   └─[7] if_stmt
-       │     ├─[7] noteq
-       │     │ ├─[7] id (n2)
-       │     │ └─[7] int_const (10)
-       │     ├─[7] dec_list
-       │     ├─[7] list
-       │     ├─[8] else_if
-       │     │ ├─[8] log_and
-       │     │ │ ├─[8] le
-       │     │ │ │ ├─[8] id (n1)
-       │     │ │ │ └─[8] int_const (2)
-       │     │ │ └─[8] log_or
-       │     │ │   ├─[8] equal
-       │     │ │   │ ├─[8] id (G)
-       │     │ │   │ └─[8] char_const (H)
-       │     │ │   └─[8] noteq
-       │     │ │     ├─[8] id (n2)
-       │     │ │     └─[8] int_const (100)
-       │     │ ├─[8] dec_list
-       │     │ └─[8] list
-       │     ├─[10] else_if
-       │     │ ├─[10] ge
-       │     │ │ ├─[10] id (G)
-       │     │ │ └─[10] char_const (H)
-       │     │ ├─[10] dec_list
-       │     │ └─[10] list
-       │     └─[11] else_stmt
-       │       ├─[11] dec_list
-       │       └─[11] list
- **/
 
 uint Function::constructIf(const AST* ast, uint tempn)
 {
@@ -312,7 +280,7 @@ uint Function::constructIf(const AST* ast, uint tempn)
 
     // Create condition block
     uint lastTemp = 0;
-    BasicBlock* condBlock = new BasicBlock(ast->lineNum, tempn++, ast->toString(), condNode->inScope);
+    BasicBlock condBlock(ast->lineNum, tempn++, ast->toString(), condNode->inScope);
     Arg condResult = expand(condBlock, condNode, lastTemp);
     this->blocks.push_back(condBlock);
     
@@ -333,7 +301,7 @@ uint Function::constructIf(const AST* ast, uint tempn)
     }
 
     // Add the jump
-    condBlock->statements.emplace_back(
+    condBlock.statements.emplace_back(
         Statement::JUMP_IF_FALSE,
         Arg(outBlock),
         condResult
@@ -378,7 +346,7 @@ uint Function::populateBB(const AST* ast, uint tempn=0)
             case AST::log_and:
             case AST::log_or:
             case AST::log_not: {
-                BasicBlock* block = new BasicBlock(child->lineNum, tempn++, child->toString(), child->inScope);
+                BasicBlock block(child->lineNum, tempn++, child->toString(), child->inScope);
                 expand(block, child, nextTemp);
                 this->blocks.push_back(block);
                 break; }
@@ -393,7 +361,7 @@ uint Function::populateBB(const AST* ast, uint tempn=0)
                 tempn = constructIf(child, tempn);
                 break;
             case AST::break_stmt: {
-                BasicBlock* block = new BasicBlock(child->lineNum, tempn++, child->toString(), child->inScope);
+                BasicBlock block(child->lineNum, tempn++, child->toString(), child->inScope);
                 this->blocks.push_back(block);
                 break; }
 
@@ -433,8 +401,8 @@ std::string Function::toString() const
 {
     std::string string;
     string += fmt::format("{}()\n", this->name);
-    for (const BasicBlock* block : blocks) {
-        string += " " + block->toString();
+    for (const BasicBlock& block : blocks) {
+        string += " " + block.toString();
     }
     return string;
 }
