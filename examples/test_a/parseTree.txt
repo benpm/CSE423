@@ -1,12 +1,12 @@
-PROGRAM | Line num: 20
- └─DECLARATION_LIST | Line num: 20
-   └─DECLARATION | Line num: 20
-     └─FUN_DECLARATION | Line num: 20
+PROGRAM | Line num: 1
+ └─DECLARATION_LIST | Line num: 1
+   └─DECLARATION | Line num: 1
+     └─FUN_DECLARATION | Line num: 1
        ├─INT | Line num: 1
        ├─ID | Line num: 1 (main) 
        ├─PARAMS | Line num: 1
-       └─STATEMENT | Line num: 20
-         └─COMPOUND_STMT | Line num: 20
+       └─STATEMENT | Line num: 1
+         └─COMPOUND_STMT | Line num: 1
            ├─LOCAL_DECLARATIONS | Line num: 13
            │ ├─LOCAL_DECLARATIONS | Line num: 9
            │ │ ├─LOCAL_DECLARATIONS | Line num: 8
@@ -184,10 +184,10 @@ PROGRAM | Line num: 20
            │                       └─IMMUTABLE | Line num: 13
            │                         └─CHARLIT | Line num: 13 (	) 
            └─STATEMENT_LIST | Line num: 19
-             ├─STATEMENT_LIST | Line num: 18
-             │ └─STATEMENT | Line num: 18
-             │   └─ITERATION_STMT | Line num: 18
-             │     └─FOR_STMT | Line num: 18
+             ├─STATEMENT_LIST | Line num: 14
+             │ └─STATEMENT | Line num: 14
+             │   └─ITERATION_STMT | Line num: 14
+             │     └─FOR_STMT | Line num: 14
              │       ├─VAR_DECLARATION | Line num: 14
              │       │ ├─INT | Line num: 14
              │       │ └─VAR_DECL_LIST | Line num: 14
@@ -221,13 +221,13 @@ PROGRAM | Line num: 20
              │       │ └─UNARY_ASSIGN_EXPRESSION | Line num: 14
              │       │   ├─ID | Line num: 14 (i) 
              │       │   └─INCR | Line num: 14
-             │       └─STATEMENT | Line num: 18
-             │         └─COMPOUND_STMT | Line num: 18
+             │       └─STATEMENT | Line num: 14
+             │         └─COMPOUND_STMT | Line num: 14
              │           ├─LOCAL_DECLARATIONS | Line num: 14
-             │           └─STATEMENT_LIST | Line num: 18
-             │             └─STATEMENT | Line num: 18
-             │               └─SELECTION_STMT | Line num: 18
-             │                 ├─IF | Line num: 18
+             │           └─STATEMENT_LIST | Line num: 15
+             │             └─STATEMENT | Line num: 15
+             │               └─SELECTION_STMT | Line num: 15
+             │                 ├─IF | Line num: 15
              │                 ├─SIMPLE_EXPRESSION | Line num: 15
              │                 │ └─AND_EXPRESSION | Line num: 15
              │                 │   └─UNARY_REL_EXPRESSION | Line num: 15
@@ -250,7 +250,7 @@ PROGRAM | Line num: 20
              │                 │             └─FACTOR | Line num: 15
              │                 │               └─IMMUTABLE | Line num: 15
              │                 │                 └─INTCONST | Line num: 15 (5) 
-             │                 ├─COMPOUND_STMT | Line num: 17
+             │                 ├─COMPOUND_STMT | Line num: 15
              │                 │ ├─LOCAL_DECLARATIONS | Line num: 15
              │                 │ └─STATEMENT_LIST | Line num: 16
              │                 │   └─STATEMENT | Line num: 16

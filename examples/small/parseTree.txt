@@ -1,12 +1,12 @@
-PROGRAM | Line num: 13
- └─DECLARATION_LIST | Line num: 13
-   └─DECLARATION | Line num: 13
-     └─FUN_DECLARATION | Line num: 13
+PROGRAM | Line num: 1
+ └─DECLARATION_LIST | Line num: 1
+   └─DECLARATION | Line num: 1
+     └─FUN_DECLARATION | Line num: 1
        ├─INT | Line num: 1
        ├─ID | Line num: 1 (main) 
        ├─PARAMS | Line num: 1
-       └─STATEMENT | Line num: 13
-         └─COMPOUND_STMT | Line num: 13
+       └─STATEMENT | Line num: 2
+         └─COMPOUND_STMT | Line num: 2
            ├─LOCAL_DECLARATIONS | Line num: 6
            │ ├─LOCAL_DECLARATIONS | Line num: 5
            │ │ ├─LOCAL_DECLARATIONS | Line num: 4
@@ -93,10 +93,10 @@ PROGRAM | Line num: 13
            │                         └─FACTOR | Line num: 6
            │                           └─IMMUTABLE | Line num: 6
            │                             └─FLOATCONST | Line num: 6 (8.01161) 
-           └─STATEMENT_LIST | Line num: 12
-             └─STATEMENT | Line num: 12
-               └─SELECTION_STMT | Line num: 12
-                 ├─IF | Line num: 12
+           └─STATEMENT_LIST | Line num: 8
+             └─STATEMENT | Line num: 8
+               └─SELECTION_STMT | Line num: 8
+                 ├─IF | Line num: 8
                  ├─SIMPLE_EXPRESSION | Line num: 8
                  │ └─AND_EXPRESSION | Line num: 8
                  │   └─UNARY_REL_EXPRESSION | Line num: 8
@@ -113,7 +113,7 @@ PROGRAM | Line num: 13
                  │             └─FACTOR | Line num: 8
                  │               └─IMMUTABLE | Line num: 8
                  │                 └─INTCONST | Line num: 8 (2) 
-                 ├─COMPOUND_STMT | Line num: 10
+                 ├─COMPOUND_STMT | Line num: 8
                  │ ├─LOCAL_DECLARATIONS | Line num: 8
                  │ └─STATEMENT_LIST | Line num: 9
                  │   └─STATEMENT | Line num: 9
@@ -129,9 +129,9 @@ PROGRAM | Line num: 13
                  │                       └─FACTOR | Line num: 9
                  │                         └─IMMUTABLE | Line num: 9
                  │                           └─INTCONST | Line num: 9 (35) 
-                 └─ELSE_STMT | Line num: 12
-                   ├─ELSE | Line num: 12
-                   └─COMPOUND_STMT | Line num: 12
+                 └─ELSE_STMT | Line num: 10
+                   ├─ELSE | Line num: 10
+                   └─COMPOUND_STMT | Line num: 10
                      ├─LOCAL_DECLARATIONS | Line num: 10
                      └─STATEMENT_LIST | Line num: 11
                        └─STATEMENT | Line num: 11

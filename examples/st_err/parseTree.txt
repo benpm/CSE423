@@ -1,5 +1,5 @@
-PROGRAM | Line num: 9
- └─DECLARATION_LIST | Line num: 9
+PROGRAM | Line num: 1
+ └─DECLARATION_LIST | Line num: 5
    ├─DECLARATION_LIST | Line num: 3
    │ ├─DECLARATION_LIST | Line num: 2
    │ │ ├─DECLARATION_LIST | Line num: 1
@@ -85,13 +85,13 @@ PROGRAM | Line num: 9
    │                       └─FACTOR | Line num: 3
    │                         └─IMMUTABLE | Line num: 3
    │                           └─INTCONST | Line num: 3 (5) 
-   └─DECLARATION | Line num: 9
-     └─FUN_DECLARATION | Line num: 9
+   └─DECLARATION | Line num: 5
+     └─FUN_DECLARATION | Line num: 5
        ├─INT | Line num: 5
        ├─ID | Line num: 5 (main) 
        ├─PARAMS | Line num: 5
-       └─STATEMENT | Line num: 9
-         └─COMPOUND_STMT | Line num: 9
+       └─STATEMENT | Line num: 6
+         └─COMPOUND_STMT | Line num: 6
            ├─LOCAL_DECLARATIONS | Line num: 8
            │ ├─LOCAL_DECLARATIONS | Line num: 7
            │ │ ├─LOCAL_DECLARATIONS | Line num: 6

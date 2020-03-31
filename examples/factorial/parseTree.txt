@@ -1,12 +1,12 @@
-PROGRAM | Line num: 13
- └─DECLARATION_LIST | Line num: 12
-   └─DECLARATION | Line num: 12
-     └─FUN_DECLARATION | Line num: 12
+PROGRAM | Line num: 1
+ └─DECLARATION_LIST | Line num: 1
+   └─DECLARATION | Line num: 1
+     └─FUN_DECLARATION | Line num: 1
        ├─INT | Line num: 1
        ├─ID | Line num: 1 (main) 
        ├─PARAMS | Line num: 1
-       └─STATEMENT | Line num: 12
-         └─COMPOUND_STMT | Line num: 12
+       └─STATEMENT | Line num: 1
+         └─COMPOUND_STMT | Line num: 1
            ├─LOCAL_DECLARATIONS | Line num: 2
            │ ├─LOCAL_DECLARATIONS | Line num: 1
            │ └─SCOPED_VAR_DECLARATION | Line num: 2
@@ -41,10 +41,10 @@ PROGRAM | Line num: 13
            │                       └─IMMUTABLE | Line num: 2
            │                         └─INTCONST | Line num: 2 (10) 
            └─STATEMENT_LIST | Line num: 11
-             ├─STATEMENT_LIST | Line num: 10
-             │ └─STATEMENT | Line num: 10
-             │   └─SELECTION_STMT | Line num: 10
-             │     ├─IF | Line num: 10
+             ├─STATEMENT_LIST | Line num: 3
+             │ └─STATEMENT | Line num: 3
+             │   └─SELECTION_STMT | Line num: 3
+             │     ├─IF | Line num: 3
              │     ├─SIMPLE_EXPRESSION | Line num: 3
              │     │ └─AND_EXPRESSION | Line num: 3
              │     │   └─UNARY_REL_EXPRESSION | Line num: 3
@@ -61,7 +61,7 @@ PROGRAM | Line num: 13
              │     │             └─FACTOR | Line num: 3
              │     │               └─IMMUTABLE | Line num: 3
              │     │                 └─INTCONST | Line num: 3 (0) 
-             │     ├─COMPOUND_STMT | Line num: 5
+             │     ├─COMPOUND_STMT | Line num: 3
              │     │ ├─LOCAL_DECLARATIONS | Line num: 3
              │     │ └─STATEMENT_LIST | Line num: 4
              │     │   └─STATEMENT | Line num: 4
@@ -81,15 +81,15 @@ PROGRAM | Line num: 13
              │     │                             └─ARGS | Line num: 4
              │     │                               └─ARG_LIST | Line num: 4
              │     │                                 └─STRINGLIT | Line num: 4 ("Error! Factorial of a negative number doesn't exist.") 
-             │     └─ELSE_STMT | Line num: 10
-             │       ├─ELSE | Line num: 10
-             │       └─COMPOUND_STMT | Line num: 10
+             │     └─ELSE_STMT | Line num: 5
+             │       ├─ELSE | Line num: 5
+             │       └─COMPOUND_STMT | Line num: 5
              │         ├─LOCAL_DECLARATIONS | Line num: 5
              │         └─STATEMENT_LIST | Line num: 9
-             │           ├─STATEMENT_LIST | Line num: 8
-             │           │ └─STATEMENT | Line num: 8
-             │           │   └─ITERATION_STMT | Line num: 8
-             │           │     └─FOR_STMT | Line num: 8
+             │           ├─STATEMENT_LIST | Line num: 6
+             │           │ └─STATEMENT | Line num: 6
+             │           │   └─ITERATION_STMT | Line num: 6
+             │           │     └─FOR_STMT | Line num: 6
              │           │       ├─VAR_DECLARATION | Line num: 6
              │           │       │ ├─INT | Line num: 6
              │           │       │ └─VAR_DECL_LIST | Line num: 6
@@ -122,8 +122,8 @@ PROGRAM | Line num: 13
              │           │       │ └─UNARY_ASSIGN_EXPRESSION | Line num: 6
              │           │       │   ├─ID | Line num: 6 (i) 
              │           │       │   └─INCR | Line num: 6
-             │           │       └─STATEMENT | Line num: 8
-             │           │         └─COMPOUND_STMT | Line num: 8
+             │           │       └─STATEMENT | Line num: 6
+             │           │         └─COMPOUND_STMT | Line num: 6
              │           │           ├─LOCAL_DECLARATIONS | Line num: 6
              │           │           └─STATEMENT_LIST | Line num: 7
              │           │             └─STATEMENT | Line num: 7
