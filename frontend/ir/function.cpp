@@ -126,6 +126,7 @@ std::vector<BasicBlock> Function::constructFor(const AST* ast)
 
     // Combine blocks
     std::vector<BasicBlock> blocks;
+    blocks.insert(blocks.end(), initBlocks.begin(), initBlocks.end());
     blocks.push_back(condBlock);
     blocks.insert(blocks.end(), declBlocks.begin(), declBlocks.end());
     blocks.insert(blocks.end(), bodyBlocks.begin(), bodyBlocks.end());
@@ -233,6 +234,17 @@ std::vector<BasicBlock> Function::populateBB(const AST* ast)
                 BasicBlock block(child->lineNum, this->nextBlockID++, child->toString(), child->inScope);
                 tmp.push_back(block);
                 break; }
+            case AST::goto_stmt: {
+                BasicBlock block(child->lineNum, this->nextBlockID++, child->toString(), child->inScope);
+                tmp.push_back(block);
+                this->gotoBlockLocs.emplace(block.label, child->children[0]->data.sval);
+                break; }
+            case AST::label_stmt: {
+                BasicBlock block(child->lineNum, this->nextBlockID++, child->toString(), child->inScope);
+                block.statements.emplace_back(Statement::NO_OP);
+                tmp.push_back(block);
+                this->labelBlockLocs.emplace(child->children[0]->data.sval, block.label);
+                break; }
             // Recurse
             default:
                 tmp = populateBB(child);
@@ -260,6 +272,14 @@ Function::Function(const AST* funcNode)
 
     this->nextBlockID = 0;
     this->blocks = this->populateBB(funcNode);
+
+    // Populate goto statements with jumps to their respective labels
+    for (auto item : this->gotoBlockLocs) {
+        this->blocks.at(item.first).statements.emplace_back(
+            Statement::JUMP,
+            Arg(this->labelBlockLocs.at(item.second))
+        );
+    }
 }
 
 /**

@@ -12,6 +12,8 @@ private:
     std::vector<BasicBlock> constructIf(const AST* ast);
     std::vector<BasicBlock> populateBB(const AST* ast);
     uint nextBlockID = 0;
+    std::map<uint, std::string> gotoBlockLocs;
+    std::map<std::string, uint> labelBlockLocs;
 public:
     std::string name;
     std::vector<BasicBlock> blocks;
