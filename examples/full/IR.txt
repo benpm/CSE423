@@ -1,0 +1,163 @@
+main()
+ BB0 [assignment] (main())
+ │(10) <[MINUS], #0, 2>
+ │(10) <[DIV], #1, 18, #0>
+ │(10) <[MUL], #2, 15, #1>
+ │(10) <[MOD], #3, #2, 18>
+ │(10) <[ASSIGN], n1, #3>
+ └────────────────────
+ BB1 [assignment] (main())
+ │(11) <[MUL], #0, n1, n1>
+ │(11) <[ASSIGN], n2, #0>
+ └────────────────────
+ BB2 [assignment] (main())
+ │(12) <[ADD], #0, n1, n1>
+ │(12) <[ADD], #1, #0, n2>
+ │(12) <[ADD], #2, #1, n2>
+ │(12) <[ASSIGN], n3, #2>
+ └────────────────────
+ BB3 [assignment] (main())
+ │(13) <[MUL], #0, 0.8, 3.16>
+ │(13) <[ASSIGN], DF, #0>
+ └────────────────────
+ BB4 [assignment] (main())
+ │(14) <[ASSIGN], G, 'G'>
+ └────────────────────
+    BB5 [assignment] (for_stmt)
+    │(17) <[ASSIGN], i, 0>
+    └────────────────────
+    BB6 [for_cond] (for_stmt)
+    │(17) <[MUL], #0, n2, n1>
+    │(17) <[DIV], #1, #0, 2>
+    │(17) <[COMP_LT], #2, i, #1>
+    │(17) <[JUMP_IF_FALSE], <18>, #2>
+    └────────────────────
+    BB7 [break_stmt] (for_stmt)
+    │(18) <[JUMP], <18>>
+    └────────────────────
+       BB8 [assignment] (for_stmt)
+       │(19) <[ASSIGN], j, 0>
+       └────────────────────
+       BB9 [for_cond] (for_stmt)
+       │(19) <[DIV], #0, n1, 2>
+       │(19) <[ADD], #1, n2, #0>
+       │(19) <[COMP_LT], #2, j, #1>
+       │(19) <[JUMP_IF_FALSE], <17>, #2>
+       └────────────────────
+       BB10 [assignment] (for_stmt)
+       │(20) <[ASSIGN], x, 0>
+       └────────────────────
+          BB11 [while_cond] (while_stmt)
+          │(21) <[COMP_LT], #0, x, n2>
+          │(21) <[COMP_GE], #1, x, n2>
+          │(21) <[NOT], #2, #1>
+          │(21) <[LOG_OR], #3, #0, #2>
+          │(21) <[JUMP_IF_FALSE], <16>, #3>
+          └────────────────────
+          BB12 [assignment] (while_stmt)
+          │(22) <[ASSIGN], z, 10>
+          └────────────────────
+          BB13 [plus_equal] (while_stmt)
+          │(23) <[ADD], #0, x, z>
+          │(23) <[ADD], x, x, #0>
+          └────────────────────
+          BB14 [break_stmt] (while_stmt)
+          │(24) <[JUMP], <16>>
+          └────────────────────
+          BB15 [while_post] (while_stmt)
+          │(21) <[JUMP], <11>>
+          └────────────────────
+       BB16 [for_post] (for_stmt)
+       │(19) <[ADD], j, j, 1>
+       │(19) <[JUMP], <9>>
+       └────────────────────
+    BB17 [for_post] (for_stmt)
+    │(17) <[ADD], i, i, 1>
+    │(17) <[JUMP], <6>>
+    └────────────────────
+ BB18 [assignment] (main())
+ │(30) <[MUL], #0, 0.101, 2>
+ │(30) <[CALL], #1, fun, DF, #0>
+ │(30) <[CALL], #2, fun, #1, 0.9>
+ │(30) <[ASSIGN], DF, #2>
+ └────────────────────
+    BB19 [if_stmt] (if_stmt)
+    │(33) <[MINUS], #0, DF>
+    │(33) <[SUB], #1, 0.8, #0>
+    │(33) <[COMP_LT], #2, DF, #1>
+    │(33) <[JUMP_IF_FALSE], <33>, #2>
+    └────────────────────
+       BB20 [if_stmt] (if_stmt)
+       │(34) <[COMP_NEQ], #0, n2, 10>
+       │(34) <[JUMP_IF_FALSE], <25>, #0>
+       └────────────────────
+       BB21 [assignment] (if_stmt)
+       │(35) <[ASSIGN], G, 'H'>
+       └────────────────────
+       BB22 [times_equal] (if_stmt)
+       │(36) <[MUL], n1, n1, 1>
+       └────────────────────
+       BB23 [mod_equal] (if_stmt)
+       │(37) <[MOD], n1, n1, 10>
+       └────────────────────
+       BB24 [incr] (if_stmt)
+       │(38) <[ADD], n1, n1, 1>
+       └────────────────────
+          BB25 [else_if] (else_if)
+          │(39) <[COMP_LE], #0, n1, 2>
+          │(39) <[COMP_EQ], #1, G, 'H'>
+          │(39) <[COMP_NEQ], #2, n2, 100>
+          │(39) <[LOG_OR], #3, #1, #2>
+          │(39) <[LOG_AND], #4, #0, #3>
+          │(39) <[JUMP_IF_FALSE], <29>, #4>
+          └────────────────────
+          BB26 [plus_equal] (else_if)
+          │(40) <[MINUS], #0, 0.6>
+          │(40) <[ADD], DF, DF, #0>
+          └────────────────────
+             BB27 [if_stmt] (if_stmt)
+             │(41) <[COMP_EQ], #0, DF, 0>
+             │(41) <[JUMP_IF_FALSE], <29>, #0>
+             └────────────────────
+             BB28 [assignment] (if_stmt)
+             │(42) <[ASSIGN], DF, 1.01>
+             └────────────────────
+          BB29 [else_if] (else_if)
+          │(44) <[COMP_GE], #0, G, 'H'>
+          │(44) <[JUMP_IF_FALSE], <32>, #0>
+          └────────────────────
+          BB30 [minus_equal] (else_if)
+          │(45) <[MINUS], n2, n2, 16>
+          └────────────────────
+          BB31 [decr] (else_if)
+          │(46) <[MINUS], n2, n2, 1>
+          └────────────────────
+          BB32 [div_equal] (else_stmt)
+          │(48) <[DIV], n1, n1, 2>
+          └────────────────────
+ BB33 [goto_stmt] (main())
+ │(51) <[JUMP], <35>>
+ └────────────────────
+ BB34 [return_stmt] (main())
+ │(52) <[MINUS], #0, 1>
+ │(52) <[RETURN], #0>
+ └────────────────────
+ BB35 [label_stmt] (main())
+ │(53) <[NO_OP]>
+ └────────────────────
+ BB36 [return_stmt] (main())
+ │(54) <[MUL], #0, n1, 2>
+ │(54) <[RETURN], #0>
+ └────────────────────
+
+fun()
+ BB0 [assignment] (fun())
+ │(3) <[ADD], #0, XKAD, V>
+ │(3) <[ASSIGN], n1, #0>
+ └────────────────────
+ BB1 [return_stmt] (fun())
+ │(4) <[MUL], #0, n1, 80>
+ │(4) <[RETURN], #0>
+ └────────────────────
+
+

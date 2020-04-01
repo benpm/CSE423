@@ -15,12 +15,14 @@ compilerFlags=(
     p # Parse tree
     a # AST
     s # Symbol Table
+    r # IR
 )
 compilerFlagNames=(
     tokens
     parseTree
     AST
     symbolTable
+    IR
 )
 
 gitRootDir=$(git rev-parse --show-toplevel)

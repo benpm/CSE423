@@ -1,0 +1,9 @@
+main()
+ BB0 [assignment] (main())
+ │(7) <[ASSIGN], g, 3>
+ └────────────────────
+ BB1 [assignment] (main())
+ │(8) <[ASSIGN], h, 3>
+ └────────────────────
+
+
