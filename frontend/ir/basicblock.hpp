@@ -5,6 +5,8 @@
 
 class BasicBlock
 {
+private:
+    uint nextTemp = 0;
 public:
     uint label;
     std::string name;
@@ -14,4 +16,5 @@ public:
 
     BasicBlock(int lineNum, uint label, std::string name, SymbolTable* scope);
     std::string toString() const;
+    Arg expand(const AST* ast);
 };

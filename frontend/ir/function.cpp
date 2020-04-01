@@ -4,145 +4,7 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/fmt.h>
 
-void addJumpsToBreaks(
-    std::vector<BasicBlock>::iterator start, 
-    std::vector<BasicBlock>::iterator end,
-    uint label);
-Arg expand(BasicBlock& block, const AST* ast, uint& tempn);
-
-// Mapping from ast nodes to IR statements
-const std::unordered_map<AST::Label, Statement::Type> labelMap {
-    {AST::sum,          Statement::ADD},
-    {AST::mul,          Statement::MUL},
-    {AST::divide,       Statement::DIV},
-    {AST::sub,          Statement::SUB},
-    {AST::modulo,       Statement::MOD},
-    {AST::unary_minus,  Statement::MINUS},
-    {AST::log_not,      Statement::NOT},
-    {AST::log_or,       Statement::LOG_OR},
-    {AST::log_and,      Statement::LOG_AND},
-    {AST::gt,           Statement::COMP_GT},
-    {AST::ge,           Statement::COMP_GE},
-    {AST::lt,           Statement::COMP_LT},
-    {AST::le,           Statement::COMP_LE},
-    {AST::equal,        Statement::COMP_EQ},
-    {AST::noteq,        Statement::COMP_NEQ},
-    {AST::plus_equal,   Statement::ADD},
-    {AST::minus_equal,  Statement::MINUS},
-    {AST::mod_equal,    Statement::MOD},
-    {AST::div_equal,    Statement::DIV},
-    {AST::times_equal,  Statement::MUL},
-    {AST::incr,         Statement::ADD},
-    {AST::decr,         Statement::MINUS},
-    {AST::assignment,   Statement::ASSIGN},
-    {AST::args,         Statement::CALL},
-    {AST::return_stmt,  Statement::RETURN}
-};
-
-// AST nodes that will not create temporaries (as opposed to intermediate statements, which do)
-const std::unordered_set<AST::Label> endStatements {
-    AST::assignment, AST::return_stmt,
-    AST::plus_equal, AST::minus_equal, AST::incr, AST::decr,
-    AST::mod_equal, AST::times_equal, AST::mod_equal, AST::div_equal
-};
-
-/**
- * @brief Populates a basic block by expanding nested operations in a given AST, creating temporaries
- * 
- * @param block The basic block to add statements to
- * @param ast The AST to generate statements from
- * @param tempn A counter for generating contiguous temporary var names
- * @return Arg A temporary variable that is intended to store the result of the op in the given AST
- */
-Arg expand(BasicBlock& block, const AST* ast, uint& tempn)
-{
-    std::vector<Arg> args;
-    Arg temporary(0u);
-
-    // Function calls
-    if (ast->label == AST::call) {
-        // Add function identifier to args
-        args.push_back(Arg(ast->children[0]->data.sval));
-        // Set current ast node to the args child so that function args can be added properly
-        ast = ast->children[1];
-    }
-
-    // Loop through children and add statement arguments
-    for (const AST* child : ast->children) {
-        switch (child->label) {
-            // Recurse on operations, add returned temporary
-            case AST::mul:
-            case AST::modulo:
-            case AST::sum:
-            case AST::sub:
-            case AST::divide:
-            case AST::unary_minus:
-            case AST::log_not:
-            case AST::log_or:
-            case AST::log_and:
-            case AST::lt:
-            case AST::gt:
-            case AST::le:
-            case AST::ge:
-            case AST::equal:
-            case AST::noteq:
-            case AST::call:
-                args.push_back(expand(block, child, tempn));
-                break;
-            // Identifier or constant value arguments
-            case AST::id:
-                args.emplace_back(child->data.sval);
-                break;
-            case AST::int_const:
-                args.emplace_back(child->data.ival);
-                break;
-            case AST::float_const:
-                args.emplace_back(child->data.fval);
-                break;
-            case AST::char_const:
-                args.emplace_back(child->data.cval);
-                break;
-            case AST::string_const:
-                args.emplace_back(child->data.sval);
-                break;
-            default:
-                spdlog::warn("{} unhandled", child->toString());
-                break;
-        }
-    }
-
-    // Create temporary if this is not a final statement
-    std::string tempName = fmt::format("#{}", tempn);
-    temporary.type = Arg::Type::NAME;
-    temporary.val.sval = strdup(tempName.c_str());
-    if (endStatements.find(ast->label) == endStatements.end()) {
-        args.insert(args.begin(), temporary);
-        tempn += 1;
-    }
-
-    // Special behavior for specific types of statements
-    switch (ast->label) {
-        // Add a one to increment, decrement, as they are mapped to add and sub
-        case AST::incr:
-        case AST::decr:
-            args.push_back(Arg(1));
-        
-        // Make these assign var to self
-        case AST::plus_equal:
-        case AST::minus_equal:
-        case AST::mod_equal:
-        case AST::div_equal:
-        case AST::times_equal:
-            args.insert(args.begin(), args.at(0));
-            break;
-    }
-
-    // Generate statement
-    if (labelMap.find(ast->label) != labelMap.end())
-        block.statements.emplace_back(labelMap.at(ast->label), args);
-
-    return temporary;
-}
+void addJumpsToBreaks(std::vector<BasicBlock>& blocks, uint label);
 
 /**
  * @brief Search for break blocks that need jump statements added to them
@@ -151,14 +13,10 @@ Arg expand(BasicBlock& block, const AST* ast, uint& tempn)
  * @param end An iterator for the last block to search through
  * @param label The label we want to jump to (should be the block after the last loop block)
  */
-void addJumpsToBreaks(
-    std::vector<BasicBlock>::iterator start, 
-    std::vector<BasicBlock>::iterator end,
-    uint label)
+void addJumpsToBreaks(std::vector<BasicBlock>& blocks, uint label)
 {
-    for (auto it = start; it != end; ++it) {
-        BasicBlock& block = *it;
-        if (block.name == "break" && block.statements.size() == 0) {
+    for (BasicBlock& block : blocks) {
+        if (block.name == "break_stmt" && block.statements.size() == 0) {
             block.statements.emplace_back(Statement::JUMP, Arg(label));
         }
     }
@@ -171,7 +29,7 @@ void addJumpsToBreaks(
  * @param tempn A number used to keep track of block IDs, should be the number after the last added block
  * @return uint The new tempn
  */
-uint Function::constructWhile(const AST* ast, uint tempn)
+std::vector<BasicBlock> Function::constructWhile(const AST* ast)
 {
     assert(ast->label == AST::while_stmt);
     assert(ast->children.size() == 3);
@@ -182,23 +40,19 @@ uint Function::constructWhile(const AST* ast, uint tempn)
     const AST* bodyNode = ast->children[2];
 
     // Create condition block
-    uint lastTemp = 0;
-    BasicBlock condBlock(ast->lineNum, tempn++, "while_cond", condNode->inScope);
-    Arg condResult = expand(condBlock, condNode, lastTemp);
-    this->blocks.push_back(condBlock);
+    BasicBlock condBlock(ast->lineNum, this->nextBlockID++, "while_cond", condNode->inScope);
+    Arg condResult = condBlock.expand(condNode);
 
     // Create declaration and body blocks
-    tempn = populateBB(declNode, tempn);
-    tempn = populateBB(bodyNode, tempn);
+    std::vector<BasicBlock> declBlocks = this->populateBB(declNode);
+    std::vector<BasicBlock> bodyBlocks = this->populateBB(bodyNode);
 
     // Create post-execution block
-    lastTemp = 0;
-    BasicBlock postBlock(ast->lineNum, tempn++, "while_post", condNode->inScope);
+    BasicBlock postBlock(ast->lineNum, this->nextBlockID++, "while_post", condNode->inScope);
     postBlock.statements.emplace_back(
         Statement::JUMP,
         Arg(condBlock.label)
     );
-    this->blocks.push_back(postBlock);
 
     // Add jumps
     condBlock.statements.emplace_back(
@@ -208,9 +62,16 @@ uint Function::constructWhile(const AST* ast, uint tempn)
     );
 
     // Populate break statements with jumps
-    addJumpsToBreaks(this->blocks.begin() + begin, this->blocks.end(), postBlock.label + 1);
+    addJumpsToBreaks(bodyBlocks, postBlock.label + 1);
 
-    return tempn;
+    // Combine blocks
+    std::vector<BasicBlock> blocks;
+    blocks.push_back(condBlock);
+    blocks.insert(blocks.end(), declBlocks.begin(), declBlocks.end());
+    blocks.insert(blocks.end(), bodyBlocks.begin(), bodyBlocks.end());
+    blocks.push_back(postBlock);
+
+    return blocks;
 }
 
 
@@ -222,7 +83,7 @@ uint Function::constructWhile(const AST* ast, uint tempn)
  * @param tempn A number used to keep track of block IDs, should be the number after the last added block
  * @return uint The new tempn
  */
-uint Function::constructFor(const AST* ast, uint tempn)
+std::vector<BasicBlock> Function::constructFor(const AST* ast)
 {
     assert(ast->label == AST::for_stmt);
     assert(ast->children.size() == 5);
@@ -235,23 +96,19 @@ uint Function::constructFor(const AST* ast, uint tempn)
     const AST* bodyNode = ast->children[4];
 
     // Create initialization block
-    tempn = populateBB(initNode, tempn);
+    std::vector<BasicBlock> initBlocks = this->populateBB(initNode);
 
     // Create condition block
-    uint lastTemp = 0;
-    BasicBlock condBlock(ast->lineNum, tempn++, "for_cond", condNode->inScope);
-    Arg condResult = expand(condBlock, condNode, lastTemp);
-    this->blocks.push_back(condBlock);
+    BasicBlock condBlock(ast->lineNum, this->nextBlockID++, "for_cond", condNode->inScope);
+    Arg condResult = condBlock.expand(condNode);
 
     // Create declaration and body blocks
-    tempn = populateBB(declNode, tempn);
-    tempn = populateBB(bodyNode, tempn);
+    std::vector<BasicBlock> declBlocks  = this->populateBB(declNode);
+    std::vector<BasicBlock> bodyBlocks = this->populateBB(bodyNode);
 
     // Create post-execution block
-    lastTemp = 0;
-    BasicBlock postBlock(ast->lineNum, tempn++, "for_post", postNode->inScope);
-    expand(postBlock, postNode, lastTemp);
-    this->blocks.push_back(postBlock);
+    BasicBlock postBlock(ast->lineNum, this->nextBlockID++, "for_post", postNode->inScope);
+    postBlock.expand(postNode);
 
     // Add jumps
     condBlock.statements.emplace_back(
@@ -265,12 +122,19 @@ uint Function::constructFor(const AST* ast, uint tempn)
     );
 
     // Populate break statements with jumps
-    addJumpsToBreaks(this->blocks.begin() + begin, this->blocks.end(), postBlock.label + 1);
+    addJumpsToBreaks(bodyBlocks, postBlock.label + 1);
 
-    return tempn;
+    // Combine blocks
+    std::vector<BasicBlock> blocks;
+    blocks.push_back(condBlock);
+    blocks.insert(blocks.end(), declBlocks.begin(), declBlocks.end());
+    blocks.insert(blocks.end(), bodyBlocks.begin(), bodyBlocks.end());
+    blocks.push_back(postBlock);
+
+    return blocks;
 }
 
-uint Function::constructIf(const AST* ast, uint tempn)
+std::vector<BasicBlock> Function::constructIf(const AST* ast)
 {
     assert(ast->label == AST::if_stmt || ast->label == AST::else_if);
 
@@ -279,35 +143,43 @@ uint Function::constructIf(const AST* ast, uint tempn)
     const AST* bodyNode = ast->children[2];
 
     // Create condition block
-    uint lastTemp = 0;
-    BasicBlock condBlock(ast->lineNum, tempn++, ast->toString(), condNode->inScope);
-    Arg condResult = expand(condBlock, condNode, lastTemp);
-    this->blocks.push_back(condBlock);
+    BasicBlock condBlock = BasicBlock(ast->lineNum, this->nextBlockID++, ast->toString(), condNode->inScope);
+    Arg condResult = condBlock.expand(condNode);
     
     // Create body and declarations
-    tempn = populateBB(declNode, tempn);
-    tempn = populateBB(bodyNode, tempn);
-    uint outBlock = tempn;
+    std::vector<BasicBlock> declBlocks = populateBB(declNode);
+    std::vector<BasicBlock> bodyBlocks = populateBB(bodyNode);
 
-    for (auto it = ast->children.begin() + 3; it != ast->children.end(); it++) {
-        const AST* child = *it;
-        if (child->label == AST::else_if) {
-            tempn = constructIf(child, tempn);
-        } else if (child->label == AST::else_stmt) {
-            tempn = populateBB(child, tempn);
-        } else {
-            spdlog::error("what");
-        }
-    }
-
-    // Add the jump
+    // Add the jump from condition to after the body
     condBlock.statements.emplace_back(
         Statement::JUMP_IF_FALSE,
-        Arg(outBlock),
+        Arg(this->nextBlockID),
         condResult
     );
 
-    return tempn;
+    // Create blocks from else-if and else children
+    std::vector<BasicBlock> elseIfChainBlocks;
+    for (auto it = ast->children.begin() + 3; it != ast->children.end(); it++) {
+        const AST* child = *it;
+        std::vector<BasicBlock> blocks;
+        if (child->label == AST::else_if) {
+            blocks = this->constructIf(child);
+        } else if (child->label == AST::else_stmt) {
+            blocks = this->populateBB(child);
+        } else {
+            spdlog::error("Unexpected child in If/else if AST node");
+        }
+        elseIfChainBlocks.insert(elseIfChainBlocks.end(), blocks.begin(), blocks.end());
+    }
+
+    // Combine blocks
+    std::vector<BasicBlock> blocks;
+    blocks.push_back(condBlock);
+    blocks.insert(blocks.end(), declBlocks.begin(), declBlocks.end());
+    blocks.insert(blocks.end(), bodyBlocks.begin(), bodyBlocks.end());
+    blocks.insert(blocks.end(), elseIfChainBlocks.begin(), elseIfChainBlocks.end());
+
+    return blocks;
 }
 
 /**
@@ -318,16 +190,13 @@ uint Function::constructIf(const AST* ast, uint tempn)
  * @param tempn A convenience variable used to create contiguous basic block IDs
  * @return uint The next number to use for basic block ID
  */
-uint Function::populateBB(const AST* ast, uint tempn=0)
+std::vector<BasicBlock> Function::populateBB(const AST* ast)
 {
-    // Keep track of beginning and end of this new chunk of basic blocks
-    int head = this->blocks.size();
-    int tail = head;
-    // Next number to be used for temporary variable names
-    uint nextTemp = 0;
+    std::vector<BasicBlock> blocks;
 
     // Create basic blocks
     for (const AST* child : ast->children) {
+        std::vector<BasicBlock> tmp;
         switch (child->label) {
             // Simple, compound statements
             case AST::return_stmt:
@@ -346,34 +215,34 @@ uint Function::populateBB(const AST* ast, uint tempn=0)
             case AST::log_and:
             case AST::log_or:
             case AST::log_not: {
-                BasicBlock block(child->lineNum, tempn++, child->toString(), child->inScope);
-                expand(block, child, nextTemp);
-                this->blocks.push_back(block);
+                BasicBlock block(child->lineNum, this->nextBlockID++, child->toString(), child->inScope);
+                block.expand(child);
+                tmp.push_back(block);
                 break; }
             // These statements require a little more work
             case AST::while_stmt:
-                tempn = constructWhile(child, tempn);
+                tmp = constructWhile(child);
                 break;
             case AST::for_stmt:
-                tempn = constructFor(child, tempn);
+                tmp = constructFor(child);
                 break;
             case AST::if_stmt:
-                tempn = constructIf(child, tempn);
+                tmp = constructIf(child);
                 break;
             case AST::break_stmt: {
-                BasicBlock block(child->lineNum, tempn++, child->toString(), child->inScope);
-                this->blocks.push_back(block);
+                BasicBlock block(child->lineNum, this->nextBlockID++, child->toString(), child->inScope);
+                tmp.push_back(block);
                 break; }
-
-            // Recur
+            // Recurse
             default:
-                tempn = populateBB(child, tempn);
+                tmp = populateBB(child);
                 break;
         }
-        tail = this->blocks.size() - 1;
+
+        blocks.insert(blocks.end(), tmp.begin(), tmp.end());
     }
 
-    return tempn;
+    return blocks;
 }
 
 /**
@@ -389,7 +258,8 @@ Function::Function(const AST* funcNode)
     this->name = funcNode->children[1]->data.sval;
     this->scope = funcNode->ownsScope;
 
-    populateBB(funcNode);
+    this->nextBlockID = 0;
+    this->blocks = this->populateBB(funcNode);
 }
 
 /**

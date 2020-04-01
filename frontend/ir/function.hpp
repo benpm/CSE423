@@ -7,10 +7,11 @@
 class Function
 {
 private:
-    uint constructWhile(const AST* ast, uint tempn);
-    uint constructFor(const AST* ast, uint tempn);
-    uint constructIf(const AST* ast, uint tempn);
-    uint populateBB(const AST* ast, uint tempn);
+    std::vector<BasicBlock> constructWhile(const AST* ast);
+    std::vector<BasicBlock> constructFor(const AST* ast);
+    std::vector<BasicBlock> constructIf(const AST* ast);
+    std::vector<BasicBlock> populateBB(const AST* ast);
+    uint nextBlockID = 0;
 public:
     std::string name;
     std::vector<BasicBlock> blocks;
