@@ -36,7 +36,7 @@ fi
 
 # Build compiler
 cd $gitRootDir/build
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=Debug ..
 make -j
 
 cd $gitRootDir/examples

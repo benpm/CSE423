@@ -3,7 +3,7 @@ PROGRAM | Line num: 1
    └─DECLARATION | Line num: 1
      └─FUN_DECLARATION | Line num: 1
        ├─INT | Line num: 1
-       ├─ID | Line num: 1 (main) 
+       ├─ID | Line num: 1 (main)
        ├─PARAMS | Line num: 1
        └─STATEMENT | Line num: 1
          └─COMPOUND_STMT | Line num: 1
@@ -15,7 +15,7 @@ PROGRAM | Line num: 1
            │   └─VAR_DECL_LIST | Line num: 2
            │     ├─VAR_DECL_LIST | Line num: 2
            │     │ └─VAR_DECL_INITIALIZE | Line num: 2
-           │     │   ├─ID | Line num: 2 (fact) 
+           │     │   ├─ID | Line num: 2 (fact)
            │     │   ├─EQUAL | Line num: 2
            │     │   └─SIMPLE_EXPRESSION | Line num: 2
            │     │     └─AND_EXPRESSION | Line num: 2
@@ -26,9 +26,9 @@ PROGRAM | Line num: 1
            │     │               └─UNARY_EXPRESSION | Line num: 2
            │     │                 └─FACTOR | Line num: 2
            │     │                   └─IMMUTABLE | Line num: 2
-           │     │                     └─INTCONST | Line num: 2 (1) 
+           │     │                     └─INTCONST | Line num: 2 (1)
            │     └─VAR_DECL_INITIALIZE | Line num: 2
-           │       ├─ID | Line num: 2 (n) 
+           │       ├─ID | Line num: 2 (n)
            │       ├─EQUAL | Line num: 2
            │       └─SIMPLE_EXPRESSION | Line num: 2
            │         └─AND_EXPRESSION | Line num: 2
@@ -39,7 +39,7 @@ PROGRAM | Line num: 1
            │                   └─UNARY_EXPRESSION | Line num: 2
            │                     └─FACTOR | Line num: 2
            │                       └─IMMUTABLE | Line num: 2
-           │                         └─INTCONST | Line num: 2 (10) 
+           │                         └─INTCONST | Line num: 2 (10)
            └─STATEMENT_LIST | Line num: 11
              ├─STATEMENT_LIST | Line num: 3
              │ └─STATEMENT | Line num: 3
@@ -53,14 +53,14 @@ PROGRAM | Line num: 1
              │     │       │ └─MUL_EXPRESSION | Line num: 3
              │     │       │   └─UNARY_EXPRESSION | Line num: 3
              │     │       │     └─FACTOR | Line num: 3
-             │     │       │       └─ID | Line num: 3 (n) 
+             │     │       │       └─ID | Line num: 3 (n)
              │     │       ├─LT | Line num: 3
              │     │       └─SUM_EXPRESSION | Line num: 3
              │     │         └─MUL_EXPRESSION | Line num: 3
              │     │           └─UNARY_EXPRESSION | Line num: 3
              │     │             └─FACTOR | Line num: 3
              │     │               └─IMMUTABLE | Line num: 3
-             │     │                 └─INTCONST | Line num: 3 (0) 
+             │     │                 └─INTCONST | Line num: 3 (0)
              │     ├─COMPOUND_STMT | Line num: 3
              │     │ ├─LOCAL_DECLARATIONS | Line num: 3
              │     │ └─STATEMENT_LIST | Line num: 4
@@ -77,10 +77,10 @@ PROGRAM | Line num: 1
              │     │                       └─FACTOR | Line num: 4
              │     │                         └─IMMUTABLE | Line num: 4
              │     │                           └─CALL | Line num: 4
-             │     │                             ├─ID | Line num: 4 (printf) 
+             │     │                             ├─ID | Line num: 4 (printf)
              │     │                             └─ARGS | Line num: 4
              │     │                               └─ARG_LIST | Line num: 4
-             │     │                                 └─STRINGLIT | Line num: 4 ("Error! Factorial of a negative number doesn't exist.") 
+             │     │                                 └─STRINGLIT | Line num: 4 ("Error! Factorial of a negative number doesn't exist.")
              │     └─ELSE_STMT | Line num: 5
              │       ├─ELSE | Line num: 5
              │       └─COMPOUND_STMT | Line num: 5
@@ -94,7 +94,7 @@ PROGRAM | Line num: 1
              │           │       │ ├─INT | Line num: 6
              │           │       │ └─VAR_DECL_LIST | Line num: 6
              │           │       │   └─VAR_DECL_INITIALIZE | Line num: 6
-             │           │       │     ├─ID | Line num: 6 (i) 
+             │           │       │     ├─ID | Line num: 6 (i)
              │           │       │     ├─EQUAL | Line num: 6
              │           │       │     └─SIMPLE_EXPRESSION | Line num: 6
              │           │       │       └─AND_EXPRESSION | Line num: 6
@@ -105,22 +105,22 @@ PROGRAM | Line num: 1
              │           │       │                 └─UNARY_EXPRESSION | Line num: 6
              │           │       │                   └─FACTOR | Line num: 6
              │           │       │                     └─IMMUTABLE | Line num: 6
-             │           │       │                       └─INTCONST | Line num: 6 (1) 
+             │           │       │                       └─INTCONST | Line num: 6 (1)
              │           │       ├─REL_EXPRESSION | Line num: 6
              │           │       │ ├─SUM_EXPRESSION | Line num: 6
              │           │       │ │ └─MUL_EXPRESSION | Line num: 6
              │           │       │ │   └─UNARY_EXPRESSION | Line num: 6
              │           │       │ │     └─FACTOR | Line num: 6
-             │           │       │ │       └─ID | Line num: 6 (i) 
+             │           │       │ │       └─ID | Line num: 6 (i)
              │           │       │ ├─LE | Line num: 6
              │           │       │ └─SUM_EXPRESSION | Line num: 6
              │           │       │   └─MUL_EXPRESSION | Line num: 6
              │           │       │     └─UNARY_EXPRESSION | Line num: 6
              │           │       │       └─FACTOR | Line num: 6
-             │           │       │         └─ID | Line num: 6 (n) 
+             │           │       │         └─ID | Line num: 6 (n)
              │           │       ├─EXPRESSION | Line num: 6
              │           │       │ └─UNARY_ASSIGN_EXPRESSION | Line num: 6
-             │           │       │   ├─ID | Line num: 6 (i) 
+             │           │       │   ├─ID | Line num: 6 (i)
              │           │       │   └─INCR | Line num: 6
              │           │       └─STATEMENT | Line num: 6
              │           │         └─COMPOUND_STMT | Line num: 6
@@ -129,7 +129,7 @@ PROGRAM | Line num: 1
              │           │             └─STATEMENT | Line num: 7
              │           │               └─EXPRESSION_STMT | Line num: 7
              │           │                 └─EXPRESSION | Line num: 7
-             │           │                   ├─ID | Line num: 7 (fact) 
+             │           │                   ├─ID | Line num: 7 (fact)
              │           │                   ├─TIMESEQUAL | Line num: 7
              │           │                   └─EXPRESSION | Line num: 7
              │           │                     └─SIMPLE_EXPRESSION | Line num: 7
@@ -140,7 +140,7 @@ PROGRAM | Line num: 1
              │           │                               └─MUL_EXPRESSION | Line num: 7
              │           │                                 └─UNARY_EXPRESSION | Line num: 7
              │           │                                   └─FACTOR | Line num: 7
-             │           │                                     └─ID | Line num: 7 (i) 
+             │           │                                     └─ID | Line num: 7 (i)
              │           └─STATEMENT | Line num: 9
              │             └─EXPRESSION_STMT | Line num: 9
              │               └─EXPRESSION | Line num: 9
@@ -154,12 +154,12 @@ PROGRAM | Line num: 1
              │                               └─FACTOR | Line num: 9
              │                                 └─IMMUTABLE | Line num: 9
              │                                   └─CALL | Line num: 9
-             │                                     ├─ID | Line num: 9 (printf) 
+             │                                     ├─ID | Line num: 9 (printf)
              │                                     └─ARGS | Line num: 9
              │                                       └─ARG_LIST | Line num: 9
              │                                         ├─ARG_LIST | Line num: 9
              │                                         │ ├─ARG_LIST | Line num: 9
-             │                                         │ │ └─STRINGLIT | Line num: 9 ("Factorial of %d = %d") 
+             │                                         │ │ └─STRINGLIT | Line num: 9 ("Factorial of %d = %d")
              │                                         │ └─EXPRESSION | Line num: 9
              │                                         │   └─SIMPLE_EXPRESSION | Line num: 9
              │                                         │     └─AND_EXPRESSION | Line num: 9
@@ -169,7 +169,7 @@ PROGRAM | Line num: 1
              │                                         │             └─MUL_EXPRESSION | Line num: 9
              │                                         │               └─UNARY_EXPRESSION | Line num: 9
              │                                         │                 └─FACTOR | Line num: 9
-             │                                         │                   └─ID | Line num: 9 (n) 
+             │                                         │                   └─ID | Line num: 9 (n)
              │                                         └─EXPRESSION | Line num: 9
              │                                           └─SIMPLE_EXPRESSION | Line num: 9
              │                                             └─AND_EXPRESSION | Line num: 9
@@ -179,7 +179,7 @@ PROGRAM | Line num: 1
              │                                                     └─MUL_EXPRESSION | Line num: 9
              │                                                       └─UNARY_EXPRESSION | Line num: 9
              │                                                         └─FACTOR | Line num: 9
-             │                                                           └─ID | Line num: 9 (fact) 
+             │                                                           └─ID | Line num: 9 (fact)
              └─STATEMENT | Line num: 11
                └─RETURN_STMT | Line num: 11
                  └─EXPRESSION | Line num: 11
@@ -192,4 +192,4 @@ PROGRAM | Line num: 1
                                └─UNARY_EXPRESSION | Line num: 11
                                  └─FACTOR | Line num: 11
                                    └─IMMUTABLE | Line num: 11
-                                     └─INTCONST | Line num: 11 (0) 
+                                     └─INTCONST | Line num: 11 (0)

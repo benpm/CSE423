@@ -33,7 +33,7 @@ std::string Arg::toString() const
         case LABEL:     return fmt::format("<{}>", val.label);
         case INT:       return fmt::format("{}", val.ival);
         case CHAR:      return fmt::format("'{}'", val.cval);
-        case FLOAT:     return fmt::format("{}", val.fval);
+        case FLOAT:     return fmt::format("{:.6}", val.fval);
         case NAME:      return fmt::format("{}", val.sval);
         default:        return "???";
     }

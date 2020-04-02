@@ -196,7 +196,7 @@ void AST::printNode(const AST* node, int depth, ulong levels)
             fmt::print(" ({})", node->data.ival);
             break;
         case AST::float_const:
-            fmt::print(" ({})", node->data.fval);
+            fmt::print(" ({:.6})", node->data.fval);
             break;
         case AST::char_const:
             fmt::print(" ({})", node->data.cval);

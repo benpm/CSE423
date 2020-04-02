@@ -126,17 +126,17 @@ void PT::printNode(PT &node, int depth, ulong levels)
     // Print the values stored at the nodes, if there are any
     switch (node.label) {
         case INTCONST:
-            std::cout << " (" << node.data.ival << ") ";
+            fmt::print(" ({})", node.data.ival);
             break;
         case FLOATCONST:
-            std::cout << " (" << node.data.fval << ") ";
+            fmt::print(" ({:.6})", node.data.fval);
             break;
         case CHARLIT:
-            std::cout << " (" << node.data.cval << ") ";
+            fmt::print(" ({})", node.data.cval);
             break;
         case STRINGLIT:
         case ID:
-            std::cout << " (" << node.data.sval << ") ";
+            fmt::print(" ({})", node.data.sval);
             break;
     }
 

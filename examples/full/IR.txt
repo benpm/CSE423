@@ -17,7 +17,7 @@ main()
  │(12) <[ASSIGN], n3, #2>
  └────────────────────
  BB3 [assignment] (main())
- │(13) <[MUL], #0, 0.8, 3.16>
+ │(13) <[MUL], #0, 0.8, 3.16000>
  │(13) <[ASSIGN], DF, #0>
  └────────────────────
  BB4 [assignment] (main())
@@ -116,11 +116,11 @@ main()
           │(40) <[ADD], DF, DF, #0>
           └────────────────────
              BB27 [if_stmt] (if_stmt)
-             │(41) <[COMP_EQ], #0, DF, 0>
+             │(41) <[COMP_EQ], #0, DF, 0.00000>
              │(41) <[JUMP_IF_FALSE], <29>, #0>
              └────────────────────
              BB28 [assignment] (if_stmt)
-             │(42) <[ASSIGN], DF, 1.01>
+             │(42) <[ASSIGN], DF, 1.01000>
              └────────────────────
           BB29 [else_if] (else_if)
           │(44) <[COMP_GE], #0, G, 'H'>
