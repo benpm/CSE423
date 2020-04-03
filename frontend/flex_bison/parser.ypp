@@ -141,76 +141,76 @@ program:
         {
             parserYppHandle->label = PT::PROGRAM;
             parserYppHandle->children = std::vector<PT*> { $1 };
-            parserYppHandle->lineNum = yylloc.first_line;
+            parserYppHandle->lineNum = @1.first_line;
         }
 ;
 declarationList:
     declarationList declaration
         {
             $$ = new PT(PT::DECLARATION_LIST,
-                std::vector<PT*> { $1, $2 }, yylloc.first_line);
+                std::vector<PT*> { $1, $2 }, @2.first_line);
         }
     | declaration
         {
             $$ = new PT(PT::DECLARATION_LIST,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
 ;
 declaration:
     varDeclaration
         {
             $$ = new PT(PT::DECLARATION,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
     | funDeclaration
         {
             $$ = new PT(PT::DECLARATION,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
 ;
 varDeclaration:
     typeSpecifier varDeclList SEMICOLON
         {
             $$ = new PT(PT::VAR_DECLARATION,
-                std::vector<PT*> { $1, $2 }, yylloc.first_line);
+                std::vector<PT*> { $1, $2 }, @1.first_line);
         }
 ;
 scopedVarDeclaration:
     scopedTypeSpecifier varDeclList SEMICOLON
         {
             $$ = new PT(PT::SCOPED_VAR_DECLARATION,
-                std::vector<PT*> { $1, $2 }, yylloc.first_line);
+                std::vector<PT*> { $1, $2 }, @1.first_line);
         }
 ;
 varDeclList:
     varDeclList COMMA varDeclInitialize
         {
             $$ = new PT(PT::VAR_DECL_LIST,
-                std::vector<PT*> { $1, $3 }, yylloc.first_line);
+                std::vector<PT*> { $1, $3 }, @2.first_line);
         }
     | varDeclInitialize
         {
             $$ = new PT(PT::VAR_DECL_LIST,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
 ;
 varDeclInitialize:
     varDeclId
         {
             $$ = new PT(PT::VAR_DECL_INITIALIZE,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
     | varDeclId EQUAL simpleExpression
         {
-            PT *nEQUAL = new PT(PT::EQUAL, yylloc.first_line);
+            PT *nEQUAL = new PT(PT::EQUAL, @1.first_line);
             $$ = new PT(PT::VAR_DECL_INITIALIZE,
-                std::vector<PT*> { $1, nEQUAL, $3}, yylloc.first_line);
+                std::vector<PT*> { $1, nEQUAL, $3}, @1.first_line);
         }
 ;
 varDeclId:
     ID
         {
-            $$ = new PT(PT::ID, yylloc.first_line);
+            $$ = new PT(PT::ID, @1.first_line);
             $$->data.sval = $1;
         }
 ;
@@ -218,34 +218,34 @@ scopedTypeSpecifier:
     typeSpecifier
         {
             $$ = new PT(PT::SCOPED_TYPE_SPECIFIER,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
 ;
 typeSpecifier:
     INT
         {
-            $$ = new PT(PT::INT, yylloc.first_line);
+            $$ = new PT(PT::INT, @1.first_line);
         }
     | FLOAT
         {
-            $$ = new PT(PT::FLOAT, yylloc.first_line);
+            $$ = new PT(PT::FLOAT, @1.first_line);
         }
     | CHAR
         {
-            $$ = new PT(PT::CHAR, yylloc.first_line);
+            $$ = new PT(PT::CHAR, @1.first_line);
         }
 ;
 funDeclaration:
     typeSpecifier funName LPAREN params RPAREN statement
         {
             $$ = new PT(PT::FUN_DECLARATION,
-                std::vector<PT*> { $1, $2, $4, $6}, yylloc.first_line);
+                std::vector<PT*> { $1, $2, $4, $6}, @1.first_line);
         }
 ;
 funName:
     ID
         {
-            $$ = new PT(PT::ID, yylloc.first_line);
+            $$ = new PT(PT::ID, @1.first_line);
             $$->data.sval = $1;
         }
 ;
@@ -253,7 +253,7 @@ params:
     paramList
         {
             $$ = new PT(PT::PARAMS,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
     | %empty
         {
@@ -264,18 +264,18 @@ paramList:
     paramList COMMA typeSpecifier paramId
         {
             $$ = new PT(PT::PARAM_LIST,
-                std::vector<PT*> { $1, $3, $4 }, yylloc.first_line);
+                std::vector<PT*> { $1, $3, $4 }, @2.first_line);
         }
     | typeSpecifier paramId
         {
             $$ = new PT(PT::PARAM_LIST,
-                std::vector<PT*> { $1, $2 }, yylloc.first_line);
+                std::vector<PT*> { $1, $2 }, @1.first_line);
         }
 ;
 paramId:
     ID
         {
-            $$ = new PT(PT::ID, yylloc.first_line);
+            $$ = new PT(PT::ID, @1.first_line);
             $$->data.sval = $1;
         }
 ;
@@ -283,49 +283,49 @@ statement:
     expressionStmt
         {
             $$ = new PT(PT::STATEMENT,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
     | compoundStmt
         {
             $$ = new PT(PT::STATEMENT,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
     | selectionStmt
         {
             $$ = new PT(PT::STATEMENT,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
     | iterationStmt
         {
             $$ = new PT(PT::STATEMENT,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
     | returnStmt
         {
             $$ = new PT(PT::STATEMENT,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
     | breakStmt
         {
             $$ = new PT(PT::STATEMENT,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
     | labelStmt
         {
             $$ = new PT(PT::STATEMENT,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
     | gotoStmt
         {
             $$ = new PT(PT::STATEMENT,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
 ;
 expressionStmt:
     expression SEMICOLON
         {
             $$ = new PT(PT::EXPRESSION_STMT,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
     | SEMICOLON
         {
@@ -336,256 +336,256 @@ expression:
     mutable assignop expression
         {
             $$ = new PT(PT::EXPRESSION,
-                std::vector<PT*> { $1, $2, $3 }, yylloc.first_line);
+                std::vector<PT*> { $1, $2, $3 }, @1.first_line);
         }
     | unaryAssignExpr
         {
             $$ = new PT(PT::EXPRESSION,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
     | simpleExpression
         {
             $$ = new PT(PT::EXPRESSION,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
 ;
 unaryAssignExpr:
     mutable unaryAssignop
         {
             $$ = new PT(PT::UNARY_ASSIGN_EXPRESSION,
-                std::vector<PT*> { $1, $2 }, yylloc.first_line);
+                std::vector<PT*> { $1, $2 }, @1.first_line);
         }
 ;
 mutable:
     ID
         {
-            $$ = new PT(PT::ID, yylloc.first_line);
+            $$ = new PT(PT::ID, @1.first_line);
             $$->data.sval = $1;
         }
 ;
 assignop:
     EQUAL
         {
-            $$ = new PT(PT::EQUAL, yylloc.first_line);
+            $$ = new PT(PT::EQUAL, @1.first_line);
         }
     | PLUSEQUAL
         {
-            $$ = new PT(PT::PLUSEQUAL, yylloc.first_line);
+            $$ = new PT(PT::PLUSEQUAL, @1.first_line);
         }
     | MINUSEQUAL
         {
-            $$ = new PT(PT::MINUSEQUAL, yylloc.first_line);
+            $$ = new PT(PT::MINUSEQUAL, @1.first_line);
         }
     | TIMESEQUAL
         {
-            $$ = new PT(PT::TIMESEQUAL, yylloc.first_line);
+            $$ = new PT(PT::TIMESEQUAL, @1.first_line);
         }
     | DIVEQUAL
         {
-            $$ = new PT(PT::DIVEQUAL, yylloc.first_line);
+            $$ = new PT(PT::DIVEQUAL, @1.first_line);
         }
     | MODEQUAL
         {
-            $$ = new PT(PT::MODEQUAL, yylloc.first_line);
+            $$ = new PT(PT::MODEQUAL, @1.first_line);
         }
 ;
 unaryAssignop:
     INCR
         {
-            $$ = new PT(PT::INCR, yylloc.first_line);
+            $$ = new PT(PT::INCR, @1.first_line);
         }
     | DECR
         {
-            $$ = new PT(PT::DECR, yylloc.first_line);
+            $$ = new PT(PT::DECR, @1.first_line);
         }
 ;
 simpleExpression:
     simpleExpression LOGOR andExpression
         {
-            PT* nLOGOR = new PT(PT::LOGOR, yylloc.first_line);
+            PT* nLOGOR = new PT(PT::LOGOR, @1.first_line);
             $$ = new PT(PT::SIMPLE_EXPRESSION,
-                std::vector<PT*> { $1, nLOGOR, $3 }, yylloc.first_line);
+                std::vector<PT*> { $1, nLOGOR, $3 }, @1.first_line);
         }
     | andExpression
         {
             $$ = new PT(PT::SIMPLE_EXPRESSION,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
 ;
 andExpression:
     andExpression LOGAND unaryRelExpression
         {
-            PT* nLOGAND = new PT(PT::LOGAND, yylloc.first_line);
+            PT* nLOGAND = new PT(PT::LOGAND, @1.first_line);
             $$ = new PT(PT::AND_EXPRESSION,
-                std::vector<PT*> { $1, nLOGAND, $3 }, yylloc.first_line);
+                std::vector<PT*> { $1, nLOGAND, $3 }, @1.first_line);
         }
     | unaryRelExpression
         {
             $$ = new PT(PT::AND_EXPRESSION,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
 ;
 unaryRelExpression:
     NOT unaryRelExpression
         {
-            PT* nNOT = new PT(PT::NOT, yylloc.first_line);
+            PT* nNOT = new PT(PT::NOT, @1.first_line);
             $$ = new PT(PT::UNARY_REL_EXPRESSION,
-                std::vector<PT*> { nNOT, $2 }, yylloc.first_line);
+                std::vector<PT*> { nNOT, $2 }, @1.first_line);
         }
     | relExpression
         {
             $$ = new PT(PT::UNARY_REL_EXPRESSION,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
 ;
 relExpression:
     sumExpression relop sumExpression
         {
             $$ = new PT(PT::REL_EXPRESSION,
-                std::vector<PT*> { $1, $2, $3 }, yylloc.first_line);
+                std::vector<PT*> { $1, $2, $3 }, @1.first_line);
         }
     | sumExpression
         {
             $$ = new PT(PT::REL_EXPRESSION,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
 ;
 relop:
     LE
         {
-            $$ = new PT(PT::LE, yylloc.first_line);
+            $$ = new PT(PT::LE, @1.first_line);
         }
     | LT
         {
-            $$ = new PT(PT::LT, yylloc.first_line);
+            $$ = new PT(PT::LT, @1.first_line);
         }
     | GT
         {
-            $$ = new PT(PT::GT, yylloc.first_line);
+            $$ = new PT(PT::GT, @1.first_line);
         }
     | GE
         {
-            $$ = new PT(PT::GE, yylloc.first_line);
+            $$ = new PT(PT::GE, @1.first_line);
         }
     | ISEQ
         {
-            $$ = new PT(PT::ISEQ, yylloc.first_line);
+            $$ = new PT(PT::ISEQ, @1.first_line);
         }
     | NOTEQ
         {
-            $$ = new PT(PT::NOTEQ, yylloc.first_line);
+            $$ = new PT(PT::NOTEQ, @1.first_line);
         }
 ;
 sumExpression:
     sumExpression sumop mulExpression
         {
             $$ = new PT(PT::SUM_EXPRESSION,
-                std::vector<PT*> { $1, $2, $3 }, yylloc.first_line);
+                std::vector<PT*> { $1, $2, $3 }, @1.first_line);
         }
     | mulExpression
         {
             $$ = new PT(PT::SUM_EXPRESSION,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
 ;
 sumop:
     PLUS
         {
-            $$ = new PT(PT::PLUS, yylloc.first_line);
+            $$ = new PT(PT::PLUS, @1.first_line);
         }
     | MINUS
         {
-            $$ = new PT(PT::MINUS, yylloc.first_line);
+            $$ = new PT(PT::MINUS, @1.first_line);
         }
 ;
 mulExpression:
     mulExpression mulop unaryExpression
         {
             $$ = new PT(PT::MUL_EXPRESSION,
-                std::vector<PT*> { $1, $2, $3 }, yylloc.first_line);
+                std::vector<PT*> { $1, $2, $3 }, @1.first_line);
         }
     | unaryExpression
         {
             $$ = new PT(PT::MUL_EXPRESSION,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
 ;
 mulop:
     TIMES
         {
-            $$ = new PT(PT::TIMES, yylloc.first_line);
+            $$ = new PT(PT::TIMES, @1.first_line);
         }
     | DIVIDE
         {
-            $$ = new PT(PT::DIVIDE, yylloc.first_line);
+            $$ = new PT(PT::DIVIDE, @1.first_line);
         }
     | MODULO
         {
-            $$ = new PT(PT::MODULO, yylloc.first_line);
+            $$ = new PT(PT::MODULO, @1.first_line);
         }
 ;
 unaryExpression:
     unaryMinus
         {
             $$ = new PT(PT::UNARY_EXPRESSION,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
     | factor
         {
             $$ = new PT(PT::UNARY_EXPRESSION,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
 ;
 unaryMinus:
     MINUS unaryExpression
         {
             $$ = new PT(PT::UNARY_MINUS,
-                std::vector<PT*> { $2 }, yylloc.first_line);
+                std::vector<PT*> { $2 }, @1.first_line);
         }
 ;
 factor:
     immutable
         {
             $$ = new PT(PT::FACTOR,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
     | mutable
         {
             $$ = new PT(PT::FACTOR,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
 ;
 immutable:
     LPAREN expression RPAREN
         {
             $$ = new PT(PT::IMMUTABLE,
-                std::vector<PT*> { $2 }, yylloc.first_line);
+                std::vector<PT*> { $2 }, @2.first_line);
         }
     | call
         {
             $$ = new PT(PT::IMMUTABLE,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
     | constant
         {
             $$ = new PT(PT::IMMUTABLE,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
 ;
 call:
     ID LPAREN args RPAREN
         {
-            PT* tID = new PT(PT::ID, yylloc.first_line);
+            PT* tID = new PT(PT::ID, @1.first_line);
             tID->data.sval = $1;
             $$ = new PT(PT::CALL,
-                std::vector<PT*> { tID, $3 }, yylloc.first_line);
+                std::vector<PT*> { tID, $3 }, @1.first_line);
         }
 ;
 args:
     argList
         {
             $$ = new PT(PT::ARGS,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
     | %empty
         {
@@ -596,42 +596,42 @@ argList:
     argList COMMA expression
         {
             $$ = new PT(PT::ARG_LIST,
-                std::vector<PT*> { $1, $3 }, yylloc.first_line);
+                std::vector<PT*> { $1, $3 }, @3.first_line);
         }
     | argList COMMA STRINGLIT
         {
-            PT* tSTRINGLIT = new PT(PT::STRINGLIT, yylloc.first_line);
+            PT* tSTRINGLIT = new PT(PT::STRINGLIT, @2.first_line);
             tSTRINGLIT->data.sval = $3;
             $$ = new PT(PT::ARG_LIST,
-                std::vector<PT*> { $1, tSTRINGLIT }, yylloc.first_line);
+                std::vector<PT*> { $1, tSTRINGLIT }, @1.first_line);
         }
     | STRINGLIT
         {
-            PT* tSTRINGLIT = new PT(PT::STRINGLIT, yylloc.first_line);
+            PT* tSTRINGLIT = new PT(PT::STRINGLIT, @1.first_line);
             tSTRINGLIT->data.sval = $1;
             $$ = new PT(PT::ARG_LIST,
-                std::vector<PT*> { tSTRINGLIT }, yylloc.first_line);
+                std::vector<PT*> { tSTRINGLIT }, @1.first_line);
         }
     | expression
         {
             $$ = new PT(PT::ARG_LIST,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
 ;
 constant:
     CHARLIT
         {
-            $$ = new PT(PT::CHARLIT, yylloc.first_line);
+            $$ = new PT(PT::CHARLIT, @1.first_line);
             $$->data.cval = $1;
         }
     | FLOATCONST
         {
-            $$ = new PT(PT::FLOATCONST, yylloc.first_line);
+            $$ = new PT(PT::FLOATCONST, @1.first_line);
             $$->data.fval = $1;
         }
     | INTCONST
         {
-            $$ = new PT(PT::INTCONST, yylloc.first_line);
+            $$ = new PT(PT::INTCONST, @1.first_line);
             $$->data.ival = $1;
         }
 ;
@@ -639,14 +639,14 @@ compoundStmt:
     LBRACE localDeclarations statementList RBRACE
         {
             $$ = new PT(PT::COMPOUND_STMT,
-                std::vector<PT*> { $2, $3 }, yylloc.first_line);
+                std::vector<PT*> { $2, $3 }, @2.first_line);
         }
 ;
 localDeclarations:
     localDeclarations scopedVarDeclaration
         {
             $$ = new PT(PT::LOCAL_DECLARATIONS,
-                std::vector<PT*> { $1, $2 }, yylloc.first_line);
+                std::vector<PT*> { $1, $2 }, @2.first_line);
         }
     | %empty
         {
@@ -657,7 +657,7 @@ statementList:
     statementList statement
         {
             $$ = new PT(PT::STATEMENT_LIST,
-                std::vector<PT*> { $1, $2 }, yylloc.first_line);
+                std::vector<PT*> { $1, $2 }, @2.first_line);
         }
     | %empty
         {
@@ -667,23 +667,23 @@ statementList:
 selectionStmt:
     IF LPAREN simpleExpression RPAREN compoundStmt elseIfList
         {
-            PT* tIF = new PT(PT::IF, yylloc.first_line);
+            PT* tIF = new PT(PT::IF, @1.first_line);
             $$ = new PT(PT::SELECTION_STMT,
-                std::vector<PT*> { tIF, $3, $5, $6 }, yylloc.first_line);
+                std::vector<PT*> { tIF, $3, $5, $6 }, @1.first_line);
         }
     | IF LPAREN simpleExpression RPAREN compoundStmt elseIfList elseStmt
         {
-            PT* tIF = new PT(PT::IF, yylloc.first_line);
+            PT* tIF = new PT(PT::IF, @1.first_line);
             $$ = new PT(PT::SELECTION_STMT,
-                std::vector<PT*> { tIF, $3, $5, $6, $7 }, yylloc.first_line);
+                std::vector<PT*> { tIF, $3, $5, $6, $7 }, @1.first_line);
         }
 ;
 elseIfList:
     elseIfList ELSE IF LPAREN simpleExpression RPAREN compoundStmt
         {
-            PT* tELSEIF = new PT(PT::ELSE_IF, yylloc.first_line);
+            PT* tELSEIF = new PT(PT::ELSE_IF, @2.first_line);
             $$ = new PT(PT::ELSE_IF_LIST,
-                std::vector<PT*> { $1, tELSEIF, $5, $7 }, yylloc.first_line);
+                std::vector<PT*> { $1, tELSEIF, $5, $7 }, @2.first_line);
         }
     | %empty
         {
@@ -693,73 +693,73 @@ elseIfList:
 elseStmt:
     ELSE compoundStmt
         {
-            PT* tELSE = new PT(PT::ELSE, yylloc.first_line);
+            PT* tELSE = new PT(PT::ELSE, @1.first_line);
             $$ = new PT(PT::ELSE_STMT,
-                std::vector<PT*> { tELSE, $2 }, yylloc.first_line);
+                std::vector<PT*> { tELSE, $2 }, @1.first_line);
         }
 ;
 iterationStmt:
     whileStmt
         {
             $$ = new PT(PT::ITERATION_STMT,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
     | forStmt
         {
             $$ = new PT(PT::ITERATION_STMT,
-                std::vector<PT*> { $1 }, yylloc.first_line);
+                std::vector<PT*> { $1 }, @1.first_line);
         }
 ;
 whileStmt:
     WHILE LPAREN simpleExpression RPAREN statement
         {
             $$ = new PT(PT::WHILE_STMT,
-                std::vector<PT*> { $3, $5 }, yylloc.first_line);
+                std::vector<PT*> { $3, $5 }, @1.first_line);
         }
 ;
 forStmt:
     FOR LPAREN varDeclaration relExpression SEMICOLON expression RPAREN statement
         {
             $$ = new PT(PT::FOR_STMT,
-                std::vector<PT*> { $3, $4, $6, $8 }, yylloc.first_line);
+                std::vector<PT*> { $3, $4, $6, $8 }, @1.first_line);
         }
 ;
 returnStmt:
     RETURN SEMICOLON
         {
-            $$ = new PT(PT::RETURN_STMT, yylloc.first_line);
+            $$ = new PT(PT::RETURN_STMT, @1.first_line);
         }
     | RETURN expression SEMICOLON
         {
             $$ = new PT(PT::RETURN_STMT,
-                std::vector<PT*> { $2 }, yylloc.first_line);
+                std::vector<PT*> { $2 }, @1.first_line);
         }
 ;
 breakStmt:
     BREAK SEMICOLON
         {
-            PT* tBREAK = new PT(PT::BREAK, yylloc.first_line);
+            PT* tBREAK = new PT(PT::BREAK, @1.first_line);
             $$ = new PT(PT::BREAK_STMT,
-                std::vector<PT*> { tBREAK }, yylloc.first_line);
+                std::vector<PT*> { tBREAK }, @1.first_line);
         }
 ;
 labelStmt:
     ID COLON
         {
-            PT* tID = new PT(PT::ID, yylloc.first_line);
+            PT* tID = new PT(PT::ID, @1.first_line);
             tID->data.sval = $1;
             $$ = new PT(PT::LABEL_STMT,
-                std::vector<PT*> { tID }, yylloc.first_line);
+                std::vector<PT*> { tID }, @1.first_line);
         }
 ;
 gotoStmt:
     GOTO ID SEMICOLON
         {
-            PT* tGOTO = new PT(PT::GOTO, yylloc.first_line);
-            PT* tID = new PT(PT::ID, yylloc.first_line);
+            PT* tGOTO = new PT(PT::GOTO, @1.first_line);
+            PT* tID = new PT(PT::ID, @1.first_line);
             tID->data.sval = $2;
             $$ = new PT(PT::GOTO_STMT,
-                std::vector<PT*> { tGOTO, tID }, yylloc.first_line);
+                std::vector<PT*> { tGOTO, tID }, @1.first_line);
         }
 %%
 

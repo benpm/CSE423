@@ -48,6 +48,8 @@ public:
     // Owned scope (also populated by ST builder)
     SymbolTable* ownsScope = NULL;
 
+    int lineNum = -1;
+
     AST(Label label);
     AST(const PT* pt);
     AST(const PT* pt, AST* parent);

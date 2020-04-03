@@ -1,5 +1,5 @@
-PROGRAM | Line num: 9
- └─DECLARATION_LIST | Line num: 9
+PROGRAM | Line num: 1
+ └─DECLARATION_LIST | Line num: 5
    ├─DECLARATION_LIST | Line num: 3
    │ ├─DECLARATION_LIST | Line num: 2
    │ │ ├─DECLARATION_LIST | Line num: 1
@@ -9,7 +9,7 @@ PROGRAM | Line num: 9
    │ │ │     └─VAR_DECL_LIST | Line num: 1
    │ │ │       ├─VAR_DECL_LIST | Line num: 1
    │ │ │       │ └─VAR_DECL_INITIALIZE | Line num: 1
-   │ │ │       │   ├─ID | Line num: 1 (a) 
+   │ │ │       │   ├─ID | Line num: 1 (a)
    │ │ │       │   ├─EQUAL | Line num: 1
    │ │ │       │   └─SIMPLE_EXPRESSION | Line num: 1
    │ │ │       │     └─AND_EXPRESSION | Line num: 1
@@ -20,9 +20,9 @@ PROGRAM | Line num: 9
    │ │ │       │               └─UNARY_EXPRESSION | Line num: 1
    │ │ │       │                 └─FACTOR | Line num: 1
    │ │ │       │                   └─IMMUTABLE | Line num: 1
-   │ │ │       │                     └─INTCONST | Line num: 1 (4) 
+   │ │ │       │                     └─INTCONST | Line num: 1 (4)
    │ │ │       └─VAR_DECL_INITIALIZE | Line num: 1
-   │ │ │         ├─ID | Line num: 1 (b) 
+   │ │ │         ├─ID | Line num: 1 (b)
    │ │ │         ├─EQUAL | Line num: 1
    │ │ │         └─SIMPLE_EXPRESSION | Line num: 1
    │ │ │           └─AND_EXPRESSION | Line num: 1
@@ -33,16 +33,16 @@ PROGRAM | Line num: 9
    │ │ │                     └─UNARY_EXPRESSION | Line num: 1
    │ │ │                       └─FACTOR | Line num: 1
    │ │ │                         └─IMMUTABLE | Line num: 1
-   │ │ │                           └─INTCONST | Line num: 1 (5) 
+   │ │ │                           └─INTCONST | Line num: 1 (5)
    │ │ └─DECLARATION | Line num: 2
    │ │   └─VAR_DECLARATION | Line num: 2
    │ │     ├─INT | Line num: 2
    │ │     └─VAR_DECL_LIST | Line num: 2
    │ │       ├─VAR_DECL_LIST | Line num: 2
    │ │       │ └─VAR_DECL_INITIALIZE | Line num: 2
-   │ │       │   └─ID | Line num: 2 (c) 
+   │ │       │   └─ID | Line num: 2 (c)
    │ │       └─VAR_DECL_INITIALIZE | Line num: 2
-   │ │         ├─ID | Line num: 2 (d) 
+   │ │         ├─ID | Line num: 2 (d)
    │ │         ├─EQUAL | Line num: 2
    │ │         └─SIMPLE_EXPRESSION | Line num: 2
    │ │           └─AND_EXPRESSION | Line num: 2
@@ -53,14 +53,14 @@ PROGRAM | Line num: 9
    │ │                     └─UNARY_EXPRESSION | Line num: 2
    │ │                       └─FACTOR | Line num: 2
    │ │                         └─IMMUTABLE | Line num: 2
-   │ │                           └─INTCONST | Line num: 2 (5) 
+   │ │                           └─INTCONST | Line num: 2 (5)
    │ └─DECLARATION | Line num: 3
    │   └─VAR_DECLARATION | Line num: 3
    │     ├─INT | Line num: 3
    │     └─VAR_DECL_LIST | Line num: 3
    │       ├─VAR_DECL_LIST | Line num: 3
    │       │ └─VAR_DECL_INITIALIZE | Line num: 3
-   │       │   ├─ID | Line num: 3 (e) 
+   │       │   ├─ID | Line num: 3 (e)
    │       │   ├─EQUAL | Line num: 3
    │       │   └─SIMPLE_EXPRESSION | Line num: 3
    │       │     └─AND_EXPRESSION | Line num: 3
@@ -71,9 +71,9 @@ PROGRAM | Line num: 9
    │       │               └─UNARY_EXPRESSION | Line num: 3
    │       │                 └─FACTOR | Line num: 3
    │       │                   └─IMMUTABLE | Line num: 3
-   │       │                     └─INTCONST | Line num: 3 (3) 
+   │       │                     └─INTCONST | Line num: 3 (3)
    │       └─VAR_DECL_INITIALIZE | Line num: 3
-   │         ├─ID | Line num: 3 (f) 
+   │         ├─ID | Line num: 3 (f)
    │         ├─EQUAL | Line num: 3
    │         └─SIMPLE_EXPRESSION | Line num: 3
    │           └─AND_EXPRESSION | Line num: 3
@@ -84,14 +84,14 @@ PROGRAM | Line num: 9
    │                     └─UNARY_EXPRESSION | Line num: 3
    │                       └─FACTOR | Line num: 3
    │                         └─IMMUTABLE | Line num: 3
-   │                           └─INTCONST | Line num: 3 (5) 
-   └─DECLARATION | Line num: 9
-     └─FUN_DECLARATION | Line num: 9
+   │                           └─INTCONST | Line num: 3 (5)
+   └─DECLARATION | Line num: 5
+     └─FUN_DECLARATION | Line num: 5
        ├─INT | Line num: 5
-       ├─ID | Line num: 5 (main) 
+       ├─ID | Line num: 5 (main)
        ├─PARAMS | Line num: 5
-       └─STATEMENT | Line num: 9
-         └─COMPOUND_STMT | Line num: 9
+       └─STATEMENT | Line num: 6
+         └─COMPOUND_STMT | Line num: 6
            ├─LOCAL_DECLARATIONS | Line num: 8
            │ ├─LOCAL_DECLARATIONS | Line num: 7
            │ │ ├─LOCAL_DECLARATIONS | Line num: 6
@@ -100,7 +100,7 @@ PROGRAM | Line num: 9
            │ │   │ └─INT | Line num: 7
            │ │   └─VAR_DECL_LIST | Line num: 7
            │ │     └─VAR_DECL_INITIALIZE | Line num: 7
-           │ │       ├─ID | Line num: 7 (g) 
+           │ │       ├─ID | Line num: 7 (g)
            │ │       ├─EQUAL | Line num: 7
            │ │       └─SIMPLE_EXPRESSION | Line num: 7
            │ │         └─AND_EXPRESSION | Line num: 7
@@ -111,13 +111,13 @@ PROGRAM | Line num: 9
            │ │                   └─UNARY_EXPRESSION | Line num: 7
            │ │                     └─FACTOR | Line num: 7
            │ │                       └─IMMUTABLE | Line num: 7
-           │ │                         └─INTCONST | Line num: 7 (3) 
+           │ │                         └─INTCONST | Line num: 7 (3)
            │ └─SCOPED_VAR_DECLARATION | Line num: 8
            │   ├─SCOPED_TYPE_SPECIFIER | Line num: 8
            │   │ └─INT | Line num: 8
            │   └─VAR_DECL_LIST | Line num: 8
            │     └─VAR_DECL_INITIALIZE | Line num: 8
-           │       ├─ID | Line num: 8 (h) 
+           │       ├─ID | Line num: 8 (h)
            │       ├─EQUAL | Line num: 8
            │       └─SIMPLE_EXPRESSION | Line num: 8
            │         └─AND_EXPRESSION | Line num: 8
@@ -128,4 +128,4 @@ PROGRAM | Line num: 9
            │                   └─UNARY_EXPRESSION | Line num: 8
            │                     └─FACTOR | Line num: 8
            │                       └─IMMUTABLE | Line num: 8
-           │                         └─INTCONST | Line num: 8 (3) 
+           │                         └─INTCONST | Line num: 8 (3)

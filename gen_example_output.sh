@@ -15,12 +15,14 @@ compilerFlags=(
     p # Parse tree
     a # AST
     s # Symbol Table
+    r # IR
 )
 compilerFlagNames=(
     tokens
     parseTree
     AST
     symbolTable
+    IR
 )
 
 gitRootDir=$(git rev-parse --show-toplevel)
@@ -34,7 +36,7 @@ fi
 
 # Build compiler
 cd $gitRootDir/build
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=Debug ..
 make -j
 
 cd $gitRootDir/examples

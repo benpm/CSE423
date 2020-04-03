@@ -1,12 +1,12 @@
-PROGRAM | Line num: 13
- └─DECLARATION_LIST | Line num: 13
-   └─DECLARATION | Line num: 13
-     └─FUN_DECLARATION | Line num: 13
+PROGRAM | Line num: 1
+ └─DECLARATION_LIST | Line num: 1
+   └─DECLARATION | Line num: 1
+     └─FUN_DECLARATION | Line num: 1
        ├─INT | Line num: 1
-       ├─ID | Line num: 1 (main) 
+       ├─ID | Line num: 1 (main)
        ├─PARAMS | Line num: 1
-       └─STATEMENT | Line num: 13
-         └─COMPOUND_STMT | Line num: 13
+       └─STATEMENT | Line num: 2
+         └─COMPOUND_STMT | Line num: 2
            ├─LOCAL_DECLARATIONS | Line num: 6
            │ ├─LOCAL_DECLARATIONS | Line num: 5
            │ │ ├─LOCAL_DECLARATIONS | Line num: 4
@@ -17,7 +17,7 @@ PROGRAM | Line num: 13
            │ │ │ │   │ └─INT | Line num: 3
            │ │ │ │   └─VAR_DECL_LIST | Line num: 3
            │ │ │ │     └─VAR_DECL_INITIALIZE | Line num: 3
-           │ │ │ │       ├─ID | Line num: 3 (a) 
+           │ │ │ │       ├─ID | Line num: 3 (a)
            │ │ │ │       ├─EQUAL | Line num: 3
            │ │ │ │       └─SIMPLE_EXPRESSION | Line num: 3
            │ │ │ │         └─AND_EXPRESSION | Line num: 3
@@ -28,13 +28,13 @@ PROGRAM | Line num: 13
            │ │ │ │                   └─UNARY_EXPRESSION | Line num: 3
            │ │ │ │                     └─FACTOR | Line num: 3
            │ │ │ │                       └─IMMUTABLE | Line num: 3
-           │ │ │ │                         └─INTCONST | Line num: 3 (42) 
+           │ │ │ │                         └─INTCONST | Line num: 3 (42)
            │ │ │ └─SCOPED_VAR_DECLARATION | Line num: 4
            │ │ │   ├─SCOPED_TYPE_SPECIFIER | Line num: 4
            │ │ │   │ └─INT | Line num: 4
            │ │ │   └─VAR_DECL_LIST | Line num: 4
            │ │ │     └─VAR_DECL_INITIALIZE | Line num: 4
-           │ │ │       ├─ID | Line num: 4 (b) 
+           │ │ │       ├─ID | Line num: 4 (b)
            │ │ │       ├─EQUAL | Line num: 4
            │ │ │       └─SIMPLE_EXPRESSION | Line num: 4
            │ │ │         └─AND_EXPRESSION | Line num: 4
@@ -45,13 +45,13 @@ PROGRAM | Line num: 13
            │ │ │                   └─UNARY_EXPRESSION | Line num: 4
            │ │ │                     └─FACTOR | Line num: 4
            │ │ │                       └─IMMUTABLE | Line num: 4
-           │ │ │                         └─INTCONST | Line num: 4 (89) 
+           │ │ │                         └─INTCONST | Line num: 4 (89)
            │ │ └─SCOPED_VAR_DECLARATION | Line num: 5
            │ │   ├─SCOPED_TYPE_SPECIFIER | Line num: 5
            │ │   │ └─INT | Line num: 5
            │ │   └─VAR_DECL_LIST | Line num: 5
            │ │     └─VAR_DECL_INITIALIZE | Line num: 5
-           │ │       ├─ID | Line num: 5 (c) 
+           │ │       ├─ID | Line num: 5 (c)
            │ │       ├─EQUAL | Line num: 5
            │ │       └─SIMPLE_EXPRESSION | Line num: 5
            │ │         └─AND_EXPRESSION | Line num: 5
@@ -62,24 +62,24 @@ PROGRAM | Line num: 13
            │ │                 │ └─MUL_EXPRESSION | Line num: 5
            │ │                 │   └─UNARY_EXPRESSION | Line num: 5
            │ │                 │     └─FACTOR | Line num: 5
-           │ │                 │       └─ID | Line num: 5 (a) 
+           │ │                 │       └─ID | Line num: 5 (a)
            │ │                 ├─PLUS | Line num: 5
            │ │                 └─MUL_EXPRESSION | Line num: 5
            │ │                   ├─MUL_EXPRESSION | Line num: 5
            │ │                   │ └─UNARY_EXPRESSION | Line num: 5
            │ │                   │   └─FACTOR | Line num: 5
-           │ │                   │     └─ID | Line num: 5 (b) 
+           │ │                   │     └─ID | Line num: 5 (b)
            │ │                   ├─TIMES | Line num: 5
            │ │                   └─UNARY_EXPRESSION | Line num: 5
            │ │                     └─FACTOR | Line num: 5
            │ │                       └─IMMUTABLE | Line num: 5
-           │ │                         └─INTCONST | Line num: 5 (12) 
+           │ │                         └─INTCONST | Line num: 5 (12)
            │ └─SCOPED_VAR_DECLARATION | Line num: 6
            │   ├─SCOPED_TYPE_SPECIFIER | Line num: 6
            │   │ └─FLOAT | Line num: 6
            │   └─VAR_DECL_LIST | Line num: 6
            │     └─VAR_DECL_INITIALIZE | Line num: 6
-           │       ├─ID | Line num: 6 (d) 
+           │       ├─ID | Line num: 6 (d)
            │       ├─EQUAL | Line num: 6
            │       └─SIMPLE_EXPRESSION | Line num: 6
            │         └─AND_EXPRESSION | Line num: 6
@@ -92,11 +92,11 @@ PROGRAM | Line num: 13
            │                       └─UNARY_EXPRESSION | Line num: 6
            │                         └─FACTOR | Line num: 6
            │                           └─IMMUTABLE | Line num: 6
-           │                             └─FLOATCONST | Line num: 6 (8.01161) 
-           └─STATEMENT_LIST | Line num: 12
-             └─STATEMENT | Line num: 12
-               └─SELECTION_STMT | Line num: 12
-                 ├─IF | Line num: 12
+           │                             └─FLOATCONST | Line num: 6 (8.011609)
+           └─STATEMENT_LIST | Line num: 8
+             └─STATEMENT | Line num: 8
+               └─SELECTION_STMT | Line num: 8
+                 ├─IF | Line num: 8
                  ├─SIMPLE_EXPRESSION | Line num: 8
                  │ └─AND_EXPRESSION | Line num: 8
                  │   └─UNARY_REL_EXPRESSION | Line num: 8
@@ -105,15 +105,15 @@ PROGRAM | Line num: 13
                  │       │ └─MUL_EXPRESSION | Line num: 8
                  │       │   └─UNARY_EXPRESSION | Line num: 8
                  │       │     └─FACTOR | Line num: 8
-                 │       │       └─ID | Line num: 8 (c) 
+                 │       │       └─ID | Line num: 8 (c)
                  │       ├─LT | Line num: 8
                  │       └─SUM_EXPRESSION | Line num: 8
                  │         └─MUL_EXPRESSION | Line num: 8
                  │           └─UNARY_EXPRESSION | Line num: 8
                  │             └─FACTOR | Line num: 8
                  │               └─IMMUTABLE | Line num: 8
-                 │                 └─INTCONST | Line num: 8 (2) 
-                 ├─COMPOUND_STMT | Line num: 10
+                 │                 └─INTCONST | Line num: 8 (2)
+                 ├─COMPOUND_STMT | Line num: 8
                  │ ├─LOCAL_DECLARATIONS | Line num: 8
                  │ └─STATEMENT_LIST | Line num: 9
                  │   └─STATEMENT | Line num: 9
@@ -128,10 +128,10 @@ PROGRAM | Line num: 13
                  │                     └─UNARY_EXPRESSION | Line num: 9
                  │                       └─FACTOR | Line num: 9
                  │                         └─IMMUTABLE | Line num: 9
-                 │                           └─INTCONST | Line num: 9 (35) 
-                 └─ELSE_STMT | Line num: 12
-                   ├─ELSE | Line num: 12
-                   └─COMPOUND_STMT | Line num: 12
+                 │                           └─INTCONST | Line num: 9 (35)
+                 └─ELSE_STMT | Line num: 10
+                   ├─ELSE | Line num: 10
+                   └─COMPOUND_STMT | Line num: 10
                      ├─LOCAL_DECLARATIONS | Line num: 10
                      └─STATEMENT_LIST | Line num: 11
                        └─STATEMENT | Line num: 11
@@ -146,4 +146,4 @@ PROGRAM | Line num: 13
                                          └─UNARY_EXPRESSION | Line num: 11
                                            └─FACTOR | Line num: 11
                                              └─IMMUTABLE | Line num: 11
-                                               └─INTCONST | Line num: 11 (124) 
+                                               └─INTCONST | Line num: 11 (124)

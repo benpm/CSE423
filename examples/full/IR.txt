@@ -1,0 +1,139 @@
+main()
+ BB0 [combined] (main())
+ │(10) <[MINUS], #2, 2>
+ │(10) <[DIV], #3, 18, #2>
+ │(10) <[MUL], #4, 15, #3>
+ │(10) <[MOD], #5, #4, 18>
+ │(10) <[ASSIGN], n1, #5>
+ │(11) <[MUL], #6, n1, n1>
+ │(11) <[ASSIGN], n2, #6>
+ │(12) <[ADD], #7, n1, n1>
+ │(12) <[ADD], #8, #7, n2>
+ │(12) <[ADD], #9, #8, n2>
+ │(12) <[ASSIGN], n3, #9>
+ │(13) <[MUL], #A, 0.800000, 3.160000>
+ │(13) <[ASSIGN], DF, #A>
+ │(14) <[ASSIGN], G, 'G'>
+ └────────────────────
+    BB5 [assignment] (for_stmt)
+    │(17) <[ASSIGN], i, 0>
+    └────────────────────
+    BB6 [for_cond] (for_stmt)
+    │(17) <[MUL], #B, n2, n1>
+    │(17) <[DIV], #C, #B, 2>
+    │(17) <[COMP_LT], #D, i, #C>
+    │(17) <[JUMP_IF_FALSE], <18>, #D>
+    └────────────────────
+    BB7 [break_stmt] (for_stmt)
+    │(18) <[JUMP], <18>>
+    └────────────────────
+       BB8 [assignment] (for_stmt)
+       │(19) <[ASSIGN], j, 0>
+       └────────────────────
+       BB9 [for_cond] (for_stmt)
+       │(19) <[DIV], #E, n1, 2>
+       │(19) <[ADD], #F, n2, #E>
+       │(19) <[COMP_LT], #10, j, #F>
+       │(19) <[JUMP_IF_FALSE], <17>, #10>
+       └────────────────────
+       BB10 [assignment] (for_stmt)
+       │(20) <[ASSIGN], x, 0>
+       └────────────────────
+          BB11 [while_cond] (while_stmt)
+          │(21) <[COMP_LT], #11, x, n2>
+          │(21) <[COMP_GE], #12, x, n2>
+          │(21) <[NOT], #13, #12>
+          │(21) <[LOG_OR], #14, #11, #13>
+          │(21) <[JUMP_IF_FALSE], <16>, #14>
+          └────────────────────
+          BB12 [combined] (while_stmt)
+          │(22) <[ASSIGN], z, 10>
+          │(23) <[ADD], #15, x, z>
+          │(23) <[ADD], x, x, #15>
+          │(24) <[JUMP], <16>>
+          └────────────────────
+          BB15 [while_post] (while_stmt)
+          │(21) <[JUMP], <11>>
+          └────────────────────
+       BB16 [for_post] (for_stmt)
+       │(19) <[ADD], j, j, 1>
+       │(19) <[JUMP], <9>>
+       └────────────────────
+    BB17 [for_post] (for_stmt)
+    │(17) <[ADD], i, i, 1>
+    │(17) <[JUMP], <6>>
+    └────────────────────
+ BB18 [assignment] (main())
+ │(30) <[MUL], #16, 0.101000, 2>
+ │(30) <[CALL], #17, fun, DF, #16>
+ │(30) <[CALL], #18, fun, #17, 0.900000>
+ │(30) <[ASSIGN], DF, #18>
+ └────────────────────
+    BB19 [if_stmt] (if_stmt)
+    │(33) <[MINUS], #19, DF>
+    │(33) <[SUB], #1A, 0.800000, #19>
+    │(33) <[COMP_LT], #1B, DF, #1A>
+    │(33) <[JUMP_IF_FALSE], <33>, #1B>
+    └────────────────────
+       BB20 [if_stmt] (if_stmt)
+       │(34) <[COMP_NEQ], #1C, n2, 10>
+       │(34) <[JUMP_IF_FALSE], <25>, #1C>
+       └────────────────────
+       BB21 [combined] (if_stmt)
+       │(35) <[ASSIGN], G, 'H'>
+       │(36) <[MUL], n1, n1, 1>
+       │(37) <[MOD], n1, n1, 10>
+       │(38) <[ADD], n1, n1, 1>
+       └────────────────────
+          BB25 [else_if] (else_if)
+          │(39) <[COMP_LE], #1D, n1, 2>
+          │(39) <[COMP_EQ], #1E, G, 'H'>
+          │(39) <[COMP_NEQ], #1F, n2, 100>
+          │(39) <[LOG_OR], #20, #1E, #1F>
+          │(39) <[LOG_AND], #21, #1D, #20>
+          │(39) <[JUMP_IF_FALSE], <29>, #21>
+          └────────────────────
+          BB26 [plus_equal] (else_if)
+          │(40) <[MINUS], #22, 0.600000>
+          │(40) <[ADD], DF, DF, #22>
+          └────────────────────
+             BB27 [if_stmt] (if_stmt)
+             │(41) <[COMP_EQ], #23, DF, 0.000000>
+             │(41) <[JUMP_IF_FALSE], <29>, #23>
+             └────────────────────
+             BB28 [assignment] (if_stmt)
+             │(42) <[ASSIGN], DF, 1.010000>
+             └────────────────────
+          BB29 [else_if] (else_if)
+          │(44) <[COMP_GE], #24, G, 'H'>
+          │(44) <[JUMP_IF_FALSE], <32>, #24>
+          └────────────────────
+          BB30 [combined] (else_if)
+          │(45) <[MINUS], n2, n2, 16>
+          │(46) <[MINUS], n2, n2, 1>
+          └────────────────────
+          BB32 [div_equal] (else_stmt)
+          │(48) <[DIV], n1, n1, 2>
+          └────────────────────
+ BB33 [goto_stmt] (main())
+ │(51) <[JUMP], <35>>
+ └────────────────────
+ BB34 [return_stmt] (main())
+ │(52) <[MINUS], #25, 1>
+ │(52) <[RETURN], #25>
+ └────────────────────
+ BB35 [combined] (main())
+ │(53) <[NO_OP]>
+ │(54) <[MUL], #26, n1, 2>
+ │(54) <[RETURN], #26>
+ └────────────────────
+
+fun()
+ BB0 [combined] (fun())
+ │(3) <[ADD], #0, XKAD, V>
+ │(3) <[ASSIGN], n1, #0>
+ │(4) <[MUL], #1, n1, 80>
+ │(4) <[RETURN], #1>
+ └────────────────────
+
+
