@@ -61,8 +61,8 @@ root
      │ │ └─[2] assignment
      │ │   ├─[2] id (DF)
      │ │   └─[2] mul
-     │ │     ├─[2] float_const (0.8)
-     │ │     └─[2] float_const (3.16000)
+     │ │     ├─[2] float_const (0.800000)
+     │ │     └─[2] float_const (3.160000)
      │ └─[2] declaration
      │   ├─[2] char_type
      │   └─[2] assignment
@@ -143,14 +143,14 @@ root
        │     │ └─[2] args
        │     │   ├─[2] id (DF)
        │     │   └─[2] mul
-       │     │     ├─[2] float_const (0.101)
+       │     │     ├─[2] float_const (0.101000)
        │     │     └─[2] int_const (2)
-       │     └─[2] float_const (0.9)
+       │     └─[2] float_const (0.900000)
        ├─[6] if_stmt
        │ ├─[6] lt
        │ │ ├─[6] id (DF)
        │ │ └─[6] sub
-       │ │   ├─[6] float_const (0.8)
+       │ │   ├─[6] float_const (0.800000)
        │ │   └─[6] unary_minus
        │ │     └─[6] id (DF)
        │ ├─[6] dec_list
@@ -189,16 +189,16 @@ root
        │     │   ├─[8] plus_equal
        │     │   │ ├─[8] id (DF)
        │     │   │ └─[8] unary_minus
-       │     │   │   └─[8] float_const (0.6)
+       │     │   │   └─[8] float_const (0.600000)
        │     │   └─[9] if_stmt
        │     │     ├─[9] equal
        │     │     │ ├─[9] id (DF)
-       │     │     │ └─[9] float_const (0.00000)
+       │     │     │ └─[9] float_const (0.000000)
        │     │     ├─[9] dec_list
        │     │     └─[9] list
        │     │       └─[9] assignment
        │     │         ├─[9] id (DF)
-       │     │         └─[9] float_const (1.01000)
+       │     │         └─[9] float_const (1.010000)
        │     ├─[10] else_if
        │     │ ├─[10] ge
        │     │ │ ├─[10] id (G)

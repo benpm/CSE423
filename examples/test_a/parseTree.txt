@@ -51,7 +51,7 @@ PROGRAM | Line num: 1
            │ │ │ │ │ │ │                   └─UNARY_EXPRESSION | Line num: 3
            │ │ │ │ │ │ │                     └─FACTOR | Line num: 3
            │ │ │ │ │ │ │                       └─IMMUTABLE | Line num: 3
-           │ │ │ │ │ │ │                         └─FLOATCONST | Line num: 3 (10.1000)
+           │ │ │ │ │ │ │                         └─FLOATCONST | Line num: 3 (10.100000)
            │ │ │ │ │ │ └─SCOPED_VAR_DECLARATION | Line num: 5
            │ │ │ │ │ │   ├─SCOPED_TYPE_SPECIFIER | Line num: 5
            │ │ │ │ │ │   │ └─INT | Line num: 5

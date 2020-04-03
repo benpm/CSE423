@@ -2,7 +2,7 @@ main()
  BB0 [combined] (main())
  │(2) <[MINUS], #0, 5>
  │(2) <[ASSIGN], value, #0>
- │(3) <[ASSIGN], a, 10.1000>
+ │(3) <[ASSIGN], a, 10.100000>
  │(5) <[MINUS], #1, 18>
  │(5) <[MUL], #2, 5, #1>
  │(5) <[ASSIGN], hek, #2>

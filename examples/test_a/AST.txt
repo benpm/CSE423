@@ -15,7 +15,7 @@ root
      │ │ ├─[1] float_type
      │ │ └─[1] assignment
      │ │   ├─[1] id (a)
-     │ │   └─[1] float_const (10.1000)
+     │ │   └─[1] float_const (10.100000)
      │ ├─[1] declaration
      │ │ ├─[1] int_type
      │ │ └─[1] assignment

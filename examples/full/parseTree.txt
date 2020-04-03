@@ -189,12 +189,12 @@ PROGRAM | Line num: 2
            │ │                   │ └─UNARY_EXPRESSION | Line num: 13
            │ │                   │   └─FACTOR | Line num: 13
            │ │                   │     └─IMMUTABLE | Line num: 13
-           │ │                   │       └─FLOATCONST | Line num: 13 (0.8)
+           │ │                   │       └─FLOATCONST | Line num: 13 (0.800000)
            │ │                   ├─TIMES | Line num: 13
            │ │                   └─UNARY_EXPRESSION | Line num: 13
            │ │                     └─FACTOR | Line num: 13
            │ │                       └─IMMUTABLE | Line num: 13
-           │ │                         └─FLOATCONST | Line num: 13 (3.16000)
+           │ │                         └─FLOATCONST | Line num: 13 (3.160000)
            │ └─SCOPED_VAR_DECLARATION | Line num: 14
            │   ├─SCOPED_TYPE_SPECIFIER | Line num: 14
            │   │ └─CHAR | Line num: 14
@@ -521,7 +521,7 @@ PROGRAM | Line num: 2
              │ │ │ │ │           │                     │                                           └─UNARY_EXPRESSION | Line num: 30
              │ │ │ │ │           │                     │                                             └─FACTOR | Line num: 30
              │ │ │ │ │           │                     │                                               └─IMMUTABLE | Line num: 30
-             │ │ │ │ │           │                     │                                                 └─FLOATCONST | Line num: 30 (0.101)
+             │ │ │ │ │           │                     │                                                 └─FLOATCONST | Line num: 30 (0.101000)
              │ │ │ │ │           │                     │                                         └─TIMES | Line num: 30
              │ │ │ │ │                                 │                                         └─UNARY_EXPRESSION | Line num: 30
              │ │ │ │ │                                 │                                           └─FACTOR | Line num: 30
@@ -537,7 +537,7 @@ PROGRAM | Line num: 2
              │ │ │ │ │                                               └─UNARY_EXPRESSION | Line num: 30
              │ │ │ │ │                                                 └─FACTOR | Line num: 30
              │ │ │ │ │                                                   └─IMMUTABLE | Line num: 30
-             │ │ │ │ │                                                     └─FLOATCONST | Line num: 30 (0.9)
+             │ │ │ │ │                                                     └─FLOATCONST | Line num: 30 (0.900000)
              │ │ │ │ └─STATEMENT | Line num: 33
              │ │ │ │   └─SELECTION_STMT | Line num: 33
              │ │ │ │     ├─IF | Line num: 33
@@ -567,7 +567,7 @@ PROGRAM | Line num: 2
              │ │ │ │     │                             │   └─UNARY_EXPRESSION | Line num: 33
              │ │ │ │     │                             │     └─FACTOR | Line num: 33
              │ │ │ │     │                             │       └─IMMUTABLE | Line num: 33
-             │ │ │ │     │                             │         └─FLOATCONST | Line num: 33 (0.8)
+             │ │ │ │     │                             │         └─FLOATCONST | Line num: 33 (0.800000)
              │ │ │ │     │                             ├─MINUS | Line num: 33
              │ │ │ │     │                             └─MUL_EXPRESSION | Line num: 33
              │ │ │ │     │                               └─UNARY_EXPRESSION | Line num: 33
@@ -750,7 +750,7 @@ PROGRAM | Line num: 2
              │ │ │ │     │       │ │     │                         └─UNARY_EXPRESSION | Line num: 40
              │ │ │ │     │       │ │     │                           └─FACTOR | Line num: 40
              │ │ │ │     │       │ │     │                             └─IMMUTABLE | Line num: 40
-             │ │ │ │     │       │ │     │                               └─FLOATCONST | Line num: 40 (0.6)
+             │ │ │ │     │       │ │     │                               └─FLOATCONST | Line num: 40 (0.600000)
              │ │ │ │     │       │ │     └─STATEMENT | Line num: 41
              │ │ │ │     │       │ │       └─SELECTION_STMT | Line num: 41
              │ │ │ │     │       │ │         ├─IF | Line num: 41
@@ -769,7 +769,7 @@ PROGRAM | Line num: 2
              │ │ │ │     │       │ │         │           └─UNARY_EXPRESSION | Line num: 41
              │ │ │ │     │       │ │         │             └─FACTOR | Line num: 41
              │ │ │ │     │       │ │         │               └─IMMUTABLE | Line num: 41
-             │ │ │ │     │       │ │         │                 └─FLOATCONST | Line num: 41 (0.00000)
+             │ │ │ │     │       │ │         │                 └─FLOATCONST | Line num: 41 (0.000000)
              │ │ │ │     │       │ │         ├─COMPOUND_STMT | Line num: 41
              │ │ │ │     │       │ │         │ ├─LOCAL_DECLARATIONS | Line num: 41
              │ │ │ │     │       │ │         │ └─STATEMENT_LIST | Line num: 42
@@ -788,7 +788,7 @@ PROGRAM | Line num: 2
              │ │ │ │     │       │ │         │                       └─UNARY_EXPRESSION | Line num: 42
              │ │ │ │     │       │ │         │                         └─FACTOR | Line num: 42
              │ │ │ │     │       │ │         │                           └─IMMUTABLE | Line num: 42
-             │ │ │ │     │       │ │         │                             └─FLOATCONST | Line num: 42 (1.01000)
+             │ │ │ │     │       │ │         │                             └─FLOATCONST | Line num: 42 (1.010000)
              │ │ │ │     │       │ ├─ELSE_IF | Line num: 44
              │ │ │ │     │       │ ├─SIMPLE_EXPRESSION | Line num: 44
              │ │ │ │     │       │ │ └─AND_EXPRESSION | Line num: 44

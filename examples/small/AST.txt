@@ -29,7 +29,7 @@ root
      │   └─[1] assignment
      │     ├─[1] id (d)
      │     └─[1] unary_minus
-     │       └─[1] float_const (8.01161)
+     │       └─[1] float_const (8.011609)
      └─[1] list
        └─[2] if_stmt
          ├─[2] lt

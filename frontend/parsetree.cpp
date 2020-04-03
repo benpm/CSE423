@@ -129,7 +129,7 @@ void PT::printNode(PT &node, int depth, ulong levels)
             fmt::print(" ({})", node.data.ival);
             break;
         case FLOATCONST:
-            fmt::print(" ({:.6})", node.data.fval);
+            fmt::print(" ({:f})", node.data.fval);
             break;
         case CHARLIT:
             fmt::print(" ({})", node.data.cval);

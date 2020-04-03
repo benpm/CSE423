@@ -92,7 +92,7 @@ PROGRAM | Line num: 1
            │                       └─UNARY_EXPRESSION | Line num: 6
            │                         └─FACTOR | Line num: 6
            │                           └─IMMUTABLE | Line num: 6
-           │                             └─FLOATCONST | Line num: 6 (8.01161)
+           │                             └─FLOATCONST | Line num: 6 (8.011609)
            └─STATEMENT_LIST | Line num: 8
              └─STATEMENT | Line num: 8
                └─SELECTION_STMT | Line num: 8
