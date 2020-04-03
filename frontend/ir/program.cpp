@@ -14,14 +14,6 @@ Program::Program(const AST& ast)
         }
     }
 
-    for (auto& func : this->functions) {
-        for (BasicBlock& blk : func.second.blocks) {
-            for (Statement& stmt : blk.statements) {
-                stmt.lineNum = blk.lineNum;
-            }
-        }
-    }
-
     spdlog::info("IR building done");
 }
 

@@ -257,6 +257,90 @@ std::vector<BasicBlock> Function::populateBB(const AST* ast)
     return blocks;
 }
 
+
+bool Function::combineBlocks()
+{
+    std::vector<std::pair<size_t, size_t>> blockGroups;
+    std::set<uint> jumpDestinations;
+    std::set<uint> hasJumps;
+    size_t newGroups = 0;
+
+    // Find blocks that are jump destinations
+    for (const BasicBlock& block : this->blocks) {
+        for (const Statement& statement : block.statements) {
+            if (statement.type == Statement::JUMP
+                || statement.type == Statement::JUMP_IF_FALSE
+                || statement.type == Statement::JUMP_IF_TRUE
+                ) {
+                jumpDestinations.insert(statement.args.at(0).val.label);
+                hasJumps.insert(block.label);
+            }
+        }
+    }
+
+    // Find block groups to be combined
+    for (size_t start = 0; start < this->blocks.size(); start++) {
+        const BasicBlock& first = this->blocks.at(start);
+        size_t end = start;
+
+        // Find last block that meets group conditions
+        do {
+            const BasicBlock& current = this->blocks.at(end);
+            // Stop before growing group if next block is a jump destination or has different scope
+            if (hasJumps.count(current.label)) {
+                break;
+            }
+            // Grow group size
+            end += 1;
+            // Stop if next block has jump, or we have reached end of blocks
+            if (end >= this->blocks.size()) {
+                end -= 1;
+                break;
+            }
+            const BasicBlock& next = this->blocks.at(end);
+            if (jumpDestinations.count(next.label)
+                || next.scope != first.scope) {
+                end -= 1;
+                break;
+            }
+        } while (true);
+
+        // Add to list of groups
+        if (end > start) {
+            spdlog::debug("GROUP: {}:{}", start, end);
+            newGroups += 1;
+        }
+        blockGroups.emplace_back(start, end);
+        start = end;
+    }
+
+    // Combine block groups
+    std::vector<BasicBlock> newBlocks;
+    for (const std::pair<size_t, size_t>& group : blockGroups) {
+        // Create first block from first block in group
+        BasicBlock& first = this->blocks.at(group.first);
+        BasicBlock newBlock(
+            first.lineNum,
+            first.label,
+            group.second > group.first ? "combined" : first.name,
+            first.scope
+        );
+        // Add statements to block from following blocks in group
+        for (size_t i = group.first; i <= group.second; i++) {
+            const BasicBlock& next = this->blocks.at(i);
+            newBlock.statements.insert(
+                newBlock.statements.end(),
+                next.statements.begin(),
+                next.statements.end()
+            );
+        }
+        newBlocks.push_back(newBlock);
+    }
+    this->blocks = newBlocks;
+
+    return newGroups > 0;
+}
+
 /**
  * @brief Construct a new Function, populating with basic blocks using the given AST
  * 
@@ -280,6 +364,16 @@ Function::Function(const AST* funcNode)
             Arg(this->labelBlockLocs.at(item.second))
         );
     }
+
+    // Assign line numbers to statements
+    for (BasicBlock& block : this->blocks) {
+        for (Statement& statement : block.statements) {
+            statement.lineNum = block.lineNum;
+        }
+    }
+
+    // Combine blocks
+    this->combineBlocks();
 }
 
 /**
