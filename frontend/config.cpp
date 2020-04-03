@@ -52,6 +52,7 @@ Config::Config(int argc, char **argv)
         case 's':
             this->printSymbolTable = true;
             break;
+        // Print the program intermediate representation
         case 'r':
             this->printIR = true;
             break;

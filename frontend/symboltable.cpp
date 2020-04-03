@@ -191,6 +191,12 @@ void SymbolTable::print()
     printTable(this, 0);
 }
 
+/**
+ * Get the depth of the symbol table embedded in the scope hierarchy
+ *
+ * @return the depth of the symbol table
+ *
+ */
 size_t SymbolTable::getDepth()
 {
     size_t depth = 0;
