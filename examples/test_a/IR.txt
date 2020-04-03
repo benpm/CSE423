@@ -1,44 +1,30 @@
 main()
- BB0 [assignment] (main())
+ BB0 [combined] (main())
  │(2) <[MINUS], #0, 5>
  │(2) <[ASSIGN], value, #0>
- └────────────────────
- BB1 [assignment] (main())
  │(3) <[ASSIGN], a, 10.1000>
- └────────────────────
- BB2 [assignment] (main())
- │(5) <[MINUS], #0, 18>
- │(5) <[MUL], #1, 5, #0>
- │(5) <[ASSIGN], hek, #1>
- └────────────────────
- BB3 [assignment] (main())
+ │(5) <[MINUS], #1, 18>
+ │(5) <[MUL], #2, 5, #1>
+ │(5) <[ASSIGN], hek, #2>
  │(6) <[ASSIGN], str, 'b'>
- └────────────────────
- BB4 [assignment] (main())
  │(7) <[ASSIGN], str2, 'c'>
- └────────────────────
- BB5 [assignment] (main())
- │(8) <[LOG_AND], #0, 1, 2>
- │(8) <[ASSIGN], logand, #0>
- └────────────────────
- BB6 [assignment] (main())
- │(9) <[LOG_OR], #0, 1, 2>
- │(9) <[ASSIGN], logor, #0>
- └────────────────────
- BB7 [assignment] (main())
+ │(8) <[LOG_AND], #3, 1, 2>
+ │(8) <[ASSIGN], logand, #3>
+ │(9) <[LOG_OR], #4, 1, 2>
+ │(9) <[ASSIGN], logor, #4>
  │(13) <[ASSIGN], a, '	'>
  └────────────────────
     BB8 [assignment] (for_stmt)
     │(14) <[ASSIGN], i, 0>
     └────────────────────
     BB9 [for_cond] (for_stmt)
-    │(14) <[COMP_LT], #0, i, 111>
-    │(14) <[JUMP_IF_FALSE], <13>, #0>
+    │(14) <[COMP_LT], #5, i, 111>
+    │(14) <[JUMP_IF_FALSE], <13>, #5>
     └────────────────────
        BB10 [if_stmt] (if_stmt)
-       │(15) <[MOD], #0, i, 10>
-       │(15) <[COMP_EQ], #1, #0, 5>
-       │(15) <[JUMP_IF_FALSE], <12>, #1>
+       │(15) <[MOD], #6, i, 10>
+       │(15) <[COMP_EQ], #7, #6, 5>
+       │(15) <[JUMP_IF_FALSE], <12>, #7>
        └────────────────────
        BB11 [plus_equal] (if_stmt)
        │(16) <[ADD], value, value, i>

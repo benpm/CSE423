@@ -1,8 +1,6 @@
 main()
- BB0 [assignment] (main())
+ BB0 [combined] (main())
  │(2) <[ASSIGN], fact, 1>
- └────────────────────
- BB1 [assignment] (main())
  │(2) <[ASSIGN], n, 10>
  └────────────────────
     BB2 [if_stmt] (if_stmt)
@@ -13,13 +11,11 @@ main()
           │(6) <[ASSIGN], i, 1>
           └────────────────────
           BB4 [for_cond] (for_stmt)
-          │(6) <[COMP_LE], #0, i, n>
-          │(6) <[JUMP_IF_FALSE], <7>, #0>
+          │(6) <[COMP_LE], #1, i, n>
+          │(6) <[JUMP_IF_FALSE], <7>, #1>
           └────────────────────
-          BB5 [times_equal] (for_stmt)
+          BB5 [combined] (for_stmt)
           │(7) <[MUL], fact, fact, i>
-          └────────────────────
-          BB6 [for_post] (for_stmt)
           │(6) <[ADD], i, i, 1>
           │(6) <[JUMP], <4>>
           └────────────────────
