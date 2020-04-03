@@ -32,7 +32,7 @@ struct Error {
     void printMessage();
 
     Error(Category cat, uint lineno, std::string name);
-    Error(Category cat, uint lineno) : Error(cat, lineno, "") {};
+    Error(Category cat) : Error(cat, 1, "") {};
 };
 
 /**
