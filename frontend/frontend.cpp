@@ -8,6 +8,7 @@
 #include <iostream>
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
+#include <analyzer.hpp>
 #include <ast.hpp>
 #include <config.hpp>
 #include <parsetree.hpp>
@@ -35,6 +36,8 @@ int main(int argc, char **argv)
     // Create symbol table
     SymbolTable symbolTable(&ast);
 
+    // Analyze program for errors
+    SemanticAnalyzer analyzer(ast, symbolTable);
 
     if (config.printParseTree) {
         spdlog::info("Parse tree:");
@@ -49,6 +52,17 @@ int main(int argc, char **argv)
     if (config.printSymbolTable) {
         spdlog::info("Symbol table:");
         symbolTable.print();
+    }
+
+    // Print errors/warnings if any
+    // Exit if error
+    if (analyzer.hasError) {
+        spdlog::info("Semantic errors/warnings:");
+        analyzer.printErrors();
+        return -1;
+    } else if (analyzer.hasWarning) {
+        spdlog::info("Semantic errors/warnings:");
+        analyzer.printErrors();
     }
 
     spdlog::info("Frontend end");
