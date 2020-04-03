@@ -4,6 +4,8 @@
 #include <set>
 #include <ast.hpp>
 
+uint BasicBlock::nextTemp = 0;
+
 // AST nodes that will not create temporaries (as opposed to intermediate statements, which do)
 const std::set<AST::Label> endStatements {
     AST::assignment, AST::return_stmt,
@@ -114,12 +116,12 @@ Arg BasicBlock::expand(const AST* ast)
     }
 
     // Create temporary if this is not a final statement
-    std::string tempName = fmt::format("#{}", this->nextTemp);
+    std::string tempName = fmt::format("#{:X}", BasicBlock::nextTemp);
     temporary.type = Arg::Type::NAME;
     temporary.val.sval = strdup(tempName.c_str());
     if (!endStatements.count(ast->label)) {
         args.insert(args.begin(), temporary);
-        this->nextTemp += 1;
+        BasicBlock::nextTemp += 1;
     }
 
     // Special behavior for specific types of statements

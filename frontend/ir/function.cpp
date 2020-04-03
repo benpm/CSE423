@@ -4,13 +4,10 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/fmt.h>
 
-void addJumpsToBreaks(std::vector<BasicBlock>& blocks, uint label);
-
 /**
  * @brief Search for break blocks that need jump statements added to them
  * 
- * @param start An iterator for the first block to search through
- * @param end An iterator for the last block to search through
+ * @param blocks A vector of blocks to search in
  * @param label The label we want to jump to (should be the block after the last loop block)
  */
 void addJumpsToBreaks(std::vector<BasicBlock>& blocks, uint label)
@@ -26,8 +23,7 @@ void addJumpsToBreaks(std::vector<BasicBlock>& blocks, uint label)
  * @brief Create basic blocks representing a while loop from given AST
  * 
  * @param ast The AST to produce blocks from
- * @param tempn A number used to keep track of block IDs, should be the number after the last added block
- * @return uint The new tempn
+ * @return std::vector<BasicBlock> The blocks created
  */
 std::vector<BasicBlock> Function::constructWhile(const AST* ast)
 {
@@ -74,14 +70,11 @@ std::vector<BasicBlock> Function::constructWhile(const AST* ast)
     return blocks;
 }
 
-
-
 /**
  * @brief Create basic blocks representing a for loop from given AST
  * 
  * @param ast The AST to produce blocks from
- * @param tempn A number used to keep track of block IDs, should be the number after the last added block
- * @return uint The new tempn
+ * @return std::vector<BasicBlock> Newly created blocks
  */
 std::vector<BasicBlock> Function::constructFor(const AST* ast)
 {
@@ -135,6 +128,12 @@ std::vector<BasicBlock> Function::constructFor(const AST* ast)
     return blocks;
 }
 
+/**
+ * @brief Create blocks for an if statement (including else-if and else children)
+ * 
+ * @param ast The AST node to create blocks from
+ * @return std::vector<BasicBlock> Newly created blocks
+ */
 std::vector<BasicBlock> Function::constructIf(const AST* ast)
 {
     assert(ast->label == AST::if_stmt || ast->label == AST::else_if);
@@ -186,10 +185,8 @@ std::vector<BasicBlock> Function::constructIf(const AST* ast)
 /**
  * @brief Recursively populates a function with basic blocks using a given AST
  * 
- * @param fun The function to populate
  * @param ast The AST to use
- * @param tempn A convenience variable used to create contiguous basic block IDs
- * @return uint The next number to use for basic block ID
+ * @return std::vector<BasicBlock> Newly created blocks
  */
 std::vector<BasicBlock> Function::populateBB(const AST* ast)
 {
@@ -257,7 +254,12 @@ std::vector<BasicBlock> Function::populateBB(const AST* ast)
     return blocks;
 }
 
-
+/**
+ * @brief Combine groups of blocks into single blocks safely
+ * 
+ * @return true Blocks were combined
+ * @return false Blocks were not combined
+ */
 bool Function::combineBlocks()
 {
     std::vector<std::pair<size_t, size_t>> blockGroups;
@@ -286,17 +288,18 @@ bool Function::combineBlocks()
         // Find last block that meets group conditions
         do {
             const BasicBlock& current = this->blocks.at(end);
-            // Stop before growing group if next block is a jump destination or has different scope
+            // Stop if block has a jump
             if (hasJumps.count(current.label)) {
                 break;
             }
-            // Grow group size
+            // Increase group size
             end += 1;
-            // Stop if next block has jump, or we have reached end of blocks
+            // Stop if we have reached end of blocks
             if (end >= this->blocks.size()) {
                 end -= 1;
                 break;
             }
+            // Stop if is jump destination or has new scope
             const BasicBlock& next = this->blocks.at(end);
             if (jumpDestinations.count(next.label)
                 || next.scope != first.scope) {
@@ -307,7 +310,6 @@ bool Function::combineBlocks()
 
         // Add to list of groups
         if (end > start) {
-            spdlog::debug("GROUP: {}:{}", start, end);
             newGroups += 1;
         }
         blockGroups.emplace_back(start, end);

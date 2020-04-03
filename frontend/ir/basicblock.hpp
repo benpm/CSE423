@@ -6,7 +6,7 @@
 class BasicBlock
 {
 private:
-    uint nextTemp = 0;
+    static uint nextTemp;
 public:
     uint label;
     std::string name;
