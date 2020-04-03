@@ -9,12 +9,14 @@ compilerFlags=(
     p # Parse tree
     a # AST
     s # Symbol Table
+    r # IR
 )
 compilerFlagNames=(
     tokens
     parseTree
     AST
     symbolTable
+    IR
 )
 
 gitRootDir=$(git rev-parse --show-toplevel)
@@ -29,7 +31,7 @@ fi
 
 # Build compiler
 cd $gitRootDir/build
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=Debug ..
 make -j
 
 # Loop over subdirectories in examples
@@ -56,6 +58,9 @@ do
         if [ "$?" != "0" ]
         then
             printf "${RED}FAILED!${NC}\n"
+            inDir=$(basename $dir) 
+            printf "+++++++++++++++++++++++++++++ Left: New | Right: Original | %s.c %s +++++++++++++++++++++++++++++\n" $inDir $flagName
+            diff "diff_tmp.txt" $outName -y
             failed=$((failed+1))
         else 
             printf "${GREEN}PASSED!${NC}\n"

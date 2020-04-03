@@ -12,6 +12,7 @@
 #include <config.hpp>
 #include <parsetree.hpp>
 #include <symboltable.hpp>
+#include <ir/program.hpp>
 
 // Main entry point for compiler
 int main(int argc, char **argv)
@@ -26,30 +27,34 @@ int main(int argc, char **argv)
 
     spdlog::info("Frontend begin");
 
-    // Create parsetree from input file
     PT pt(config.file);
 
     // Create abstract syntax tree
     AST ast(&pt);
-
+    
     // Create symbol table
     SymbolTable symbolTable(&ast);
 
-
-    if (config.printParseTree) {
-        spdlog::info("Parse tree:");
-        pt.print();
-    }
-
-    if (config.printAST) {
-        spdlog::info("Parse tree:");
-        ast.print();
-    }
+    // Create IR program
+    Program program(ast);
 
     if (config.printSymbolTable) {
         spdlog::info("Symbol table:");
         symbolTable.print();
     }
+    if (config.printParseTree) {
+        spdlog::info("Parse tree:");
+        pt.print();
+    }
+    if (config.printAST) {
+        spdlog::info("Parse tree:");
+        ast.print();
+    }
+    if (config.printIR) {
+        spdlog::info("IR:");
+        program.print();
+    }
+
 
     spdlog::info("Frontend end");
 

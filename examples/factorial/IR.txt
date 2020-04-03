@@ -1,0 +1,26 @@
+main()
+ BB0 [combined] (main())
+ │(2) <[ASSIGN], fact, 1>
+ │(2) <[ASSIGN], n, 10>
+ └────────────────────
+    BB2 [if_stmt] (if_stmt)
+    │(3) <[COMP_LT], #0, n, 0>
+    │(3) <[JUMP_IF_FALSE], <3>, #0>
+    └────────────────────
+          BB3 [assignment] (for_stmt)
+          │(6) <[ASSIGN], i, 1>
+          └────────────────────
+          BB4 [for_cond] (for_stmt)
+          │(6) <[COMP_LE], #1, i, n>
+          │(6) <[JUMP_IF_FALSE], <7>, #1>
+          └────────────────────
+          BB5 [combined] (for_stmt)
+          │(7) <[MUL], fact, fact, i>
+          │(6) <[ADD], i, i, 1>
+          │(6) <[JUMP], <4>>
+          └────────────────────
+ BB7 [return_stmt] (main())
+ │(11) <[RETURN], 0>
+ └────────────────────
+
+

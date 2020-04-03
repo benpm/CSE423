@@ -14,7 +14,7 @@ find_package(BISON REQUIRED)
 find_package(spdlog QUIET)
 if(NOT spdlog_FOUND)
     message("-- Static Spdlog not found, falling back to headers. Note that compiling with release will not work")
-    include_directories("external")
+    include_directories("libs")
 else()
     message("-- Static Spdlog found, defaulting to that")
 endif()
@@ -25,7 +25,7 @@ endif()
 #
 ##########################################################
 include_directories("frontend")
-include_directories("external/magic_enum")
+include_directories("libs/magic_enum")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 ##########################################################
@@ -51,11 +51,15 @@ ADD_FLEX_BISON_DEPENDENCY(scanner parser)
 #
 ###########################################################
 add_executable(sc64
-    frontend/frontend.cpp
-    frontend/parsetree.cpp
-    frontend/ast.cpp
-    frontend/config.cpp
-    frontend/symboltable.cpp
+    "frontend/frontend.cpp"
+    "frontend/parsetree.cpp"
+    "frontend/ast.cpp"
+    "frontend/config.cpp"
+    "frontend/symboltable.cpp"
+    "frontend/ir/statement.cpp"
+    "frontend/ir/basicblock.cpp"
+    "frontend/ir/function.cpp"
+    "frontend/ir/program.cpp"
     ${FLEX_scanner_OUTPUTS}
     ${BISON_parser_OUTPUTS}
 )

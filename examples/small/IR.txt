@@ -1,0 +1,22 @@
+main()
+ BB0 [combined] (main())
+ │(3) <[ASSIGN], a, 42>
+ │(4) <[ASSIGN], b, 89>
+ │(5) <[MUL], #0, b, 12>
+ │(5) <[ADD], #1, a, #0>
+ │(5) <[ASSIGN], c, #1>
+ │(6) <[MINUS], #2, 8.011609>
+ │(6) <[ASSIGN], d, #2>
+ └────────────────────
+    BB4 [if_stmt] (if_stmt)
+    │(8) <[COMP_LT], #3, c, 2>
+    │(8) <[JUMP_IF_FALSE], <6>, #3>
+    └────────────────────
+    BB5 [return_stmt] (if_stmt)
+    │(9) <[RETURN], 35>
+    └────────────────────
+       BB6 [return_stmt] (else_stmt)
+       │(11) <[RETURN], 124>
+       └────────────────────
+
+

@@ -64,4 +64,5 @@ public:
 
     void populateChildren(AST* ast);
     void print();
+    size_t getDepth();
 };

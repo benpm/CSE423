@@ -1,0 +1,7 @@
+main()
+ BB0 [combined] (main())
+ │(7) <[ASSIGN], g, 3>
+ │(8) <[ASSIGN], h, 3>
+ └────────────────────
+
+
