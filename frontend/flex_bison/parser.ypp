@@ -249,6 +249,13 @@ funName:
             $$->data.sval = $1;
         }
 ;
+funName:
+    ID
+        {
+            $$ = new PT(PT::ID, yylloc.first_line);
+            $$->data.sval = $1;
+        }
+;
 params:
     paramList
         {
@@ -319,6 +326,16 @@ statement:
         {
             $$ = new PT(PT::STATEMENT,
                 std::vector<PT*> { $1 }, @1.first_line);
+        }
+    | labelStmt
+        {
+            $$ = new PT(PT::STATEMENT,
+                std::vector<PT*> { $1 }, yylloc.first_line);
+        }
+    | gotoStmt
+        {
+            $$ = new PT(PT::STATEMENT,
+                std::vector<PT*> { $1 }, yylloc.first_line);
         }
 ;
 expressionStmt:
@@ -611,6 +628,20 @@ argList:
             tSTRINGLIT->data.sval = $1;
             $$ = new PT(PT::ARG_LIST,
                 std::vector<PT*> { tSTRINGLIT }, @1.first_line);
+        }
+    | argList COMMA STRINGLIT
+        {
+            PT* tSTRINGLIT = new PT(PT::STRINGLIT, yylloc.first_line);
+            tSTRINGLIT->data.sval = $3;
+            $$ = new PT(PT::ARG_LIST,
+                std::vector<PT*> { $1, tSTRINGLIT }, yylloc.first_line);
+        }
+    | STRINGLIT
+        {
+            PT* tSTRINGLIT = new PT(PT::STRINGLIT, yylloc.first_line);
+            tSTRINGLIT->data.sval = $1;
+            $$ = new PT(PT::ARG_LIST,
+                std::vector<PT*> { tSTRINGLIT }, yylloc.first_line);
         }
     | expression
         {

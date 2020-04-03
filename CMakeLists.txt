@@ -63,6 +63,7 @@ add_executable(sc64
     ${FLEX_scanner_OUTPUTS}
     ${BISON_parser_OUTPUTS}
 )
+
 if(spdlog_FOUND)
     target_link_libraries(sc64 spdlog::spdlog)
 endif()

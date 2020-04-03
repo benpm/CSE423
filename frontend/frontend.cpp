@@ -1,7 +1,6 @@
 /**
  * @file frontend.cpp
  * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
- * @brief Driver for scanner + parser. Takes in filename as argv[1] and builds parse tree
  * @brief Main frontend entry point for Super Compiler 64
  * @date 2020-02-11
  *
