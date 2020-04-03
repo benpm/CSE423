@@ -30,13 +30,13 @@ Error::Error(Category cat, uint lineno, std::string name)
     this->messageTemplate = templateMap.at(cat);
 
     switch (cat) {
-    case Category::UnusedVariable:
-    case Category::UnusedFunction:
-    case Category::UnusedLabel:
-        isFatal = false;
-        break;
-    default:
-        isFatal = true;
+        case Category::UnusedVariable:
+        case Category::UnusedFunction:
+        case Category::UnusedLabel:
+            isFatal = false;
+            break;
+        default:
+            isFatal = true;
     }
 }
 
