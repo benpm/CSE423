@@ -13,7 +13,7 @@ Documentation and User Manual lives on our [Wiki](https://github.com/benpm/CSE42
 - [ ] Semantic analyzer
     - [ ] Type checking
     - [ ] Scope checking
-- [ ] IR generator
+- [X] IR generator
 - [ ] Optimizer
 - [ ] Code generator
 
