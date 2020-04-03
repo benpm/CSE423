@@ -56,6 +56,7 @@ add_executable(sc64
     frontend/ast.cpp
     frontend/config.cpp
     frontend/symboltable.cpp
+    frontend/analyzer.cpp
     ${FLEX_scanner_OUTPUTS}
     ${BISON_parser_OUTPUTS}
 )
