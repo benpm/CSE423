@@ -41,11 +41,9 @@ struct Error {
  */
 class SemanticAnalyzer {
 private:
-    AST &ast;
-    SymbolTable &table;
     std::vector<Error> errors;
 
-    void analyzeProgram();
+    void analyzeProgram(AST &ast, SymbolTable &table);
 
 public:
     bool hasWarning = false;
@@ -53,5 +51,5 @@ public:
 
     void printErrors();
 
-    SemanticAnalyzer(AST &ast, SymbolTable &st);
+    SemanticAnalyzer(AST &ast, SymbolTable &table);
 };
