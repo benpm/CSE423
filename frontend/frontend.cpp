@@ -38,6 +38,10 @@ int main(int argc, char **argv)
     // Create IR program
     Program program(ast);
 
+    if (!config.outputCSV.empty()) {
+        spdlog::info("IR output as CSV to {}", config.outputCSV);
+        program.outputToFile(config.outputCSV);
+    }
     if (config.printSymbolTable) {
         spdlog::info("Symbol table:");
         symbolTable.print();
