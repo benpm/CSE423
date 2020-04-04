@@ -209,3 +209,21 @@ size_t SymbolTable::getDepth()
 
     return depth;
 }
+
+/**
+ * @brief Get the Symbol Type of the name, searching up the tree if necessary
+ * 
+ * @param name The name of symbol
+ * @return Symbol::Type The type of the symbol
+ */
+Symbol::Type SymbolTable::getSymbolType(const char* name)
+{
+    SymbolTable* table = this;
+    do {
+        if (table->table.count(name)) {
+            return table->table.at(name).symType;
+        }
+        table = table->parent;
+    } while (table->parent);
+    return Symbol::Type::None;
+}

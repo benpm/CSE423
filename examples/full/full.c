@@ -10,7 +10,7 @@ int main()
     int n1 = 15 * (18 / -2) % 18;
     int n2 = n1 * n1;
     int n3 = n1 + n1 + n2 + n2;
-    float DF = 0.8 * 3.16;
+    float DF = 0.8 * n2;
     char G = 'G';
 
     // Testing nested loops of various types

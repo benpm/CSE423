@@ -1,42 +1,26 @@
 #include <ir/statement.hpp>
 #include <unordered_map>
 #include <spdlog/fmt/fmt.h>
-
-std::unordered_map<Statement::Type, std::string> typeMap {
-    {Statement::ADD, "ADD"},
-    {Statement::MUL, "MUL"},
-    {Statement::DIV, "DIV"},
-    {Statement::SUB, "SUB"},
-    {Statement::MOD, "MOD"},
-    {Statement::MINUS, "MINUS"},
-    {Statement::NOT, "NOT"},
-    {Statement::ASSIGN, "ASSIGN"},
-    {Statement::JUMP, "JUMP"},
-    {Statement::JUMP_IF_TRUE, "JUMP_IF_TRUE"},
-    {Statement::JUMP_IF_FALSE, "JUMP_IF_FALSE"},
-    {Statement::COMP_LT, "COMP_LT"},
-    {Statement::COMP_GT, "COMP_GT"},
-    {Statement::COMP_LE, "COMP_LE"},
-    {Statement::COMP_GE, "COMP_GE"},
-    {Statement::COMP_EQ, "COMP_EQ"},
-    {Statement::COMP_NEQ, "COMP_NEQ"},
-    {Statement::LOG_OR, "LOG_OR"},
-    {Statement::LOG_AND, "LOG_AND"},
-    {Statement::RETURN, "RETURN"},
-    {Statement::CALL, "CALL"},
-    {Statement::NO_OP, "NO_OP"}
-};
+#include <magic_enum.hpp>
 
 std::string Arg::toString() const
 {
-    switch (this->type) {
-        case LABEL:     return fmt::format("<{}>", val.label);
-        case INT:       return fmt::format("{}", val.ival);
-        case CHAR:      return fmt::format("'{}'", val.cval);
-        case FLOAT:     return fmt::format("{:f}", val.fval);
-        case NAME:      return fmt::format("{}", val.sval);
-        default:        return "???";
+    std::string string;
+    if (this->type == NAME)
+    switch (this->idType) {
+        case Symbol::Type::Int: string += "(int)"; break;
+        case Symbol::Type::Char: string += "(char)"; break;
+        case Symbol::Type::Float: string += "(float)"; break;
     }
+    switch (this->type) {
+        case LABEL:     string += fmt::format("<{}>", val.label); break;
+        case INT:       string += fmt::format("{}", val.ival); break;
+        case CHAR:      string += fmt::format("'{}'", val.cval); break;
+        case FLOAT:     string += fmt::format("{:f}", val.fval); break;
+        case NAME:      string += fmt::format("{}", val.sval); break;
+        default:        string += "???"; break;
+    }
+    return string;
 }
 
 Statement::Statement(Type type)
@@ -47,12 +31,14 @@ Statement::Statement(Type type)
 Statement::Statement(Type type, Arg a)
 {
     this->type = type;
+    this->resultType = a.idType;
     this->args.push_back(a);
 }
 
 Statement::Statement(Type type, Arg a, Arg b)
 {
     this->type = type;
+    this->resultType = a.idType;
     this->args.push_back(a);
     this->args.push_back(b);
 }
@@ -60,6 +46,7 @@ Statement::Statement(Type type, Arg a, Arg b)
 Statement::Statement(Type type, Arg a, Arg b, Arg c)
 {
     this->type = type;
+    this->resultType = a.idType;
     this->args.push_back(a);
     this->args.push_back(b);
     this->args.push_back(c);
@@ -69,12 +56,24 @@ Statement::Statement(Type type, std::vector<Arg>& args)
 {
     this->type = type;
     this->args = args;
+    this->resultType = args.at(0).idType;
 }
 
 std::string Statement::toString() const
 {
     std::string string;
-    string += fmt::format("({}) <[{}]", lineNum, typeMap.at(this->type));
+    // Line number
+    string += fmt::format("({}) <", lineNum);
+    // Result type
+    switch (this->resultType)
+    {
+        case Symbol::Type::Int: string += "[int]"; break;
+        case Symbol::Type::Char: string += "[char]"; break;
+        case Symbol::Type::Float: string += "[float]"; break;
+    }
+    // Statement type
+    string += fmt::format("[{}]", magic_enum::enum_name(this->type));
+    // Arguments
     for (const Arg& arg : args) {
         string += fmt::format(", {}", arg.toString());
     }
