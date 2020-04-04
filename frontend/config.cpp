@@ -23,7 +23,7 @@ extern bool scannerPrintTokens;
 Config::Config(int argc, char **argv)
 {
     int opt;
-    while ((opt = getopt(argc, argv, "lhtapsr")) != -1) {
+    while ((opt = getopt(argc, argv, "lhtapsrc:")) != -1) {
         switch (opt) {
         // Print usage message
         case 'h':
@@ -56,6 +56,9 @@ Config::Config(int argc, char **argv)
         case 'r':
             this->printIR = true;
             break;
+        case 'c':
+            this->outputCSV = optarg;
+            break;
         // Unknown option
         default:
             std::cerr << "Unknown flag in command line input. Exiting" << std::endl;
@@ -76,6 +79,8 @@ Config::Config(int argc, char **argv)
         spdlog::info("Symbol table printing enabled");
     if (this->printIR)
         spdlog::info("IR printing enabled");
+    if (!this->outputCSV.empty())
+        spdlog::info("IR output enabled");
 
     // No file provided
     if (optind >= argc) {
@@ -103,7 +108,7 @@ Config::Config(int argc, char **argv)
  *
  */
 void Config::usage(std::string exec_name) {
-    std::cout << "Usage: " << exec_name << " FILE_TO_PARSE [-h] [-t] [-p] [-s] [-r] [-l]" << std::endl;
+    std::cout << "Usage: " << exec_name << " FILE_TO_PARSE [-h] [-t] [-p] [-a] [-s] [-r] [-l]" << std::endl;
     std::cout << "  -h\t Print this help message" << std::endl
               << "  -t\t Print the tokens found in the file" << std::endl
               << "  -p\t Print the parse tree" << std::endl

@@ -18,6 +18,7 @@ struct Config {
     bool suppressLogs = false;
 
     std::string file;
+    std::string outputCSV;
 
     Config(int argc, char **argv);
     void usage(std::string exec_name);
