@@ -394,7 +394,7 @@ std::string Function::toString() const
 std::string Function::toCSV() const
 {
     std::string string;
-    string += fmt::format("func,{}()\n", this->name);
+    string += fmt::format("func,{}\n", this->name);
     for (const BasicBlock& block : blocks) {
         string += block.toCSV();
     }

@@ -44,8 +44,9 @@ void Program::outputToFile(std::string filename)
     std::ofstream csv(filename, std::ofstream::out | std::ofstream::trunc);
     std::string string;
     for (auto item : functions) {
-        string += item.second.toCSV() + "\n";
+        string += item.second.toCSV();
     }
+    string += "\n";
     csv << string;
     csv.close();
 }

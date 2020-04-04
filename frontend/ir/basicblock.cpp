@@ -173,7 +173,7 @@ std::string BasicBlock::toString() const
 std::string BasicBlock::toCSV() const
 {
     std::string string;
-    string += fmt::format("BB,{},{},{}\n", this->label, this->name, this->scope->name);
+    string += fmt::format("BB,{},{}\n", this->label, this->name);
     for (const Statement& stmt : statements) {
         string += stmt.toCSV() + "\n";
     }

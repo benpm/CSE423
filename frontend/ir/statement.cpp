@@ -7,11 +7,11 @@ std::string Arg::toString() const
 {
     std::string string;
     if (this->type == NAME)
-    switch (this->idType) {
-        case Symbol::Type::Int: string += "(int)"; break;
-        case Symbol::Type::Char: string += "(char)"; break;
-        case Symbol::Type::Float: string += "(float)"; break;
-    }
+        switch (this->idType) {
+            case Symbol::Type::Int: string += "(int)"; break;
+            case Symbol::Type::Char: string += "(char)"; break;
+            case Symbol::Type::Float: string += "(float)"; break;
+        }
     switch (this->type) {
         case LABEL:     string += fmt::format("<{}>", val.label); break;
         case INT:       string += fmt::format("{}", val.ival); break;
@@ -25,14 +25,22 @@ std::string Arg::toString() const
 
 std::string Arg::toCSV() const
 {
+    std::string string;
+    if (this->type == NAME)
+        switch (this->idType) {
+            case Symbol::Type::Int: string += "int "; break;
+            case Symbol::Type::Char: string += "char "; break;
+            case Symbol::Type::Float: string += "float "; break;
+        }
     switch (this->type) {
-        case LABEL:     return fmt::format("{}", val.label);
-        case INT:       return fmt::format("{}", val.ival);
-        case CHAR:      return fmt::format("'{}'", val.cval);
-        case FLOAT:     return fmt::format("{:f}", val.fval);
-        case NAME:      return fmt::format("{}", val.sval);
-        default:        return "???";
+        case LABEL:     string += fmt::format("{}", val.label); break;
+        case INT:       string += fmt::format("{}", val.ival); break;
+        case CHAR:      string += fmt::format("'{}'", val.cval); break;
+        case FLOAT:     string += fmt::format("{:f}", val.fval); break;
+        case NAME:      string += fmt::format("{}", val.sval); break;
+        default:        string += "???"; break;
     }
+    return string;
 }
 
 Statement::Statement(Type type)
@@ -96,7 +104,18 @@ std::string Statement::toString() const
 std::string Statement::toCSV() const
 {
     std::string string;
-    string += fmt::format("stmt,{},{}", lineNum, typeMap.at(this->type));
+    string += fmt::format("stmt,{},", lineNum);
+    // Result type
+    switch (this->resultType)
+    {
+        case Symbol::Type::Int: string += "int"; break;
+        case Symbol::Type::Char: string += "char"; break;
+        case Symbol::Type::Float: string += "float"; break;
+        default: string += "none"; break;
+    }
+    // Statement type
+    string += fmt::format(",{}", magic_enum::enum_name(this->type));
+    // Arguments
     for (const Arg& arg : args) {
         string += fmt::format(",{}", arg.toCSV());
     }
