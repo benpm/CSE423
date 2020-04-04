@@ -39,6 +39,18 @@ std::string Arg::toString() const
     }
 }
 
+std::string Arg::toCSV() const
+{
+    switch (this->type) {
+        case LABEL:     return fmt::format("{}", val.label);
+        case INT:       return fmt::format("{}", val.ival);
+        case CHAR:      return fmt::format("'{}'", val.cval);
+        case FLOAT:     return fmt::format("{:f}", val.fval);
+        case NAME:      return fmt::format("{}", val.sval);
+        default:        return "???";
+    }
+}
+
 Statement::Statement(Type type)
 {
     this->type = type;
@@ -79,5 +91,15 @@ std::string Statement::toString() const
         string += fmt::format(", {}", arg.toString());
     }
     string += ">";
+    return string;
+}
+
+std::string Statement::toCSV() const
+{
+    std::string string;
+    string += fmt::format("stmt,{},{}", lineNum, typeMap.at(this->type));
+    for (const Arg& arg : args) {
+        string += fmt::format(",{}", arg.toCSV());
+    }
     return string;
 }

@@ -392,3 +392,13 @@ std::string Function::toString() const
     }
     return string;
 }
+
+std::string Function::toCSV() const
+{
+    std::string string;
+    string += fmt::format("func,{}\n", this->name);
+    for (const BasicBlock& block : blocks) {
+        string += block.toCSV();
+    }
+    return string;
+}

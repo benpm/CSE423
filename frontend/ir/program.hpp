@@ -1,6 +1,7 @@
 #pragma once
 
-#include <unordered_map>
+#include <utility>
+#include <vector>
 #include <ast.hpp>
 #include <ir/function.hpp>
 
@@ -8,10 +9,11 @@
 class Program
 {
 public:
-    std::unordered_map<std::string, Function> functions;
+    std::vector<std::pair<std::string, Function>> functions;
 
     Program(const AST& ast);
     Program(std::string irCode);
     std::string outputToString();
+    void outputToFile(std::string filename);
     void print();
 };

@@ -24,4 +24,5 @@ public:
 
     Function(const AST* funcNode);
     std::string toString() const;
+    std::string toCSV() const;
 };

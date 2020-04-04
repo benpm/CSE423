@@ -16,5 +16,6 @@ public:
 
     BasicBlock(int lineNum, uint label, std::string name, SymbolTable* scope);
     std::string toString() const;
+    std::string toCSV() const;
     Arg expand(const AST* ast);
 };

@@ -1,3 +1,4 @@
+#include <fstream>
 #include <iostream>
 #include <ir/program.hpp>
 #include <spdlog/spdlog.h>
@@ -10,7 +11,7 @@ Program::Program(const AST& ast)
     for (const AST* child : ast.children[0]->children) {
         if (child->label == AST::function) {
             std::string name = child->children[1]->data.sval;
-            this->functions.emplace(name, Function(child));
+            this->functions.emplace_back(name, Function(child));
         }
     }
 
@@ -30,6 +31,20 @@ std::string Program::outputToString()
         string += item.second.toString() + "\n";
     }
     return string;
+}
+
+
+void Program::outputToFile(std::string filename)
+{
+    // Create/overwrite file with CSV representation of IR program
+    std::ofstream csv(filename, std::ofstream::out | std::ofstream::trunc);
+    std::string string;
+    for (auto item : functions) {
+        string += item.second.toCSV() + "\n";
+    }
+    csv << string;
+    csv.close();
+    std::cout << string << std::endl;
 }
 
 void Program::print()

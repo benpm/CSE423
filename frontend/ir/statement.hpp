@@ -28,6 +28,7 @@ struct Arg
     Arg(char* sval) { type = Type::NAME; val.sval = sval; };
 
     std::string toString() const;
+    std::string toCSV() const;
 };
 
 class Statement
@@ -62,4 +63,5 @@ public:
     Statement(Type type, Arg a, Arg b, Arg c);
     Statement(Type type, std::vector<Arg>& args);
     std::string toString() const;
+    std::string toCSV() const;
 };
