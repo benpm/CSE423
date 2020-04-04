@@ -18,9 +18,13 @@ Program::Program(const AST& ast)
     spdlog::info("IR building done");
 }
 
-Program::Program(std::string irCode)
+Program::Program(std::string filename)
 {
-    // Build IR program from plaintext IR code
+    std::ifstream csv(filename);
+
+    // TODO: Build IR from its CSV representation
+
+    csv.close();
 }
 
 std::string Program::outputToString()

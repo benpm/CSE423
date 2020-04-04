@@ -12,7 +12,7 @@ public:
     std::vector<std::pair<std::string, Function>> functions;
 
     Program(const AST& ast);
-    Program(std::string irCode);
+    Program(std::string filename);
     std::string outputToString();
     void outputToFile(std::string filename);
     void print();
