@@ -44,7 +44,6 @@ void Program::outputToFile(std::string filename)
     }
     csv << string;
     csv.close();
-    std::cout << string << std::endl;
 }
 
 void Program::print()
