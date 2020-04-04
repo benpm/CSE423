@@ -36,7 +36,7 @@ std::vector<BasicBlock> Function::constructWhile(const AST* ast)
     const AST* bodyNode = ast->children[2];
 
     // Create condition block
-    BasicBlock condBlock(ast->lineNum, this->nextBlockID++, "while_cond", condNode->inScope);
+    BasicBlock condBlock(ast->lineNum, this->nextBlockID++, "while_cond");
     Arg condResult = condBlock.expand(condNode);
 
     // Create declaration and body blocks
@@ -44,7 +44,7 @@ std::vector<BasicBlock> Function::constructWhile(const AST* ast)
     std::vector<BasicBlock> bodyBlocks = this->populateBB(bodyNode);
 
     // Create post-execution block
-    BasicBlock postBlock(ast->lineNum, this->nextBlockID++, "while_post", condNode->inScope);
+    BasicBlock postBlock(ast->lineNum, this->nextBlockID++, "while_post");
     postBlock.statements.emplace_back(
         Statement::JUMP,
         Arg(condBlock.label)
@@ -92,7 +92,7 @@ std::vector<BasicBlock> Function::constructFor(const AST* ast)
     std::vector<BasicBlock> initBlocks = this->populateBB(initNode);
 
     // Create condition block
-    BasicBlock condBlock(ast->lineNum, this->nextBlockID++, "for_cond", condNode->inScope);
+    BasicBlock condBlock(ast->lineNum, this->nextBlockID++, "for_cond");
     Arg condResult = condBlock.expand(condNode);
 
     // Create declaration and body blocks
@@ -100,7 +100,7 @@ std::vector<BasicBlock> Function::constructFor(const AST* ast)
     std::vector<BasicBlock> bodyBlocks = this->populateBB(bodyNode);
 
     // Create post-execution block
-    BasicBlock postBlock(ast->lineNum, this->nextBlockID++, "for_post", postNode->inScope);
+    BasicBlock postBlock(ast->lineNum, this->nextBlockID++, "for_post");
     postBlock.expand(postNode);
 
     // Add jumps
@@ -143,7 +143,7 @@ std::vector<BasicBlock> Function::constructIf(const AST* ast)
     const AST* bodyNode = ast->children[2];
 
     // Create condition block
-    BasicBlock condBlock = BasicBlock(ast->lineNum, this->nextBlockID++, ast->toString(), condNode->inScope);
+    BasicBlock condBlock = BasicBlock(ast->lineNum, this->nextBlockID++, ast->toString());
     Arg condResult = condBlock.expand(condNode);
     
     // Create body and declarations
@@ -213,7 +213,7 @@ std::vector<BasicBlock> Function::populateBB(const AST* ast)
             case AST::log_and:
             case AST::log_or:
             case AST::log_not: {
-                BasicBlock block(child->lineNum, this->nextBlockID++, child->toString(), child->inScope);
+                BasicBlock block(child->lineNum, this->nextBlockID++, child->toString());
                 block.expand(child);
                 tmp.push_back(block);
                 break; }
@@ -228,16 +228,16 @@ std::vector<BasicBlock> Function::populateBB(const AST* ast)
                 tmp = constructIf(child);
                 break;
             case AST::break_stmt: {
-                BasicBlock block(child->lineNum, this->nextBlockID++, child->toString(), child->inScope);
+                BasicBlock block(child->lineNum, this->nextBlockID++, child->toString());
                 tmp.push_back(block);
                 break; }
             case AST::goto_stmt: {
-                BasicBlock block(child->lineNum, this->nextBlockID++, child->toString(), child->inScope);
+                BasicBlock block(child->lineNum, this->nextBlockID++, child->toString());
                 tmp.push_back(block);
                 this->gotoBlockLocs.emplace(block.label, child->children[0]->data.sval);
                 break; }
             case AST::label_stmt: {
-                BasicBlock block(child->lineNum, this->nextBlockID++, child->toString(), child->inScope);
+                BasicBlock block(child->lineNum, this->nextBlockID++, child->toString());
                 block.statements.emplace_back(Statement::NO_OP);
                 tmp.push_back(block);
                 this->labelBlockLocs.emplace(child->children[0]->data.sval, block.label);
@@ -299,10 +299,9 @@ bool Function::combineBlocks()
                 end -= 1;
                 break;
             }
-            // Stop if is jump destination or has new scope
+            // Stop if is jump destination
             const BasicBlock& next = this->blocks.at(end);
-            if (jumpDestinations.count(next.label)
-                || next.scope != first.scope) {
+            if (jumpDestinations.count(next.label)) {
                 end -= 1;
                 break;
             }
@@ -324,8 +323,7 @@ bool Function::combineBlocks()
         BasicBlock newBlock(
             first.lineNum,
             first.label,
-            group.second > group.first ? "combined" : first.name,
-            first.scope
+            group.second > group.first ? "combined" : first.name
         );
         // Add statements to block from following blocks in group
         for (size_t i = group.first; i <= group.second; i++) {

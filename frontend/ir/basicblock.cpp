@@ -42,10 +42,9 @@ const std::unordered_map<AST::Label, Statement::Type> labelMap {
     {AST::return_stmt,  Statement::RETURN}
 };
 
-BasicBlock::BasicBlock(int lineNum, uint label, std::string name, SymbolTable* scope)
+BasicBlock::BasicBlock(int lineNum, uint label, std::string name)
 {
     this->lineNum = lineNum;
-    this->scope = scope;
     this->label = label;
     this->name = name;
 }
@@ -151,8 +150,8 @@ Arg BasicBlock::expand(const AST* ast)
 std::string BasicBlock::toString() const
 {
     std::string string;
-    std::string padding((this->scope->getDepth() - 1) * 3, ' ');
-    string += padding + fmt::format("BB{} [{}] ({})\n", this->label, this->name, this->scope->name);
+    std::string padding(1, ' ');
+    string += padding + fmt::format("BB{} [{}]\n", this->label, this->name);
     for (const Statement& stmt : statements) {
         string += padding + " │" + stmt.toString() + "\n";
     }
