@@ -27,38 +27,52 @@ int main(int argc, char **argv)
 
     spdlog::info("Frontend begin");
 
-    PT pt(config.file);
+    // Input from program, not IR
+    if (config.inputCSV.empty()) {
+        // Create parsetree from program
+        PT pt(config.file);
 
-    // Create abstract syntax tree
-    AST ast(&pt);
-    
-    // Create symbol table
-    SymbolTable symbolTable(&ast);
+        // Create abstract syntax tree
+        AST ast(&pt);
+        
+        // Create symbol table
+        SymbolTable symbolTable(&ast);
 
-    // Create IR program
-    Program program(ast);
+        // Create IR program
+        Program program(ast);
 
-    if (!config.outputCSV.empty()) {
-        spdlog::info("IR output as CSV to {}", config.outputCSV);
-        program.outputToFile(config.outputCSV);
-    }
-    if (config.printSymbolTable) {
-        spdlog::info("Symbol table:");
-        symbolTable.print();
-    }
-    if (config.printParseTree) {
-        spdlog::info("Parse tree:");
-        pt.print();
-    }
-    if (config.printAST) {
-        spdlog::info("Parse tree:");
-        ast.print();
-    }
-    if (config.printIR) {
-        spdlog::info("IR:");
-        program.print();
-    }
+        if (config.printSymbolTable) {
+            spdlog::info("Symbol table:");
+            symbolTable.print();
+        }
+        if (config.printParseTree) {
+            spdlog::info("Parse tree:");
+            pt.print();
+        }
+        if (config.printAST) {
+            spdlog::info("Abstract syntax tree:");
+            ast.print();
+        }
+        if (!config.outputCSV.empty()) {
+            spdlog::info("IR output as CSV to {}", config.outputCSV);
+            program.outputToFile(config.outputCSV);
+        }
+        if (config.printIR) {
+            spdlog::info("IR:");
+            program.print();
+        }
+    } else {
+        Program program(config.inputCSV);
 
+        if (!config.outputCSV.empty()) {
+            spdlog::info("IR output as CSV to {}", config.outputCSV);
+            program.outputToFile(config.outputCSV);
+        }
+        if (config.printIR) {
+            spdlog::info("IR:");
+            program.print();
+        }
+    }
 
     spdlog::info("Frontend end");
 

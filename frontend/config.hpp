@@ -18,6 +18,7 @@ struct Config {
     bool suppressLogs = false;
 
     std::string file;
+    std::string inputCSV;
     std::string outputCSV;
 
     Config(int argc, char **argv);
