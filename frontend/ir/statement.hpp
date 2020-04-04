@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <symboltable.hpp>
 
 struct Arg
 {
@@ -21,11 +22,16 @@ struct Arg
     };
     Type type;
 
+    // Type of identifier
+    Symbol::Type idType = Symbol::Type::None;
+
     Arg(uint label) { type = Type::LABEL; val.label = label; };
-    Arg(int ival)   { type = Type::INT; val.ival = ival; };
-    Arg(char cval)  { type = Type::CHAR; val.cval = cval; };
-    Arg(float fval) { type = Type::FLOAT; val.fval = fval; };
+    Arg(int ival)   { type = Type::INT; val.ival = ival; idType = Symbol::Type::Int; };
+    Arg(char cval)  { type = Type::CHAR; val.cval = cval; idType = Symbol::Type::Char; };
+    Arg(float fval) { type = Type::FLOAT; val.fval = fval; idType = Symbol::Type::Float; };
     Arg(char* sval) { type = Type::NAME; val.sval = sval; };
+    Arg(char* sval, Symbol::Type idType)
+        { type = Type::NAME; val.sval = sval; this->idType = idType; };
 
     std::string toString() const;
     std::string toCSV() const;
@@ -54,6 +60,7 @@ public:
     };
 
     Type type = Type::NO_OP;
+    Symbol::Type resultType = Symbol::Type::None;
     std::vector<Arg> args;
     int lineNum = -1;
 

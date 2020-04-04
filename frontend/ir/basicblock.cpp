@@ -42,10 +42,9 @@ const std::unordered_map<AST::Label, Statement::Type> labelMap {
     {AST::return_stmt,  Statement::RETURN}
 };
 
-BasicBlock::BasicBlock(int lineNum, uint label, std::string name, SymbolTable* scope)
+BasicBlock::BasicBlock(int lineNum, uint label, std::string name)
 {
     this->lineNum = lineNum;
-    this->scope = scope;
     this->label = label;
     this->name = name;
 }
@@ -75,6 +74,8 @@ Arg BasicBlock::expand(const AST* ast)
     for (const AST* child : ast->children) {
         switch (child->label) {
             // Recurse on operations, add returned temporary
+            case AST::call:
+                temporary.idType = child->inScope->getSymbolType(child->children[0]->data.sval);
             case AST::mul:
             case AST::modulo:
             case AST::sum:
@@ -90,12 +91,14 @@ Arg BasicBlock::expand(const AST* ast)
             case AST::ge:
             case AST::equal:
             case AST::noteq:
-            case AST::call:
                 args.push_back(this->expand(child));
                 break;
             // Identifier or constant value arguments
             case AST::id:
-                args.emplace_back(child->data.sval);
+                args.emplace_back(
+                    child->data.sval, 
+                    child->inScope->getSymbolType(child->data.sval)
+                );
                 break;
             case AST::int_const:
                 args.emplace_back(child->data.ival);
@@ -119,6 +122,12 @@ Arg BasicBlock::expand(const AST* ast)
     std::string tempName = fmt::format("#{:X}", BasicBlock::nextTemp);
     temporary.type = Arg::Type::NAME;
     temporary.val.sval = strdup(tempName.c_str());
+    // Type rules
+    if (temporary.idType == Symbol::Type::None)
+    for (const Arg& arg : args) {
+        temporary.idType = std::max(temporary.idType, arg.idType);
+    }
+    // Insert temporary if needed
     if (!endStatements.count(ast->label)) {
         args.insert(args.begin(), temporary);
         BasicBlock::nextTemp += 1;
@@ -142,8 +151,9 @@ Arg BasicBlock::expand(const AST* ast)
     }
 
     // Generate statement
-    if (labelMap.count(ast->label))
+    if (labelMap.count(ast->label)) {
         this->statements.emplace_back(labelMap.at(ast->label), args);
+    }
 
     return temporary;
 }
@@ -151,8 +161,8 @@ Arg BasicBlock::expand(const AST* ast)
 std::string BasicBlock::toString() const
 {
     std::string string;
-    std::string padding((this->scope->getDepth() - 1) * 3, ' ');
-    string += padding + fmt::format("BB{} [{}] ({})\n", this->label, this->name, this->scope->name);
+    std::string padding(1, ' ');
+    string += padding + fmt::format("BB{} [{}]\n", this->label, this->name);
     for (const Statement& stmt : statements) {
         string += padding + " │" + stmt.toString() + "\n";
     }

@@ -18,8 +18,9 @@
  *
  */
 struct Symbol {
+    // NOTE: Do not re-order this enum, their order 
     enum Type {
-        Int = AST::int_type, Float = AST::float_type, Char = AST::char_type, None
+        Int = AST::int_type, Float = AST::float_type, Char = AST::char_type, None = 0
     };
 
     enum Category {
@@ -65,4 +66,5 @@ public:
     void populateChildren(AST* ast);
     void print();
     size_t getDepth();
+    Symbol::Type getSymbolType(const char* name);
 };

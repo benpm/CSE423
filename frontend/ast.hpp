@@ -28,7 +28,10 @@ public:
     enum Label {
         root, function, id, list, declaration, initialization, sum, mul,
         int_const, float_const, string_const, char_const, for_stmt,
-        if_stmt, call, int_type, float_type, char_type, bool_expr, unhandled,
+        if_stmt, call,
+        // NOTE: Do not re-order this enum, their order affects type conversion rules
+        char_type, int_type, float_type,
+        bool_expr, unhandled,
         args, return_stmt, le, ge, lt, gt, incr, decr, plus_equal, minus_equal,
         times_equal, dec_list, else_stmt, params, while_stmt, break_stmt, label_stmt,
         goto_stmt, modulo, divide, noteq, equal, assignment, else_if, log_and, log_or,

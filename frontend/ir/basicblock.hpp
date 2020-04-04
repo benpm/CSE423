@@ -10,11 +10,10 @@ private:
 public:
     uint label;
     std::string name;
-    SymbolTable* scope;
     std::vector<Statement> statements;
     int lineNum = -1;
 
-    BasicBlock(int lineNum, uint label, std::string name, SymbolTable* scope);
+    BasicBlock(int lineNum, uint label, std::string name);
     std::string toString() const;
     std::string toCSV() const;
     Arg expand(const AST* ast);
