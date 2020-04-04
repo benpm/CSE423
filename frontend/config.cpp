@@ -99,12 +99,14 @@ Config::Config(int argc, char **argv)
  *
  */
 void Config::usage(std::string exec_name) {
-    std::cout << "Usage: " << exec_name << " FILE_TO_PARSE [-h] [-t] [-p] [-a] [-s] [-r] [-l]" << std::endl;
+    std::cout << "Usage: " << exec_name << " FILE_TO_PARSE [-htpasrl]"
+                                           "[-c OUTPUT_CSV]" << std::endl;
     std::cout << "  -h\t Print this help message" << std::endl
               << "  -t\t Print the tokens found in the file" << std::endl
               << "  -p\t Print the parse tree" << std::endl
               << "  -a\t Print the abstract syntax tree" << std::endl
               << "  -s\t Print the symbol table" << std::endl
               << "  -r\t Print the IR" << std::endl
+              << "  -c\t Output the IR to a CSV file" << std::endl
               << "  -l\t Hide logging messages (except errors)" << std::endl;
 }
