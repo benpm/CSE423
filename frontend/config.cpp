@@ -90,15 +90,6 @@ Config::Config(int argc, char **argv)
     }
 
     this->file = argv[optind];
-
-    if (this->printTokens)
-        spdlog::info("Token printing enabled");
-    if (this->printAST)
-        spdlog::info("Abstract syntax tree printing enabled");
-    if (this->printParseTree)
-        spdlog::info("Parse tree printing enabled");
-    if (this->printSymbolTable)
-        spdlog::info("Symbol table printing enabled");
 }
 
 /**
