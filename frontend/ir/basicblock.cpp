@@ -1,7 +1,9 @@
+#include <fstream>
+#include <set>
+#include <sstream>
 #include <ir/basicblock.hpp>
 #include <spdlog/fmt/fmt.h>
 #include <spdlog/spdlog.h>
-#include <set>
 #include <ast.hpp>
 
 uint BasicBlock::nextTemp = 0;
@@ -47,6 +49,33 @@ BasicBlock::BasicBlock(int lineNum, uint label, std::string name)
     this->lineNum = lineNum;
     this->label = label;
     this->name = name;
+}
+
+BasicBlock::BasicBlock(uint label, std::string name, std::ifstream& csv)
+{
+    this->label = label;
+    this->name = name;
+    while (true) {
+        std::streampos oldPos = csv.tellg();
+        std::string line;
+
+        std::getline(csv, line);
+        if (line.empty()) {
+            csv.seekg(oldPos);
+            break;
+        }
+        std::stringstream row(line);
+        std::string rowType;
+        std::getline(row, rowType, ',');
+        // Row represents a basic block or function line
+        if (rowType == "BB" || rowType == "func") {
+            csv.seekg(oldPos);
+            break;
+        }
+        // Row represents a statement line
+        assert(rowType == "stmt");
+        this->statements.push_back(Statement(row));
+    }
 }
 
 /**

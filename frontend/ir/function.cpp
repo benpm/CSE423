@@ -1,3 +1,4 @@
+#include <sstream>
 #include <unordered_set>
 #include <assert.h>
 #include <ir/function.hpp>
@@ -374,6 +375,42 @@ Function::Function(const AST* funcNode)
 
     // Combine blocks
     this->combineBlocks();
+}
+/**
+ * @brief Construct a new Function, populating with basic blocks using the given AST
+ * 
+ * @param csv Reference to the CSV ifstream being parsed
+ */
+Function::Function(std::string name, std::ifstream& csv)
+{
+    this->name = name;
+    while (true) {
+        std::streampos oldPos = csv.tellg();
+        std::string line;
+
+        std::getline(csv, line);
+        if (line.empty()) {
+            csv.seekg(oldPos);
+            break;
+        }
+        std::stringstream row(line);
+        std::string rowType;
+        std::getline(row, rowType, ',');
+        // Row represents a function line
+        if (rowType == "func") {
+            csv.seekg(oldPos);
+            break;
+        }
+        // Row represents a basic block line
+        assert(rowType == "BB");
+        // Get the function name and create a Function object
+        // Pass reference to the ifstream to Function
+        std::string label;
+        std::string name;
+        std::getline(row, label, ',');
+        std::getline(row, name, ',');
+        this->blocks.push_back(BasicBlock(atoi(label.c_str()), name, csv));
+    }
 }
 
 /**

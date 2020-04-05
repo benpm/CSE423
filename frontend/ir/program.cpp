@@ -1,5 +1,7 @@
 #include <fstream>
 #include <iostream>
+#include <sstream>
+#include <string>
 #include <ir/program.hpp>
 #include <spdlog/spdlog.h>
 
@@ -20,9 +22,21 @@ Program::Program(const AST& ast)
 
 Program::Program(std::string filename)
 {
+    spdlog::info("IR building beginning");
     std::ifstream csv(filename);
+    std::string line;
 
-    // TODO: Build IR from its CSV representation
+    while (std::getline(csv, line) && !line.empty()) {
+        std::stringstream row(line);
+        std::string value;
+        std::getline(row, value, ',');
+        // Row represents a function line
+        assert(value == "func");
+        // Get the function name and create a Function object
+        // Pass reference to the ifstream to Function
+        std::getline(row, value, ',');
+        this->functions.emplace_back(value, Function(value, csv));
+    }
 
     csv.close();
 }

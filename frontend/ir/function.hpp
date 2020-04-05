@@ -1,5 +1,6 @@
 #pragma once
 
+#include <fstream>
 #include <set>
 #include <symboltable.hpp>
 #include <ast.hpp>
@@ -23,6 +24,7 @@ public:
     SymbolTable* scope;
 
     Function(const AST* funcNode);
+    Function(std::string name, std::ifstream& csv);
     std::string toString() const;
     std::string toCSV() const;
 };

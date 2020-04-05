@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sstream>
 #include <string>
 #include <vector>
 #include <symboltable.hpp>
@@ -69,6 +70,7 @@ public:
     Statement(Type type, Arg a, Arg b);
     Statement(Type type, Arg a, Arg b, Arg c);
     Statement(Type type, std::vector<Arg>& args);
+    Statement(std::stringstream& csvRow);
     std::string toString() const;
     std::string toCSV() const;
 };
