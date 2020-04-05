@@ -1,2 +1,21 @@
-Expected file to compile!
-[frontend][error] No file provided to compile. Exiting.
+func,main
+BB,0,combined
+stmt,2,int,ASSIGN,int fact,1
+stmt,2,int,ASSIGN,int n,10
+stmt,3,int,COMP_LT,int #0,int n,0
+stmt,3,none,JUMP_IF_FALSE,4,int #0
+BB,3,call
+stmt,4,none,CALL,#1,printf,"Error! Factorial of a negative number doesn't exist."
+BB,4,assignment
+stmt,6,int,ASSIGN,int i,1
+BB,5,for_cond
+stmt,6,int,COMP_LE,int #2,int i,int n
+stmt,6,none,JUMP_IF_FALSE,8,int #2
+BB,6,combined
+stmt,7,int,MUL,int fact,int fact,int i
+stmt,6,int,ADD,int i,int i,1
+stmt,6,none,JUMP,5
+BB,8,combined
+stmt,9,int,CALL,int #3,printf,"Factorial of %d = %d",int n,int fact
+stmt,11,int,RETURN,0
+

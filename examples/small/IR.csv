@@ -1,2 +1,16 @@
-Expected file to compile!
-[frontend][error] No file provided to compile. Exiting.
+func,main
+BB,0,combined
+stmt,3,int,ASSIGN,int a,42
+stmt,4,int,ASSIGN,int b,89
+stmt,5,int,MUL,int #0,int b,12
+stmt,5,int,ADD,int #1,int a,int #0
+stmt,5,int,ASSIGN,int c,int #1
+stmt,6,float,MINUS,float #2,8.011609
+stmt,6,float,ASSIGN,float d,float #2
+stmt,8,int,COMP_LT,int #3,int c,2
+stmt,8,none,JUMP_IF_FALSE,6,int #3
+BB,5,return_stmt
+stmt,9,int,RETURN,35
+BB,6,return_stmt
+stmt,11,int,RETURN,124
+

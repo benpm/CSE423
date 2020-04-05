@@ -1,2 +1,108 @@
-Expected file to compile!
-[frontend][error] No file provided to compile. Exiting.
+func,fun
+BB,0,combined
+stmt,3,float,ADD,float #0,float XKAD,float V
+stmt,3,float,ASSIGN,float n1,float #0
+stmt,4,float,MUL,float #1,float n1,80
+stmt,4,float,RETURN,float #1
+func,main
+BB,0,combined
+stmt,10,int,MINUS,int #2,2
+stmt,10,int,DIV,int #3,18,int #2
+stmt,10,int,MUL,int #4,15,int #3
+stmt,10,int,MOD,int #5,int #4,18
+stmt,10,int,ASSIGN,int n1,int #5
+stmt,11,int,MUL,int #6,int n1,int n1
+stmt,11,int,ASSIGN,int n2,int #6
+stmt,12,int,ADD,int #7,int n1,int n1
+stmt,12,int,ADD,int #8,int #7,int n2
+stmt,12,int,ADD,int #9,int #8,int n2
+stmt,12,int,ASSIGN,int n3,int #9
+stmt,13,float,MUL,float #A,0.800000,int n2
+stmt,13,float,ASSIGN,float DF,float #A
+stmt,14,char,ASSIGN,char G,'G'
+stmt,17,int,ASSIGN,int i,0
+BB,6,for_cond
+stmt,17,int,MUL,int #B,int n2,int n1
+stmt,17,int,DIV,int #C,int #B,2
+stmt,17,int,COMP_LT,int #D,int i,int #C
+stmt,17,none,JUMP_IF_FALSE,18,int #D
+BB,7,break_stmt
+stmt,18,none,JUMP,18
+BB,8,assignment
+stmt,19,int,ASSIGN,int j,0
+BB,9,for_cond
+stmt,19,int,DIV,int #E,int n1,2
+stmt,19,int,ADD,int #F,int n2,int #E
+stmt,19,int,COMP_LT,int #10,int j,int #F
+stmt,19,none,JUMP_IF_FALSE,17,int #10
+BB,10,assignment
+stmt,20,int,ASSIGN,int x,0
+BB,11,while_cond
+stmt,21,int,COMP_LT,int #11,int x,int n2
+stmt,21,int,COMP_GE,int #12,int x,int n2
+stmt,21,int,NOT,int #13,int #12
+stmt,21,int,LOG_OR,int #14,int #11,int #13
+stmt,21,none,JUMP_IF_FALSE,16,int #14
+BB,12,combined
+stmt,22,int,ASSIGN,int z,10
+stmt,23,int,ADD,int #15,int x,int z
+stmt,23,int,ADD,int x,int x,int #15
+stmt,24,none,JUMP,16
+BB,15,while_post
+stmt,21,none,JUMP,11
+BB,16,for_post
+stmt,19,int,ADD,int j,int j,1
+stmt,19,none,JUMP,9
+BB,17,for_post
+stmt,17,int,ADD,int i,int i,1
+stmt,17,none,JUMP,6
+BB,18,combined
+stmt,30,float,MUL,float #16,0.101000,2
+stmt,30,float,CALL,float #17,fun,float DF,float #16
+stmt,30,float,CALL,float #18,fun,float #17,0.900000
+stmt,30,float,ASSIGN,float DF,float #18
+stmt,31,float,CALL,float #19,printf,"test: %f\n",float DF
+stmt,34,float,MINUS,float #1A,float DF
+stmt,34,float,SUB,float #1B,0.800000,float #1A
+stmt,34,float,COMP_LT,float #1C,float DF,float #1B
+stmt,34,none,JUMP_IF_FALSE,34,float #1C
+BB,21,if_stmt
+stmt,35,int,COMP_NEQ,int #1D,int n2,10
+stmt,35,none,JUMP_IF_FALSE,26,int #1D
+BB,22,combined
+stmt,36,char,ASSIGN,char G,'H'
+stmt,37,int,MUL,int n1,int n1,1
+stmt,38,int,MOD,int n1,int n1,10
+stmt,39,int,ADD,int n1,int n1,1
+BB,26,else_if
+stmt,40,int,COMP_LE,int #1E,int n1,2
+stmt,40,char,COMP_EQ,char #1F,char G,'H'
+stmt,40,int,COMP_NEQ,int #20,int n2,100
+stmt,40,int,LOG_OR,int #21,char #1F,int #20
+stmt,40,int,LOG_AND,int #22,int #1E,int #21
+stmt,40,none,JUMP_IF_FALSE,30,int #22
+BB,27,combined
+stmt,41,float,MINUS,float #23,0.600000
+stmt,41,float,ADD,float DF,float DF,float #23
+stmt,42,float,COMP_EQ,float #24,float DF,0.000000
+stmt,42,none,JUMP_IF_FALSE,30,float #24
+BB,29,assignment
+stmt,43,float,ASSIGN,float DF,1.010000
+BB,30,else_if
+stmt,45,char,COMP_GE,char #25,char G,'H'
+stmt,45,none,JUMP_IF_FALSE,33,char #25
+BB,31,combined
+stmt,46,int,MINUS,int n2,int n2,16
+stmt,47,int,MINUS,int n2,int n2,1
+BB,33,div_equal
+stmt,49,int,DIV,int n1,int n1,2
+BB,34,goto_stmt
+stmt,52,none,JUMP,36
+BB,35,return_stmt
+stmt,53,int,MINUS,int #26,1
+stmt,53,int,RETURN,int #26
+BB,36,combined
+stmt,54,none,NO_OP
+stmt,55,int,MUL,int #27,int n1,2
+stmt,55,int,RETURN,int #27
+
