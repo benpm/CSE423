@@ -1,9 +1,22 @@
+/**
+ * @file statement.cpp
+ * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
+ * @brief Implementation of IR Statement and Arg data structures
+ * @date 2020-03-11
+ *
+ */
 #include <unordered_map>
 #include <spdlog/fmt/fmt.h>
 #include <magic_enum.hpp>
 #include <ir/statement.hpp>
 #include <symboltable.hpp>
 
+/**
+ * Produce the plaintext string representation of an IR Statement argument
+ *
+ * @return The plaintext string representation of an IR Statement argument
+ *
+ */
 std::string Arg::toString() const
 {
     std::string string;
@@ -24,6 +37,12 @@ std::string Arg::toString() const
     return string;
 }
 
+/**
+ * Produce the CSV string representation of an IR Statement argument
+ *
+ * @return The CSV string representation of an IR Statement argument
+ *
+ */
 std::string Arg::toCSV() const
 {
     std::string string;
@@ -44,11 +63,24 @@ std::string Arg::toCSV() const
     return string;
 }
 
+/**
+ * Construct a new Statement of a given type
+ *
+ * @param type The type (operation, etc.) of the statement
+ *
+ */
 Statement::Statement(Type type)
 {
     this->type = type;
 }
 
+/**
+ * Construct a new one-argument Statement of a given type
+ *
+ * @param type The type (operation, etc.) of the statement
+ * @param a The first argument
+ *
+ */
 Statement::Statement(Type type, Arg a)
 {
     this->type = type;
@@ -56,6 +88,14 @@ Statement::Statement(Type type, Arg a)
     this->args.push_back(a);
 }
 
+/**
+ * Construct a new two-argument Statement of a given type
+ *
+ * @param type The type (operation, etc.) of the statement
+ * @param a The first argument
+ * @param b The second argument
+ *
+ */
 Statement::Statement(Type type, Arg a, Arg b)
 {
     this->type = type;
@@ -64,6 +104,15 @@ Statement::Statement(Type type, Arg a, Arg b)
     this->args.push_back(b);
 }
 
+/**
+ * Construct a new three-argument Statement of a given type
+ *
+ * @param type The type (operation, etc.) of the statement
+ * @param a The first argument
+ * @param b The second argument
+ * @param c The third argument
+ *
+ */
 Statement::Statement(Type type, Arg a, Arg b, Arg c)
 {
     this->type = type;
@@ -73,6 +122,13 @@ Statement::Statement(Type type, Arg a, Arg b, Arg c)
     this->args.push_back(c);
 }
 
+/**
+ * Construct a new variable-argument Statement of a given type (usually a function call)
+ *
+ * @param type The type (operation, etc.) of the statement
+ * @param args A vector of the statement arguments
+ *
+ */
 Statement::Statement(Type type, std::vector<Arg>& args)
 {
     this->type = type;
@@ -80,6 +136,12 @@ Statement::Statement(Type type, std::vector<Arg>& args)
     this->resultType = args.at(0).idType;
 }
 
+/**
+ * Construct a new Statement from its IR CSV representation
+ *
+ * @param csvRow A reference to the CSV row string stream
+ *
+ */
 Statement::Statement(std::stringstream& csvRow)
 {
     std::string value;
@@ -143,6 +205,12 @@ Statement::Statement(std::stringstream& csvRow)
     }
 }
 
+/**
+ * Produce the plaintext string representation of the IR Statement
+ *
+ * @return The plaintext string representation of the IR Statement
+ *
+ */
 std::string Statement::toString() const
 {
     std::string string;
@@ -165,6 +233,12 @@ std::string Statement::toString() const
     return string;
 }
 
+/**
+ * Produce the CSV string representation of the IR Statement
+ *
+ * @return The CSV string representation of the IR Statement
+ *
+ */
 std::string Statement::toCSV() const
 {
     std::string string;

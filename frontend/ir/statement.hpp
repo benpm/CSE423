@@ -1,3 +1,10 @@
+/**
+ * @file statement.hpp
+ * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
+ * @brief Header for Statement and Arg data structures
+ * @date 2020-03-11
+ *
+ */
 #pragma once
 
 #include <sstream>
@@ -5,6 +12,11 @@
 #include <vector>
 #include <symboltable.hpp>
 
+/**
+ * @brief Data structure for an IR statement argument
+ * @details Usually consists of a literal or symbol with a type
+ *
+ */
 struct Arg
 {
     // Stored value of argument
@@ -38,6 +50,11 @@ struct Arg
     std::string toCSV() const;
 };
 
+/**
+ * @brief Data structure for an IR statement
+ * @details Consists of a line number, result type, operation, and arguments
+ *
+ */
 class Statement
 {
 public:

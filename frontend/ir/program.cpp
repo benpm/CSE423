@@ -1,3 +1,10 @@
+/**
+ * @file program.cpp
+ * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
+ * @brief Implementation of IR Program data structure
+ * @date 2020-03-11
+ *
+ */
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -5,6 +12,12 @@
 #include <ir/program.hpp>
 #include <spdlog/spdlog.h>
 
+/**
+ * Construct a new Program from the program AST
+ *
+ * @param ast Reference to the AST root node
+ *
+ */
 Program::Program(const AST& ast)
 {
     spdlog::info("IR building beginning");
@@ -20,6 +33,12 @@ Program::Program(const AST& ast)
     spdlog::info("IR building done");
 }
 
+/**
+ * Construct a new Program from its CSV representation
+ *
+ * @param filename The name of the IR CSV file
+ *
+ */
 Program::Program(std::string filename)
 {
     spdlog::info("IR building beginning");
@@ -41,6 +60,12 @@ Program::Program(std::string filename)
     csv.close();
 }
 
+/**
+ * Produce the plaintext string representation of the IR Program
+ *
+ * @return The plaintext string representation of the IR Program
+ *
+ */
 std::string Program::outputToString()
 {
     // Create plaintext representation of this IR program
@@ -51,7 +76,12 @@ std::string Program::outputToString()
     return string;
 }
 
-
+/**
+ * Output the IR CSV representation to a file
+ *
+ * @param filename The name of the IR CSV file
+ *
+ */
 void Program::outputToFile(std::string filename)
 {
     // Create/overwrite file with CSV representation of IR program
@@ -65,6 +95,10 @@ void Program::outputToFile(std::string filename)
     csv.close();
 }
 
+/**
+ * Print the plaintext string representation of the IR Program
+ *
+ */
 void Program::print()
 {
     std::cout << outputToString() << std::endl;

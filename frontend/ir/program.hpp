@@ -1,3 +1,10 @@
+/**
+ * @file program.hpp
+ * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
+ * @brief Header for Program data structure
+ * @date 2020-03-11
+ *
+ */
 #pragma once
 
 #include <utility>
@@ -5,7 +12,11 @@
 #include <ast.hpp>
 #include <ir/function.hpp>
 
-// Intermediate representation program
+/**
+ * @brief Data structure for an IR program
+ * @details Is composed of a series of functions
+ *
+ */
 class Program
 {
 public:
