@@ -28,6 +28,7 @@ int main()
 
     // Testing function calls
     DF = fun(fun(DF, 0.101 * 2), 0.9);
+	printf("test: %f\n", DF);
 
     // Testing conditional statements
     if (DF < (0.8 - (-DF))) {
