@@ -16,13 +16,15 @@ compilerFlags=(
     a # AST
     s # Symbol Table
     r # IR
+    c # IR CSV
 )
 compilerFlagNames=(
-    tokens
-    parseTree
-    AST
-    symbolTable
-    IR
+    tokens.txt
+    parseTree.txt
+    AST.txt
+    symbolTable.txt
+    IR.txt
+    IR.csv
 )
 
 gitRootDir=$(git rev-parse --show-toplevel)
@@ -54,7 +56,7 @@ do
     do 
         flag=${compilerFlags[i]}
         flagName=${compilerFlagNames[i]}
-        outName=$flagName.txt
+        outName=$flagName
 
         printf "\tGenerating %s\n" $flagName
 
