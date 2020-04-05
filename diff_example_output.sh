@@ -19,6 +19,9 @@ compilerFlagNames=(
     IR
 )
 
+csvFlag=c
+csvFlagName=IR.csv
+
 gitRootDir=$(git rev-parse --show-toplevel)
 examplesDir=$gitRootDir/examples/
 compilerExecutable=$gitRootDir/build/sc64
@@ -67,6 +70,25 @@ do
         fi
         total=$((total+1))
     done
+
+    printf "\tDiffing %s... " $csvFlagName
+
+    # Diff IR CSV
+    # Bash magic to get sterr indented on output
+    outName=$dir/$csvFlagName
+    $compilerExecutable -l $cFile -$csvFlag "diff_tmp.txt" 2> "diff_tmp.txt"
+    diff "diff_tmp.txt" $outName > /dev/null
+    if [ "$?" != "0" ]
+    then
+        printf "${RED}FAILED!${NC}\n"
+        inDir=$(basename $dir) 
+        printf "+++++++++++++++++++++++++++++ Left: New | Right: Original | %s.c %s +++++++++++++++++++++++++++++\n" $inDir $flagName
+        diff "diff_tmp.txt" $outName -y
+        failed=$((failed+1))
+    else 
+        printf "${GREEN}PASSED!${NC}\n"
+    fi
+    total=$((total+1))
 done
 
 if [ "$failed" != "0" ]

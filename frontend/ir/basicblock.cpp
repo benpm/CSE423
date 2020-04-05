@@ -1,9 +1,19 @@
+/**
+ * @file basicblock.cpp
+ * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
+ * @brief Implementation of IR BasicBlock data structure
+ * @date 2020-03-11
+ *
+ */
+#include <fstream>
+#include <set>
+#include <sstream>
 #include <ir/basicblock.hpp>
 #include <spdlog/fmt/fmt.h>
 #include <spdlog/spdlog.h>
-#include <set>
 #include <ast.hpp>
 
+// Value of next unused temporary variable
 uint BasicBlock::nextTemp = 0;
 
 // AST nodes that will not create temporaries (as opposed to intermediate statements, which do)
@@ -42,6 +52,14 @@ const std::unordered_map<AST::Label, Statement::Type> labelMap {
     {AST::return_stmt,  Statement::RETURN}
 };
 
+/**
+ * Create a simple basic block
+ *
+ * @param lineNum The line number of the start of the block
+ * @param label The unique label (BB#) of the basic block
+ * @param name The name (function, if, for, etc.) of the basic block
+ *
+ */
 BasicBlock::BasicBlock(int lineNum, uint label, std::string name)
 {
     this->lineNum = lineNum;
@@ -50,12 +68,46 @@ BasicBlock::BasicBlock(int lineNum, uint label, std::string name)
 }
 
 /**
- * @brief Populates a basic block by expanding nested operations in a given AST, creating temporaries
+ * Create a basic block from an IR CSV representation
+ *
+ * @param label The unique label (BB#) of the basic block
+ * @param name The name (function, if, for, etc.) of the basic block
+ * @param csv A reference to the CSV file stream being parsed
+ *
+ */
+BasicBlock::BasicBlock(uint label, std::string name, std::ifstream& csv)
+{
+    this->label = label;
+    this->name = name;
+    while (true) {
+        std::streampos oldPos = csv.tellg();
+        std::string line;
+
+        std::getline(csv, line);
+        if (line.empty()) {
+            csv.seekg(oldPos);
+            break;
+        }
+        std::stringstream row(line);
+        std::string rowType;
+        std::getline(row, rowType, ',');
+        // Row represents a basic block or function line
+        if (rowType == "BB" || rowType == "func") {
+            csv.seekg(oldPos);
+            break;
+        }
+        // Row represents a statement line
+        assert(rowType == "stmt");
+        this->statements.push_back(Statement(row));
+    }
+}
+
+/**
+ * Populates a basic block by expanding nested operations in a given AST, creating temporaries
  * 
- * @param block The basic block to add statements to
  * @param ast The AST to generate statements from
- * @param tempn A counter for generating contiguous temporary var names
- * @return Arg A temporary variable that is intended to store the result of the op in the given AST
+ * @return A temporary variable that is intended to store the result of the op in the given AST
+ *
  */
 Arg BasicBlock::expand(const AST* ast)
 {
@@ -158,6 +210,12 @@ Arg BasicBlock::expand(const AST* ast)
     return temporary;
 }
 
+/**
+ * Return the "pretty" string representation of an IR basic block
+ *
+ * @return The string representation of the IR basic block
+ *
+ */
 std::string BasicBlock::toString() const
 {
     std::string string;
@@ -167,5 +225,21 @@ std::string BasicBlock::toString() const
         string += padding + " │" + stmt.toString() + "\n";
     }
     string += padding + " └────────────────────\n";
+    return string;
+}
+
+/**
+ * Return the CSV string representation of an IR BasicBlock
+ *
+ * @return The CSV string representation of the IR BasicBlock
+ *
+ */
+std::string BasicBlock::toCSV() const
+{
+    std::string string;
+    string += fmt::format("BB,{},{}\n", this->label, this->name);
+    for (const Statement& stmt : statements) {
+        string += stmt.toCSV() + "\n";
+    }
     return string;
 }

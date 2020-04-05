@@ -1,3 +1,11 @@
+/**
+ * @file function.cpp
+ * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
+ * @brief Implementation of IR Function data structure
+ * @date 2020-03-11
+ *
+ */
+#include <sstream>
 #include <unordered_set>
 #include <assert.h>
 #include <ir/function.hpp>
@@ -5,10 +13,11 @@
 #include <spdlog/fmt/fmt.h>
 
 /**
- * @brief Search for break blocks that need jump statements added to them
- * 
+ * Search for break blocks that need jump statements added to them
+ *
  * @param blocks A vector of blocks to search in
  * @param label The label we want to jump to (should be the block after the last loop block)
+ *
  */
 void addJumpsToBreaks(std::vector<BasicBlock>& blocks, uint label)
 {
@@ -20,10 +29,11 @@ void addJumpsToBreaks(std::vector<BasicBlock>& blocks, uint label)
 }
 
 /**
- * @brief Create basic blocks representing a while loop from given AST
- * 
+ * Create basic blocks representing a while loop from given AST
+ *
  * @param ast The AST to produce blocks from
- * @return std::vector<BasicBlock> The blocks created
+ * @return Vector of newly created blocks
+ *
  */
 std::vector<BasicBlock> Function::constructWhile(const AST* ast)
 {
@@ -71,10 +81,11 @@ std::vector<BasicBlock> Function::constructWhile(const AST* ast)
 }
 
 /**
- * @brief Create basic blocks representing a for loop from given AST
- * 
+ * Create basic blocks representing a for loop from given AST
+ *
  * @param ast The AST to produce blocks from
- * @return std::vector<BasicBlock> Newly created blocks
+ * @return Vector of newly created blocks
+ *
  */
 std::vector<BasicBlock> Function::constructFor(const AST* ast)
 {
@@ -129,10 +140,11 @@ std::vector<BasicBlock> Function::constructFor(const AST* ast)
 }
 
 /**
- * @brief Create blocks for an if statement (including else-if and else children)
- * 
+ * Create blocks for an if statement (including else-if and else children)
+ *
  * @param ast The AST node to create blocks from
- * @return std::vector<BasicBlock> Newly created blocks
+ * @return Vector of newly created blocks
+ *
  */
 std::vector<BasicBlock> Function::constructIf(const AST* ast)
 {
@@ -183,10 +195,11 @@ std::vector<BasicBlock> Function::constructIf(const AST* ast)
 }
 
 /**
- * @brief Recursively populates a function with basic blocks using a given AST
- * 
+ * Recursively populates a function with basic blocks using a given AST
+ *
  * @param ast The AST to use
- * @return std::vector<BasicBlock> Newly created blocks
+ * @return Vector of newly created blocks
+ *
  */
 std::vector<BasicBlock> Function::populateBB(const AST* ast)
 {
@@ -256,10 +269,10 @@ std::vector<BasicBlock> Function::populateBB(const AST* ast)
 }
 
 /**
- * @brief Combine groups of blocks into single blocks safely
- * 
- * @return true Blocks were combined
- * @return false Blocks were not combined
+ * Combine groups of blocks into single blocks safely
+ *
+ * @return true if blocks were combined, else false
+ *
  */
 bool Function::combineBlocks()
 {
@@ -343,9 +356,10 @@ bool Function::combineBlocks()
 }
 
 /**
- * @brief Construct a new Function, populating with basic blocks using the given AST
- * 
- * @param funcNode AST node, must be of type "function"
+ * Construct a new Function, populating with basic blocks using the given AST
+ *
+ * @param funcNode Pointer to the AST node, must be of type "function"
+ *
  */
 Function::Function(const AST* funcNode)
 {
@@ -378,9 +392,49 @@ Function::Function(const AST* funcNode)
 }
 
 /**
- * @brief Produces a plaintext representation of the IR
+ * Construct a new Function, populating with basic blocks using the given AST
  * 
- * @return std::string The plaintext representation
+ * @param name The name of the function
+ * @param csv Reference to the CSV ifstream being parsed
+ *
+ */
+Function::Function(std::string name, std::ifstream& csv)
+{
+    this->name = name;
+    while (true) {
+        std::streampos oldPos = csv.tellg();
+        std::string line;
+
+        std::getline(csv, line);
+        if (line.empty()) {
+            csv.seekg(oldPos);
+            break;
+        }
+        std::stringstream row(line);
+        std::string rowType;
+        std::getline(row, rowType, ',');
+        // Row represents a function line
+        if (rowType == "func") {
+            csv.seekg(oldPos);
+            break;
+        }
+        // Row represents a basic block line
+        assert(rowType == "BB");
+        // Get the function name and create a Function object
+        // Pass reference to the ifstream to Function
+        std::string label;
+        std::string name;
+        std::getline(row, label, ',');
+        std::getline(row, name, ',');
+        this->blocks.push_back(BasicBlock(atoi(label.c_str()), name, csv));
+    }
+}
+
+/**
+ * Produces a plaintext string representation of the IR function
+ *
+ * @return The plaintext string representation of the IR function
+ *
  */
 std::string Function::toString() const
 {
@@ -388,6 +442,22 @@ std::string Function::toString() const
     string += fmt::format("{}()\n", this->name);
     for (const BasicBlock& block : blocks) {
         string += " " + block.toString();
+    }
+    return string;
+}
+
+/**
+ * Produces a CSV string representation of the IR function
+ *
+ * @return The CSV string representation of the IR function
+ *
+ */
+std::string Function::toCSV() const
+{
+    std::string string;
+    string += fmt::format("func,{}\n", this->name);
+    for (const BasicBlock& block : blocks) {
+        string += block.toCSV();
     }
     return string;
 }

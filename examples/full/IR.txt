@@ -1,3 +1,11 @@
+fun()
+  BB0 [combined]
+  │(3) <[float][ADD], (float)#0, (float)XKAD, (float)V>
+  │(3) <[float][ASSIGN], (float)n1, (float)#0>
+  │(4) <[float][MUL], (float)#1, (float)n1, 80>
+  │(4) <[float][RETURN], (float)#1>
+  └────────────────────
+
 main()
   BB0 [combined]
   │(10) <[int][MINUS], (int)#2, 2>
@@ -121,14 +129,6 @@ main()
   │(54) <[NO_OP]>
   │(55) <[int][MUL], (int)#27, (int)n1, 2>
   │(55) <[int][RETURN], (int)#27>
-  └────────────────────
-
-fun()
-  BB0 [combined]
-  │(3) <[float][ADD], (float)#0, (float)XKAD, (float)V>
-  │(3) <[float][ASSIGN], (float)n1, (float)#0>
-  │(4) <[float][MUL], (float)#1, (float)n1, 80>
-  │(4) <[float][RETURN], (float)#1>
   └────────────────────
 
 

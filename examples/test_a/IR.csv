@@ -1,0 +1,31 @@
+func,main
+BB,0,combined
+stmt,2,int,MINUS,int #0,5
+stmt,2,int,ASSIGN,int value,int #0
+stmt,3,float,ASSIGN,float a,10.100000
+stmt,5,int,MINUS,int #1,18
+stmt,5,int,MUL,int #2,5,int #1
+stmt,5,int,ASSIGN,int hek,int #2
+stmt,6,char,ASSIGN,char str,'b'
+stmt,7,char,ASSIGN,char str2,'c'
+stmt,8,int,LOG_AND,int #3,1,2
+stmt,8,int,ASSIGN,int logand,int #3
+stmt,9,int,LOG_OR,int #4,1,2
+stmt,9,int,ASSIGN,int logor,int #4
+stmt,13,float,ASSIGN,float a,'	'
+stmt,14,int,ASSIGN,int i,0
+BB,9,for_cond
+stmt,14,int,COMP_LT,int #5,int i,111
+stmt,14,none,JUMP_IF_FALSE,13,int #5
+BB,10,if_stmt
+stmt,15,int,MOD,int #6,int i,10
+stmt,15,int,COMP_EQ,int #7,int #6,5
+stmt,15,none,JUMP_IF_FALSE,12,int #7
+BB,11,plus_equal
+stmt,16,int,ADD,int value,int value,int i
+BB,12,for_post
+stmt,14,int,ADD,int i,int i,1
+stmt,14,none,JUMP,9
+BB,13,return_stmt
+stmt,19,int,RETURN,int value
+
