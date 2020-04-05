@@ -199,6 +199,7 @@ std::vector<BasicBlock> Function::populateBB(const AST* ast)
         switch (child->label) {
             // Simple, compound statements
             case AST::return_stmt:
+            case AST::call:
             case AST::incr:
             case AST::decr:
             case AST::plus_equal:

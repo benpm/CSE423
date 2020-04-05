@@ -63,7 +63,7 @@
 <=, EQUAL>
 <0.8, FLOATCONST>
 <*, TIMES>
-<3.16, FLOATCONST>
+<n2, ID>
 <;, SEMICOLON>
 <char, CHAR>
 <G, ID>
@@ -163,6 +163,13 @@
 <), RPAREN>
 <,, COMMA>
 <0.9, FLOATCONST>
+<), RPAREN>
+<;, SEMICOLON>
+<printf, ID>
+<(, LPAREN>
+<"test: %f\n", STRINGLIT>
+<,, COMMA>
+<DF, ID>
 <), RPAREN>
 <;, SEMICOLON>
 <if, IF>

@@ -62,7 +62,7 @@ root
      │ │   ├─[2] id (DF)
      │ │   └─[2] mul
      │ │     ├─[2] float_const (0.800000)
-     │ │     └─[2] float_const (3.160000)
+     │ │     └─[2] id (n2)
      │ └─[2] declaration
      │   ├─[2] char_type
      │   └─[2] assignment
@@ -146,6 +146,11 @@ root
        │     │     ├─[2] float_const (0.101000)
        │     │     └─[2] int_const (2)
        │     └─[2] float_const (0.900000)
+       ├─[2] call
+       │ ├─[2] id (printf)
+       │ └─[2] args
+       │   ├─[2] string_const ("test: %f\n")
+       │   └─[2] id (DF)
        ├─[6] if_stmt
        │ ├─[6] lt
        │ │ ├─[6] id (DF)

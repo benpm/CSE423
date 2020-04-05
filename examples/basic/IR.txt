@@ -1,16 +1,14 @@
 main()
- BB0 [assignment] (main())
- │(2) <[ASSIGN], foo, 420>
- └────────────────────
-    BB1 [if_stmt] (if_stmt)
-    │(3) <[COMP_GT], #0, foo, 10>
-    │(3) <[JUMP_IF_FALSE], <3>, #0>
-    └────────────────────
-    BB2 [assignment] (if_stmt)
-    │(4) <[ASSIGN], foo, 19>
-    └────────────────────
- BB3 [return_stmt] (main())
- │(6) <[RETURN], 0>
- └────────────────────
+  BB0 [combined]
+  │(2) <[int][ASSIGN], (int)foo, 420>
+  │(3) <[int][COMP_GT], (int)#0, (int)foo, 10>
+  │(3) <[JUMP_IF_FALSE], <3>, (int)#0>
+  └────────────────────
+  BB2 [assignment]
+  │(4) <[int][ASSIGN], (int)foo, 19>
+  └────────────────────
+  BB3 [return_stmt]
+  │(6) <[int][RETURN], 0>
+  └────────────────────
 
 
