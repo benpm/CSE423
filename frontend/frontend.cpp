@@ -64,6 +64,12 @@ int main(int argc, char **argv)
     } else {
         Program program(config.inputCSV);
 
+        if (config.printSymbolTable)
+            spdlog::info("IR as input, ignoring symbol table print flag");
+        if (config.printParseTree)
+            spdlog::info("IR as input, ignoring parsetree print flag");
+        if (config.printAST)
+            spdlog::info("IR as input, ignoring abstract syntax tree print flag");
         if (!config.outputCSV.empty()) {
             spdlog::info("IR output as CSV to {}", config.outputCSV);
             program.outputToFile(config.outputCSV);
