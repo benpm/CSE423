@@ -1,3 +1,11 @@
+/**
+ * @file function.cpp
+ * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
+ * @brief Implementation of IR Function data structure
+ * @date 2020-03-11
+ *
+ */
+#include <sstream>
 #include <unordered_set>
 #include <assert.h>
 #include <ir/function.hpp>
@@ -5,10 +13,11 @@
 #include <spdlog/fmt/fmt.h>
 
 /**
- * @brief Search for break blocks that need jump statements added to them
- * 
+ * Search for break blocks that need jump statements added to them
+ *
  * @param blocks A vector of blocks to search in
  * @param label The label we want to jump to (should be the block after the last loop block)
+ *
  */
 void addJumpsToBreaks(std::vector<BasicBlock>& blocks, uint label)
 {
@@ -20,10 +29,11 @@ void addJumpsToBreaks(std::vector<BasicBlock>& blocks, uint label)
 }
 
 /**
- * @brief Create basic blocks representing a while loop from given AST
- * 
+ * Create basic blocks representing a while loop from given AST
+ *
  * @param ast The AST to produce blocks from
- * @return std::vector<BasicBlock> The blocks created
+ * @return Vector of newly created blocks
+ *
  */
 std::vector<BasicBlock> Function::constructWhile(const AST* ast)
 {
@@ -36,7 +46,7 @@ std::vector<BasicBlock> Function::constructWhile(const AST* ast)
     const AST* bodyNode = ast->children[2];
 
     // Create condition block
-    BasicBlock condBlock(ast->lineNum, this->nextBlockID++, "while_cond", condNode->inScope);
+    BasicBlock condBlock(ast->lineNum, this->nextBlockID++, "while_cond");
     Arg condResult = condBlock.expand(condNode);
 
     // Create declaration and body blocks
@@ -44,7 +54,7 @@ std::vector<BasicBlock> Function::constructWhile(const AST* ast)
     std::vector<BasicBlock> bodyBlocks = this->populateBB(bodyNode);
 
     // Create post-execution block
-    BasicBlock postBlock(ast->lineNum, this->nextBlockID++, "while_post", condNode->inScope);
+    BasicBlock postBlock(ast->lineNum, this->nextBlockID++, "while_post");
     postBlock.statements.emplace_back(
         Statement::JUMP,
         Arg(condBlock.label)
@@ -71,10 +81,11 @@ std::vector<BasicBlock> Function::constructWhile(const AST* ast)
 }
 
 /**
- * @brief Create basic blocks representing a for loop from given AST
- * 
+ * Create basic blocks representing a for loop from given AST
+ *
  * @param ast The AST to produce blocks from
- * @return std::vector<BasicBlock> Newly created blocks
+ * @return Vector of newly created blocks
+ *
  */
 std::vector<BasicBlock> Function::constructFor(const AST* ast)
 {
@@ -92,7 +103,7 @@ std::vector<BasicBlock> Function::constructFor(const AST* ast)
     std::vector<BasicBlock> initBlocks = this->populateBB(initNode);
 
     // Create condition block
-    BasicBlock condBlock(ast->lineNum, this->nextBlockID++, "for_cond", condNode->inScope);
+    BasicBlock condBlock(ast->lineNum, this->nextBlockID++, "for_cond");
     Arg condResult = condBlock.expand(condNode);
 
     // Create declaration and body blocks
@@ -100,7 +111,7 @@ std::vector<BasicBlock> Function::constructFor(const AST* ast)
     std::vector<BasicBlock> bodyBlocks = this->populateBB(bodyNode);
 
     // Create post-execution block
-    BasicBlock postBlock(ast->lineNum, this->nextBlockID++, "for_post", postNode->inScope);
+    BasicBlock postBlock(ast->lineNum, this->nextBlockID++, "for_post");
     postBlock.expand(postNode);
 
     // Add jumps
@@ -129,10 +140,11 @@ std::vector<BasicBlock> Function::constructFor(const AST* ast)
 }
 
 /**
- * @brief Create blocks for an if statement (including else-if and else children)
- * 
+ * Create blocks for an if statement (including else-if and else children)
+ *
  * @param ast The AST node to create blocks from
- * @return std::vector<BasicBlock> Newly created blocks
+ * @return Vector of newly created blocks
+ *
  */
 std::vector<BasicBlock> Function::constructIf(const AST* ast)
 {
@@ -143,7 +155,7 @@ std::vector<BasicBlock> Function::constructIf(const AST* ast)
     const AST* bodyNode = ast->children[2];
 
     // Create condition block
-    BasicBlock condBlock = BasicBlock(ast->lineNum, this->nextBlockID++, ast->toString(), condNode->inScope);
+    BasicBlock condBlock = BasicBlock(ast->lineNum, this->nextBlockID++, ast->toString());
     Arg condResult = condBlock.expand(condNode);
     
     // Create body and declarations
@@ -183,10 +195,11 @@ std::vector<BasicBlock> Function::constructIf(const AST* ast)
 }
 
 /**
- * @brief Recursively populates a function with basic blocks using a given AST
- * 
+ * Recursively populates a function with basic blocks using a given AST
+ *
  * @param ast The AST to use
- * @return std::vector<BasicBlock> Newly created blocks
+ * @return Vector of newly created blocks
+ *
  */
 std::vector<BasicBlock> Function::populateBB(const AST* ast)
 {
@@ -198,6 +211,7 @@ std::vector<BasicBlock> Function::populateBB(const AST* ast)
         switch (child->label) {
             // Simple, compound statements
             case AST::return_stmt:
+            case AST::call:
             case AST::incr:
             case AST::decr:
             case AST::plus_equal:
@@ -213,7 +227,7 @@ std::vector<BasicBlock> Function::populateBB(const AST* ast)
             case AST::log_and:
             case AST::log_or:
             case AST::log_not: {
-                BasicBlock block(child->lineNum, this->nextBlockID++, child->toString(), child->inScope);
+                BasicBlock block(child->lineNum, this->nextBlockID++, child->toString());
                 block.expand(child);
                 tmp.push_back(block);
                 break; }
@@ -228,16 +242,16 @@ std::vector<BasicBlock> Function::populateBB(const AST* ast)
                 tmp = constructIf(child);
                 break;
             case AST::break_stmt: {
-                BasicBlock block(child->lineNum, this->nextBlockID++, child->toString(), child->inScope);
+                BasicBlock block(child->lineNum, this->nextBlockID++, child->toString());
                 tmp.push_back(block);
                 break; }
             case AST::goto_stmt: {
-                BasicBlock block(child->lineNum, this->nextBlockID++, child->toString(), child->inScope);
+                BasicBlock block(child->lineNum, this->nextBlockID++, child->toString());
                 tmp.push_back(block);
                 this->gotoBlockLocs.emplace(block.label, child->children[0]->data.sval);
                 break; }
             case AST::label_stmt: {
-                BasicBlock block(child->lineNum, this->nextBlockID++, child->toString(), child->inScope);
+                BasicBlock block(child->lineNum, this->nextBlockID++, child->toString());
                 block.statements.emplace_back(Statement::NO_OP);
                 tmp.push_back(block);
                 this->labelBlockLocs.emplace(child->children[0]->data.sval, block.label);
@@ -255,10 +269,10 @@ std::vector<BasicBlock> Function::populateBB(const AST* ast)
 }
 
 /**
- * @brief Combine groups of blocks into single blocks safely
- * 
- * @return true Blocks were combined
- * @return false Blocks were not combined
+ * Combine groups of blocks into single blocks safely
+ *
+ * @return true if blocks were combined, else false
+ *
  */
 bool Function::combineBlocks()
 {
@@ -299,10 +313,9 @@ bool Function::combineBlocks()
                 end -= 1;
                 break;
             }
-            // Stop if is jump destination or has new scope
+            // Stop if is jump destination
             const BasicBlock& next = this->blocks.at(end);
-            if (jumpDestinations.count(next.label)
-                || next.scope != first.scope) {
+            if (jumpDestinations.count(next.label)) {
                 end -= 1;
                 break;
             }
@@ -324,8 +337,7 @@ bool Function::combineBlocks()
         BasicBlock newBlock(
             first.lineNum,
             first.label,
-            group.second > group.first ? "combined" : first.name,
-            first.scope
+            group.second > group.first ? "combined" : first.name
         );
         // Add statements to block from following blocks in group
         for (size_t i = group.first; i <= group.second; i++) {
@@ -344,9 +356,10 @@ bool Function::combineBlocks()
 }
 
 /**
- * @brief Construct a new Function, populating with basic blocks using the given AST
- * 
- * @param funcNode AST node, must be of type "function"
+ * Construct a new Function, populating with basic blocks using the given AST
+ *
+ * @param funcNode Pointer to the AST node, must be of type "function"
+ *
  */
 Function::Function(const AST* funcNode)
 {
@@ -379,9 +392,49 @@ Function::Function(const AST* funcNode)
 }
 
 /**
- * @brief Produces a plaintext representation of the IR
+ * Construct a new Function, populating with basic blocks using the given AST
  * 
- * @return std::string The plaintext representation
+ * @param name The name of the function
+ * @param csv Reference to the CSV ifstream being parsed
+ *
+ */
+Function::Function(std::string name, std::ifstream& csv)
+{
+    this->name = name;
+    while (true) {
+        std::streampos oldPos = csv.tellg();
+        std::string line;
+
+        std::getline(csv, line);
+        if (line.empty()) {
+            csv.seekg(oldPos);
+            break;
+        }
+        std::stringstream row(line);
+        std::string rowType;
+        std::getline(row, rowType, ',');
+        // Row represents a function line
+        if (rowType == "func") {
+            csv.seekg(oldPos);
+            break;
+        }
+        // Row represents a basic block line
+        assert(rowType == "BB");
+        // Get the function name and create a Function object
+        // Pass reference to the ifstream to Function
+        std::string label;
+        std::string name;
+        std::getline(row, label, ',');
+        std::getline(row, name, ',');
+        this->blocks.push_back(BasicBlock(atoi(label.c_str()), name, csv));
+    }
+}
+
+/**
+ * Produces a plaintext string representation of the IR function
+ *
+ * @return The plaintext string representation of the IR function
+ *
  */
 std::string Function::toString() const
 {
@@ -389,6 +442,22 @@ std::string Function::toString() const
     string += fmt::format("{}()\n", this->name);
     for (const BasicBlock& block : blocks) {
         string += " " + block.toString();
+    }
+    return string;
+}
+
+/**
+ * Produces a CSV string representation of the IR function
+ *
+ * @return The CSV string representation of the IR function
+ *
+ */
+std::string Function::toCSV() const
+{
+    std::string string;
+    string += fmt::format("func,{}\n", this->name);
+    for (const BasicBlock& block : blocks) {
+        string += block.toCSV();
     }
     return string;
 }

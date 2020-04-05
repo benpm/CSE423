@@ -24,7 +24,7 @@ endif()
 #   Set up includes
 #
 ##########################################################
-include_directories("frontend")
+include_directories("include")
 include_directories("libs/magic_enum")
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
@@ -36,11 +36,11 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 #
 ##########################################################
 BISON_TARGET(parser 
-    frontend/flex_bison/parser.ypp 
+    src/flex_bison/parser.ypp 
     ${CMAKE_CURRENT_BINARY_DIR}/parser.tab.cpp
 )
 FLEX_TARGET(scanner 
-    frontend/flex_bison/scanner.l 
+    src/flex_bison/scanner.l 
     ${CMAKE_CURRENT_BINARY_DIR}/lex.yy.cpp
 )
 ADD_FLEX_BISON_DEPENDENCY(scanner parser)
@@ -51,16 +51,16 @@ ADD_FLEX_BISON_DEPENDENCY(scanner parser)
 #
 ###########################################################
 add_executable(sc64
-    "frontend/frontend.cpp"
-    "frontend/parsetree.cpp"
-    "frontend/ast.cpp"
-    "frontend/config.cpp"
-    "frontend/symboltable.cpp"
-    "frontend/analyzer.cpp"
-    "frontend/ir/statement.cpp"
-    "frontend/ir/basicblock.cpp"
-    "frontend/ir/function.cpp"
-    "frontend/ir/program.cpp"
+    "src/frontend.cpp"
+    "src/config.cpp"
+    "src/parsetree.cpp"
+    "src/ast.cpp"
+    "src/symboltable.cpp"
+    "src/analyzer.cpp"
+    "src/ir/statement.cpp"
+    "src/ir/basicblock.cpp"
+    "src/ir/function.cpp"
+    "src/ir/program.cpp"
     ${FLEX_scanner_OUTPUTS}
     ${BISON_parser_OUTPUTS}
 )

@@ -25,6 +25,10 @@ compilerFlagNames=(
     IR
 )
 
+# IR CSV flag
+csvFlag=c
+csvFlagName=IR.csv
+
 gitRootDir=$(git rev-parse --show-toplevel)
 compilerExecutable=$gitRootDir/build/sc64
 
@@ -61,6 +65,9 @@ do
         # Bash magic to get sterr indented on output
         $compilerExecutable -l -$flag $cFile > $outName 2>&1
     done
+
+    printf "\tGenerating %s\n" $csvFlagName
+    $compilerExecutable -l $cFile -$csvFlag $csvFlagName 2> $csvFlagName
 
     cd ../
 done

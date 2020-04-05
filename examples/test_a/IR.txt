@@ -1,40 +1,38 @@
 main()
- BB0 [combined] (main())
- │(2) <[MINUS], #0, 5>
- │(2) <[ASSIGN], value, #0>
- │(3) <[ASSIGN], a, 10.100000>
- │(5) <[MINUS], #1, 18>
- │(5) <[MUL], #2, 5, #1>
- │(5) <[ASSIGN], hek, #2>
- │(6) <[ASSIGN], str, 'b'>
- │(7) <[ASSIGN], str2, 'c'>
- │(8) <[LOG_AND], #3, 1, 2>
- │(8) <[ASSIGN], logand, #3>
- │(9) <[LOG_OR], #4, 1, 2>
- │(9) <[ASSIGN], logor, #4>
- │(13) <[ASSIGN], a, '	'>
- └────────────────────
-    BB8 [assignment] (for_stmt)
-    │(14) <[ASSIGN], i, 0>
-    └────────────────────
-    BB9 [for_cond] (for_stmt)
-    │(14) <[COMP_LT], #5, i, 111>
-    │(14) <[JUMP_IF_FALSE], <13>, #5>
-    └────────────────────
-       BB10 [if_stmt] (if_stmt)
-       │(15) <[MOD], #6, i, 10>
-       │(15) <[COMP_EQ], #7, #6, 5>
-       │(15) <[JUMP_IF_FALSE], <12>, #7>
-       └────────────────────
-       BB11 [plus_equal] (if_stmt)
-       │(16) <[ADD], value, value, i>
-       └────────────────────
-    BB12 [for_post] (for_stmt)
-    │(14) <[ADD], i, i, 1>
-    │(14) <[JUMP], <9>>
-    └────────────────────
- BB13 [return_stmt] (main())
- │(19) <[RETURN], value>
- └────────────────────
+  BB0 [combined]
+  │(2) <[int][MINUS], (int)#0, 5>
+  │(2) <[int][ASSIGN], (int)value, (int)#0>
+  │(3) <[float][ASSIGN], (float)a, 10.100000>
+  │(5) <[int][MINUS], (int)#1, 18>
+  │(5) <[int][MUL], (int)#2, 5, (int)#1>
+  │(5) <[int][ASSIGN], (int)hek, (int)#2>
+  │(6) <[char][ASSIGN], (char)str, 'b'>
+  │(7) <[char][ASSIGN], (char)str2, 'c'>
+  │(8) <[int][LOG_AND], (int)#3, 1, 2>
+  │(8) <[int][ASSIGN], (int)logand, (int)#3>
+  │(9) <[int][LOG_OR], (int)#4, 1, 2>
+  │(9) <[int][ASSIGN], (int)logor, (int)#4>
+  │(13) <[float][ASSIGN], (float)a, '	'>
+  │(14) <[int][ASSIGN], (int)i, 0>
+  └────────────────────
+  BB9 [for_cond]
+  │(14) <[int][COMP_LT], (int)#5, (int)i, 111>
+  │(14) <[JUMP_IF_FALSE], <13>, (int)#5>
+  └────────────────────
+  BB10 [if_stmt]
+  │(15) <[int][MOD], (int)#6, (int)i, 10>
+  │(15) <[int][COMP_EQ], (int)#7, (int)#6, 5>
+  │(15) <[JUMP_IF_FALSE], <12>, (int)#7>
+  └────────────────────
+  BB11 [plus_equal]
+  │(16) <[int][ADD], (int)value, (int)value, (int)i>
+  └────────────────────
+  BB12 [for_post]
+  │(14) <[int][ADD], (int)i, (int)i, 1>
+  │(14) <[JUMP], <9>>
+  └────────────────────
+  BB13 [return_stmt]
+  │(19) <[int][RETURN], (int)value>
+  └────────────────────
 
 

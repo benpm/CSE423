@@ -14,6 +14,8 @@ Documentation and User Manual lives on our [Wiki](https://github.com/benpm/CSE42
     - [ ] Type checking
     - [ ] Scope checking
 - [X] IR generator
+    - [X] Output IR to file
+    - [X] Read in IR from file
 - [ ] Optimizer
 - [ ] Code generator
 

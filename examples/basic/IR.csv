@@ -1,0 +1,10 @@
+func,main
+BB,0,combined
+stmt,2,int,ASSIGN,int foo,420
+stmt,3,int,COMP_GT,int #0,int foo,10
+stmt,3,none,JUMP_IF_FALSE,3,int #0
+BB,2,assignment
+stmt,4,int,ASSIGN,int foo,19
+BB,3,return_stmt
+stmt,6,int,RETURN,0
+

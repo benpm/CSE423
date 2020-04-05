@@ -1,8 +1,22 @@
+/**
+ * @file statement.hpp
+ * @author Haydn Jones, Benjamin Mastripolito, Steven Anaya
+ * @brief Header for Statement and Arg data structures
+ * @date 2020-03-11
+ *
+ */
 #pragma once
 
+#include <sstream>
 #include <string>
 #include <vector>
+#include <symboltable.hpp>
 
+/**
+ * @brief Data structure for an IR statement argument
+ * @details Usually consists of a literal or symbol with a type
+ *
+ */
 struct Arg
 {
     // Stored value of argument
@@ -21,15 +35,26 @@ struct Arg
     };
     Type type;
 
+    // Type of identifier
+    Symbol::Type idType = Symbol::Type::None;
+
     Arg(uint label) { type = Type::LABEL; val.label = label; };
-    Arg(int ival)   { type = Type::INT; val.ival = ival; };
-    Arg(char cval)  { type = Type::CHAR; val.cval = cval; };
-    Arg(float fval) { type = Type::FLOAT; val.fval = fval; };
+    Arg(int ival)   { type = Type::INT; val.ival = ival; idType = Symbol::Type::Int; };
+    Arg(char cval)  { type = Type::CHAR; val.cval = cval; idType = Symbol::Type::Char; };
+    Arg(float fval) { type = Type::FLOAT; val.fval = fval; idType = Symbol::Type::Float; };
     Arg(char* sval) { type = Type::NAME; val.sval = sval; };
+    Arg(char* sval, Symbol::Type idType)
+        { type = Type::NAME; val.sval = sval; this->idType = idType; };
 
     std::string toString() const;
+    std::string toCSV() const;
 };
 
+/**
+ * @brief Data structure for an IR statement
+ * @details Consists of a line number, result type, operation, and arguments
+ *
+ */
 class Statement
 {
 public:
@@ -53,6 +78,7 @@ public:
     };
 
     Type type = Type::NO_OP;
+    Symbol::Type resultType = Symbol::Type::None;
     std::vector<Arg> args;
     int lineNum = -1;
 
@@ -61,5 +87,7 @@ public:
     Statement(Type type, Arg a, Arg b);
     Statement(Type type, Arg a, Arg b, Arg c);
     Statement(Type type, std::vector<Arg>& args);
+    Statement(std::stringstream& csvRow);
     std::string toString() const;
+    std::string toCSV() const;
 };

@@ -1,26 +1,28 @@
 main()
- BB0 [combined] (main())
- │(2) <[ASSIGN], fact, 1>
- │(2) <[ASSIGN], n, 10>
- └────────────────────
-    BB2 [if_stmt] (if_stmt)
-    │(3) <[COMP_LT], #0, n, 0>
-    │(3) <[JUMP_IF_FALSE], <3>, #0>
-    └────────────────────
-          BB3 [assignment] (for_stmt)
-          │(6) <[ASSIGN], i, 1>
-          └────────────────────
-          BB4 [for_cond] (for_stmt)
-          │(6) <[COMP_LE], #1, i, n>
-          │(6) <[JUMP_IF_FALSE], <7>, #1>
-          └────────────────────
-          BB5 [combined] (for_stmt)
-          │(7) <[MUL], fact, fact, i>
-          │(6) <[ADD], i, i, 1>
-          │(6) <[JUMP], <4>>
-          └────────────────────
- BB7 [return_stmt] (main())
- │(11) <[RETURN], 0>
- └────────────────────
+  BB0 [combined]
+  │(2) <[int][ASSIGN], (int)fact, 1>
+  │(2) <[int][ASSIGN], (int)n, 10>
+  │(3) <[int][COMP_LT], (int)#0, (int)n, 0>
+  │(3) <[JUMP_IF_FALSE], <4>, (int)#0>
+  └────────────────────
+  BB3 [call]
+  │(4) <[CALL], #1, printf, "Error! Factorial of a negative number doesn't exist.">
+  └────────────────────
+  BB4 [assignment]
+  │(6) <[int][ASSIGN], (int)i, 1>
+  └────────────────────
+  BB5 [for_cond]
+  │(6) <[int][COMP_LE], (int)#2, (int)i, (int)n>
+  │(6) <[JUMP_IF_FALSE], <8>, (int)#2>
+  └────────────────────
+  BB6 [combined]
+  │(7) <[int][MUL], (int)fact, (int)fact, (int)i>
+  │(6) <[int][ADD], (int)i, (int)i, 1>
+  │(6) <[JUMP], <5>>
+  └────────────────────
+  BB8 [combined]
+  │(9) <[int][CALL], (int)#3, printf, "Factorial of %d = %d", (int)n, (int)fact>
+  │(11) <[int][RETURN], 0>
+  └────────────────────
 
 
