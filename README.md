@@ -17,7 +17,13 @@ Documentation and User Manual lives on our [Wiki](https://github.com/benpm/CSE42
     - [X] Output IR to file
     - [X] Read in IR from file
 - [ ] Optimizer
+    - [ ] Constant propagation
+    - [ ] Constant folding
 - [ ] Code generator
+    - [ ] x86 processor model
+    - [ ] Instruction selection
+    - [ ] Register allocation
+    - [ ] Output x86 ASM
 
 ## Examples
 Visit the [/examples](/examples) directory for examples of intermediate ouputs.
