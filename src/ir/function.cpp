@@ -369,6 +369,17 @@ Function::Function(const AST* funcNode)
     this->name = funcNode->children[1]->data.sval;
     this->scope = funcNode->ownsScope;
 
+    // Add parameters
+    for (const auto& item : this->scope->table) {
+        if (item.second.category == Symbol::Category::Parameter) {
+            this->parameters.emplace_back(
+                strdup(item.first.c_str()),
+                item.second.symType
+            );
+        }
+    }
+
+    // Create blocks
     this->nextBlockID = 0;
     this->blocks = this->populateBB(funcNode);
 
@@ -398,9 +409,10 @@ Function::Function(const AST* funcNode)
  * @param csv Reference to the CSV ifstream being parsed
  *
  */
-Function::Function(std::string name, std::ifstream& csv)
+Function::Function(std::string name, std::ifstream& csv, std::vector<Arg> parameters)
 {
     this->name = name;
+    this->parameters = parameters;
     while (true) {
         std::streampos oldPos = csv.tellg();
         std::string line;
@@ -439,8 +451,14 @@ Function::Function(std::string name, std::ifstream& csv)
 std::string Function::toString() const
 {
     std::string string;
-    string += fmt::format("{}()\n", this->name);
-    for (const BasicBlock& block : blocks) {
+    // Parameters
+    string += fmt::format("{}(", this->name);
+    for (const Arg& param : this->parameters) {
+        string += param.toString() + ", ";
+    }
+    string += ")\n";
+    // Blocks
+    for (const BasicBlock& block : this->blocks) {
         string += " " + block.toString();
     }
     return string;
@@ -455,7 +473,12 @@ std::string Function::toString() const
 std::string Function::toCSV() const
 {
     std::string string;
-    string += fmt::format("func,{}\n", this->name);
+    string += fmt::format("func,{}", this->name);
+    // Parameters
+    for (const Arg& param : this->parameters) {
+        string += "," + param.toCSV();
+    }
+    string += "\n";
     for (const BasicBlock& block : blocks) {
         string += block.toCSV();
     }

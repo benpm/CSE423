@@ -51,10 +51,19 @@ Program::Program(std::string filename)
         std::getline(row, value, ',');
         // Row represents a function line
         assert(value == "func");
-        // Get the function name and create a Function object
-        // Pass reference to the ifstream to Function
+        // Get the function name
         std::getline(row, value, ',');
-        this->functions.emplace_back(value, Function(value, csv));
+        std::string funcName = value;
+        // Get parameters
+        std::vector<Arg> parameters;
+        while (std::getline(row, value, ',')) {
+            std::string idtype = value.substr(0, value.find(' '));
+            std::string name = value.substr(value.find(' ') + 1);
+            spdlog::debug("{}:{}", idtype, name);
+            parameters.emplace_back(strdup(name.c_str()), idtype);
+        }
+        // Create function, passing ref to ifstream
+        this->functions.emplace_back(value, Function(funcName, csv, parameters));
     }
 
     csv.close();

@@ -1,4 +1,4 @@
-func,fun
+func,fun,float V,float XKAD
 BB,0,combined
 stmt,3,float,ADD,float #0,float XKAD,float V
 stmt,3,float,ASSIGN,float n1,float #0
