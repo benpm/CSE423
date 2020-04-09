@@ -1,4 +1,4 @@
-fun()
+fun((float)V, (float)XKAD, )
   BB0 [combined]
   │(3) <[float][ADD], (float)#0, (float)XKAD, (float)V>
   │(3) <[float][ASSIGN], (float)n1, (float)#0>

@@ -45,6 +45,7 @@ struct Arg
     Arg(char* sval) { type = Type::NAME; val.sval = sval; };
     Arg(char* sval, Symbol::Type idType)
         { type = Type::NAME; val.sval = sval; this->idType = idType; };
+    Arg(char* sval, const std::string idType);
 
     std::string toString() const;
     std::string toCSV() const;

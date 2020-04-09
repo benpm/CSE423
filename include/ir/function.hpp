@@ -33,10 +33,11 @@ private:
 public:
     std::string name;
     std::vector<BasicBlock> blocks;
+    std::vector<Arg> parameters;
     SymbolTable* scope;
 
     Function(const AST* funcNode);
-    Function(std::string name, std::ifstream& csv);
+    Function(std::string name, std::ifstream& csv, std::vector<Arg> parameters);
     std::string toString() const;
     std::string toCSV() const;
 };

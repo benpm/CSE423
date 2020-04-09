@@ -12,6 +12,24 @@
 #include <symboltable.hpp>
 
 /**
+ * @brief Construct a new name arg with name sval and type idType
+ * 
+ * @param sval String name
+ * @param idType String representing the idtype: either "int", "float", or "char"
+ */
+Arg::Arg(char* sval, const std::string idType)
+{
+    type = Type::NAME;
+    val.sval = sval;
+    if (idType == "int")
+        this->idType = Symbol::Type::Int;
+    else if (idType == "float")
+        this->idType = Symbol::Type::Float;
+    else
+        this->idType = Symbol::Type::Char;
+}
+
+/**
  * Produce the plaintext string representation of an IR Statement argument
  *
  * @return The plaintext string representation of an IR Statement argument
@@ -182,13 +200,7 @@ Statement::Statement(std::stringstream& csvRow)
 
             std::getline(arg, argType, ' ');
             std::getline(arg, argLabel, ' ');
-            if (argType == "int")
-                symType = Symbol::Type::Int;
-            else if (argType == "float")
-                symType = Symbol::Type::Float;
-            else
-                symType = Symbol::Type::Char;
-            this->args.emplace_back(strdup(argLabel.c_str()), symType);
+            this->args.emplace_back(strdup(argLabel.c_str()), argType);
         } else if (value.find('.') != std::string::npos) {
             // Argument is a float literal
             this->args.emplace_back((float) atof(value.c_str()));
