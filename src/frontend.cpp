@@ -13,6 +13,7 @@
 #include <parsetree.hpp>
 #include <symboltable.hpp>
 #include <ir/program.hpp>
+#include <optimizer.hpp>
 
 // Main entry point for compiler
 int main(int argc, char **argv)
@@ -40,6 +41,10 @@ int main(int argc, char **argv)
 
         // Create IR program
         Program program(ast);
+
+        // Optimize IR program
+        Optimizer optimizer;
+        optimizer.optimize(program);
 
         if (config.printSymbolTable) {
             spdlog::info("Symbol table:");

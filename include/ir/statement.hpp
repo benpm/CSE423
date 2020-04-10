@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include <symboltable.hpp>
+#include <spdlog/spdlog.h>
 
 /**
  * @brief Data structure for an IR statement argument
@@ -46,6 +47,37 @@ struct Arg
     Arg(char* sval, Symbol::Type idType)
         { type = Type::NAME; val.sval = sval; this->idType = idType; };
     Arg(char* sval, const std::string idType);
+
+    operator int () const { 
+        switch (this->type) {
+            case Arg::LABEL: return (int)val.label;
+            case Arg::CHAR: return (int)val.cval;
+            case Arg::FLOAT: return (int)val.fval;
+            case Arg::INT: return (int)val.ival;
+        }
+        spdlog::error("Arg cast used on invalid type");
+        return 0;
+    }
+    operator char () const { 
+        switch (this->type) {
+            case Arg::LABEL: return (char)val.label;
+            case Arg::CHAR: return (char)val.cval;
+            case Arg::FLOAT: return (char)val.fval;
+            case Arg::INT: return (char)val.ival;
+        }
+        spdlog::error("Arg cast used on invalid type");
+        return 0;
+    }
+    operator float () const { 
+        switch (this->type) {
+            case Arg::LABEL: return (float)val.label;
+            case Arg::CHAR: return (float)val.cval;
+            case Arg::FLOAT: return (float)val.fval;
+            case Arg::INT: return (float)val.ival;
+        }
+        spdlog::error("Arg cast used on invalid type");
+        return 0.0f;
+    }
 
     std::string toString() const;
     std::string toCSV() const;
