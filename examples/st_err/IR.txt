@@ -1,7 +1,0 @@
-main()
-  BB0 [combined]
-  │(7) <[int][ASSIGN], (int)g, 3>
-  │(8) <[int][ASSIGN], (int)h, 3>
-  └────────────────────
-
-

@@ -1,5 +1,0 @@
-func,main
-BB,0,combined
-stmt,7,int,ASSIGN,int g,3
-stmt,8,int,ASSIGN,int h,3
-
