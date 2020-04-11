@@ -16,219 +16,229 @@ root
    │ │     └─[1] sum
    │ │       ├─[1] id (XKAD)
    │ │       └─[1] id (V)
-   │ └─[1] list
-   │   └─[1] return_stmt
-   │     └─[1] mul
-   │       ├─[1] id (n1)
-   │       └─[1] int_const (80)
-   └─[2] function
-     ├─[2] int_type
-     ├─[2] id (main)
-     ├─[2] params
-     ├─[2] dec_list
-     │ ├─[2] declaration
-     │ │ ├─[2] int_type
-     │ │ └─[2] assignment
-     │ │   ├─[2] id (n1)
-     │ │   └─[2] modulo
-     │ │     ├─[2] mul
-     │ │     │ ├─[2] int_const (15)
-     │ │     │ └─[2] divide
-     │ │     │   ├─[2] int_const (18)
-     │ │     │   └─[2] unary_minus
-     │ │     │     └─[2] int_const (2)
-     │ │     └─[2] int_const (18)
-     │ ├─[2] declaration
-     │ │ ├─[2] int_type
-     │ │ └─[2] assignment
-     │ │   ├─[2] id (n2)
-     │ │   └─[2] mul
-     │ │     ├─[2] id (n1)
-     │ │     └─[2] id (n1)
-     │ ├─[2] declaration
-     │ │ ├─[2] int_type
-     │ │ └─[2] assignment
-     │ │   ├─[2] id (n3)
-     │ │   └─[2] sum
-     │ │     ├─[2] sum
-     │ │     │ ├─[2] sum
-     │ │     │ │ ├─[2] id (n1)
-     │ │     │ │ └─[2] id (n1)
-     │ │     │ └─[2] id (n2)
-     │ │     └─[2] id (n2)
-     │ ├─[2] declaration
-     │ │ ├─[2] float_type
-     │ │ └─[2] assignment
-     │ │   ├─[2] id (DF)
-     │ │   └─[2] mul
-     │ │     ├─[2] float_const (0.800000)
-     │ │     └─[2] id (n2)
-     │ └─[2] declaration
-     │   ├─[2] char_type
-     │   └─[2] assignment
-     │     ├─[2] id (G)
-     │     └─[2] char_const (G)
-     └─[2] list
-       ├─[3] for_stmt
-       │ ├─[3] declaration
-       │ │ ├─[3] int_type
-       │ │ └─[3] assignment
-       │ │   ├─[3] id (i)
-       │ │   └─[3] int_const (0)
-       │ ├─[3] lt
-       │ │ ├─[3] id (i)
-       │ │ └─[3] divide
-       │ │   ├─[3] mul
-       │ │   │ ├─[3] id (n2)
-       │ │   │ └─[3] id (n1)
-       │ │   └─[3] int_const (2)
-       │ ├─[3] plus_equal
-       │ │ ├─[3] id (i)
-       │ │ └─[3] int_const (1)
-       │ ├─[3] dec_list
-       │ └─[3] list
-       │   ├─[3] break_stmt
-       │   └─[4] for_stmt
-       │     ├─[4] declaration
-       │     │ ├─[4] int_type
-       │     │ └─[4] assignment
-       │     │   ├─[4] id (j)
-       │     │   └─[4] int_const (0)
-       │     ├─[4] lt
-       │     │ ├─[4] id (j)
-       │     │ └─[4] sum
-       │     │   ├─[4] id (n2)
-       │     │   └─[4] divide
-       │     │     ├─[4] id (n1)
-       │     │     └─[4] int_const (2)
-       │     ├─[4] plus_equal
-       │     │ ├─[4] id (j)
-       │     │ └─[4] int_const (1)
-       │     ├─[4] dec_list
-       │     │ └─[4] declaration
-       │     │   ├─[4] int_type
-       │     │   └─[4] assignment
-       │     │     ├─[4] id (x)
-       │     │     └─[4] int_const (0)
-       │     └─[4] list
-       │       └─[5] while_stmt
-       │         ├─[5] log_or
-       │         │ ├─[5] lt
-       │         │ │ ├─[5] id (x)
-       │         │ │ └─[5] id (n2)
-       │         │ └─[5] log_not
-       │         │   └─[5] ge
-       │         │     ├─[5] id (x)
-       │         │     └─[5] id (n2)
-       │         ├─[5] dec_list
-       │         │ └─[5] declaration
-       │         │   ├─[5] int_type
-       │         │   └─[5] assignment
-       │         │     ├─[5] id (z)
-       │         │     └─[5] int_const (10)
-       │         └─[5] list
-       │           ├─[5] plus_equal
-       │           │ ├─[5] id (x)
-       │           │ └─[5] sum
-       │           │   ├─[5] id (x)
-       │           │   └─[5] id (z)
-       │           └─[5] break_stmt
-       ├─[2] assignment
-       │ ├─[2] id (DF)
-       │ └─[2] call
-       │   ├─[2] id (fun)
-       │   └─[2] args
-       │     ├─[2] call
-       │     │ ├─[2] id (fun)
-       │     │ └─[2] args
-       │     │   ├─[2] id (DF)
-       │     │   └─[2] mul
-       │     │     ├─[2] float_const (0.101000)
-       │     │     └─[2] int_const (2)
-       │     └─[2] float_const (0.900000)
-       ├─[2] call
-       │ ├─[2] id (printf)
-       │ └─[2] args
-       │   ├─[2] string_const ("test: %f\n")
-       │   └─[2] id (DF)
-       ├─[6] if_stmt
-       │ ├─[6] lt
-       │ │ ├─[6] id (DF)
-       │ │ └─[6] sub
-       │ │   ├─[6] float_const (0.800000)
-       │ │   └─[6] unary_minus
-       │ │     └─[6] id (DF)
+   │ └─[2] list
+   │   └─[2] return_stmt
+   │     └─[2] mul
+   │       ├─[2] id (n1)
+   │       └─[2] int_const (80)
+   └─[3] function
+     ├─[3] int_type
+     ├─[3] id (main)
+     ├─[3] params
+     ├─[3] dec_list
+     │ ├─[3] declaration
+     │ │ ├─[3] int_type
+     │ │ └─[3] assignment
+     │ │   ├─[3] id (n1)
+     │ │   └─[3] modulo
+     │ │     ├─[3] mul
+     │ │     │ ├─[3] int_const (15)
+     │ │     │ └─[3] divide
+     │ │     │   ├─[3] int_const (18)
+     │ │     │   └─[3] unary_minus
+     │ │     │     └─[3] int_const (2)
+     │ │     └─[3] int_const (18)
+     │ ├─[3] declaration
+     │ │ ├─[3] int_type
+     │ │ └─[3] assignment
+     │ │   ├─[3] id (n2)
+     │ │   └─[3] mul
+     │ │     ├─[3] id (n1)
+     │ │     └─[3] id (n1)
+     │ ├─[3] declaration
+     │ │ ├─[3] int_type
+     │ │ └─[3] assignment
+     │ │   ├─[3] id (n3)
+     │ │   └─[3] sum
+     │ │     ├─[3] sum
+     │ │     │ ├─[3] sum
+     │ │     │ │ ├─[3] id (n1)
+     │ │     │ │ └─[3] id (n1)
+     │ │     │ └─[3] id (n2)
+     │ │     └─[3] id (n2)
+     │ ├─[3] declaration
+     │ │ ├─[3] float_type
+     │ │ └─[3] assignment
+     │ │   ├─[3] id (DF)
+     │ │   └─[3] mul
+     │ │     ├─[3] float_const (0.800000)
+     │ │     └─[3] id (n2)
+     │ └─[3] declaration
+     │   ├─[3] char_type
+     │   └─[3] assignment
+     │     ├─[3] id (G)
+     │     └─[3] char_const (G)
+     └─[4] list
+       ├─[5] for_stmt
+       │ ├─[5] declaration
+       │ │ ├─[5] int_type
+       │ │ └─[5] assignment
+       │ │   ├─[5] id (i)
+       │ │   └─[5] int_const (0)
+       │ ├─[5] lt
+       │ │ ├─[5] id (i)
+       │ │ └─[5] divide
+       │ │   ├─[5] mul
+       │ │   │ ├─[5] id (n2)
+       │ │   │ └─[5] id (n1)
+       │ │   └─[5] int_const (2)
+       │ ├─[5] plus_equal
+       │ │ ├─[5] id (i)
+       │ │ └─[5] int_const (1)
        │ ├─[6] dec_list
+       │ │ └─[6] declaration
+       │ │   ├─[6] int_type
+       │ │   └─[6] assignment
+       │ │     ├─[6] id (n1)
+       │ │     └─[6] int_const (10)
        │ └─[6] list
-       │   └─[7] if_stmt
-       │     ├─[7] noteq
-       │     │ ├─[7] id (n2)
-       │     │ └─[7] int_const (10)
-       │     ├─[7] dec_list
-       │     ├─[7] list
-       │     │ ├─[7] assignment
-       │     │ │ ├─[7] id (G)
-       │     │ │ └─[7] char_const (H)
-       │     │ ├─[7] times_equal
-       │     │ │ ├─[7] id (n1)
-       │     │ │ └─[7] int_const (1)
-       │     │ ├─[7] mod_equal
-       │     │ │ ├─[7] id (n1)
-       │     │ │ └─[7] int_const (10)
-       │     │ └─[7] incr
-       │     │   └─[7] id (n1)
-       │     ├─[8] else_if
-       │     │ ├─[8] log_and
-       │     │ │ ├─[8] le
-       │     │ │ │ ├─[8] id (n1)
-       │     │ │ │ └─[8] int_const (2)
-       │     │ │ └─[8] log_or
-       │     │ │   ├─[8] equal
-       │     │ │   │ ├─[8] id (G)
-       │     │ │   │ └─[8] char_const (H)
-       │     │ │   └─[8] noteq
-       │     │ │     ├─[8] id (n2)
-       │     │ │     └─[8] int_const (100)
-       │     │ ├─[8] dec_list
-       │     │ └─[8] list
-       │     │   ├─[8] plus_equal
-       │     │   │ ├─[8] id (DF)
-       │     │   │ └─[8] unary_minus
-       │     │   │   └─[8] float_const (0.600000)
-       │     │   └─[9] if_stmt
-       │     │     ├─[9] equal
-       │     │     │ ├─[9] id (DF)
-       │     │     │ └─[9] float_const (0.000000)
-       │     │     ├─[9] dec_list
-       │     │     └─[9] list
-       │     │       └─[9] assignment
-       │     │         ├─[9] id (DF)
-       │     │         └─[9] float_const (1.010000)
-       │     ├─[10] else_if
-       │     │ ├─[10] ge
-       │     │ │ ├─[10] id (G)
-       │     │ │ └─[10] char_const (H)
-       │     │ ├─[10] dec_list
-       │     │ └─[10] list
-       │     │   ├─[10] minus_equal
-       │     │   │ ├─[10] id (n2)
-       │     │   │ └─[10] int_const (16)
-       │     │   └─[10] decr
-       │     │     └─[10] id (n2)
-       │     └─[11] else_stmt
-       │       ├─[11] dec_list
-       │       └─[11] list
-       │         └─[11] div_equal
-       │           ├─[11] id (n1)
-       │           └─[11] int_const (2)
-       ├─[2] goto_stmt
-       │ └─[2] id (label)
-       ├─[2] return_stmt
-       │ └─[2] unary_minus
-       │   └─[2] int_const (1)
-       ├─[2] label_stmt
-       │ └─[2] id (label)
-       └─[2] return_stmt
-         └─[2] mul
-           ├─[2] id (n1)
-           └─[2] int_const (2)
+       │   ├─[6] break_stmt
+       │   └─[7] for_stmt
+       │     ├─[7] declaration
+       │     │ ├─[7] int_type
+       │     │ └─[7] assignment
+       │     │   ├─[7] id (j)
+       │     │   └─[7] int_const (0)
+       │     ├─[7] lt
+       │     │ ├─[7] id (j)
+       │     │ └─[7] sum
+       │     │   ├─[7] id (n2)
+       │     │   └─[7] divide
+       │     │     ├─[7] id (n1)
+       │     │     └─[7] int_const (2)
+       │     ├─[7] plus_equal
+       │     │ ├─[7] id (j)
+       │     │ └─[7] int_const (1)
+       │     ├─[8] dec_list
+       │     │ └─[8] declaration
+       │     │   ├─[8] int_type
+       │     │   └─[8] assignment
+       │     │     ├─[8] id (x)
+       │     │     └─[8] int_const (0)
+       │     └─[8] list
+       │       └─[9] while_stmt
+       │         ├─[9] log_or
+       │         │ ├─[9] lt
+       │         │ │ ├─[9] id (x)
+       │         │ │ └─[9] id (n2)
+       │         │ └─[9] log_not
+       │         │   └─[9] ge
+       │         │     ├─[9] id (x)
+       │         │     └─[9] id (n2)
+       │         ├─[10] dec_list
+       │         │ ├─[10] declaration
+       │         │ │ ├─[10] int_type
+       │         │ │ └─[10] assignment
+       │         │ │   ├─[10] id (z)
+       │         │ │   └─[10] int_const (10)
+       │         │ └─[10] declaration
+       │         │   ├─[10] int_type
+       │         │   └─[10] assignment
+       │         │     ├─[10] id (x)
+       │         │     └─[10] int_const (3)
+       │         └─[10] list
+       │           ├─[10] plus_equal
+       │           │ ├─[10] id (x)
+       │           │ └─[10] sum
+       │           │   ├─[10] id (x)
+       │           │   └─[10] id (z)
+       │           └─[10] break_stmt
+       ├─[4] assignment
+       │ ├─[4] id (DF)
+       │ └─[4] call
+       │   ├─[4] id (fun)
+       │   └─[4] args
+       │     ├─[4] call
+       │     │ ├─[4] id (fun)
+       │     │ └─[4] args
+       │     │   ├─[4] id (DF)
+       │     │   └─[4] mul
+       │     │     ├─[4] float_const (0.101000)
+       │     │     └─[4] int_const (2)
+       │     └─[4] float_const (0.900000)
+       ├─[4] call
+       │ ├─[4] id (printf)
+       │ └─[4] args
+       │   ├─[4] string_const ("test: %f\n")
+       │   └─[4] id (DF)
+       ├─[11] if_stmt
+       │ ├─[11] lt
+       │ │ ├─[11] id (DF)
+       │ │ └─[11] sub
+       │ │   ├─[11] float_const (0.800000)
+       │ │   └─[11] unary_minus
+       │ │     └─[11] id (DF)
+       │ ├─[11] dec_list
+       │ └─[12] list
+       │   └─[13] if_stmt
+       │     ├─[13] noteq
+       │     │ ├─[13] id (n2)
+       │     │ └─[13] int_const (10)
+       │     ├─[13] dec_list
+       │     ├─[14] list
+       │     │ ├─[14] assignment
+       │     │ │ ├─[14] id (G)
+       │     │ │ └─[14] char_const (H)
+       │     │ ├─[14] times_equal
+       │     │ │ ├─[14] id (n1)
+       │     │ │ └─[14] int_const (1)
+       │     │ ├─[14] mod_equal
+       │     │ │ ├─[14] id (n1)
+       │     │ │ └─[14] int_const (10)
+       │     │ └─[14] incr
+       │     │   └─[14] id (n1)
+       │     ├─[15] else_if
+       │     │ ├─[15] log_and
+       │     │ │ ├─[15] le
+       │     │ │ │ ├─[15] id (n1)
+       │     │ │ │ └─[15] int_const (2)
+       │     │ │ └─[15] log_or
+       │     │ │   ├─[15] equal
+       │     │ │   │ ├─[15] id (G)
+       │     │ │   │ └─[15] char_const (H)
+       │     │ │   └─[15] noteq
+       │     │ │     ├─[15] id (n2)
+       │     │ │     └─[15] int_const (100)
+       │     │ ├─[15] dec_list
+       │     │ └─[16] list
+       │     │   ├─[16] plus_equal
+       │     │   │ ├─[16] id (DF)
+       │     │   │ └─[16] unary_minus
+       │     │   │   └─[16] float_const (0.600000)
+       │     │   └─[17] if_stmt
+       │     │     ├─[17] equal
+       │     │     │ ├─[17] id (DF)
+       │     │     │ └─[17] float_const (0.000000)
+       │     │     ├─[17] dec_list
+       │     │     └─[18] list
+       │     │       └─[18] assignment
+       │     │         ├─[18] id (DF)
+       │     │         └─[18] float_const (1.010000)
+       │     ├─[19] else_if
+       │     │ ├─[19] ge
+       │     │ │ ├─[19] id (G)
+       │     │ │ └─[19] char_const (H)
+       │     │ ├─[19] dec_list
+       │     │ └─[20] list
+       │     │   ├─[20] minus_equal
+       │     │   │ ├─[20] id (n2)
+       │     │   │ └─[20] int_const (16)
+       │     │   └─[20] decr
+       │     │     └─[20] id (n2)
+       │     └─[21] else_stmt
+       │       ├─[21] dec_list
+       │       └─[22] list
+       │         └─[22] div_equal
+       │           ├─[22] id (n1)
+       │           └─[22] int_const (2)
+       ├─[4] goto_stmt
+       │ └─[4] id (label)
+       ├─[4] return_stmt
+       │ └─[4] unary_minus
+       │   └─[4] int_const (1)
+       ├─[4] label_stmt
+       │ └─[4] id (label)
+       └─[4] return_stmt
+         └─[4] mul
+           ├─[4] id (n1)
+           └─[4] int_const (2)
