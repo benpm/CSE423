@@ -52,6 +52,28 @@ const std::unordered_map<AST::Label, Statement::Type> labelMap {
     {AST::return_stmt,  Statement::RETURN}
 };
 
+Arg createAlias(const AST* idnode)
+{
+    assert(idnode->label == AST::id);
+    // Find the scope in which this identifier is declared
+    const SymbolTable* declScope = idnode->inScope;
+    while (declScope->table.count(idnode->data.sval) == 0) {
+        declScope = declScope->parent;
+    }
+    // Get the identifier type
+    Symbol::Type idType = declScope->table.at(idnode->data.sval).symType;
+    // Search further up the tree to find if this identifier is shadowed
+    const SymbolTable* scope = declScope->parent;
+    while (scope) {
+        if (scope->table.count(idnode->data.sval)) {
+            std::string newName = fmt::format("{}_{}", declScope->tableID, idnode->data.sval);
+            return Arg(strdup(newName.c_str()), idType);
+        }
+        scope = scope->parent;
+    }
+    return Arg(idnode->data.sval, idType);
+}
+
 /**
  * Create a simple basic block
  *
@@ -147,10 +169,7 @@ Arg BasicBlock::expand(const AST* ast)
                 break;
             // Identifier or constant value arguments
             case AST::id:
-                args.emplace_back(
-                    child->data.sval, 
-                    child->inScope->getSymbolType(child->data.sval)
-                );
+                args.push_back(createAlias(child));
                 break;
             case AST::int_const:
                 args.emplace_back(child->data.ival);
