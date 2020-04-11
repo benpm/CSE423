@@ -30,17 +30,17 @@ root
      │     ├─[1] id (d)
      │     └─[1] unary_minus
      │       └─[1] float_const (8.011609)
-     └─[1] list
-       └─[2] if_stmt
-         ├─[2] lt
-         │ ├─[2] id (c)
-         │ └─[2] int_const (2)
-         ├─[2] dec_list
-         ├─[2] list
-         │ └─[2] return_stmt
-         │   └─[2] int_const (35)
-         └─[3] else_stmt
-           ├─[3] dec_list
-           └─[3] list
-             └─[3] return_stmt
-               └─[3] int_const (124)
+     └─[2] list
+       └─[3] if_stmt
+         ├─[3] lt
+         │ ├─[3] id (c)
+         │ └─[3] int_const (2)
+         ├─[3] dec_list
+         ├─[4] list
+         │ └─[4] return_stmt
+         │   └─[4] int_const (35)
+         └─[5] else_stmt
+           ├─[5] dec_list
+           └─[6] list
+             └─[6] return_stmt
+               └─[6] int_const (124)

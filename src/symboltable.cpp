@@ -15,7 +15,7 @@
 uint SymbolTable::globalTableID = 0;
 std::set<int> SymbolTable::scopeCreators {
     AST::root, AST::for_stmt, AST::if_stmt, AST::else_stmt, AST::else_if, AST::while_stmt,
-    AST::function
+    AST::function, AST::list
 };
 
 /**
@@ -79,7 +79,12 @@ SymbolTable::SymbolTable(AST* ast, SymbolTable* parent, std::string name)
 void SymbolTable::populateChildren(AST* ast)
 {
     for (AST* childAST : ast->children) {
-        childAST->inScope = this;
+        // Really ugly thing for inheriting scope
+        if (ast->inScope != NULL && ast->inScope->tableID > this->tableID) {
+            childAST->inScope = ast->inScope;
+        } else {
+            childAST->inScope = this;
+        }
 
         // Functions create symbols and scopes
         if (childAST->label == AST::function) {
@@ -114,8 +119,8 @@ void SymbolTable::populateChildren(AST* ast)
             else
                 symNameNode = childAST->children[1];
 
-            Symbol symbol(this->tableID, symTypeNode->label, Symbol::Local);
-            this->table.emplace(symNameNode->data.sval, symbol);
+            Symbol symbol(childAST->inScope->tableID, symTypeNode->label, Symbol::Local);
+            childAST->inScope->table.emplace(symNameNode->data.sval, symbol);
         }
         // Function paramaters in declaration
         if (childAST->label == AST::params) {
@@ -132,6 +137,14 @@ void SymbolTable::populateChildren(AST* ast)
             Symbol symbol(this->tableID, Symbol::None, Symbol::Label);
             this->table.emplace(symNameNode->data.sval, symbol);
         }
+    }
+
+    // Assign correct scope to declarations inside loop bodies
+    if (ast->label == AST::for_stmt) {
+        ast->children[3]->inScope = ast->children[4]->ownsScope;
+    }
+    if (ast->label == AST::while_stmt) {
+        ast->children[1]->inScope = ast->children[2]->ownsScope;
     }
 
     for (AST* childAST : ast->children) {

@@ -90,6 +90,11 @@
 <1, INTCONST>
 <), RPAREN>
 <{, LBRACE>
+<int, INT>
+<n1, ID>
+<=, EQUAL>
+<10, INTCONST>
+<;, SEMICOLON>
 <break, BREAK>
 <;, SEMICOLON>
 <for, IF>
@@ -137,6 +142,11 @@
 <z, ID>
 <=, EQUAL>
 <10, INTCONST>
+<;, SEMICOLON>
+<int, INT>
+<x, ID>
+<=, EQUAL>
+<3, INTCONST>
 <;, SEMICOLON>
 <x, ID>
 <+=, PLUSEQUAL>
