@@ -42,10 +42,6 @@ int main(int argc, char **argv)
         // Create IR program
         Program program(ast);
 
-        // Optimize IR program
-        Optimizer optimizer;
-        optimizer.optimize(program);
-
         if (config.printSymbolTable) {
             spdlog::info("Symbol table:");
             symbolTable.print();
@@ -66,6 +62,10 @@ int main(int argc, char **argv)
             spdlog::info("IR:");
             program.print();
         }
+
+        // Optimize IR program
+        Optimizer optimizer;
+        optimizer.optimize(program);
     } else {
         Program program(config.inputCSV);
 

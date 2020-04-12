@@ -6,8 +6,8 @@ class Optimizer
 {
 private:
     Arg evaluate(const Statement& statement);
-    bool optimizeBlock(BasicBlock& block);
     bool canEvaluate(const Statement& statement);
+    bool foldConstants(BasicBlock& block);
 public:
     void optimize(Program& program);
 };
