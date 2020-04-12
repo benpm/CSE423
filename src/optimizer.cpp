@@ -71,6 +71,7 @@ Arg Optimizer::evaluate(const Statement& statement)
 
 void Optimizer::optimize(Program& program)
 {
+    spdlog::info("Optimizer beginning");
     for (auto& item : program.functions) {
         bool proceed = false;
         do {
@@ -78,8 +79,11 @@ void Optimizer::optimize(Program& program)
 
             // Create contiguous list of statements
             std::vector<std::pair<BasicBlock&, Statement&>> stmts;
+            std::set<size_t> jumpBlocks;
             for (BasicBlock& block : item.second.blocks) {
-                if (block.statements.back().type != Statement::JUMP_IF_FALSE)
+                if (block.statements.back().type == Statement::JUMP_IF_FALSE) {
+                    jumpBlocks.insert(block.label);
+                }
                 for (Statement& stmt : block.statements) {
                     stmts.emplace_back(std::pair<BasicBlock&, Statement&>(block, stmt));
                 }
@@ -106,8 +110,10 @@ void Optimizer::optimize(Program& program)
                 const char* name = pair.first;
                 Arg value = stmts[pair.second].second.args.at(1);
                 size_t i = pair.second + 1;
+                BasicBlock& originBlock = stmts[pair.second].first;
                 for (; i < stmts.size(); i++) {
                     Statement& stmt = stmts[i].second;
+                    BasicBlock& block = stmts[i].first;
                     // Continue if no args
                     if (stmt.args.size() == 0)
                         continue;
@@ -120,6 +126,10 @@ void Optimizer::optimize(Program& program)
                     for (size_t argindx = 1; argindx < stmt.args.size(); argindx++) {
                         if (stmt.args.at(argindx).type == Arg::NAME 
                             && strcmp(stmt.args.at(argindx).val.sval, name) == 0) {
+                            if (jumpBlocks.count(block.label)
+                                && jumpBlocks.count(originBlock.label) == 0) {
+                                goto stop;
+                            }
                             spdlog::debug(
                                 "replace {} -> {}", 
                                 stmt.args.at(argindx).toString(), 
@@ -130,6 +140,7 @@ void Optimizer::optimize(Program& program)
                     }
                 }
                 // If we reached the end, remove assignment
+                stop:
                 if (i == stmts.size()) {
                     removeStmts.push_back(pair);
                 }
@@ -147,7 +158,7 @@ void Optimizer::optimize(Program& program)
             }
         } while (proceed);
     }
-    program.print();
+    spdlog::info("Optimizer done");
 }
 
 bool Optimizer::canEvaluate(const Statement& statement)

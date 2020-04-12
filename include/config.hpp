@@ -15,6 +15,7 @@ struct Config {
     bool printTokens = false;
     bool printSymbolTable = false;
     bool printIR = false;
+    bool optimize = false;
     bool suppressLogs = false;
 
     std::string file;

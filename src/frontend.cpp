@@ -58,14 +58,14 @@ int main(int argc, char **argv)
             spdlog::info("IR output as CSV to {}", config.outputCSV);
             program.outputToFile(config.outputCSV);
         }
+        if (config.optimize) {
+            Optimizer optimizer;
+            optimizer.optimize(program);
+        }
         if (config.printIR) {
             spdlog::info("IR:");
             program.print();
         }
-
-        // Optimize IR program
-        Optimizer optimizer;
-        optimizer.optimize(program);
     } else {
         Program program(config.inputCSV);
 

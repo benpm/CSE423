@@ -8,19 +8,9 @@ fun((float)V, (float)XKAD, )
 
 main()
   BB0 [combined]
-  │(10) <[int][MINUS], (int)#2, 2>
-  │(10) <[int][DIV], (int)#3, 18, (int)#2>
-  │(10) <[int][MUL], (int)#4, 15, (int)#3>
-  │(10) <[int][MOD], (int)#5, (int)#4, 18>
-  │(10) <[int][ASSIGN], (int)n1, (int)#5>
-  │(11) <[int][MUL], (int)#6, (int)n1, (int)n1>
-  │(11) <[int][ASSIGN], (int)n2, (int)#6>
-  │(12) <[int][ADD], (int)#7, (int)n1, (int)n1>
-  │(12) <[int][ADD], (int)#8, (int)#7, (int)n2>
-  │(12) <[int][ADD], (int)#9, (int)#8, (int)n2>
-  │(12) <[int][ASSIGN], (int)n3, (int)#9>
-  │(13) <[float][MUL], (float)#A, 0.800000, (int)n2>
-  │(13) <[float][ASSIGN], (float)DF, (float)#A>
+  │(10) <[int][ASSIGN], (int)n1, -9>
+  │(11) <[int][ASSIGN], (int)n2, 81>
+  │(13) <[float][ASSIGN], (float)DF, 64.800003>
   │(14) <[char][ASSIGN], (char)G, 'G'>
   │(17) <[int][ASSIGN], (int)i, 0>
   └────────────────────
@@ -31,7 +21,6 @@ main()
   │(17) <[JUMP_IF_FALSE], <21>, (int)#D>
   └────────────────────
   BB7 [combined]
-  │(18) <[int][ASSIGN], (int)f, 10>
   │(19) <[JUMP], <21>>
   └────────────────────
   BB9 [assignment]
@@ -54,9 +43,8 @@ main()
   │(22) <[JUMP_IF_FALSE], <19>, (int)#14>
   └────────────────────
   BB13 [combined]
-  │(23) <[int][ASSIGN], (int)z, 10>
   │(24) <[int][ASSIGN], (int)x2, 3>
-  │(25) <[int][ADD], (int)#15, (int)z, (int)x>
+  │(25) <[int][ADD], (int)#15, 10, (int)x>
   │(25) <[int][ADD], (int)x2, (int)x2, (int)#15>
   │(26) <[int][MINUS], (int)n2, (int)n2, (int)x>
   │(27) <[JUMP], <19>>
@@ -73,8 +61,7 @@ main()
   │(17) <[JUMP], <6>>
   └────────────────────
   BB21 [combined]
-  │(33) <[float][MUL], (float)#16, 0.101000, 2>
-  │(33) <[float][CALL], (float)#17, fun, (float)DF, (float)#16>
+  │(33) <[float][CALL], (float)#17, fun, (float)DF, 0.202000>
   │(33) <[float][CALL], (float)#18, fun, (float)#17, 0.900000>
   │(33) <[float][ASSIGN], (float)DF, (float)#18>
   │(34) <[float][CALL], (float)#19, printf, "test: %f\n", (float)DF>
@@ -102,13 +89,11 @@ main()
   │(43) <[JUMP_IF_FALSE], <33>, (int)#22>
   └────────────────────
   BB30 [combined]
-  │(44) <[float][MINUS], (float)#23, 0.600000>
-  │(44) <[float][ADD], (float)DF, (float)DF, (float)#23>
+  │(44) <[float][ADD], (float)DF, (float)DF, -0.600000>
   │(45) <[float][COMP_EQ], (float)#24, (float)DF, 0.000000>
   │(45) <[JUMP_IF_FALSE], <33>, (float)#24>
   └────────────────────
   BB32 [assignment]
-  │(46) <[float][ASSIGN], (float)DF, 1.010000>
   └────────────────────
   BB33 [else_if]
   │(48) <[char][COMP_GE], (char)#25, (char)G, 'H'>
@@ -125,7 +110,7 @@ main()
   │(55) <[JUMP], <39>>
   └────────────────────
   BB38 [return_stmt]
-  │(56) <[int][MINUS], (int)#26, 1>
+  │(56) <[int][ASSIGN], (int)#26, -1>
   │(56) <[int][RETURN], (int)#26>
   └────────────────────
   BB39 [combined]

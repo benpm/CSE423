@@ -23,7 +23,7 @@ extern bool scannerPrintTokens;
 Config::Config(int argc, char **argv)
 {
     int opt;
-    while ((opt = getopt(argc, argv, "lhtapsri:c:")) != -1) {
+    while ((opt = getopt(argc, argv, "lhtapsroi:c:")) != -1) {
         switch (opt) {
         // Print usage message
         case 'h':
@@ -56,6 +56,10 @@ Config::Config(int argc, char **argv)
         case 'r':
             this->printIR = true;
             break;
+        // Optimizes IR before printing
+        case 'o':
+            this->optimize = true;
+            break;
         case 'i':
             this->inputCSV = optarg;
             break;
@@ -82,6 +86,8 @@ Config::Config(int argc, char **argv)
         spdlog::info("Symbol table printing enabled");
     if (this->printIR)
         spdlog::info("IR printing enabled");
+    if (this->optimize)
+        spdlog::info("optimizer enabled");
     if (!this->inputCSV.empty())
         spdlog::info("IR input enabled");
     if (!this->outputCSV.empty())
@@ -115,6 +121,7 @@ void Config::usage(std::string exec_name) {
               << "  -a\t Print the abstract syntax tree" << std::endl
               << "  -s\t Print the symbol table" << std::endl
               << "  -r\t Print the IR" << std::endl
+              << "  -o\t Enable IR optimizer" << std::endl
               << "  -i\t Use the CSV representation of an IR as input program" << std::endl
               << "  -c\t Output the IR to a CSV file" << std::endl
               << "  -l\t Hide logging messages (except errors)" << std::endl;

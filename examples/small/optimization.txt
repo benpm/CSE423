@@ -1,0 +1,12 @@
+main()
+  BB0 [combined]
+  │(8) <[JUMP_IF_FALSE], <6>, 0>
+  └────────────────────
+  BB5 [return_stmt]
+  │(9) <[int][RETURN], 35>
+  └────────────────────
+  BB6 [return_stmt]
+  │(11) <[int][RETURN], 124>
+  └────────────────────
+
+
