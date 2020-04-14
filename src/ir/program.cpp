@@ -59,7 +59,6 @@ Program::Program(std::string filename)
         while (std::getline(row, value, ',')) {
             std::string idtype = value.substr(0, value.find(' '));
             std::string name = value.substr(value.find(' ') + 1);
-            spdlog::debug("{}:{}", idtype, name);
             parameters.emplace_back(strdup(name.c_str()), idtype);
         }
         // Create function, passing ref to ifstream

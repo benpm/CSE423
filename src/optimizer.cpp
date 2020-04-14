@@ -130,10 +130,6 @@ void Optimizer::optimize(Program& program)
                                 && jumpBlocks.count(originBlock.label) == 0) {
                                 goto stop;
                             }
-                            spdlog::debug(
-                                "replace {} -> {}", 
-                                stmt.args.at(argindx).toString(), 
-                                value.toString());
                             stmt.args.at(argindx) = value;
                             proceed = true;
                         }
@@ -184,11 +180,9 @@ bool Optimizer::foldConstants(BasicBlock& block)
     for (Statement& statement : statements) {
         if (this->canEvaluate(statement)) {
             Arg result = this->evaluate(statement);
-            spdlog::debug("fold from: {}", statement.toString());
             int lineNum = statement.lineNum;
             statement = Statement(Statement::ASSIGN, statement.args.at(0), result);
             statement.lineNum = lineNum;
-            spdlog::debug("fold to  : {}", statement.toString());
             success = true;
         }
     }
