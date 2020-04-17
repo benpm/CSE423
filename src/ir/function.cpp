@@ -272,6 +272,7 @@ std::vector<BasicBlock> Function::constructWhile(const AST* ast)
     std::vector<BasicBlock> condBlocks = this->constructCond(condNode);
 
     // Create declaration and body blocks
+    uint inLabel = this->nextBlockID;
     std::vector<BasicBlock> declBlocks = this->populateBB(declNode);
     std::vector<BasicBlock> bodyBlocks = this->populateBB(bodyNode);
 
@@ -279,7 +280,7 @@ std::vector<BasicBlock> Function::constructWhile(const AST* ast)
     BasicBlock postBlock(ast->lineNum, this->nextBlockID++, "while_post");
 
     // Populate jumps for condition blocks
-    this->assignCondLabels(condBlocks, declBlocks.at(0).label, postBlock.label + 1);
+    this->assignCondLabels(condBlocks, inLabel, postBlock.label + 1);
     postBlock.statements.emplace_back(
         Statement::JUMP,
         Arg(condBlocks.at(0).label)
@@ -324,6 +325,7 @@ std::vector<BasicBlock> Function::constructFor(const AST* ast)
     std::vector<BasicBlock> condBlocks = this->constructCond(condNode);
 
     // Create declaration and body blocks
+    uint inLabel = this->nextBlockID;
     std::vector<BasicBlock> declBlocks  = this->populateBB(declNode);
     std::vector<BasicBlock> bodyBlocks = this->populateBB(bodyNode);
 
@@ -332,7 +334,7 @@ std::vector<BasicBlock> Function::constructFor(const AST* ast)
     postBlock.expand(postNode);
 
     // Add jumps
-    this->assignCondLabels(condBlocks, declBlocks.at(0).label, postBlock.label + 1);
+    this->assignCondLabels(condBlocks, inLabel, postBlock.label + 1);
     postBlock.statements.emplace_back(
         Statement::JUMP,
         Arg(condBlocks.at(0).label)

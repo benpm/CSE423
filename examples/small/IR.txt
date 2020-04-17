@@ -7,8 +7,8 @@ main()
   │(5) <[int][ASSIGN], (int)c, (int)#1>
   │(6) <[float][MINUS], (float)#2, 8.011609>
   │(6) <[float][ASSIGN], (float)d, (float)#2>
-  │(8) <[int][COMP_LT], (int)#3, (int)c, 2>
-  │(8) <[JUMP_IF_FALSE], <6>, (int)#3>
+  │(8) <[JUMP_LT], <5>, (int)c, 2>
+  │(8) <[JUMP], <6>>
   └────────────────────
   BB5 [return_stmt]
   │(9) <[int][RETURN], 35>

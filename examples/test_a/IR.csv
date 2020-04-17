@@ -8,24 +8,20 @@ stmt,5,int,MUL,int #2,5,int #1
 stmt,5,int,ASSIGN,int hek,int #2
 stmt,6,char,ASSIGN,char str,'b'
 stmt,7,char,ASSIGN,char str2,'c'
-stmt,8,int,LOG_AND,int #3,1,2
-stmt,8,int,ASSIGN,int logand,int #3
-stmt,9,int,LOG_OR,int #4,1,2
-stmt,9,int,ASSIGN,int logor,int #4
 stmt,13,float,ASSIGN,float a,'	'
 stmt,14,int,ASSIGN,int i,0
-BB,9,for_cond
-stmt,14,int,COMP_LT,int #5,int i,111
-stmt,14,none,JUMP_IF_FALSE,13,int #5
-BB,10,if_stmt
-stmt,15,int,MOD,int #6,int i,10
-stmt,15,int,COMP_EQ,int #7,int #6,5
-stmt,15,none,JUMP_IF_FALSE,12,int #7
-BB,11,plus_equal
+BB,7,lt
+stmt,14,none,JUMP_LT,8,int i,111
+stmt,14,none,JUMP,11
+BB,8,equal
+stmt,15,int,MOD,int #3,int i,10
+stmt,15,none,JUMP_EQ,9,int #3,5
+stmt,15,none,JUMP,10
+BB,9,plus_equal
 stmt,16,int,ADD,int value,int value,int i
-BB,12,for_post
+BB,10,for_post
 stmt,14,int,ADD,int i,int i,1
-stmt,14,none,JUMP,9
-BB,13,return_stmt
+stmt,14,none,JUMP,7
+BB,11,return_stmt
 stmt,19,int,RETURN,int value
 
