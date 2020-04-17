@@ -85,17 +85,13 @@ std::vector<BasicBlock> Function::constructCond(const AST* ast, uint success=1, 
 
     std::vector<BasicBlock> blocks;
     int logChildren = 0;
-    AST::Label parentLabel = ast->label;
-    bool negation = false;
 
     // Logical not
     if (ast->label == AST::log_not) {
         ast = ast->children[0];
-        // parentLabel = (ast->label == AST::log_and) ? AST::log_or : AST::log_and;
         uint tmp = success;
         success = failure;
         failure = tmp;
-        negation = true;
     }
 
     // Single comparison
@@ -125,36 +121,28 @@ std::vector<BasicBlock> Function::constructCond(const AST* ast, uint success=1, 
             Statement::Type stmtType = logicMap.at(child->label);
             Arg opA = block.expand(child->children[0]);
             Arg opB = block.expand(child->children[1]);
-            if (parentLabel == AST::log_and) {
+            if (ast->label == AST::log_and) {
                 // If parent is AND, we jump if FALSE to FAIL
                 Statement stmt(stmtType, failure, opA, opB);
                 negate(stmt);
                 block.statements.push_back(stmt);
-                if (negation)
-                    negate(stmt);
             } else {
                 // If parent is OR, we jump if TRUE to SUCCESS
                 Statement stmt(stmtType, success, opA, opB);
                 block.statements.push_back(stmt);
-                if (negation)
-                    negate(stmt);
             }
             blocks.push_back(block);
         } else if (!logOps.count(child->label)) {
             BasicBlock block(child->lineNum, this->nextBlockID++, child->toString());
             Arg operand = block.expand(child);
-            if (parentLabel == AST::log_and) {
+            if (ast->label == AST::log_and) {
                 // If parent is AND, we jump if FALSE to FAIL
                 Statement stmt(Statement::JUMP_IF_FALSE, failure, operand);
                 block.statements.push_back(stmt);
-                if (negation)
-                    negate(stmt);
             } else {
                 // If parent is OR, we jump if TRUE to SUCCESS
                 Statement stmt(Statement::JUMP_IF_TRUE, success, operand);
                 block.statements.push_back(stmt);
-                if (negation)
-                    negate(stmt);
             }
             blocks.push_back(block);
         } else if (logOps.count(child->label)) {
@@ -170,7 +158,7 @@ std::vector<BasicBlock> Function::constructCond(const AST* ast, uint success=1, 
         // If first child is logic, we recurse and assign new failure/success labels
         uint nsuccess = success;
         uint nfailure = failure;
-        if (parentLabel == AST::log_and) {
+        if (ast->label == AST::log_and) {
             // Jump to end block on early success
             nsuccess = endBlock.label;
         } else {
@@ -192,7 +180,7 @@ std::vector<BasicBlock> Function::constructCond(const AST* ast, uint success=1, 
         BasicBlock fall(ast->lineNum, this->nextBlockID++, "fallthrough");
         fall.statements.emplace_back(
             Statement::JUMP,
-            parentLabel == AST::log_and ? success : failure
+            ast->label == AST::log_and ? success : failure
         );
         blocks.push_back(fall);
     }
