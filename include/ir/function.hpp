@@ -24,7 +24,6 @@ private:
     std::vector<BasicBlock> constructWhile(const AST* ast);
     std::vector<BasicBlock> constructFor(const AST* ast);
     std::vector<BasicBlock> constructIf(const AST* ast);
-    BasicBlock createComparisonBlock(const AST* node, uint jumpto);
     std::vector<BasicBlock> constructCond(const AST* ast, uint success, uint failure);
     void assignCondLabels(std::vector<BasicBlock>& blocks, uint success, uint failure);
     std::vector<BasicBlock> populateBB(const AST* ast);

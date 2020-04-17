@@ -31,6 +31,11 @@ const std::map<AST::Label, Statement::Type> logicMap {
     {AST::lt, Statement::JUMP_LT}
 };
 
+/**
+ * @brief Negate this conditional statement
+ * 
+ * @param stmt The statement to negate
+ */
 void negate(Statement& stmt)
 {
     const std::map<Statement::Type, Statement::Type> negationOf {
@@ -66,19 +71,14 @@ void addJumpsToBreaks(std::vector<BasicBlock>& blocks, uint label)
     }
 }
 
-BasicBlock Function::createComparisonBlock(const AST* node, uint jumpto)
-{
-    BasicBlock block(
-        node->lineNum, this->nextBlockID++, node->toString()
-    );
-    Arg opA = block.expand(node->children[0]);
-    Arg opB = block.expand(node->children[1]);
-    block.statements.emplace_back(
-        logicMap.at(node->label), jumpto, opA, opB
-    );
-    return block;
-}
-
+/**
+ * @brief Constructs a list of blocks recursively with short circuiting for a boolean condition statement
+ * 
+ * @param ast The root node of the conditional statement
+ * @param success Jump to label on success, if not provided, will be replaced later by assignCondLabels
+ * @param failure Jump to label on fail, if not provided, will be replaced later by assignCondLabels
+ * @return std::vector<BasicBlock> IR blocks representing this conditional statement
+ */
 std::vector<BasicBlock> Function::constructCond(const AST* ast, uint success=1, uint failure=0)
 {
     const std::set<AST::Label> logOps { AST::log_or, AST::log_and, AST::log_not };
@@ -200,8 +200,17 @@ std::vector<BasicBlock> Function::constructCond(const AST* ast, uint success=1, 
     return blocks;
 }
 
+/**
+ * @brief Assigns correct success/failure labels to a set of conditional jump blocks
+ * Also enforces label continuinity, as constructCond does not create contiguous block labels
+ * 
+ * @param blocks The blocks to manipulate
+ * @param success The label to jump to upon success
+ * @param failure The label to jump to upon failure
+ */
 void Function::assignCondLabels(std::vector<BasicBlock>& blocks, uint success, uint failure)
 {
+    // Replace success / failure labels
     uint start = blocks.at(0).label;
     for (BasicBlock& block : blocks) {
         start = std::min(block.label, start);
@@ -217,6 +226,7 @@ void Function::assignCondLabels(std::vector<BasicBlock>& blocks, uint success, u
         }
     }
 
+    // Map old labels to new ones
     uint next = start;
     std::map<uint, uint> labelMap;
     for (BasicBlock& block : blocks) {
@@ -227,6 +237,7 @@ void Function::assignCondLabels(std::vector<BasicBlock>& blocks, uint success, u
         next += 1;
     }
 
+    // Replace old labels with new ones inside of statements
     for (BasicBlock& block : blocks) {
         for (Statement& stmt : block.statements) {
             for (Arg& arg : stmt.args) {
