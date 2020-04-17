@@ -86,48 +86,67 @@ std::vector<BasicBlock> Function::constructCond(const AST* ast, uint success=0, 
     std::vector<BasicBlock> blocks;
     int logChildren = 0;
 
+    // Create comparison jump statements
     for (const AST* child : ast->children) {
         if (logicMap.count(child->label)) {
             BasicBlock block(child->lineNum, this->nextBlockID++, child->toString());
             Statement::Type stmtType = logicMap.at(child->label);
             Arg opA = block.expand(child->children[0]);
             Arg opB = block.expand(child->children[1]);
-            Arg jumpTo(0u);
             if (ast->label == AST::log_and) {
+                // If parent is AND, we jump if FALSE to FAIL
                 Statement stmt(stmtType, failure, opA, opB);
                 negate(stmt);
                 block.statements.push_back(stmt);
             } else {
+                // If parent is OR, we jump if TRUE to SUCCESS
                 Statement stmt(stmtType, success, opA, opB);
                 block.statements.push_back(stmt);
             }
             blocks.push_back(block);
         } else if (!logOps.count(child->label)) {
-            spdlog::warn("not implemented: should handle identifiers / constants");
+            BasicBlock block(child->lineNum, this->nextBlockID++, child->toString());
+            Arg operand = block.expand(child);
+            if (ast->label == AST::log_and) {
+                // If parent is AND, we jump if FALSE to FAIL
+                Statement stmt(Statement::JUMP_IF_FALSE, failure, operand);
+                block.statements.push_back(stmt);
+            } else {
+                // If parent is OR, we jump if TRUE to SUCCESS
+                Statement stmt(Statement::JUMP_IF_TRUE, success, operand);
+                block.statements.push_back(stmt);
+            }
+            blocks.push_back(block);
         } else if (logOps.count(child->label)) {
             logChildren += 1;
         }
     }
 
+    // If both children are logical statements (OR, AND), we link
     bool link = (logChildren == 2);
-    BasicBlock endBlock(ast->lineNum, this->nextBlockID++, "next");
-    
-    uint nsuccess = success;
-    uint nfailure = failure;
     if (logOps.count(ast->children[0]->label)) {
+        // Label to jump to on consecutive failure / success, here on we must check more comparisons
+        BasicBlock endBlock(ast->lineNum, this->nextBlockID++, "next");
+        // If first child is logic, we recurse and assign new failure/success labels
+        uint nsuccess = success;
+        uint nfailure = failure;
         if (ast->label == AST::log_and) {
+            // Jump to end block on early success
             nsuccess = endBlock.label;
         } else {
+            // Jump to end block on early fail
             nfailure = endBlock.label;
         }
         std::vector<BasicBlock> newBlocks = this->constructCond(ast->children[0], nsuccess, nfailure);
         blocks.insert(blocks.end(), newBlocks.begin(), newBlocks.end());
+        blocks.push_back(endBlock);
     }
-    blocks.push_back(endBlock);
+    // If second child is logic, recurse, but keep old success/fail labels
     if (logOps.count(ast->children[1]->label)) {
         std::vector<BasicBlock> newBlocks = this->constructCond(ast->children[1], success, failure);
         blocks.insert(blocks.end(), newBlocks.begin(), newBlocks.end());
     }
+    // If we aren't linking, insert a fallthrough jump case
     if (!link) {
         BasicBlock fall(ast->lineNum, this->nextBlockID++, "fallthrough");
         fall.statements.emplace_back(
