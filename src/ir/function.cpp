@@ -161,7 +161,9 @@ std::vector<BasicBlock> Function::constructCond(const AST* ast, uint success=0, 
 
 void Function::assignCondLabels(std::vector<BasicBlock>& blocks, uint outLabel, uint bodyLabel)
 {
+    uint start = blocks.at(0).label;
     for (BasicBlock& block : blocks) {
+        start = std::min(block.label, start);
         for (Statement& stmt : block.statements) {
             if (jumpStmts.count(stmt.type)) {
                 Arg& labelArg = stmt.args.at(0);
@@ -169,6 +171,28 @@ void Function::assignCondLabels(std::vector<BasicBlock>& blocks, uint outLabel, 
                     labelArg.val.label = outLabel;
                 } else if (labelArg.val.label == 0u) {
                     labelArg.val.label = bodyLabel;
+                }
+            }
+        }
+    }
+
+    uint next = start;
+    std::map<uint, uint> labelMap;
+    for (BasicBlock& block : blocks) {
+        if (block.label != next) {
+            labelMap.emplace(block.label, next);
+            block.label = next;
+        }
+        next += 1;
+    }
+
+    for (BasicBlock& block : blocks) {
+        for (Statement& stmt : block.statements) {
+            for (Arg& arg : stmt.args) {
+                if (arg.type == Arg::LABEL) {
+                    if (labelMap.count(arg.val.label)) {
+                        arg.val.label = labelMap.at(arg.val.label);
+                    }
                 }
             }
         }
@@ -528,7 +552,7 @@ Function::Function(const AST* funcNode)
     }
 
     // Combine blocks
-    // this->combineBlocks();
+    this->combineBlocks();
 }
 
 /**
