@@ -79,12 +79,44 @@ BasicBlock Function::createComparisonBlock(const AST* node, uint jumpto)
     return block;
 }
 
-std::vector<BasicBlock> Function::constructCond(const AST* ast, uint success=0, uint failure=1)
+std::vector<BasicBlock> Function::constructCond(const AST* ast, uint success=1, uint failure=0)
 {
-    const std::set<AST::Label> logOps { AST::log_or, AST::log_and };
+    const std::set<AST::Label> logOps { AST::log_or, AST::log_and, AST::log_not };
 
     std::vector<BasicBlock> blocks;
     int logChildren = 0;
+    AST::Label parentLabel = ast->label;
+    bool negation = false;
+
+    // Logical not
+    if (ast->label == AST::log_not) {
+        ast = ast->children[0];
+        // parentLabel = (ast->label == AST::log_and) ? AST::log_or : AST::log_and;
+        uint tmp = success;
+        success = failure;
+        failure = tmp;
+        negation = true;
+    }
+
+    // Single comparison
+    if (logicMap.count(ast->label)) {
+        BasicBlock block(ast->lineNum, this->nextBlockID++, ast->toString());
+        Statement stmt(
+            logicMap.at(ast->label),
+            success,
+            block.expand(ast->children[0]),
+            block.expand(ast->children[1])
+        );
+        block.statements.push_back(stmt);
+        block.statements.emplace_back(Statement::JUMP, failure);
+        return std::vector<BasicBlock>{block};
+    } else if (!logOps.count(ast->label)) {
+        BasicBlock block(ast->lineNum, this->nextBlockID++, ast->toString());
+        Statement stmt(Statement::JUMP_IF_TRUE, success, block.expand(ast));
+        block.statements.push_back(stmt);
+        block.statements.emplace_back(Statement::JUMP, failure);
+        return std::vector<BasicBlock>{block};
+    }
 
     // Create comparison jump statements
     for (const AST* child : ast->children) {
@@ -93,28 +125,36 @@ std::vector<BasicBlock> Function::constructCond(const AST* ast, uint success=0, 
             Statement::Type stmtType = logicMap.at(child->label);
             Arg opA = block.expand(child->children[0]);
             Arg opB = block.expand(child->children[1]);
-            if (ast->label == AST::log_and) {
+            if (parentLabel == AST::log_and) {
                 // If parent is AND, we jump if FALSE to FAIL
                 Statement stmt(stmtType, failure, opA, opB);
                 negate(stmt);
                 block.statements.push_back(stmt);
+                if (negation)
+                    negate(stmt);
             } else {
                 // If parent is OR, we jump if TRUE to SUCCESS
                 Statement stmt(stmtType, success, opA, opB);
                 block.statements.push_back(stmt);
+                if (negation)
+                    negate(stmt);
             }
             blocks.push_back(block);
         } else if (!logOps.count(child->label)) {
             BasicBlock block(child->lineNum, this->nextBlockID++, child->toString());
             Arg operand = block.expand(child);
-            if (ast->label == AST::log_and) {
+            if (parentLabel == AST::log_and) {
                 // If parent is AND, we jump if FALSE to FAIL
                 Statement stmt(Statement::JUMP_IF_FALSE, failure, operand);
                 block.statements.push_back(stmt);
+                if (negation)
+                    negate(stmt);
             } else {
                 // If parent is OR, we jump if TRUE to SUCCESS
                 Statement stmt(Statement::JUMP_IF_TRUE, success, operand);
                 block.statements.push_back(stmt);
+                if (negation)
+                    negate(stmt);
             }
             blocks.push_back(block);
         } else if (logOps.count(child->label)) {
@@ -130,13 +170,14 @@ std::vector<BasicBlock> Function::constructCond(const AST* ast, uint success=0, 
         // If first child is logic, we recurse and assign new failure/success labels
         uint nsuccess = success;
         uint nfailure = failure;
-        if (ast->label == AST::log_and) {
+        if (parentLabel == AST::log_and) {
             // Jump to end block on early success
             nsuccess = endBlock.label;
         } else {
             // Jump to end block on early fail
             nfailure = endBlock.label;
         }
+        const AST* child = ast->children[0];
         std::vector<BasicBlock> newBlocks = this->constructCond(ast->children[0], nsuccess, nfailure);
         blocks.insert(blocks.end(), newBlocks.begin(), newBlocks.end());
         blocks.push_back(endBlock);
@@ -151,7 +192,7 @@ std::vector<BasicBlock> Function::constructCond(const AST* ast, uint success=0, 
         BasicBlock fall(ast->lineNum, this->nextBlockID++, "fallthrough");
         fall.statements.emplace_back(
             Statement::JUMP,
-            ast->label == AST::log_and ? success : failure
+            parentLabel == AST::log_and ? success : failure
         );
         blocks.push_back(fall);
     }
@@ -159,7 +200,7 @@ std::vector<BasicBlock> Function::constructCond(const AST* ast, uint success=0, 
     return blocks;
 }
 
-void Function::assignCondLabels(std::vector<BasicBlock>& blocks, uint outLabel, uint bodyLabel)
+void Function::assignCondLabels(std::vector<BasicBlock>& blocks, uint success, uint failure)
 {
     uint start = blocks.at(0).label;
     for (BasicBlock& block : blocks) {
@@ -168,9 +209,9 @@ void Function::assignCondLabels(std::vector<BasicBlock>& blocks, uint outLabel, 
             if (jumpStmts.count(stmt.type)) {
                 Arg& labelArg = stmt.args.at(0);
                 if (labelArg.val.label == 1u) {
-                    labelArg.val.label = outLabel;
+                    labelArg.val.label = success;
                 } else if (labelArg.val.label == 0u) {
-                    labelArg.val.label = bodyLabel;
+                    labelArg.val.label = failure;
                 }
             }
         }
@@ -225,13 +266,13 @@ std::vector<BasicBlock> Function::constructWhile(const AST* ast)
 
     // Create post-execution block
     BasicBlock postBlock(ast->lineNum, this->nextBlockID++, "while_post");
+
+    // Populate jumps for condition blocks
+    this->assignCondLabels(condBlocks, declBlocks.at(0).label, postBlock.label + 1);
     postBlock.statements.emplace_back(
         Statement::JUMP,
         Arg(condBlocks.at(0).label)
     );
-
-    // Populate jumps for condition blocks
-    this->assignCondLabels(condBlocks, postBlock.label + 1, bodyBlocks.at(0).label);
 
     // Populate break statements with jumps
     addJumpsToBreaks(bodyBlocks, postBlock.label + 1);
@@ -280,7 +321,7 @@ std::vector<BasicBlock> Function::constructFor(const AST* ast)
     postBlock.expand(postNode);
 
     // Add jumps
-    this->assignCondLabels(condBlocks, postBlock.label + 1, bodyBlocks.at(0).label);
+    this->assignCondLabels(condBlocks, declBlocks.at(0).label, postBlock.label + 1);
     postBlock.statements.emplace_back(
         Statement::JUMP,
         Arg(condBlocks.at(0).label)
@@ -323,7 +364,7 @@ std::vector<BasicBlock> Function::constructIf(const AST* ast)
     std::vector<BasicBlock> bodyBlocks = populateBB(bodyNode);
 
     // Add the jump from condition to after the body
-    this->assignCondLabels(condBlocks, this->nextBlockID, bodyBlocks.at(0).label);
+    this->assignCondLabels(condBlocks, bodyBlocks.at(0).label, this->nextBlockID);
 
     // Create blocks from else-if and else children
     std::vector<BasicBlock> elseIfChainBlocks;
@@ -375,14 +416,7 @@ std::vector<BasicBlock> Function::populateBB(const AST* ast)
             case AST::mod_equal:
             case AST::div_equal:
             case AST::times_equal:
-            case AST::assignment:
-            case AST::lt:
-            case AST::gt:
-            case AST::ge:
-            case AST::le:
-            case AST::log_and:
-            case AST::log_or:
-            case AST::log_not: {
+            case AST::assignment: {
                 BasicBlock block(child->lineNum, this->nextBlockID++, child->toString());
                 block.expand(child);
                 tmp.push_back(block);

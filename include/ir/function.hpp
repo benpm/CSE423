@@ -26,7 +26,7 @@ private:
     std::vector<BasicBlock> constructIf(const AST* ast);
     BasicBlock createComparisonBlock(const AST* node, uint jumpto);
     std::vector<BasicBlock> constructCond(const AST* ast, uint success, uint failure);
-    void assignCondLabels(std::vector<BasicBlock>& blocks, uint outLabel, uint bodyLabel);
+    void assignCondLabels(std::vector<BasicBlock>& blocks, uint success, uint failure);
     std::vector<BasicBlock> populateBB(const AST* ast);
     bool combineBlocks();
     bool isJumpDestination(const BasicBlock& block) const;
