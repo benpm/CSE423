@@ -5,12 +5,55 @@
  * @date 2020-03-11
  *
  */
+#include <cassert>
 #include <sstream>
 #include <unordered_set>
 #include <assert.h>
 #include <ir/function.hpp>
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/fmt.h>
+
+
+const std::set<Statement::Type> jumpStmts {
+    Statement::JUMP_EQ, Statement::JUMP_NEQ,
+    Statement::JUMP_LT, Statement::JUMP_GT,
+    Statement::JUMP_LE, Statement::JUMP_GE,
+    Statement::JUMP,
+    Statement::JUMP_IF_TRUE, Statement::JUMP_IF_FALSE
+};
+
+const std::map<AST::Label, Statement::Type> logicMap {
+    {AST::noteq, Statement::JUMP_NEQ},
+    {AST::equal, Statement::JUMP_EQ},
+    {AST::ge, Statement::JUMP_GE},
+    {AST::le, Statement::JUMP_LE},
+    {AST::gt, Statement::JUMP_GT},
+    {AST::lt, Statement::JUMP_LT}
+};
+
+/**
+ * @brief Negate this conditional statement
+ * 
+ * @param stmt The statement to negate
+ */
+void negate(Statement& stmt)
+{
+    const std::map<Statement::Type, Statement::Type> negationOf {
+        {Statement::JUMP_EQ, Statement::JUMP_NEQ},
+        {Statement::JUMP_NEQ, Statement::JUMP_EQ},
+        {Statement::JUMP_LT, Statement::JUMP_GE},
+        {Statement::JUMP_GT, Statement::JUMP_LE},
+        {Statement::JUMP_LE, Statement::JUMP_GT},
+        {Statement::JUMP_GE, Statement::JUMP_LT},
+        {Statement::JUMP_IF_TRUE, Statement::JUMP_IF_FALSE},
+        {Statement::JUMP_IF_FALSE, Statement::JUMP_IF_TRUE},
+        {Statement::JUMP, Statement::JUMP}
+    };
+
+    assert(negationOf.count(stmt.type));
+
+    stmt.type = negationOf.at(stmt.type);
+}
 
 /**
  * Search for break blocks that need jump statements added to them
@@ -24,6 +67,174 @@ void addJumpsToBreaks(std::vector<BasicBlock>& blocks, uint label)
     for (BasicBlock& block : blocks) {
         if (block.name == "break_stmt" && block.statements.size() == 0) {
             block.statements.emplace_back(Statement::JUMP, Arg(label));
+        }
+    }
+}
+
+/**
+ * @brief Constructs a list of blocks recursively with short circuiting for a boolean condition statement
+ * 
+ * @param ast The root node of the conditional statement
+ * @param success Jump to label on success, if not provided, will be replaced later by assignCondLabels
+ * @param failure Jump to label on fail, if not provided, will be replaced later by assignCondLabels
+ * @return std::vector<BasicBlock> IR blocks representing this conditional statement
+ */
+std::vector<BasicBlock> Function::constructCond(const AST* ast, uint success=1, uint failure=0)
+{
+    const std::set<AST::Label> logOps { AST::log_or, AST::log_and, AST::log_not };
+
+    std::vector<BasicBlock> blocks;
+    int logChildren = 0;
+
+    // Logical not
+    if (ast->label == AST::log_not) {
+        ast = ast->children[0];
+        uint tmp = success;
+        success = failure;
+        failure = tmp;
+    }
+
+    // Single comparison
+    if (logicMap.count(ast->label)) {
+        BasicBlock block(ast->lineNum, this->nextBlockID++, ast->toString());
+        Statement stmt(
+            logicMap.at(ast->label),
+            success,
+            block.expand(ast->children[0]),
+            block.expand(ast->children[1])
+        );
+        block.statements.push_back(stmt);
+        block.statements.emplace_back(Statement::JUMP, failure);
+        return std::vector<BasicBlock>{block};
+    } else if (!logOps.count(ast->label)) {
+        BasicBlock block(ast->lineNum, this->nextBlockID++, ast->toString());
+        Statement stmt(Statement::JUMP_IF_TRUE, success, block.expand(ast));
+        block.statements.push_back(stmt);
+        block.statements.emplace_back(Statement::JUMP, failure);
+        return std::vector<BasicBlock>{block};
+    }
+
+    // Create comparison jump statements
+    for (const AST* child : ast->children) {
+        if (logicMap.count(child->label)) {
+            BasicBlock block(child->lineNum, this->nextBlockID++, child->toString());
+            Statement::Type stmtType = logicMap.at(child->label);
+            Arg opA = block.expand(child->children[0]);
+            Arg opB = block.expand(child->children[1]);
+            if (ast->label == AST::log_and) {
+                // If parent is AND, we jump if FALSE to FAIL
+                Statement stmt(stmtType, failure, opA, opB);
+                negate(stmt);
+                block.statements.push_back(stmt);
+            } else {
+                // If parent is OR, we jump if TRUE to SUCCESS
+                Statement stmt(stmtType, success, opA, opB);
+                block.statements.push_back(stmt);
+            }
+            blocks.push_back(block);
+        } else if (!logOps.count(child->label)) {
+            BasicBlock block(child->lineNum, this->nextBlockID++, child->toString());
+            Arg operand = block.expand(child);
+            if (ast->label == AST::log_and) {
+                // If parent is AND, we jump if FALSE to FAIL
+                Statement stmt(Statement::JUMP_IF_FALSE, failure, operand);
+                block.statements.push_back(stmt);
+            } else {
+                // If parent is OR, we jump if TRUE to SUCCESS
+                Statement stmt(Statement::JUMP_IF_TRUE, success, operand);
+                block.statements.push_back(stmt);
+            }
+            blocks.push_back(block);
+        } else if (logOps.count(child->label)) {
+            logChildren += 1;
+        }
+    }
+
+    // If both children are logical statements (OR, AND), we link
+    bool link = (logChildren == 2);
+    if (logOps.count(ast->children[0]->label)) {
+        // Label to jump to on consecutive failure / success, here on we must check more comparisons
+        BasicBlock endBlock(ast->lineNum, this->nextBlockID++, "next");
+        // If first child is logic, we recurse and assign new failure/success labels
+        uint nsuccess = success;
+        uint nfailure = failure;
+        if (ast->label == AST::log_and) {
+            // Jump to end block on early success
+            nsuccess = endBlock.label;
+        } else {
+            // Jump to end block on early fail
+            nfailure = endBlock.label;
+        }
+        const AST* child = ast->children[0];
+        std::vector<BasicBlock> newBlocks = this->constructCond(ast->children[0], nsuccess, nfailure);
+        blocks.insert(blocks.end(), newBlocks.begin(), newBlocks.end());
+        blocks.push_back(endBlock);
+    }
+    // If second child is logic, recurse, but keep old success/fail labels
+    if (logOps.count(ast->children[1]->label)) {
+        std::vector<BasicBlock> newBlocks = this->constructCond(ast->children[1], success, failure);
+        blocks.insert(blocks.end(), newBlocks.begin(), newBlocks.end());
+    }
+    // If we aren't linking, insert a fallthrough jump case
+    if (!link) {
+        BasicBlock fall(ast->lineNum, this->nextBlockID++, "fallthrough");
+        fall.statements.emplace_back(
+            Statement::JUMP,
+            ast->label == AST::log_and ? success : failure
+        );
+        blocks.push_back(fall);
+    }
+
+    return blocks;
+}
+
+/**
+ * @brief Assigns correct success/failure labels to a set of conditional jump blocks
+ * Also enforces label continuinity, as constructCond does not create contiguous block labels
+ * 
+ * @param blocks The blocks to manipulate
+ * @param success The label to jump to upon success
+ * @param failure The label to jump to upon failure
+ */
+void Function::assignCondLabels(std::vector<BasicBlock>& blocks, uint success, uint failure)
+{
+    // Replace success / failure labels
+    uint start = blocks.at(0).label;
+    for (BasicBlock& block : blocks) {
+        start = std::min(block.label, start);
+        for (Statement& stmt : block.statements) {
+            if (jumpStmts.count(stmt.type)) {
+                Arg& labelArg = stmt.args.at(0);
+                if (labelArg.val.label == 1u) {
+                    labelArg.val.label = success;
+                } else if (labelArg.val.label == 0u) {
+                    labelArg.val.label = failure;
+                }
+            }
+        }
+    }
+
+    // Map old labels to new ones
+    uint next = start;
+    std::map<uint, uint> labelMap;
+    for (BasicBlock& block : blocks) {
+        if (block.label != next) {
+            labelMap.emplace(block.label, next);
+            block.label = next;
+        }
+        next += 1;
+    }
+
+    // Replace old labels with new ones inside of statements
+    for (BasicBlock& block : blocks) {
+        for (Statement& stmt : block.statements) {
+            for (Arg& arg : stmt.args) {
+                if (arg.type == Arg::LABEL) {
+                    if (labelMap.count(arg.val.label)) {
+                        arg.val.label = labelMap.at(arg.val.label);
+                    }
+                }
+            }
         }
     }
 }
@@ -45,26 +256,22 @@ std::vector<BasicBlock> Function::constructWhile(const AST* ast)
     const AST* declNode = ast->children[1];
     const AST* bodyNode = ast->children[2];
 
-    // Create condition block
-    BasicBlock condBlock(ast->lineNum, this->nextBlockID++, "while_cond");
-    Arg condResult = condBlock.expand(condNode);
+    // Create condition blocks
+    std::vector<BasicBlock> condBlocks = this->constructCond(condNode);
 
     // Create declaration and body blocks
+    uint inLabel = this->nextBlockID;
     std::vector<BasicBlock> declBlocks = this->populateBB(declNode);
     std::vector<BasicBlock> bodyBlocks = this->populateBB(bodyNode);
 
     // Create post-execution block
     BasicBlock postBlock(ast->lineNum, this->nextBlockID++, "while_post");
+
+    // Populate jumps for condition blocks
+    this->assignCondLabels(condBlocks, inLabel, postBlock.label + 1);
     postBlock.statements.emplace_back(
         Statement::JUMP,
-        Arg(condBlock.label)
-    );
-
-    // Add jumps
-    condBlock.statements.emplace_back(
-        Statement::JUMP_IF_FALSE,
-        Arg(postBlock.label + 1),
-        condResult
+        Arg(condBlocks.at(0).label)
     );
 
     // Populate break statements with jumps
@@ -72,7 +279,7 @@ std::vector<BasicBlock> Function::constructWhile(const AST* ast)
 
     // Combine blocks
     std::vector<BasicBlock> blocks;
-    blocks.push_back(condBlock);
+    blocks.insert(blocks.end(), condBlocks.begin(), condBlocks.end());
     blocks.insert(blocks.end(), declBlocks.begin(), declBlocks.end());
     blocks.insert(blocks.end(), bodyBlocks.begin(), bodyBlocks.end());
     blocks.push_back(postBlock);
@@ -102,11 +309,11 @@ std::vector<BasicBlock> Function::constructFor(const AST* ast)
     // Create initialization block
     std::vector<BasicBlock> initBlocks = this->populateBB(initNode);
 
-    // Create condition block
-    BasicBlock condBlock(ast->lineNum, this->nextBlockID++, "for_cond");
-    Arg condResult = condBlock.expand(condNode);
+    // Create condition blocks
+    std::vector<BasicBlock> condBlocks = this->constructCond(condNode);
 
     // Create declaration and body blocks
+    uint inLabel = this->nextBlockID;
     std::vector<BasicBlock> declBlocks  = this->populateBB(declNode);
     std::vector<BasicBlock> bodyBlocks = this->populateBB(bodyNode);
 
@@ -115,14 +322,10 @@ std::vector<BasicBlock> Function::constructFor(const AST* ast)
     postBlock.expand(postNode);
 
     // Add jumps
-    condBlock.statements.emplace_back(
-        Statement::JUMP_IF_FALSE,
-        Arg(postBlock.label + 1),
-        condResult
-    );
+    this->assignCondLabels(condBlocks, inLabel, postBlock.label + 1);
     postBlock.statements.emplace_back(
         Statement::JUMP,
-        Arg(condBlock.label)
+        Arg(condBlocks.at(0).label)
     );
 
     // Populate break statements with jumps
@@ -131,7 +334,7 @@ std::vector<BasicBlock> Function::constructFor(const AST* ast)
     // Combine blocks
     std::vector<BasicBlock> blocks;
     blocks.insert(blocks.end(), initBlocks.begin(), initBlocks.end());
-    blocks.push_back(condBlock);
+    blocks.insert(blocks.end(), condBlocks.begin(), condBlocks.end());
     blocks.insert(blocks.end(), declBlocks.begin(), declBlocks.end());
     blocks.insert(blocks.end(), bodyBlocks.begin(), bodyBlocks.end());
     blocks.push_back(postBlock);
@@ -154,20 +357,15 @@ std::vector<BasicBlock> Function::constructIf(const AST* ast)
     const AST* declNode = ast->children[1];
     const AST* bodyNode = ast->children[2];
 
-    // Create condition block
-    BasicBlock condBlock = BasicBlock(ast->lineNum, this->nextBlockID++, ast->toString());
-    Arg condResult = condBlock.expand(condNode);
+    // Create condition blocks
+    std::vector<BasicBlock> condBlocks = this->constructCond(condNode);
     
     // Create body and declarations
     std::vector<BasicBlock> declBlocks = populateBB(declNode);
     std::vector<BasicBlock> bodyBlocks = populateBB(bodyNode);
 
     // Add the jump from condition to after the body
-    condBlock.statements.emplace_back(
-        Statement::JUMP_IF_FALSE,
-        Arg(this->nextBlockID),
-        condResult
-    );
+    this->assignCondLabels(condBlocks, bodyBlocks.at(0).label, this->nextBlockID);
 
     // Create blocks from else-if and else children
     std::vector<BasicBlock> elseIfChainBlocks;
@@ -186,7 +384,7 @@ std::vector<BasicBlock> Function::constructIf(const AST* ast)
 
     // Combine blocks
     std::vector<BasicBlock> blocks;
-    blocks.push_back(condBlock);
+    blocks.insert(blocks.end(), condBlocks.begin(), condBlocks.end());
     blocks.insert(blocks.end(), declBlocks.begin(), declBlocks.end());
     blocks.insert(blocks.end(), bodyBlocks.begin(), bodyBlocks.end());
     blocks.insert(blocks.end(), elseIfChainBlocks.begin(), elseIfChainBlocks.end());
@@ -219,14 +417,7 @@ std::vector<BasicBlock> Function::populateBB(const AST* ast)
             case AST::mod_equal:
             case AST::div_equal:
             case AST::times_equal:
-            case AST::assignment:
-            case AST::lt:
-            case AST::gt:
-            case AST::ge:
-            case AST::le:
-            case AST::log_and:
-            case AST::log_or:
-            case AST::log_not: {
+            case AST::assignment: {
                 BasicBlock block(child->lineNum, this->nextBlockID++, child->toString());
                 block.expand(child);
                 tmp.push_back(block);
@@ -284,10 +475,7 @@ bool Function::combineBlocks()
     // Find blocks that are jump destinations
     for (const BasicBlock& block : this->blocks) {
         for (const Statement& statement : block.statements) {
-            if (statement.type == Statement::JUMP
-                || statement.type == Statement::JUMP_IF_FALSE
-                || statement.type == Statement::JUMP_IF_TRUE
-                ) {
+            if (jumpStmts.count(statement.type)) {
                 jumpDestinations.insert(statement.args.at(0).val.label);
                 hasJumps.insert(block.label);
             }

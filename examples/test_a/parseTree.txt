@@ -8,164 +8,107 @@ PROGRAM | Line num: 1
        └─STATEMENT | Line num: 1
          └─COMPOUND_STMT | Line num: 1
            ├─LOCAL_DECLARATIONS | Line num: 13
-           │ ├─LOCAL_DECLARATIONS | Line num: 9
-           │ │ ├─LOCAL_DECLARATIONS | Line num: 8
-           │ │ │ ├─LOCAL_DECLARATIONS | Line num: 7
-           │ │ │ │ ├─LOCAL_DECLARATIONS | Line num: 6
-           │ │ │ │ │ ├─LOCAL_DECLARATIONS | Line num: 5
-           │ │ │ │ │ │ ├─LOCAL_DECLARATIONS | Line num: 3
-           │ │ │ │ │ │ │ ├─LOCAL_DECLARATIONS | Line num: 2
-           │ │ │ │ │ │ │ │ ├─LOCAL_DECLARATIONS | Line num: 1
-           │ │ │ │ │ │ │ │ └─SCOPED_VAR_DECLARATION | Line num: 2
-           │ │ │ │ │ │ │ │   ├─SCOPED_TYPE_SPECIFIER | Line num: 2
-           │ │ │ │ │ │ │ │   │ └─INT | Line num: 2
-           │ │ │ │ │ │ │ │   └─VAR_DECL_LIST | Line num: 2
-           │ │ │ │ │ │ │ │     └─VAR_DECL_INITIALIZE | Line num: 2
-           │ │ │ │ │ │ │ │       ├─ID | Line num: 2 (value)
-           │ │ │ │ │ │ │ │       ├─EQUAL | Line num: 2
-           │ │ │ │ │ │ │ │       └─SIMPLE_EXPRESSION | Line num: 2
-           │ │ │ │ │ │ │ │         └─AND_EXPRESSION | Line num: 2
-           │ │ │ │ │ │ │ │           └─UNARY_REL_EXPRESSION | Line num: 2
-           │ │ │ │ │ │ │ │             └─REL_EXPRESSION | Line num: 2
-           │ │ │ │ │ │ │ │               └─SUM_EXPRESSION | Line num: 2
-           │ │ │ │ │ │ │ │                 └─MUL_EXPRESSION | Line num: 2
-           │ │ │ │ │ │ │ │                   └─UNARY_EXPRESSION | Line num: 2
-           │ │ │ │ │ │ │ │                     └─UNARY_MINUS | Line num: 2
-           │ │ │ │ │ │ │ │                       └─UNARY_EXPRESSION | Line num: 2
-           │ │ │ │ │ │ │ │                         └─FACTOR | Line num: 2
-           │ │ │ │ │ │ │ │                           └─IMMUTABLE | Line num: 2
-           │ │ │ │ │ │ │ │                             └─INTCONST | Line num: 2 (5)
-           │ │ │ │ │ │ │ └─SCOPED_VAR_DECLARATION | Line num: 3
-           │ │ │ │ │ │ │   ├─SCOPED_TYPE_SPECIFIER | Line num: 3
-           │ │ │ │ │ │ │   │ └─FLOAT | Line num: 3
-           │ │ │ │ │ │ │   └─VAR_DECL_LIST | Line num: 3
-           │ │ │ │ │ │ │     └─VAR_DECL_INITIALIZE | Line num: 3
-           │ │ │ │ │ │ │       ├─ID | Line num: 3 (a)
-           │ │ │ │ │ │ │       ├─EQUAL | Line num: 3
-           │ │ │ │ │ │ │       └─SIMPLE_EXPRESSION | Line num: 3
-           │ │ │ │ │ │ │         └─AND_EXPRESSION | Line num: 3
-           │ │ │ │ │ │ │           └─UNARY_REL_EXPRESSION | Line num: 3
-           │ │ │ │ │ │ │             └─REL_EXPRESSION | Line num: 3
-           │ │ │ │ │ │ │               └─SUM_EXPRESSION | Line num: 3
-           │ │ │ │ │ │ │                 └─MUL_EXPRESSION | Line num: 3
-           │ │ │ │ │ │ │                   └─UNARY_EXPRESSION | Line num: 3
-           │ │ │ │ │ │ │                     └─FACTOR | Line num: 3
-           │ │ │ │ │ │ │                       └─IMMUTABLE | Line num: 3
-           │ │ │ │ │ │ │                         └─FLOATCONST | Line num: 3 (10.100000)
-           │ │ │ │ │ │ └─SCOPED_VAR_DECLARATION | Line num: 5
-           │ │ │ │ │ │   ├─SCOPED_TYPE_SPECIFIER | Line num: 5
-           │ │ │ │ │ │   │ └─INT | Line num: 5
-           │ │ │ │ │ │   └─VAR_DECL_LIST | Line num: 5
-           │ │ │ │ │ │     └─VAR_DECL_INITIALIZE | Line num: 5
-           │ │ │ │ │ │       ├─ID | Line num: 5 (hek)
-           │ │ │ │ │ │       ├─EQUAL | Line num: 5
-           │ │ │ │ │ │       └─SIMPLE_EXPRESSION | Line num: 5
-           │ │ │ │ │ │         └─AND_EXPRESSION | Line num: 5
-           │ │ │ │ │ │           └─UNARY_REL_EXPRESSION | Line num: 5
-           │ │ │ │ │ │             └─REL_EXPRESSION | Line num: 5
-           │ │ │ │ │ │               └─SUM_EXPRESSION | Line num: 5
-           │ │ │ │ │ │                 └─MUL_EXPRESSION | Line num: 5
-           │ │ │ │ │ │                   ├─MUL_EXPRESSION | Line num: 5
-           │ │ │ │ │ │                   │ └─UNARY_EXPRESSION | Line num: 5
-           │ │ │ │ │ │                   │   └─FACTOR | Line num: 5
-           │ │ │ │ │ │                   │     └─IMMUTABLE | Line num: 5
-           │ │ │ │ │ │                   │       └─INTCONST | Line num: 5 (5)
-           │ │ │ │ │ │                   ├─TIMES | Line num: 5
-           │ │ │ │ │ │                   └─UNARY_EXPRESSION | Line num: 5
-           │ │ │ │ │ │                     └─UNARY_MINUS | Line num: 5
-           │ │ │ │ │ │                       └─UNARY_EXPRESSION | Line num: 5
-           │ │ │ │ │ │                         └─FACTOR | Line num: 5
-           │ │ │ │ │ │                           └─IMMUTABLE | Line num: 5
-           │ │ │ │ │ │                             └─INTCONST | Line num: 5 (18)
-           │ │ │ │ │ └─SCOPED_VAR_DECLARATION | Line num: 6
-           │ │ │ │ │   ├─SCOPED_TYPE_SPECIFIER | Line num: 6
-           │ │ │ │ │   │ └─CHAR | Line num: 6
-           │ │ │ │ │   └─VAR_DECL_LIST | Line num: 6
-           │ │ │ │ │     └─VAR_DECL_INITIALIZE | Line num: 6
-           │ │ │ │ │       ├─ID | Line num: 6 (str)
-           │ │ │ │ │       ├─EQUAL | Line num: 6
-           │ │ │ │ │       └─SIMPLE_EXPRESSION | Line num: 6
-           │ │ │ │ │         └─AND_EXPRESSION | Line num: 6
-           │ │ │ │ │           └─UNARY_REL_EXPRESSION | Line num: 6
-           │ │ │ │ │             └─REL_EXPRESSION | Line num: 6
-           │ │ │ │ │               └─SUM_EXPRESSION | Line num: 6
-           │ │ │ │ │                 └─MUL_EXPRESSION | Line num: 6
-           │ │ │ │ │                   └─UNARY_EXPRESSION | Line num: 6
-           │ │ │ │ │                     └─FACTOR | Line num: 6
-           │ │ │ │ │                       └─IMMUTABLE | Line num: 6
-           │ │ │ │ │                         └─CHARLIT | Line num: 6 (b)
-           │ │ │ │ └─SCOPED_VAR_DECLARATION | Line num: 7
-           │ │ │ │   ├─SCOPED_TYPE_SPECIFIER | Line num: 7
-           │ │ │ │   │ └─CHAR | Line num: 7
-           │ │ │ │   └─VAR_DECL_LIST | Line num: 7
-           │ │ │ │     └─VAR_DECL_INITIALIZE | Line num: 7
-           │ │ │ │       ├─ID | Line num: 7 (str2)
-           │ │ │ │       ├─EQUAL | Line num: 7
-           │ │ │ │       └─SIMPLE_EXPRESSION | Line num: 7
-           │ │ │ │         └─AND_EXPRESSION | Line num: 7
-           │ │ │ │           └─UNARY_REL_EXPRESSION | Line num: 7
-           │ │ │ │             └─REL_EXPRESSION | Line num: 7
-           │ │ │ │               └─SUM_EXPRESSION | Line num: 7
-           │ │ │ │                 └─MUL_EXPRESSION | Line num: 7
-           │ │ │ │                   └─UNARY_EXPRESSION | Line num: 7
-           │ │ │ │                     └─FACTOR | Line num: 7
-           │ │ │ │                       └─IMMUTABLE | Line num: 7
-           │ │ │ │                         └─CHARLIT | Line num: 7 (c)
-           │ │ │ └─SCOPED_VAR_DECLARATION | Line num: 8
-           │ │ │   ├─SCOPED_TYPE_SPECIFIER | Line num: 8
-           │ │ │   │ └─INT | Line num: 8
-           │ │ │   └─VAR_DECL_LIST | Line num: 8
-           │ │ │     └─VAR_DECL_INITIALIZE | Line num: 8
-           │ │ │       ├─ID | Line num: 8 (logand)
-           │ │ │       ├─EQUAL | Line num: 8
-           │ │ │       └─SIMPLE_EXPRESSION | Line num: 8
-           │ │ │         └─AND_EXPRESSION | Line num: 8
-           │ │ │           ├─AND_EXPRESSION | Line num: 8
-           │ │ │           │ └─UNARY_REL_EXPRESSION | Line num: 8
-           │ │ │           │   └─REL_EXPRESSION | Line num: 8
-           │ │ │           │     └─SUM_EXPRESSION | Line num: 8
-           │ │ │           │       └─MUL_EXPRESSION | Line num: 8
-           │ │ │           │         └─UNARY_EXPRESSION | Line num: 8
-           │ │ │           │           └─FACTOR | Line num: 8
-           │ │ │           │             └─IMMUTABLE | Line num: 8
-           │ │ │           │               └─INTCONST | Line num: 8 (1)
-           │ │ │           ├─LOGAND | Line num: 8
-           │ │ │           └─UNARY_REL_EXPRESSION | Line num: 8
-           │ │ │             └─REL_EXPRESSION | Line num: 8
-           │ │ │               └─SUM_EXPRESSION | Line num: 8
-           │ │ │                 └─MUL_EXPRESSION | Line num: 8
-           │ │ │                   └─UNARY_EXPRESSION | Line num: 8
-           │ │ │                     └─FACTOR | Line num: 8
-           │ │ │                       └─IMMUTABLE | Line num: 8
-           │ │ │                         └─INTCONST | Line num: 8 (2)
-           │ │ └─SCOPED_VAR_DECLARATION | Line num: 9
-           │ │   ├─SCOPED_TYPE_SPECIFIER | Line num: 9
-           │ │   │ └─INT | Line num: 9
-           │ │   └─VAR_DECL_LIST | Line num: 9
-           │ │     └─VAR_DECL_INITIALIZE | Line num: 9
-           │ │       ├─ID | Line num: 9 (logor)
-           │ │       ├─EQUAL | Line num: 9
-           │ │       └─SIMPLE_EXPRESSION | Line num: 9
-           │ │         ├─SIMPLE_EXPRESSION | Line num: 9
-           │ │         │ └─AND_EXPRESSION | Line num: 9
-           │ │         │   └─UNARY_REL_EXPRESSION | Line num: 9
-           │ │         │     └─REL_EXPRESSION | Line num: 9
-           │ │         │       └─SUM_EXPRESSION | Line num: 9
-           │ │         │         └─MUL_EXPRESSION | Line num: 9
-           │ │         │           └─UNARY_EXPRESSION | Line num: 9
-           │ │         │             └─FACTOR | Line num: 9
-           │ │         │               └─IMMUTABLE | Line num: 9
-           │ │         │                 └─INTCONST | Line num: 9 (1)
-           │ │         ├─LOGOR | Line num: 9
-           │ │         └─AND_EXPRESSION | Line num: 9
-           │ │           └─UNARY_REL_EXPRESSION | Line num: 9
-           │ │             └─REL_EXPRESSION | Line num: 9
-           │ │               └─SUM_EXPRESSION | Line num: 9
-           │ │                 └─MUL_EXPRESSION | Line num: 9
-           │ │                   └─UNARY_EXPRESSION | Line num: 9
-           │ │                     └─FACTOR | Line num: 9
-           │ │                       └─IMMUTABLE | Line num: 9
-           │ │                         └─INTCONST | Line num: 9 (2)
+           │ ├─LOCAL_DECLARATIONS | Line num: 7
+           │ │ ├─LOCAL_DECLARATIONS | Line num: 6
+           │ │ │ ├─LOCAL_DECLARATIONS | Line num: 5
+           │ │ │ │ ├─LOCAL_DECLARATIONS | Line num: 3
+           │ │ │ │ │ ├─LOCAL_DECLARATIONS | Line num: 2
+           │ │ │ │ │ │ ├─LOCAL_DECLARATIONS | Line num: 1
+           │ │ │ │ │ │ └─SCOPED_VAR_DECLARATION | Line num: 2
+           │ │ │ │ │ │   ├─SCOPED_TYPE_SPECIFIER | Line num: 2
+           │ │ │ │ │ │   │ └─INT | Line num: 2
+           │ │ │ │ │ │   └─VAR_DECL_LIST | Line num: 2
+           │ │ │ │ │ │     └─VAR_DECL_INITIALIZE | Line num: 2
+           │ │ │ │ │ │       ├─ID | Line num: 2 (value)
+           │ │ │ │ │ │       ├─EQUAL | Line num: 2
+           │ │ │ │ │ │       └─SIMPLE_EXPRESSION | Line num: 2
+           │ │ │ │ │ │         └─AND_EXPRESSION | Line num: 2
+           │ │ │ │ │ │           └─UNARY_REL_EXPRESSION | Line num: 2
+           │ │ │ │ │ │             └─REL_EXPRESSION | Line num: 2
+           │ │ │ │ │ │               └─SUM_EXPRESSION | Line num: 2
+           │ │ │ │ │ │                 └─MUL_EXPRESSION | Line num: 2
+           │ │ │ │ │ │                   └─UNARY_EXPRESSION | Line num: 2
+           │ │ │ │ │ │                     └─UNARY_MINUS | Line num: 2
+           │ │ │ │ │ │                       └─UNARY_EXPRESSION | Line num: 2
+           │ │ │ │ │ │                         └─FACTOR | Line num: 2
+           │ │ │ │ │ │                           └─IMMUTABLE | Line num: 2
+           │ │ │ │ │ │                             └─INTCONST | Line num: 2 (5)
+           │ │ │ │ │ └─SCOPED_VAR_DECLARATION | Line num: 3
+           │ │ │ │ │   ├─SCOPED_TYPE_SPECIFIER | Line num: 3
+           │ │ │ │ │   │ └─FLOAT | Line num: 3
+           │ │ │ │ │   └─VAR_DECL_LIST | Line num: 3
+           │ │ │ │ │     └─VAR_DECL_INITIALIZE | Line num: 3
+           │ │ │ │ │       ├─ID | Line num: 3 (a)
+           │ │ │ │ │       ├─EQUAL | Line num: 3
+           │ │ │ │ │       └─SIMPLE_EXPRESSION | Line num: 3
+           │ │ │ │ │         └─AND_EXPRESSION | Line num: 3
+           │ │ │ │ │           └─UNARY_REL_EXPRESSION | Line num: 3
+           │ │ │ │ │             └─REL_EXPRESSION | Line num: 3
+           │ │ │ │ │               └─SUM_EXPRESSION | Line num: 3
+           │ │ │ │ │                 └─MUL_EXPRESSION | Line num: 3
+           │ │ │ │ │                   └─UNARY_EXPRESSION | Line num: 3
+           │ │ │ │ │                     └─FACTOR | Line num: 3
+           │ │ │ │ │                       └─IMMUTABLE | Line num: 3
+           │ │ │ │ │                         └─FLOATCONST | Line num: 3 (10.100000)
+           │ │ │ │ └─SCOPED_VAR_DECLARATION | Line num: 5
+           │ │ │ │   ├─SCOPED_TYPE_SPECIFIER | Line num: 5
+           │ │ │ │   │ └─INT | Line num: 5
+           │ │ │ │   └─VAR_DECL_LIST | Line num: 5
+           │ │ │ │     └─VAR_DECL_INITIALIZE | Line num: 5
+           │ │ │ │       ├─ID | Line num: 5 (hek)
+           │ │ │ │       ├─EQUAL | Line num: 5
+           │ │ │ │       └─SIMPLE_EXPRESSION | Line num: 5
+           │ │ │ │         └─AND_EXPRESSION | Line num: 5
+           │ │ │ │           └─UNARY_REL_EXPRESSION | Line num: 5
+           │ │ │ │             └─REL_EXPRESSION | Line num: 5
+           │ │ │ │               └─SUM_EXPRESSION | Line num: 5
+           │ │ │ │                 └─MUL_EXPRESSION | Line num: 5
+           │ │ │ │                   ├─MUL_EXPRESSION | Line num: 5
+           │ │ │ │                   │ └─UNARY_EXPRESSION | Line num: 5
+           │ │ │ │                   │   └─FACTOR | Line num: 5
+           │ │ │ │                   │     └─IMMUTABLE | Line num: 5
+           │ │ │ │                   │       └─INTCONST | Line num: 5 (5)
+           │ │ │ │                   ├─TIMES | Line num: 5
+           │ │ │ │                   └─UNARY_EXPRESSION | Line num: 5
+           │ │ │ │                     └─UNARY_MINUS | Line num: 5
+           │ │ │ │                       └─UNARY_EXPRESSION | Line num: 5
+           │ │ │ │                         └─FACTOR | Line num: 5
+           │ │ │ │                           └─IMMUTABLE | Line num: 5
+           │ │ │ │                             └─INTCONST | Line num: 5 (18)
+           │ │ │ └─SCOPED_VAR_DECLARATION | Line num: 6
+           │ │ │   ├─SCOPED_TYPE_SPECIFIER | Line num: 6
+           │ │ │   │ └─CHAR | Line num: 6
+           │ │ │   └─VAR_DECL_LIST | Line num: 6
+           │ │ │     └─VAR_DECL_INITIALIZE | Line num: 6
+           │ │ │       ├─ID | Line num: 6 (str)
+           │ │ │       ├─EQUAL | Line num: 6
+           │ │ │       └─SIMPLE_EXPRESSION | Line num: 6
+           │ │ │         └─AND_EXPRESSION | Line num: 6
+           │ │ │           └─UNARY_REL_EXPRESSION | Line num: 6
+           │ │ │             └─REL_EXPRESSION | Line num: 6
+           │ │ │               └─SUM_EXPRESSION | Line num: 6
+           │ │ │                 └─MUL_EXPRESSION | Line num: 6
+           │ │ │                   └─UNARY_EXPRESSION | Line num: 6
+           │ │ │                     └─FACTOR | Line num: 6
+           │ │ │                       └─IMMUTABLE | Line num: 6
+           │ │ │                         └─CHARLIT | Line num: 6 (b)
+           │ │ └─SCOPED_VAR_DECLARATION | Line num: 7
+           │ │   ├─SCOPED_TYPE_SPECIFIER | Line num: 7
+           │ │   │ └─CHAR | Line num: 7
+           │ │   └─VAR_DECL_LIST | Line num: 7
+           │ │     └─VAR_DECL_INITIALIZE | Line num: 7
+           │ │       ├─ID | Line num: 7 (str2)
+           │ │       ├─EQUAL | Line num: 7
+           │ │       └─SIMPLE_EXPRESSION | Line num: 7
+           │ │         └─AND_EXPRESSION | Line num: 7
+           │ │           └─UNARY_REL_EXPRESSION | Line num: 7
+           │ │             └─REL_EXPRESSION | Line num: 7
+           │ │               └─SUM_EXPRESSION | Line num: 7
+           │ │                 └─MUL_EXPRESSION | Line num: 7
+           │ │                   └─UNARY_EXPRESSION | Line num: 7
+           │ │                     └─FACTOR | Line num: 7
+           │ │                       └─IMMUTABLE | Line num: 7
+           │ │                         └─CHARLIT | Line num: 7 (c)
            │ └─SCOPED_VAR_DECLARATION | Line num: 13
            │   ├─SCOPED_TYPE_SPECIFIER | Line num: 13
            │   │ └─CHAR | Line num: 13

@@ -66,8 +66,8 @@ public:
         MINUS, NOT, ASSIGN,
         // Unconditional jump to basic block label [BB label]
         JUMP,
-        // Boolean comparison, store result [result] [operand A] [operand B]
-        COMP_LT, COMP_GT, COMP_LE, COMP_GE, COMP_EQ, COMP_NEQ, LOG_OR, LOG_AND,
+        // Comparison jumps [BB label] [A] [B]
+        JUMP_LT, JUMP_GT, JUMP_LE, JUMP_GE, JUMP_EQ, JUMP_NEQ, 
         // Conditional true/false jump to basic block label [BB label] [check]
         JUMP_IF_TRUE, JUMP_IF_FALSE,
         // Return statement [return value]
