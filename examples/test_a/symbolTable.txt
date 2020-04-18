@@ -6,13 +6,11 @@
   +----------------------------+
   | Table ID: 1         main() |
   +----------------------------+
-  | a      | Float  | Local    |
-  | hek    | Int    | Local    |
-  | logand | Int    | Local    |
-  | logor  | Int    | Local    |
-  | str    | Char   | Local    |
-  | str2   | Char   | Local    |
-  | value  | Int    | Local    |
+  | a     | Float  | Local     |
+  | hek   | Int    | Local     |
+  | str   | Char   | Local     |
+  | str2  | Char   | Local     |
+  | value | Int    | Local     |
   +----------------------------+
     +----------------------------+
     | Table ID: 2           list |

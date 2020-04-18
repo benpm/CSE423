@@ -1,8 +1,8 @@
 main()
   BB0 [combined]
   │(2) <[int][ASSIGN], (int)foo, 420>
-  │(3) <[int][COMP_GT], (int)#0, (int)foo, 10>
-  │(3) <[JUMP_IF_FALSE], <3>, (int)#0>
+  │(3) <[JUMP_GT], <2>, (int)foo, 10>
+  │(3) <[JUMP], <3>>
   └────────────────────
   BB2 [assignment]
   │(4) <[int][ASSIGN], (int)foo, 19>

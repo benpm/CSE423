@@ -5,8 +5,8 @@ int main() {
     int hek = 5 * -18;
     char str = 'b';
     char str2 = 'c';
-    int logand = 1 && 2;
-    int logor = 1 || 2;
+    //int logand = 1 && 2;
+    //int logor = 1 || 2;
     /*
     boi
     */
