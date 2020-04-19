@@ -34,20 +34,6 @@ root
      │ │ └─[1] assignment
      │ │   ├─[1] id (str2)
      │ │   └─[1] char_const (c)
-     │ ├─[1] declaration
-     │ │ ├─[1] int_type
-     │ │ └─[1] assignment
-     │ │   ├─[1] id (logand)
-     │ │   └─[1] log_and
-     │ │     ├─[1] int_const (1)
-     │ │     └─[1] int_const (2)
-     │ ├─[1] declaration
-     │ │ ├─[1] int_type
-     │ │ └─[1] assignment
-     │ │   ├─[1] id (logor)
-     │ │   └─[1] log_or
-     │ │     ├─[1] int_const (1)
-     │ │     └─[1] int_const (2)
      │ └─[1] declaration
      │   ├─[1] char_type
      │   └─[1] assignment
