@@ -1,6 +1,7 @@
 main()
   BB0 [combined]
-  │(8) <[JUMP_IF_FALSE], <6>, 0>
+  │(8) <[JUMP_LT], <5>, 1110, 2>
+  │(8) <[JUMP], <6>>
   └────────────────────
   BB5 [return_stmt]
   │(9) <[int][RETURN], 35>

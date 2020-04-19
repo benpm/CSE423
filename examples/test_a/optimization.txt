@@ -3,23 +3,22 @@ main()
   │(2) <[int][ASSIGN], (int)value, -5>
   │(14) <[int][ASSIGN], (int)i, 0>
   └────────────────────
-  BB9 [for_cond]
-  │(14) <[int][COMP_LT], (int)#5, (int)i, 111>
-  │(14) <[JUMP_IF_FALSE], <13>, (int)#5>
+  BB7 [lt]
+  │(14) <[JUMP_LT], <8>, 0, 111>
+  │(14) <[JUMP], <11>>
   └────────────────────
-  BB10 [if_stmt]
-  │(15) <[int][MOD], (int)#6, (int)i, 10>
-  │(15) <[int][COMP_EQ], (int)#7, (int)#6, 5>
-  │(15) <[JUMP_IF_FALSE], <12>, (int)#7>
+  BB8 [equal]
+  │(15) <[JUMP_EQ], <9>, 0, 5>
+  │(15) <[JUMP], <10>>
   └────────────────────
-  BB11 [plus_equal]
-  │(16) <[int][ADD], (int)value, (int)value, (int)i>
+  BB9 [plus_equal]
+  │(16) <[int][ADD], (int)value, (int)value, 0>
   └────────────────────
-  BB12 [for_post]
+  BB10 [for_post]
   │(14) <[int][ADD], (int)i, (int)i, 1>
-  │(14) <[JUMP], <9>>
+  │(14) <[JUMP], <7>>
   └────────────────────
-  BB13 [return_stmt]
+  BB11 [return_stmt]
   │(19) <[int][RETURN], (int)value>
   └────────────────────
 

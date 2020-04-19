@@ -28,20 +28,20 @@ main()
   │(17) <[int][MUL], (int)#B, (int)n2, (int)n1>
   │(17) <[int][DIV], (int)#C, (int)#B, 2>
   │(17) <[JUMP_LT], <7>, (int)i, (int)#C>
-  │(17) <[JUMP], <22>>
+  │(17) <[JUMP], <23>>
   └────────────────────
   BB7 [combined]
-  │(18) <[int][ASSIGN], (int)6_n1, 10>
-  │(19) <[JUMP], <22>>
+  │(18) <[int][ASSIGN], (int)f, 10>
+  │(19) <[JUMP], <23>>
   └────────────────────
   BB9 [assignment]
   │(20) <[int][ASSIGN], (int)j, 0>
   └────────────────────
   BB10 [lt]
-  │(20) <[int][DIV], (int)#D, (int)6_n1, 2>
+  │(20) <[int][DIV], (int)#D, (int)n1, 2>
   │(20) <[int][ADD], (int)#E, (int)n2, (int)#D>
   │(20) <[JUMP_LT], <11>, (int)j, (int)#E>
-  │(20) <[JUMP], <21>>
+  │(20) <[JUMP], <22>>
   └────────────────────
   BB11 [assignment]
   │(21) <[int][ASSIGN], (int)x, 0>
@@ -50,97 +50,98 @@ main()
   │(22) <[JUMP_LT], <15>, (int)x, (int)n2>
   └────────────────────
   BB13 [ge]
-  │(22) <[JUMP_GE], <20>, (int)x, (int)n2>
+  │(22) <[JUMP_GE], <21>, (int)x, (int)n2>
   │(22) <[JUMP], <15>>
   └────────────────────
   BB14 [fallthrough]
-  │(22) <[JUMP], <20>>
+  │(22) <[JUMP], <21>>
   └────────────────────
   BB15 [combined]
   │(23) <[int][ASSIGN], (int)z, 10>
-  │(24) <[int][ASSIGN], (int)10_x, 3>
-  │(25) <[int][ADD], (int)#F, (int)10_x, (int)z>
-  │(25) <[int][ADD], (int)10_x, (int)10_x, (int)#F>
-  │(26) <[JUMP], <20>>
+  │(24) <[int][ASSIGN], (int)x2, 3>
+  │(25) <[int][ADD], (int)#F, (int)z, (int)x>
+  │(25) <[int][ADD], (int)x2, (int)x2, (int)#F>
+  │(26) <[int][MINUS], (int)n2, (int)n2, (int)x>
+  │(27) <[JUMP], <21>>
   └────────────────────
-  BB19 [while_post]
+  BB20 [while_post]
   │(22) <[JUMP], <12>>
   └────────────────────
-  BB20 [for_post]
+  BB21 [for_post]
   │(20) <[int][ADD], (int)j, (int)j, 1>
   │(20) <[JUMP], <10>>
   └────────────────────
-  BB21 [for_post]
+  BB22 [for_post]
   │(17) <[int][ADD], (int)i, (int)i, 1>
   │(17) <[JUMP], <6>>
   └────────────────────
-  BB22 [combined]
-  │(32) <[float][MUL], (float)#10, 0.101000, 2>
-  │(32) <[float][CALL], (float)#11, fun, (float)DF, (float)#10>
-  │(32) <[float][CALL], (float)#12, fun, (float)#11, 0.900000>
-  │(32) <[float][ASSIGN], (float)DF, (float)#12>
-  │(33) <[float][CALL], (float)#13, printf, "test: %f\n", (float)DF>
-  │(36) <[float][MINUS], (float)#14, (float)DF>
-  │(36) <[float][SUB], (float)#15, 0.800000, (float)#14>
-  │(36) <[JUMP_LT], <25>, (float)DF, (float)#15>
-  │(36) <[JUMP], <42>>
+  BB23 [combined]
+  │(33) <[float][MUL], (float)#10, 0.101000, 2>
+  │(33) <[float][CALL], (float)#11, fun, (float)DF, (float)#10>
+  │(33) <[float][CALL], (float)#12, fun, (float)#11, 0.900000>
+  │(33) <[float][ASSIGN], (float)DF, (float)#12>
+  │(34) <[float][CALL], (float)#13, printf, "test: %f\n", (float)DF>
+  │(37) <[float][MINUS], (float)#14, (float)DF>
+  │(37) <[float][SUB], (float)#15, 0.800000, (float)#14>
+  │(37) <[JUMP_LT], <26>, (float)DF, (float)#15>
+  │(37) <[JUMP], <43>>
   └────────────────────
-  BB25 [noteq]
-  │(37) <[JUMP_NEQ], <26>, (int)n2, 10>
-  │(37) <[JUMP], <30>>
+  BB26 [noteq]
+  │(38) <[JUMP_NEQ], <27>, (int)n2, 10>
+  │(38) <[JUMP], <31>>
   └────────────────────
-  BB26 [combined]
-  │(38) <[char][ASSIGN], (char)G, 'H'>
-  │(39) <[int][MUL], (int)n1, (int)n1, 1>
-  │(40) <[int][MOD], (int)n1, (int)n1, 10>
-  │(41) <[int][ADD], (int)n1, (int)n1, 1>
+  BB27 [combined]
+  │(39) <[char][ASSIGN], (char)G, 'H'>
+  │(40) <[int][MUL], (int)n1, (int)n1, 1>
+  │(41) <[int][MOD], (int)n1, (int)n1, 10>
+  │(42) <[int][ADD], (int)n1, (int)n1, 1>
   └────────────────────
-  BB30 [le]
-  │(42) <[JUMP_GT], <38>, (int)n1, 2>
+  BB31 [le]
+  │(43) <[JUMP_GT], <39>, (int)n1, 2>
   └────────────────────
-  BB31 [equal]
-  │(42) <[JUMP_EQ], <35>, (char)G, 'H'>
+  BB32 [equal]
+  │(43) <[JUMP_EQ], <36>, (char)G, 'H'>
   └────────────────────
-  BB32 [noteq]
-  │(42) <[JUMP_NEQ], <35>, (int)n2, 100>
-  └────────────────────
-  BB33 [fallthrough]
-  │(42) <[JUMP], <38>>
+  BB33 [noteq]
+  │(43) <[JUMP_NEQ], <36>, (int)n2, 100>
   └────────────────────
   BB34 [fallthrough]
-  │(42) <[JUMP], <35>>
+  │(43) <[JUMP], <39>>
   └────────────────────
-  BB35 [combined]
-  │(43) <[float][MINUS], (float)#16, 0.600000>
-  │(43) <[float][ADD], (float)DF, (float)DF, (float)#16>
-  │(44) <[JUMP_EQ], <37>, (float)DF, 0.000000>
-  │(44) <[JUMP], <38>>
+  BB35 [fallthrough]
+  │(43) <[JUMP], <36>>
   └────────────────────
-  BB37 [assignment]
-  │(45) <[float][ASSIGN], (float)DF, 1.010000>
+  BB36 [combined]
+  │(44) <[float][MINUS], (float)#16, 0.600000>
+  │(44) <[float][ADD], (float)DF, (float)DF, (float)#16>
+  │(45) <[JUMP_EQ], <38>, (float)DF, 0.000000>
+  │(45) <[JUMP], <39>>
   └────────────────────
-  BB38 [ge]
-  │(47) <[JUMP_GE], <39>, (char)G, 'H'>
-  │(47) <[JUMP], <41>>
+  BB38 [assignment]
+  │(46) <[float][ASSIGN], (float)DF, 1.010000>
   └────────────────────
-  BB39 [combined]
-  │(48) <[int][MINUS], (int)n2, (int)n2, 16>
-  │(49) <[int][MINUS], (int)n2, (int)n2, 1>
+  BB39 [ge]
+  │(48) <[JUMP_GE], <40>, (char)G, 'H'>
+  │(48) <[JUMP], <42>>
   └────────────────────
-  BB41 [div_equal]
-  │(51) <[int][DIV], (int)n1, (int)n1, 2>
+  BB40 [combined]
+  │(49) <[int][MINUS], (int)n2, (int)n2, 16>
+  │(50) <[int][MINUS], (int)n2, (int)n2, 1>
   └────────────────────
-  BB42 [goto_stmt]
-  │(54) <[JUMP], <44>>
+  BB42 [div_equal]
+  │(52) <[int][DIV], (int)n1, (int)n1, 2>
   └────────────────────
-  BB43 [return_stmt]
-  │(55) <[int][MINUS], (int)#17, 1>
-  │(55) <[int][RETURN], (int)#17>
+  BB43 [goto_stmt]
+  │(55) <[JUMP], <45>>
   └────────────────────
-  BB44 [combined]
-  │(56) <[NO_OP]>
-  │(57) <[int][MUL], (int)#18, (int)n1, 2>
-  │(57) <[int][RETURN], (int)#18>
+  BB44 [return_stmt]
+  │(56) <[int][MINUS], (int)#17, 1>
+  │(56) <[int][RETURN], (int)#17>
+  └────────────────────
+  BB45 [combined]
+  │(57) <[NO_OP]>
+  │(58) <[int][MUL], (int)#18, (int)n1, 2>
+  │(58) <[int][RETURN], (int)#18>
   └────────────────────
 
 

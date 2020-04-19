@@ -7,15 +7,7 @@ const std::set<Statement::Type> canEvalTypes {
     Statement::SUB,
     Statement::MOD,
     Statement::MINUS,
-    Statement::NOT,
-    Statement::COMP_LT,
-    Statement::COMP_GT,
-    Statement::COMP_LE,
-    Statement::COMP_GE,
-    Statement::COMP_EQ,
-    Statement::COMP_NEQ,
-    Statement::LOG_OR,
-    Statement::LOG_AND
+    Statement::NOT
 };
 
 template<class T>
@@ -34,24 +26,6 @@ T internalEval(const Statement& statement)
             return (int)statement.args.at(1) % (int)statement.args.at(2);
         case Statement::MINUS:
             return -(T)statement.args.at(1);
-        case Statement::NOT:
-            return !(T)statement.args.at(1);
-        case Statement::COMP_LT:
-            return (T)statement.args.at(1) < (T)statement.args.at(2);
-        case Statement::COMP_LE:
-            return (T)statement.args.at(1) <= (T)statement.args.at(2);
-        case Statement::COMP_GT:
-            return (T)statement.args.at(1) > (T)statement.args.at(2);
-        case Statement::COMP_GE:
-            return (T)statement.args.at(1) >= (T)statement.args.at(2);
-        case Statement::COMP_EQ:
-            return (T)statement.args.at(1) == (T)statement.args.at(2);
-        case Statement::COMP_NEQ:
-            return (T)statement.args.at(1) != (T)statement.args.at(2);
-        case Statement::LOG_AND:
-            return (T)statement.args.at(1) && (T)statement.args.at(2);
-        case Statement::LOG_OR:
-            return (T)statement.args.at(1) || (T)statement.args.at(2);
     }
     return T(0);
 }
