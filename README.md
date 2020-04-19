@@ -16,9 +16,9 @@ Documentation and User Manual lives on our [Wiki](https://github.com/benpm/CSE42
 - [X] [IR generator](https://github.com/benpm/CSE423/wiki/Specification#intermediate-representation)
     - [X] Output IR to file
     - [X] Read in IR from file
-- [ ] Optimizer
-    - [ ] Constant propagation
-    - [ ] Constant folding
+- [X] Optimizer
+    - [X] Constant propagation
+    - [X] Constant folding
 - [ ] Code generator
     - [ ] x86 processor model
     - [ ] Instruction selection

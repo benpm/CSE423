@@ -56,6 +56,7 @@ add_executable(sc64
     "src/ast.cpp"
     "src/config.cpp"
     "src/symboltable.cpp"
+    "src/optimizer.cpp"
     "src/ir/statement.cpp"
     "src/ir/basicblock.cpp"
     "src/ir/function.cpp"

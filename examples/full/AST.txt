@@ -89,7 +89,7 @@ root
        │ │ └─[6] declaration
        │ │   ├─[6] int_type
        │ │   └─[6] assignment
-       │ │     ├─[6] id (n1)
+       │ │     ├─[6] id (f)
        │ │     └─[6] int_const (10)
        │ └─[6] list
        │   ├─[6] break_stmt
@@ -134,14 +134,17 @@ root
        │         │ └─[10] declaration
        │         │   ├─[10] int_type
        │         │   └─[10] assignment
-       │         │     ├─[10] id (x)
+       │         │     ├─[10] id (x2)
        │         │     └─[10] int_const (3)
        │         └─[10] list
        │           ├─[10] plus_equal
-       │           │ ├─[10] id (x)
+       │           │ ├─[10] id (x2)
        │           │ └─[10] sum
-       │           │   ├─[10] id (x)
-       │           │   └─[10] id (z)
+       │           │   ├─[10] id (z)
+       │           │   └─[10] id (x)
+       │           ├─[10] minus_equal
+       │           │ ├─[10] id (n2)
+       │           │ └─[10] id (x)
        │           └─[10] break_stmt
        ├─[4] assignment
        │ ├─[4] id (DF)
