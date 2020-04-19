@@ -11,10 +11,13 @@ main()
   │(10) <[int][ASSIGN], (int)n1, -9>
   │(11) <[int][ASSIGN], (int)n2, 81>
   │(13) <[float][ASSIGN], (float)DF, 64.800003>
+  │(14) <[char][ASSIGN], (char)G, 'G'>
   │(17) <[int][ASSIGN], (int)i, 0>
   └────────────────────
   BB6 [lt]
-  │(17) <[JUMP_LT], <7>, 0, -364>
+  │(17) <[int][MUL], (int)#B, (int)n2, (int)n1>
+  │(17) <[int][DIV], (int)#C, (int)#B, 2>
+  │(17) <[JUMP_LT], <7>, (int)i, (int)#C>
   │(17) <[JUMP], <23>>
   └────────────────────
   BB7 [combined]
@@ -24,16 +27,19 @@ main()
   │(20) <[int][ASSIGN], (int)j, 0>
   └────────────────────
   BB10 [lt]
-  │(20) <[JUMP_LT], <11>, 0, 77>
+  │(20) <[int][DIV], (int)#D, (int)n1, 2>
+  │(20) <[int][ADD], (int)#E, (int)n2, (int)#D>
+  │(20) <[JUMP_LT], <11>, (int)j, (int)#E>
   │(20) <[JUMP], <22>>
   └────────────────────
   BB11 [assignment]
+  │(21) <[int][ASSIGN], (int)x, 0>
   └────────────────────
   BB12 [lt]
-  │(22) <[JUMP_LT], <15>, 0, 81>
+  │(22) <[JUMP_LT], <15>, (int)x, (int)n2>
   └────────────────────
   BB13 [ge]
-  │(22) <[JUMP_GE], <21>, 0, 81>
+  │(22) <[JUMP_GE], <21>, (int)x, (int)n2>
   │(22) <[JUMP], <15>>
   └────────────────────
   BB14 [fallthrough]
@@ -41,8 +47,9 @@ main()
   └────────────────────
   BB15 [combined]
   │(24) <[int][ASSIGN], (int)x2, 3>
-  │(25) <[int][ADD], (int)x2, (int)x2, 10>
-  │(26) <[int][MINUS], (int)n2, (int)n2, 0>
+  │(25) <[int][ADD], (int)#F, 10, (int)x>
+  │(25) <[int][ADD], (int)x2, (int)x2, (int)#F>
+  │(26) <[int][MINUS], (int)n2, (int)n2, (int)x>
   │(27) <[JUMP], <21>>
   └────────────────────
   BB20 [while_post]
@@ -57,7 +64,7 @@ main()
   │(17) <[JUMP], <6>>
   └────────────────────
   BB23 [combined]
-  │(33) <[float][CALL], (float)#11, fun, 64.800003, 0.202000>
+  │(33) <[float][CALL], (float)#11, fun, (float)DF, 0.202000>
   │(33) <[float][CALL], (float)#12, fun, (float)#11, 0.900000>
   │(33) <[float][ASSIGN], (float)DF, (float)#12>
   │(34) <[float][CALL], (float)#13, printf, "test: %f\n", (float)DF>
@@ -71,6 +78,7 @@ main()
   │(38) <[JUMP], <31>>
   └────────────────────
   BB27 [combined]
+  │(39) <[char][ASSIGN], (char)G, 'H'>
   │(40) <[int][MUL], (int)n1, (int)n1, 1>
   │(41) <[int][MOD], (int)n1, (int)n1, 10>
   │(42) <[int][ADD], (int)n1, (int)n1, 1>
@@ -79,7 +87,7 @@ main()
   │(43) <[JUMP_GT], <39>, (int)n1, 2>
   └────────────────────
   BB32 [equal]
-  │(43) <[JUMP_EQ], <36>, 'H', 'H'>
+  │(43) <[JUMP_EQ], <36>, (char)G, 'H'>
   └────────────────────
   BB33 [noteq]
   │(43) <[JUMP_NEQ], <36>, (int)n2, 100>
@@ -98,7 +106,7 @@ main()
   BB38 [assignment]
   └────────────────────
   BB39 [ge]
-  │(48) <[JUMP_GE], <40>, 'H', 'H'>
+  │(48) <[JUMP_GE], <40>, (char)G, 'H'>
   │(48) <[JUMP], <42>>
   └────────────────────
   BB40 [combined]

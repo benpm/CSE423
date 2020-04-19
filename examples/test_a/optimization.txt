@@ -4,15 +4,16 @@ main()
   │(14) <[int][ASSIGN], (int)i, 0>
   └────────────────────
   BB7 [lt]
-  │(14) <[JUMP_LT], <8>, 0, 111>
+  │(14) <[JUMP_LT], <8>, (int)i, 111>
   │(14) <[JUMP], <11>>
   └────────────────────
   BB8 [equal]
-  │(15) <[JUMP_EQ], <9>, 0, 5>
+  │(15) <[int][MOD], (int)#3, (int)i, 10>
+  │(15) <[JUMP_EQ], <9>, (int)#3, 5>
   │(15) <[JUMP], <10>>
   └────────────────────
   BB9 [plus_equal]
-  │(16) <[int][ADD], (int)value, (int)value, 0>
+  │(16) <[int][ADD], (int)value, (int)value, (int)i>
   └────────────────────
   BB10 [for_post]
   │(14) <[int][ADD], (int)i, (int)i, 1>

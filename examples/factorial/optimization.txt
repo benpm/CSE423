@@ -11,11 +11,11 @@ main()
   │(6) <[int][ASSIGN], (int)i, 1>
   └────────────────────
   BB5 [le]
-  │(6) <[JUMP_LE], <6>, 1, 10>
+  │(6) <[JUMP_LE], <6>, (int)i, 10>
   │(6) <[JUMP], <8>>
   └────────────────────
   BB6 [combined]
-  │(7) <[int][MUL], (int)fact, (int)fact, 1>
+  │(7) <[int][MUL], (int)fact, (int)fact, (int)i>
   │(6) <[int][ADD], (int)i, (int)i, 1>
   │(6) <[JUMP], <5>>
   └────────────────────

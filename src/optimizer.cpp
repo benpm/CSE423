@@ -46,6 +46,15 @@ Arg Optimizer::evaluate(const Statement& statement)
 void Optimizer::optimize(Program& program)
 {
     spdlog::info("Optimizer beginning");
+
+    const std::set<Statement::Type> jumpStmts {
+        Statement::JUMP_EQ, Statement::JUMP_NEQ,
+        Statement::JUMP_LT, Statement::JUMP_GT,
+        Statement::JUMP_LE, Statement::JUMP_GE,
+        Statement::JUMP,
+        Statement::JUMP_IF_TRUE, Statement::JUMP_IF_FALSE
+    };
+
     for (auto& item : program.functions) {
         bool proceed = false;
         do {
@@ -55,7 +64,7 @@ void Optimizer::optimize(Program& program)
             std::vector<std::pair<BasicBlock&, Statement&>> stmts;
             std::set<size_t> jumpBlocks;
             for (BasicBlock& block : item.second.blocks) {
-                if (block.statements.back().type == Statement::JUMP_IF_FALSE) {
+                if (jumpStmts.count(block.statements.back().type)) {
                     jumpBlocks.insert(block.label);
                 }
                 for (Statement& stmt : block.statements) {
@@ -69,12 +78,12 @@ void Optimizer::optimize(Program& program)
             }
 
             // Find last constant assignment for each identifier
-            std::vector<std::pair<const char*, size_t>> lastAssigns;
+            std::map<const char*, size_t> lastAssigns;
             for (size_t i = 0; i < stmts.size(); i++) {
                 const Statement& stmt = stmts[i].second;
                 if (stmt.type == Statement::ASSIGN
                     && stmt.args.at(1).type != Arg::NAME) {
-                    lastAssigns.emplace_back(stmt.args.at(0).val.sval, i);
+                    lastAssigns.emplace(stmt.args.at(0).val.sval, i);
                 }
             }
 
