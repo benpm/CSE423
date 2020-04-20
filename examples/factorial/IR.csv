@@ -17,6 +17,6 @@ stmt,7,int,MUL,int fact,int fact,int i
 stmt,6,int,ADD,int i,int i,1
 stmt,6,none,JUMP,5
 BB,8,combined
-stmt,9,int,CALL,int #1,printf,"Factorial of %d = %d",int n,int fact
+stmt,9,int,CALL,int #0,printf,"Factorial of %d = %d",int n,int fact
 stmt,11,int,RETURN,0
 

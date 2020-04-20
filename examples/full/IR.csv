@@ -5,29 +5,29 @@ func,fun,float V,float XKAD
 BB,0,combined
 stmt,6,float,ADD,float #0,float XKAD,float V
 stmt,6,float,ASSIGN,float n1,float #0
-stmt,7,float,MUL,float #1,float n1,80
-stmt,7,float,RETURN,float #1
+stmt,7,float,MUL,float #0,float n1,80
+stmt,7,float,RETURN,float #0
 func,main
 BB,0,combined
-stmt,13,int,MINUS,int #2,2
-stmt,13,int,DIV,int #3,18,int #2
-stmt,13,int,MUL,int #4,15,int #3
-stmt,13,int,MOD,int #5,int #4,18
-stmt,13,int,ASSIGN,int n1,int #5
-stmt,14,int,MUL,int #6,int n1,int n1
-stmt,14,int,ASSIGN,int n2,int #6
-stmt,15,int,ADD,int #7,int n1,int n1
-stmt,15,int,ADD,int #8,int #7,int n2
-stmt,15,int,ADD,int #9,int #8,int n2
-stmt,15,int,ASSIGN,int n3,int #9
-stmt,16,float,MUL,float #A,0.800000,int n2
-stmt,16,float,ASSIGN,float DF,float #A
+stmt,13,int,MINUS,int #0,2
+stmt,13,int,DIV,int #1,18,int #0
+stmt,13,int,MUL,int #2,15,int #1
+stmt,13,int,MOD,int #3,int #2,18
+stmt,13,int,ASSIGN,int n1,int #3
+stmt,14,int,MUL,int #0,int n1,int n1
+stmt,14,int,ASSIGN,int n2,int #0
+stmt,15,int,ADD,int #0,int n1,int n1
+stmt,15,int,ADD,int #1,int #0,int n2
+stmt,15,int,ADD,int #2,int #1,int n2
+stmt,15,int,ASSIGN,int n3,int #2
+stmt,16,float,MUL,float #0,0.800000,int n2
+stmt,16,float,ASSIGN,float DF,float #0
 stmt,17,char,ASSIGN,char G,'G'
 stmt,20,int,ASSIGN,int i,0
 BB,6,lt
-stmt,20,int,MUL,int #B,int n2,int n1
-stmt,20,int,DIV,int #C,int #B,2
-stmt,20,none,JUMP_LT,7,int i,int #C
+stmt,20,int,MUL,int #0,int n2,int n1
+stmt,20,int,DIV,int #1,int #0,2
+stmt,20,none,JUMP_LT,7,int i,int #1
 stmt,20,none,JUMP,23
 BB,7,combined
 stmt,21,int,ASSIGN,int f,10
@@ -35,9 +35,9 @@ stmt,22,none,JUMP,23
 BB,9,assignment
 stmt,23,int,ASSIGN,int j,0
 BB,10,lt
-stmt,23,int,DIV,int #D,int n1,2
-stmt,23,int,ADD,int #E,int n2,int #D
-stmt,23,none,JUMP_LT,11,int j,int #E
+stmt,23,int,DIV,int #0,int n1,2
+stmt,23,int,ADD,int #1,int n2,int #0
+stmt,23,none,JUMP_LT,11,int j,int #1
 stmt,23,none,JUMP,22
 BB,11,assignment
 stmt,24,int,ASSIGN,int x,0
@@ -51,8 +51,8 @@ stmt,25,none,JUMP,21
 BB,15,combined
 stmt,26,int,ASSIGN,int z,10
 stmt,27,int,ASSIGN,int x2,3
-stmt,28,int,ADD,int #F,int z,int x
-stmt,28,int,ADD,int x2,int x2,int #F
+stmt,28,int,ADD,int #0,int z,int x
+stmt,28,int,ADD,int x2,int x2,int #0
 stmt,29,int,MINUS,int n2,int n2,int x
 stmt,30,none,JUMP,21
 BB,20,while_post
@@ -64,17 +64,17 @@ BB,22,for_post
 stmt,20,int,ADD,int i,int i,1
 stmt,20,none,JUMP,6
 BB,23,combined
-stmt,36,float,MUL,float #10,0.101000,2
-stmt,36,float,CALL,float #11,fun,float DF,float #10
-stmt,36,float,CALL,float #12,fun,float #11,0.900000
-stmt,36,float,ASSIGN,float DF,float #12
-stmt,37,float,CALL,float #13,printf,"test: %f\n",float DF
-stmt,39,float,MUL,float #14,float DF,int globA
-stmt,39,float,MUL,float #15,float #14,int globB
-stmt,39,float,ASSIGN,float DF,float #15
-stmt,41,float,MINUS,float #16,float DF
-stmt,41,float,SUB,float #17,0.800000,float #16
-stmt,41,none,JUMP_LT,27,float DF,float #17
+stmt,36,float,MUL,float #0,0.101000,2
+stmt,36,float,CALL,float #1,fun,float DF,float #0
+stmt,36,float,CALL,float #2,fun,float #1,0.900000
+stmt,36,float,ASSIGN,float DF,float #2
+stmt,37,float,CALL,float #0,printf,"test: %f\n",float DF
+stmt,39,float,MUL,float #0,float DF,int globA
+stmt,39,float,MUL,float #1,float #0,int globB
+stmt,39,float,ASSIGN,float DF,float #1
+stmt,41,float,MINUS,float #0,float DF
+stmt,41,float,SUB,float #1,0.800000,float #0
+stmt,41,none,JUMP_LT,27,float DF,float #1
 stmt,41,none,JUMP,44
 BB,27,noteq
 stmt,42,none,JUMP_NEQ,28,int n2,10
@@ -95,8 +95,8 @@ stmt,47,none,JUMP,40
 BB,36,fallthrough
 stmt,47,none,JUMP,37
 BB,37,combined
-stmt,48,float,MINUS,float #18,0.600000
-stmt,48,float,ADD,float DF,float DF,float #18
+stmt,48,float,MINUS,float #0,0.600000
+stmt,48,float,ADD,float DF,float DF,float #0
 stmt,49,none,JUMP_EQ,39,float DF,0.000000
 stmt,49,none,JUMP,40
 BB,39,assignment
@@ -112,10 +112,10 @@ stmt,56,int,DIV,int n1,int n1,2
 BB,44,goto_stmt
 stmt,59,none,JUMP,46
 BB,45,return_stmt
-stmt,60,int,MINUS,int #19,1
-stmt,60,int,RETURN,int #19
+stmt,60,int,MINUS,int #0,1
+stmt,60,int,RETURN,int #0
 BB,46,combined
 stmt,61,none,NO_OP
-stmt,62,int,MUL,int #1A,int n1,2
-stmt,62,int,RETURN,int #1A
+stmt,62,int,MUL,int #0,int n1,2
+stmt,62,int,RETURN,int #0
 

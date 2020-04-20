@@ -8,8 +8,8 @@ main()
   │(5) <[int][MUL], (int)#0, (int)b, 12>
   │(5) <[int][ADD], (int)#1, (int)a, (int)#0>
   │(5) <[int][ASSIGN], (int)c, (int)#1>
-  │(6) <[float][MINUS], (float)#2, 8.011609>
-  │(6) <[float][ASSIGN], (float)d, (float)#2>
+  │(6) <[float][MINUS], (float)#0, 8.011609>
+  │(6) <[float][ASSIGN], (float)d, (float)#0>
   │(8) <[JUMP_LT], <5>, (int)c, 2>
   │(8) <[JUMP], <6>>
   └────────────────────

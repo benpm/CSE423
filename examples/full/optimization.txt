@@ -7,8 +7,8 @@ fun((float)V, (float)XKAD, )
   BB0 [combined]
   │(6) <[float][ADD], (float)#0, (float)XKAD, (float)V>
   │(6) <[float][ASSIGN], (float)n1, (float)#0>
-  │(7) <[float][MUL], (float)#1, (float)n1, 80>
-  │(7) <[float][RETURN], (float)#1>
+  │(7) <[float][MUL], (float)#0, (float)n1, 80>
+  │(7) <[float][RETURN], (float)#0>
   └────────────────────
 
 main()
@@ -20,9 +20,9 @@ main()
   │(20) <[int][ASSIGN], (int)i, 0>
   └────────────────────
   BB6 [lt]
-  │(20) <[int][MUL], (int)#B, (int)n2, (int)n1>
-  │(20) <[int][DIV], (int)#C, (int)#B, 2>
-  │(20) <[JUMP_LT], <7>, (int)i, (int)#C>
+  │(20) <[int][MUL], (int)#0, (int)n2, (int)n1>
+  │(20) <[int][DIV], (int)#1, (int)#0, 2>
+  │(20) <[JUMP_LT], <7>, (int)i, (int)#1>
   │(20) <[JUMP], <23>>
   └────────────────────
   BB7 [combined]
@@ -32,9 +32,9 @@ main()
   │(23) <[int][ASSIGN], (int)j, 0>
   └────────────────────
   BB10 [lt]
-  │(23) <[int][DIV], (int)#D, (int)n1, 2>
-  │(23) <[int][ADD], (int)#E, (int)n2, (int)#D>
-  │(23) <[JUMP_LT], <11>, (int)j, (int)#E>
+  │(23) <[int][DIV], (int)#0, (int)n1, 2>
+  │(23) <[int][ADD], (int)#1, (int)n2, (int)#0>
+  │(23) <[JUMP_LT], <11>, (int)j, (int)#1>
   │(23) <[JUMP], <22>>
   └────────────────────
   BB11 [assignment]
@@ -52,8 +52,8 @@ main()
   └────────────────────
   BB15 [combined]
   │(27) <[int][ASSIGN], (int)x2, 3>
-  │(28) <[int][ADD], (int)#F, 10, (int)x>
-  │(28) <[int][ADD], (int)x2, (int)x2, (int)#F>
+  │(28) <[int][ADD], (int)#0, 10, (int)x>
+  │(28) <[int][ADD], (int)x2, (int)x2, (int)#0>
   │(29) <[int][MINUS], (int)n2, (int)n2, (int)x>
   │(30) <[JUMP], <21>>
   └────────────────────
@@ -69,16 +69,16 @@ main()
   │(20) <[JUMP], <6>>
   └────────────────────
   BB23 [combined]
-  │(36) <[float][CALL], (float)#11, fun, (float)DF, 0.202000>
-  │(36) <[float][CALL], (float)#12, fun, (float)#11, 0.900000>
-  │(36) <[float][ASSIGN], (float)DF, (float)#12>
-  │(37) <[float][CALL], (float)#13, printf, "test: %f\n", (float)DF>
-  │(39) <[float][MUL], (float)#14, (float)DF, (int)globA>
-  │(39) <[float][MUL], (float)#15, (float)#14, (int)globB>
-  │(39) <[float][ASSIGN], (float)DF, (float)#15>
-  │(41) <[float][MINUS], (float)#16, (float)DF>
-  │(41) <[float][SUB], (float)#17, 0.800000, (float)#16>
-  │(41) <[JUMP_LT], <27>, (float)DF, (float)#17>
+  │(36) <[float][CALL], (float)#1, fun, (float)DF, 0.202000>
+  │(36) <[float][CALL], (float)#2, fun, (float)#1, 0.900000>
+  │(36) <[float][ASSIGN], (float)DF, (float)#2>
+  │(37) <[float][CALL], (float)#0, printf, "test: %f\n", (float)DF>
+  │(39) <[float][MUL], (float)#0, (float)DF, (int)globA>
+  │(39) <[float][MUL], (float)#1, (float)#0, (int)globB>
+  │(39) <[float][ASSIGN], (float)DF, (float)#1>
+  │(41) <[float][MINUS], (float)#0, (float)DF>
+  │(41) <[float][SUB], (float)#1, 0.800000, (float)#0>
+  │(41) <[JUMP_LT], <27>, (float)DF, (float)#1>
   │(41) <[JUMP], <44>>
   └────────────────────
   BB27 [noteq]
@@ -128,13 +128,12 @@ main()
   │(59) <[JUMP], <46>>
   └────────────────────
   BB45 [return_stmt]
-  │(60) <[int][ASSIGN], (int)#19, -1>
-  │(60) <[int][RETURN], (int)#19>
+  │(60) <[int][RETURN], -1>
   └────────────────────
   BB46 [combined]
   │(61) <[NO_OP]>
-  │(62) <[int][MUL], (int)#1A, (int)n1, 2>
-  │(62) <[int][RETURN], (int)#1A>
+  │(62) <[int][MUL], (int)#0, (int)n1, 2>
+  │(62) <[int][RETURN], (int)#0>
   └────────────────────
 
 
