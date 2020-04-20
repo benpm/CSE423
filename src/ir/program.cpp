@@ -18,7 +18,7 @@
  * @param ast Reference to the AST root node
  *
  */
-Program::Program(const AST& ast)
+Program::Program(const AST& ast) : globals(0, -1, "globals")
 {
     spdlog::info("IR building beginning");
     // Build IR program from ast and symbol table
@@ -27,6 +27,8 @@ Program::Program(const AST& ast)
         if (child->label == AST::function) {
             std::string name = child->children[1]->data.sval;
             this->functions.emplace_back(name, Function(child));
+        } else if (child->label == AST::declaration) {
+            globals.expand(child->children[1]);
         }
     }
 
@@ -39,7 +41,7 @@ Program::Program(const AST& ast)
  * @param filename The name of the IR CSV file
  *
  */
-Program::Program(std::string filename)
+Program::Program(std::string filename) : globals(0, -1, "globals")
 {
     spdlog::info("IR building beginning");
     std::ifstream csv(filename);
@@ -78,6 +80,7 @@ std::string Program::outputToString()
 {
     // Create plaintext representation of this IR program
     std::string string;
+    string += globals.toString() + "\n";
     for (auto item : functions) {
         string += item.second.toString() + "\n";
     }
@@ -95,6 +98,9 @@ void Program::outputToFile(std::string filename)
     // Create/overwrite file with CSV representation of IR program
     std::ofstream csv(filename, std::ofstream::out | std::ofstream::trunc);
     std::string string;
+
+    string += this->globals.toCSV();
+
     for (auto item : functions) {
         string += item.second.toCSV();
     }

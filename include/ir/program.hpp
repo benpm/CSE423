@@ -22,6 +22,8 @@ class Program
 public:
     std::vector<std::pair<std::string, Function>> functions;
 
+    BasicBlock globals;
+
     Program(const AST& ast);
     Program(std::string filename);
     std::string outputToString();

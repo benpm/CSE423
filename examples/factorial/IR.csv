@@ -1,3 +1,4 @@
+BB,4294967295,globals
 func,main
 BB,0,combined
 stmt,2,int,ASSIGN,int fact,1
