@@ -1,0 +1,27 @@
+main()
+  BB0 [combined]
+  │(2) <[int][ASSIGN], (int)fact, 1>
+  │(3) <[JUMP_LT], <3>, 10, 0>
+  │(3) <[JUMP], <4>>
+  └────────────────────
+  BB3 [call]
+  │(4) <[CALL], #0, printf, "Error! Factorial of a negative number doesn't exist.">
+  └────────────────────
+  BB4 [assignment]
+  │(6) <[int][ASSIGN], (int)i, 1>
+  └────────────────────
+  BB5 [le]
+  │(6) <[JUMP_LE], <6>, (int)i, 10>
+  │(6) <[JUMP], <8>>
+  └────────────────────
+  BB6 [combined]
+  │(7) <[int][MUL], (int)fact, (int)fact, (int)i>
+  │(6) <[int][ADD], (int)i, (int)i, 1>
+  │(6) <[JUMP], <5>>
+  └────────────────────
+  BB8 [combined]
+  │(9) <[int][CALL], (int)#1, printf, "Factorial of %d = %d", 10, (int)fact>
+  │(11) <[int][RETURN], 0>
+  └────────────────────
+
+

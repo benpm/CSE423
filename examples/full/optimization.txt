@@ -8,19 +8,9 @@ fun((float)V, (float)XKAD, )
 
 main()
   BB0 [combined]
-  │(10) <[int][MINUS], (int)#2, 2>
-  │(10) <[int][DIV], (int)#3, 18, (int)#2>
-  │(10) <[int][MUL], (int)#4, 15, (int)#3>
-  │(10) <[int][MOD], (int)#5, (int)#4, 18>
-  │(10) <[int][ASSIGN], (int)n1, (int)#5>
-  │(11) <[int][MUL], (int)#6, (int)n1, (int)n1>
-  │(11) <[int][ASSIGN], (int)n2, (int)#6>
-  │(12) <[int][ADD], (int)#7, (int)n1, (int)n1>
-  │(12) <[int][ADD], (int)#8, (int)#7, (int)n2>
-  │(12) <[int][ADD], (int)#9, (int)#8, (int)n2>
-  │(12) <[int][ASSIGN], (int)n3, (int)#9>
-  │(13) <[float][MUL], (float)#A, 0.800000, (int)n2>
-  │(13) <[float][ASSIGN], (float)DF, (float)#A>
+  │(10) <[int][ASSIGN], (int)n1, -9>
+  │(11) <[int][ASSIGN], (int)n2, 81>
+  │(13) <[float][ASSIGN], (float)DF, 64.800003>
   │(14) <[char][ASSIGN], (char)G, 'G'>
   │(17) <[int][ASSIGN], (int)i, 0>
   └────────────────────
@@ -31,7 +21,6 @@ main()
   │(17) <[JUMP], <23>>
   └────────────────────
   BB7 [combined]
-  │(18) <[int][ASSIGN], (int)f, 10>
   │(19) <[JUMP], <23>>
   └────────────────────
   BB9 [assignment]
@@ -57,9 +46,8 @@ main()
   │(22) <[JUMP], <21>>
   └────────────────────
   BB15 [combined]
-  │(23) <[int][ASSIGN], (int)z, 10>
   │(24) <[int][ASSIGN], (int)x2, 3>
-  │(25) <[int][ADD], (int)#F, (int)z, (int)x>
+  │(25) <[int][ADD], (int)#F, 10, (int)x>
   │(25) <[int][ADD], (int)x2, (int)x2, (int)#F>
   │(26) <[int][MINUS], (int)n2, (int)n2, (int)x>
   │(27) <[JUMP], <21>>
@@ -76,8 +64,7 @@ main()
   │(17) <[JUMP], <6>>
   └────────────────────
   BB23 [combined]
-  │(33) <[float][MUL], (float)#10, 0.101000, 2>
-  │(33) <[float][CALL], (float)#11, fun, (float)DF, (float)#10>
+  │(33) <[float][CALL], (float)#11, fun, (float)DF, 0.202000>
   │(33) <[float][CALL], (float)#12, fun, (float)#11, 0.900000>
   │(33) <[float][ASSIGN], (float)DF, (float)#12>
   │(34) <[float][CALL], (float)#13, printf, "test: %f\n", (float)DF>
@@ -112,13 +99,11 @@ main()
   │(43) <[JUMP], <36>>
   └────────────────────
   BB36 [combined]
-  │(44) <[float][MINUS], (float)#16, 0.600000>
-  │(44) <[float][ADD], (float)DF, (float)DF, (float)#16>
+  │(44) <[float][ADD], (float)DF, (float)DF, -0.600000>
   │(45) <[JUMP_EQ], <38>, (float)DF, 0.000000>
   │(45) <[JUMP], <39>>
   └────────────────────
   BB38 [assignment]
-  │(46) <[float][ASSIGN], (float)DF, 1.010000>
   └────────────────────
   BB39 [ge]
   │(48) <[JUMP_GE], <40>, (char)G, 'H'>
@@ -135,7 +120,7 @@ main()
   │(55) <[JUMP], <45>>
   └────────────────────
   BB44 [return_stmt]
-  │(56) <[int][MINUS], (int)#17, 1>
+  │(56) <[int][ASSIGN], (int)#17, -1>
   │(56) <[int][RETURN], (int)#17>
   └────────────────────
   BB45 [combined]

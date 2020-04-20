@@ -16,6 +16,7 @@ compilerFlags=(
     a # AST
     s # Symbol Table
     r # IR
+    or # Optimization
 )
 compilerFlagNames=(
     tokens
@@ -23,6 +24,7 @@ compilerFlagNames=(
     AST
     symbolTable
     IR
+    optimization
 )
 
 # IR CSV flag

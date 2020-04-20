@@ -14,6 +14,7 @@
 #include <parsetree.hpp>
 #include <symboltable.hpp>
 #include <ir/program.hpp>
+#include <optimizer.hpp>
 
 // Main entry point for compiler
 int main(int argc, char **argv)
@@ -67,6 +68,10 @@ int main(int argc, char **argv)
         if (!config.outputCSV.empty()) {
             spdlog::info("IR output as CSV to {}", config.outputCSV);
             program.outputToFile(config.outputCSV);
+        }
+        if (config.optimize) {
+            Optimizer optimizer;
+            optimizer.optimize(program);
         }
         if (config.printIR) {
             spdlog::info("IR:");

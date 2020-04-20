@@ -61,6 +61,7 @@ add_executable(sc64
     "src/ir/basicblock.cpp"
     "src/ir/function.cpp"
     "src/ir/program.cpp"
+    "src/optimizer.cpp"
     ${FLEX_scanner_OUTPUTS}
     ${BISON_parser_OUTPUTS}
 )
