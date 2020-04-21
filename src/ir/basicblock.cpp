@@ -245,8 +245,13 @@ Arg BasicBlock::expand(const AST* ast, bool start)
 
     // Generate statement
     if (labelMap.count(ast->label)) {
-        Statement& stmt = this->statements.emplace_back(labelMap.at(ast->label), args);
-        stmt.lineNum = ast->lineNum;
+        if (ast->label == AST::assignment
+            && BasicBlock::nextTemp > 0) {
+            this->statements.back().args.at(0) = args.at(0);
+        } else {
+            Statement& stmt = this->statements.emplace_back(labelMap.at(ast->label), args);
+            stmt.lineNum = ast->lineNum;
+        }
     }
 
     return temporary;
