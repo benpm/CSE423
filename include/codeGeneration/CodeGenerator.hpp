@@ -1,0 +1,46 @@
+#pragma once
+
+#include <ir/program.hpp>
+
+class Instruction
+{
+private:
+public:
+    enum OpCode {
+        ADD,   // add  src, dest | adds src to dest and stores in dest
+        IMUL,  // imul src, dest | multiplies src by dest and stores in dest
+        IDIV,  // IDIV divisor   | Divides EAX by divisor, quotient in EAX, remainder in EDX
+        SUB,   // sub src, dest  | subtracts src from dest into dest
+        NEG,   // neg arg        | arithmetic negation 
+        MOV,   // mov src, dest  | moves data from src to dest
+        PUSH,  // push arg       | pushes data onto stack
+        POP,   // pop dest       | pop data from stack into dest
+        JMP,   // jmp loc        | Unconditionally jump to location     
+        JE,    // je loc         | Jump if equal, checks if ZF = 1
+        JNE,   // jne loc        | Jump if not equal, checks if ZFs = 0
+        JG,    // jge loc        | Jump if > , check if SF == OF and ZF == 0
+        JGE,   // jge loc        | Jump if >=, check if SF == OF _OR_ ZF == 0
+        JL,    // jl loc         | Jump if <, check if SF != OF
+        JLE,   // jle loc        | Jump if <=, check if SF != OF _OR_ ZF == 1
+        JZ,    // jz  loc        | Jump if == 0, check if ZF == 1
+        JNZ,   // jnz loc        | Jump if != 0, check if ZF == 0
+        RET,   // ret [val]      | Loads next val on the stack into EIP, and then pops the specified number of bytes off the stack. If val not supplied, instruction will not pop any vals
+        CALL,  // call loc       | Pushes the addr of the instr AFTER call instr to top of the stack, jumps to loc
+        CMP    // cmp arg0, arg1 | arg1 - arg0, sets flags
+    };
+
+    OpCode opCode;
+
+    std::vector<std::string> args;
+
+    Instruction(OpCode opCode, std::vector<std::string> args);
+};
+
+class CodeGenerator
+{
+private:
+public:
+    std::vector<Instruction> instrs;
+
+    CodeGenerator(const Program& program);
+};
