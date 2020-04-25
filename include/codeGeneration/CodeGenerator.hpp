@@ -2,6 +2,7 @@
 
 #include <ir/program.hpp>
 #include <variant>
+#include <codeGeneration/MemoryAllocator.hpp>
 
 enum Register {
     // When adding registers, make sure to update regOccupied!
@@ -20,6 +21,8 @@ public:
         Register,      // Register
         std::pair<Register, int> // Mem address with offset i.e. -12(%ebp)
     > arg;
+
+    std::string toString() const;
 
     InstrArg(int   imm)                {this->arg = imm;};
     InstrArg(float imm)                {this->arg = imm;};
@@ -58,17 +61,26 @@ public:
     };
 
     OpCode opCode;
+    std::string asmDirective; // Holds arbitrary string needed in creating assembly (i.e. )
 
     std::vector<InstrArg> args;
 
-    Instruction(OpCode opCode, const std::vector<InstrArg> args);
+    Instruction(OpCode opCode, const std::vector<InstrArg> args) : opCode(opCode), args(args) {};
+    Instruction(std::string asmDirective) : asmDirective(asmDirective) {};
+
+    std::string toString() const;
 };
 
 class CodeGenerator
 {
 private:
+    void genFunction(const Function& func);
+    void genStatement(MemoryAllocator& allocator, const Statement& stmt);
+    void genADD(MemoryAllocator& allocator, const Statement& stmt);
+
 public:
     std::vector<Instruction> instrs;
-
     CodeGenerator(const Program& program);
+
+    void printInstructs();
 };

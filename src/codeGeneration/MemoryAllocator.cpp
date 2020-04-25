@@ -7,7 +7,6 @@ MemoryAllocator::MemoryAllocator(CodeGenerator& codeGen) :
 {
 }
 
-
 InstrArg MemoryAllocator::getReg(const Arg& arg)
 {
     // Check if argument is already in a register, return the register if it is
