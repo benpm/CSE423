@@ -3,8 +3,7 @@ stmt,1,int,ASSIGN,int globA,3
 stmt,2,int,ASSIGN,int globB,4
 func,fun,float V,float XKAD
 BB,0,combined
-stmt,6,float,ADD,float #0,float XKAD,float V
-stmt,6,float,ASSIGN,float n1,float #0
+stmt,6,float,ADD,float n1,float XKAD,float V
 stmt,7,float,MUL,float #0,float n1,80
 stmt,7,float,RETURN,float #0
 func,main
@@ -12,16 +11,12 @@ BB,0,combined
 stmt,13,int,MINUS,int #0,2
 stmt,13,int,DIV,int #1,18,int #0
 stmt,13,int,MUL,int #2,15,int #1
-stmt,13,int,MOD,int #3,int #2,18
-stmt,13,int,ASSIGN,int n1,int #3
-stmt,14,int,MUL,int #0,int n1,int n1
-stmt,14,int,ASSIGN,int n2,int #0
+stmt,13,int,MOD,int n1,int #2,18
+stmt,14,int,MUL,int n2,int n1,int n1
 stmt,15,int,ADD,int #0,int n1,int n1
 stmt,15,int,ADD,int #1,int #0,int n2
-stmt,15,int,ADD,int #2,int #1,int n2
-stmt,15,int,ASSIGN,int n3,int #2
-stmt,16,float,MUL,float #0,0.800000,int n2
-stmt,16,float,ASSIGN,float DF,float #0
+stmt,15,int,ADD,int n3,int #1,int n2
+stmt,16,float,MUL,float DF,0.800000,int n2
 stmt,17,char,ASSIGN,char G,'G'
 stmt,20,int,ASSIGN,int i,0
 BB,6,lt
@@ -66,12 +61,10 @@ stmt,20,none,JUMP,6
 BB,23,combined
 stmt,36,float,MUL,float #0,0.101000,2
 stmt,36,float,CALL,float #1,fun,float DF,float #0
-stmt,36,float,CALL,float #2,fun,float #1,0.900000
-stmt,36,float,ASSIGN,float DF,float #2
+stmt,36,float,CALL,float DF,fun,float #1,0.900000
 stmt,37,float,CALL,float #0,printf,"test: %f\n",float DF
 stmt,39,float,MUL,float #0,float DF,int globA
-stmt,39,float,MUL,float #1,float #0,int globB
-stmt,39,float,ASSIGN,float DF,float #1
+stmt,39,float,MUL,float DF,float #0,int globB
 stmt,41,float,MINUS,float #0,float DF
 stmt,41,float,SUB,float #1,0.800000,float #0
 stmt,41,none,JUMP_LT,27,float DF,float #1
