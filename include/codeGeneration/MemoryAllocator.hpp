@@ -12,13 +12,6 @@ struct ArgHash
 class MemoryAllocator
 {
 public:
-    enum Register {
-		EAX, EBX, ECX, EDX
-	};
-    std::vector<std::string> enumToString {
-        "%eax", "%ebx", "%ecx", "%edx"
-    };
-	
     CodeGenerator& codeGen;
 
     int stackSize; // Used to determine offset
@@ -29,7 +22,7 @@ public:
 
     MemoryAllocator(CodeGenerator& codeGen);
 
-    std::string getReg(const Arg& arg);
+    InstrArg getReg(const Arg& arg);
     void save(const Arg& arg);
     void deregister(const Arg& arg);
 

@@ -1,6 +1,34 @@
 #pragma once
 
 #include <ir/program.hpp>
+#include <variant>
+
+enum Register {
+    // When adding registers, make sure to update regOccupied!
+    EAX, EBX, ECX, EDX,
+    EBP = 256
+};
+
+class InstrArg
+{
+public:
+    std::variant<
+        int,           // Integer immediate    
+        float,         // Float immediate
+        char,          // Character immediate
+        std::string,   // Label/function name
+        Register,      // Register
+        std::pair<Register, int> // Mem address with offset i.e. -12(%ebp)
+    > arg;
+
+    InstrArg(int   imm)                {this->arg = imm;};
+    InstrArg(float imm)                {this->arg = imm;};
+    InstrArg(char  imm)                {this->arg = imm;};
+    InstrArg(std::string label)        {this->arg = label;};
+    InstrArg(Register reg)             {this->arg = reg;};
+    InstrArg(Register reg, int offset) {this->arg = std::pair<Register, int>{reg, offset};};
+    InstrArg(){};
+};
 
 class Instruction
 {
@@ -31,9 +59,9 @@ public:
 
     OpCode opCode;
 
-    std::vector<std::string> args;
+    std::vector<InstrArg> args;
 
-    Instruction(OpCode opCode, std::vector<std::string> args);
+    Instruction(OpCode opCode, const std::vector<InstrArg> args);
 };
 
 class CodeGenerator

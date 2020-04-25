@@ -3,38 +3,37 @@
 
 
 MemoryAllocator::MemoryAllocator(CodeGenerator& codeGen) :
-    codeGen(codeGen)
+    codeGen(codeGen), regOccupied(4) // Number of open registers
 {
-
 }
 
 
-std::string MemoryAllocator::getReg(const Arg& arg)
+InstrArg MemoryAllocator::getReg(const Arg& arg)
 {
-    // Check if argument is already in a register
+    // Check if argument is already in a register, return the register if it is
     if (this->regMap.count(arg)) {
-        Register reg = this->regMap[arg];
-        return this->enumToString.at(reg);
+        return InstrArg{this->regMap[arg]};
     }
 
     // It is not in a register so we must check if it's on the stack
-    // If it is, move it in to register Reg and return
+    // If it is, move it in to register openReg and return
     // If its not on the stack, just return a register for it
-    Register reg = this->getNextAvailReg(arg);
+    Register openReg = this->getNextAvailReg(arg);
     if (this->stackOffsetMap.count(arg)) {
         int offset = this->stackOffsetMap[arg];
-        std::string src = fmt::format("{}(%ebp)");
-        std::string dest = this->enumToString.at(reg);
 
-        Instruction loadInstr(Instruction::MOV, {src, dest});
+        InstrArg src{Register::EBP, offset}; // offset(%ebp)
+        InstrArg dest{openReg};              // %reg
+        Instruction loadInstr(Instruction::MOV, {src, dest}); // mov offset(%ebp) %reg
+
         this->codeGen.instrs.push_back(loadInstr);
-        this->regMap.emplace(arg, reg);
+        this->regMap.emplace(arg, openReg);
     }
 
-    return this->enumToString.at(reg);
+    return openReg;
 }
 
-MemoryAllocator::Register MemoryAllocator::getNextAvailReg(const Arg& arg)
+Register MemoryAllocator::getNextAvailReg(const Arg& arg)
 {
     // Find next unoccupied register. THIS CURRENTLY DOES NOT
     // TAKE INTO ACCOUNT FLOATS!!!!
@@ -54,19 +53,17 @@ void MemoryAllocator::save(const Arg& arg)
         Register reg = this->regMap.at(arg);
         if (this->stackOffsetMap.count(arg)) {
             // If already on the stack, save to that location
-            int loc = this->stackOffsetMap.at(arg);
+            int offset = this->stackOffsetMap.at(arg);
             // Move from register to location on stack
-            Instruction instr(Instruction::MOV, {
-                this->enumToString.at(reg),
-                fmt::format("{}(%rbp)", loc)
-            });
+            InstrArg src{reg}; // %reg
+            InstrArg dest{Register::EBP, offset}; // offset(%ebp)
+            Instruction instr(Instruction::MOV, {src, dest}); // mov %reg, offset(%ebp)
             codeGen.instrs.push_back(instr);
         } else {
             // Push onto stack, mapping where on stack we are
             this->stackOffsetMap.emplace(arg, -this->stackSize);
-            Instruction instr(Instruction::PUSH, {
-                this->enumToString.at(reg)
-            });
+            InstrArg arg{reg}; // %reg
+            Instruction instr(Instruction::PUSH, {arg}); // push %reg
             this->codeGen.instrs.push_back(instr);
             // Increase stack size member
             this->stackSize += 4;
