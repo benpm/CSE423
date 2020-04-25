@@ -1,4 +1,4 @@
-#include <CodeGenerator.hpp>
+#include <codeGeneration/CodeGenerator.hpp>
 
 CodeGenerator::CodeGenerator(const Program& program)
 {

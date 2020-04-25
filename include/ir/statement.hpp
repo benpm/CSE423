@@ -78,6 +78,9 @@ struct Arg
         spdlog::error("Arg cast used on invalid type");
         return 0.0f;
     }
+    bool operator==(const Arg &other) const { 
+        return this->toString() == other.toString();
+    }
 
     std::string toString() const;
     std::string toCSV() const;
