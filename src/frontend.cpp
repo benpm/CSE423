@@ -63,7 +63,6 @@ int main(int argc, char **argv)
         }
 
         CodeGenerator codeGenerator(program);
-        codeGenerator.printInstructs();
     } else {
         Program program(config.inputCSV);
 

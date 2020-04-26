@@ -1,6 +1,8 @@
 #include <codeGeneration/CodeGenerator.hpp>
 #include <codeGeneration/MemoryAllocator.hpp>
 #include <map>
+#include <unordered_set>
+#include <iostream>
 
 CodeGenerator::CodeGenerator(const Program& program)
 {
@@ -15,12 +17,12 @@ void CodeGenerator::genFunction(const Function& func)
     MemoryAllocator allocator(*this);
 
     // <-- Insert function header stuff HERE
-    this->instrs.push_back({fmt::format("{}:", func.name)});
+    this->insert({fmt::format("{}:", func.name)});
     for (const BasicBlock& block : func.blocks) {
         // <-- Insert label
-        this->instrs.push_back({fmt::format("BB{}:", block.label)});
+        this->insert({fmt::format("BB{}:", block.label)});
         for (const Statement& stmt : block.statements) {
-            this->instrs.push_back({fmt::format("; {}", stmt.toString())});
+            this->insert({fmt::format("; {}", stmt.toString())});
             this->genStatement(allocator, stmt);
         }
     }
@@ -29,18 +31,141 @@ void CodeGenerator::genFunction(const Function& func)
 void CodeGenerator::genStatement(MemoryAllocator& allocator, const Statement& stmt)
 {
     switch(stmt.type) {
-        case Statement::ADD: this->genADD(allocator, stmt); break;
-        default: /* throw "Unhandled statement type"; */ break;
+        case Statement::ADD:           this->genADD(allocator, stmt);           break;
+        case Statement::MUL:           this->genMUL(allocator, stmt);           break;
+        case Statement::DIV:           this->genDIV(allocator, stmt);           break;
+        case Statement::SUB:           this->genSUB(allocator, stmt);           break;
+        case Statement::MOD:           this->genMOD(allocator, stmt);           break;
+        case Statement::MINUS:         this->genMINUS(allocator, stmt);         break;
+        case Statement::ASSIGN:        this->genASSIGN(allocator, stmt);        break;
+        case Statement::JUMP:          this->genJUMP(allocator, stmt);          break;
+        case Statement::JUMP_LT:       this->genJUMP_LT(allocator, stmt);       break;
+        case Statement::JUMP_GT:       this->genJUMP_GT(allocator, stmt);       break;
+        case Statement::JUMP_LE:       this->genJUMP_LE(allocator, stmt);       break;
+        case Statement::JUMP_GE:       this->genJUMP_GE(allocator, stmt);       break;
+        case Statement::JUMP_EQ:       this->genJUMP_EQ(allocator, stmt);       break;
+        case Statement::JUMP_NEQ:      this->genJUMP_NEQ(allocator, stmt);      break;
+        case Statement::JUMP_IF_TRUE:  this->genJUMP_IF_TRUE(allocator, stmt);  break;
+        case Statement::JUMP_IF_FALSE: this->genJUMP_IF_FALSE(allocator, stmt); break;
+        case Statement::RETURN:        this->genRETURN(allocator, stmt);        break;
+        case Statement::CALL:          this->genCALL(allocator, stmt);          break;
+        case Statement::NO_OP:         this->genNO_OP(allocator, stmt);         break;
+        default: spdlog::error("Unhandled statement type"); exit(EXIT_FAILURE); break;
     }
 }
 
 void CodeGenerator::genADD(MemoryAllocator& allocator, const Statement& stmt)
 {
-    this->instrs.push_back({
-        Instruction::ADD,
-        {{Register::eax},
-         {Register::eax}}
-    });
+    // dest = opA + opB
+    InstrArg dest = allocator.getReg(stmt.args.at(0));
+    InstrArg opA = allocator.getReg(stmt.args.at(1));
+    InstrArg opB = allocator.getReg(stmt.args.at(2));
+    
+    Instruction sumInstr{Instruction::ADD,  {opA, opB}, fmt::format("{}, {}", stmt.args.at(1).toString(), stmt.args.at(2).toString())}; // add %opA, %opB
+    Instruction movInstr{Instruction::MOV, {opB, dest}, fmt::format("{}, {}", stmt.args.at(2).toString(), stmt.args.at(0).toString())}; // mov %opB, %dest
+
+    this->insert(sumInstr);
+    this->insert(movInstr);
+
+    allocator.save(stmt.args.at(0));
+
+    allocator.deregister({stmt.args.at(0), stmt.args.at(1), stmt.args.at(2)});
+}
+
+void CodeGenerator::genMUL(MemoryAllocator& allocator, const Statement& stmt)
+{
+
+}
+
+void CodeGenerator::genDIV(MemoryAllocator& allocator, const Statement& stmt)
+{
+
+}
+
+void CodeGenerator::genSUB(MemoryAllocator& allocator, const Statement& stmt)
+{
+
+}
+
+void CodeGenerator::genMOD(MemoryAllocator& allocator, const Statement& stmt)
+{
+
+}
+
+void CodeGenerator::genMINUS(MemoryAllocator& allocator, const Statement& stmt)
+{
+
+}
+
+void CodeGenerator::genASSIGN(MemoryAllocator& allocator, const Statement& stmt)
+{
+
+}
+
+void CodeGenerator::genJUMP(MemoryAllocator& allocator, const Statement& stmt)
+{
+
+}
+
+void CodeGenerator::genJUMP_LT(MemoryAllocator& allocator, const Statement& stmt)
+{
+
+}
+
+void CodeGenerator::genJUMP_GT(MemoryAllocator& allocator, const Statement& stmt)
+{
+
+}
+
+void CodeGenerator::genJUMP_LE(MemoryAllocator& allocator, const Statement& stmt)
+{
+
+}
+
+void CodeGenerator::genJUMP_GE(MemoryAllocator& allocator, const Statement& stmt)
+{
+
+}
+
+void CodeGenerator::genJUMP_EQ(MemoryAllocator& allocator, const Statement& stmt)
+{
+
+}
+
+void CodeGenerator::genJUMP_NEQ(MemoryAllocator& allocator, const Statement& stmt)
+{
+
+}
+
+void CodeGenerator::genJUMP_IF_TRUE(MemoryAllocator& allocator, const Statement& stmt)
+{
+
+}
+
+void CodeGenerator::genJUMP_IF_FALSE(MemoryAllocator& allocator, const Statement& stmt)
+{
+
+}
+
+void CodeGenerator::genRETURN(MemoryAllocator& allocator, const Statement& stmt)
+{
+
+}
+
+void CodeGenerator::genCALL(MemoryAllocator& allocator, const Statement& stmt)
+{
+
+}
+
+void CodeGenerator::genNO_OP(MemoryAllocator& allocator, const Statement& stmt)
+{
+
+}
+
+void CodeGenerator::insert(const Instruction& instr)
+{
+    this->instrs.push_back(instr);
+    std::cout << instr.toString() << std::endl;
 }
 
 void CodeGenerator::printInstructs()

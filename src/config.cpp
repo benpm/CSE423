@@ -133,7 +133,7 @@ void Config::usage(std::string exec_name) {
 void Config::setupLogger()
 {
     // Logging configuration    
-    spdlog::set_default_logger(spdlog::stderr_color_mt("console"));
+    spdlog::set_default_logger(spdlog::stderr_color_st("console"));
     spdlog::set_level(spdlog::level::debug);
     spdlog::set_pattern("[frontend][%^%l%$] %v");
 }

@@ -2,6 +2,7 @@
 
 #include <codeGeneration/CodeGenerator.hpp>
 #include <codeGeneration/Instruction.hpp>
+#include <unordered_set>
 
 struct ArgHash
 {
@@ -26,7 +27,7 @@ public:
     InstrArg getReg(const Arg& arg);
     void save(const Arg& arg);
     void deregister(const Arg& arg);
-
+    void deregister(const std::unordered_set<Arg, ArgHash> args);
 private:
     Register getNextAvailReg(const Arg& arg);
 };

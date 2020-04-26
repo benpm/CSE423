@@ -10,6 +10,7 @@ enum Register {
     // Usable registers
     eax, ebx, ecx, edx,
     // Unusable registers
+    no_reg,
     ebp = 127
 };
 
@@ -64,10 +65,14 @@ public:
 
     OpCode opCode;
     std::string asmDirective; // Holds arbitrary string needed in creating assembly (i.e. )
+    std::string comment;
 
     std::vector<InstrArg> args;
 
-    Instruction(OpCode opCode, const std::vector<InstrArg> args) : opCode(opCode), args(args) {};
+    Instruction(OpCode opCode, const std::vector<InstrArg> args)
+        : opCode(opCode), args(args) {};
+    Instruction(OpCode opCode, const std::vector<InstrArg> args, std::string comment) 
+        : opCode(opCode), args(args), comment(comment) {};
     Instruction(std::string asmDirective) : asmDirective(asmDirective) {};
 
     std::string toString() const;

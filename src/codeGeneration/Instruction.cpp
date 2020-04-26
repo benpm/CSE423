@@ -1,6 +1,7 @@
 #include <codeGeneration/Instruction.hpp>
 #include <magic_enum.hpp>
 #include <map>
+#include <spdlog/spdlog.h>
 #include <spdlog/formatter.h>
 
 std::string InstrArg::toString() const
@@ -16,18 +17,19 @@ std::string InstrArg::toString() const
         );
     } else if (std::holds_alternative<int>(this->arg)) {
         int imm = std::get<int>(this->arg);
-        return fmt::format("{}", imm);
+        return fmt::format("${}", imm);
     } else if (std::holds_alternative<float>(this->arg)) {
         float imm = std::get<float>(this->arg);
-        return fmt::format("{}", imm);
+        return fmt::format("${}", imm);
     } else if (std::holds_alternative<char>(this->arg)) {
         char imm = std::get<char>(this->arg);
-        return fmt::format("{}", imm);
+        return fmt::format("${}", imm);
     } else if (std::holds_alternative<std::string>(this->arg)) {
         return std::get<std::string>(this->arg);
     }
 
-    throw "Instruction arg cannot be converted to string!";
+    spdlog::error("Instruction arg cannot be converted to string!");
+    return "Frick";
 }
 
 std::map<Instruction::OpCode, std::string> opToStr {
@@ -64,6 +66,9 @@ std::string Instruction::toString() const
         str += fmt::format("{}, ", args[i].toString());
     }
     str += fmt::format("{}", args.back().toString());
+    if (this->comment.size() != 0) {
+        str += fmt::format(" ;{}", this->comment);
+    }
 
     return str;
 }

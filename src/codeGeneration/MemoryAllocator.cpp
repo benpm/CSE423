@@ -1,5 +1,7 @@
 #include <cassert>
 #include <codeGeneration/MemoryAllocator.hpp>
+#include <spdlog/spdlog.h>
+#include <magic_enum.hpp>
 
 
 MemoryAllocator::MemoryAllocator(CodeGenerator& codeGen) :
@@ -9,8 +11,10 @@ MemoryAllocator::MemoryAllocator(CodeGenerator& codeGen) :
 
 InstrArg MemoryAllocator::getReg(const Arg& arg)
 {
+    spdlog::debug("--> Getting register for {}", arg.toString());
     // Check if argument is already in a register, return the register if it is
     if (this->regMap.count(arg)) {
+        spdlog::debug("----> already in {}", magic_enum::enum_name(this->regMap[arg]));
         return InstrArg{this->regMap[arg]};
     }
 
@@ -25,10 +29,10 @@ InstrArg MemoryAllocator::getReg(const Arg& arg)
         InstrArg dest{openReg};              // %reg
         Instruction loadInstr(Instruction::MOV, {src, dest}); // mov offset(%ebp) %reg
 
-        this->codeGen.instrs.push_back(loadInstr);
-        this->regMap.emplace(arg, openReg);
+        this->codeGen.insert(loadInstr);
     }
 
+    this->regMap.emplace(arg, openReg);
     return openReg;
 }
 
@@ -38,15 +42,19 @@ Register MemoryAllocator::getNextAvailReg(const Arg& arg)
     // TAKE INTO ACCOUNT FLOATS!!!!
     for (int i = 0; i < this->regOccupied.size(); i++) {
         if (!this->regOccupied.at(i)) {
+            spdlog::debug("----> Putting {} in {}", arg.toString(), magic_enum::enum_name((Register) i));
             this->regOccupied.at(i) = true;
             return (Register)i;
         }
     }
-    throw fmt::format("Holy shit we ran out of registers on {}", arg.toString());
+    spdlog::error("Holy shit we ran out of registers on {}", arg.toString());
+    return Register::no_reg;
 }
 
 void MemoryAllocator::save(const Arg& arg)
 {
+    spdlog::debug("--> Saving {}", arg.toString());
+    
     assert(arg.type == Arg::Type::NAME);
     if (this->regMap.count(arg)) {
         Register reg = this->regMap.at(arg);
@@ -57,30 +65,39 @@ void MemoryAllocator::save(const Arg& arg)
             InstrArg src{reg}; // %reg
             InstrArg dest{Register::ebp, offset}; // offset(%ebp)
             Instruction instr(Instruction::MOV, {src, dest}); // mov %reg, offset(%ebp)
-            codeGen.instrs.push_back(instr);
+            codeGen.insert(instr);
         } else {
             // Push onto stack, mapping where on stack we are
             this->stackOffsetMap.emplace(arg, -this->stackSize);
             InstrArg arg{reg}; // %reg
             Instruction instr(Instruction::PUSH, {arg}); // push %reg
-            this->codeGen.instrs.push_back(instr);
+            this->codeGen.insert(instr);
             // Increase stack size member
             this->stackSize += 4;
         }
     } else {
-        throw fmt::format("Cannot save {}, arg not assigned a register", arg.toString());
+        spdlog::error("Cannot save {}, arg not assigned a register", arg.toString());
+    }
+}
+
+void MemoryAllocator::deregister(const std::unordered_set<Arg, ArgHash> args)
+{
+    for (const Arg& arg : args) {
+        this->deregister(arg);
     }
 }
 
 void MemoryAllocator::deregister(const Arg& arg)
-{   
-    // Arg must be in register to deregister it. If its not we throw an exception
+{
+    spdlog::debug("--> Deregistering {}, Cur size {}", arg.toString(), this->regMap.size());
+    // Arg must be in register to deregister it. If its not we error
     if (this->regMap.count(arg)) {
-        Register reg = this->regMap[reg];
+        Register reg = this->regMap.at(arg);
         this->regMap.erase(arg);
         this->regOccupied.at(reg) = false;
+        spdlog::debug("----> new size {}", this->regMap.size());
         return;
     }
 
-    throw fmt::format("Deregistering a register that is not allocated! {}", arg.toString());
+    spdlog::error("Deregistering a register that is not allocated! {}", arg.toString());
 }
