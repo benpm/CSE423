@@ -7,8 +7,9 @@
  */
 #include <iostream>
 #include <unistd.h>
-#include <spdlog/spdlog.h>
 #include <config.hpp>
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 // Global to enable scanner token printing
 extern bool scannerPrintTokens;
@@ -22,6 +23,8 @@ extern bool scannerPrintTokens;
  */
 Config::Config(int argc, char **argv)
 {
+    this->setupLogger();
+
     int opt;
     while ((opt = getopt(argc, argv, "lhtapsroi:c:")) != -1) {
         switch (opt) {
@@ -125,4 +128,12 @@ void Config::usage(std::string exec_name) {
               << "  -i\t Use the CSV representation of an IR as input program" << std::endl
               << "  -c\t Output the IR to a CSV file" << std::endl
               << "  -l\t Hide logging messages (except errors)" << std::endl;
+}
+
+void Config::setupLogger()
+{
+    // Logging configuration    
+    spdlog::set_default_logger(spdlog::stderr_color_mt("console"));
+    spdlog::set_level(spdlog::level::debug);
+    spdlog::set_pattern("[frontend][%^%l%$] %v");
 }

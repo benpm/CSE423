@@ -24,4 +24,5 @@ struct Config {
 
     Config(int argc, char **argv);
     void usage(std::string exec_name);
+    void setupLogger();
 };

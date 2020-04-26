@@ -1,6 +1,7 @@
 #pragma once
 
 #include <codeGeneration/CodeGenerator.hpp>
+#include <codeGeneration/Instruction.hpp>
 
 struct ArgHash
 {
