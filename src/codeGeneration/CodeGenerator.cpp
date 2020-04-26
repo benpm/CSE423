@@ -99,7 +99,15 @@ void CodeGenerator::genMINUS(MemoryAllocator& allocator, const Statement& stmt)
 
 void CodeGenerator::genASSIGN(MemoryAllocator& allocator, const Statement& stmt)
 {
+    // dest = src
+    InstrArg dest = allocator.getReg(stmt.args.at(0));
+    InstrArg src = allocator.getReg(stmt.args.at(1));
 
+    Instruction movInstr{Instruction::MOV, {src, dest}};
+
+    this->insert(movInstr);
+    allocator.save(stmt.args.at(0));
+    allocator.deregister({stmt.args.at(0), stmt.args.at(1)});
 }
 
 void CodeGenerator::genJUMP(MemoryAllocator& allocator, const Statement& stmt)

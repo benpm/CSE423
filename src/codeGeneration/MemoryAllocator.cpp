@@ -32,6 +32,27 @@ InstrArg MemoryAllocator::getReg(const Arg& arg)
         this->codeGen.insert(loadInstr);
     }
 
+    // If immediate, move the immediate into the register
+    if (arg.type != Arg::NAME) {
+        switch (arg.type) {
+        case Arg::FLOAT:{
+            Instruction movInstr(Instruction::MOV, {arg.val.fval, openReg});
+            this->codeGen.insert(movInstr);
+            break;}
+        case Arg::INT:{
+            Instruction movInstr(Instruction::MOV, {arg.val.ival, openReg});
+            this->codeGen.insert(movInstr);
+            break;}
+        case Arg::CHAR:{
+            Instruction movInstr(Instruction::MOV, {arg.val.cval, openReg});
+            this->codeGen.insert(movInstr);
+            break;}
+        default:
+            spdlog::error("Unknown arg type"); exit(EXIT_FAILURE);
+            break;
+        }
+    }
+
     this->regMap.emplace(arg, openReg);
     return openReg;
 }
