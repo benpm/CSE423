@@ -138,7 +138,9 @@ void CodeGenerator::genASSIGN(MemoryAllocator& allocator, const Statement& stmt)
 
 void CodeGenerator::genJUMP(MemoryAllocator& allocator, const Statement& stmt)
 {
-
+    std::string label = fmt::format("BB{}", stmt.args.at(0).val.ival);
+    Instruction jmp{Instruction::JMP, {label}};
+    this->insert(jmp);
 }
 
 void CodeGenerator::genJUMP_LT(MemoryAllocator& allocator, const Statement& stmt)
@@ -153,7 +155,17 @@ void CodeGenerator::genJUMP_GT(MemoryAllocator& allocator, const Statement& stmt
 
 void CodeGenerator::genJUMP_LE(MemoryAllocator& allocator, const Statement& stmt)
 {
+    std::string label = fmt::format("BB{}", stmt.args.at(0).val.ival);
+    InstrArg opA = allocator.getReg(stmt.args.at(1));
+    InstrArg opB = allocator.getReg(stmt.args.at(2));
+    
+    Instruction cmp{Instruction::CMP, {opA, opB}}; // cmp %opA, $opB | opA - opB
+    Instruction jmple{Instruction::JLE, {label}};  // jle label      | if opA - opB <= 0
+    
+    this->insert(cmp);
+    this->insert(jmple);
 
+    allocator.deregister({stmt.args.at(1), stmt.args.at(2)});
 }
 
 void CodeGenerator::genJUMP_GE(MemoryAllocator& allocator, const Statement& stmt)
