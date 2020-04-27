@@ -16,7 +16,7 @@ class MemoryAllocator
 public:
     CodeGenerator& codeGen;
 
-    int stackSize; // Used to determine offset
+    int stackSize = 0; // Used to determine offset
 
 	std::vector<bool> regOccupied;               // Indexed by register enum
 	std::unordered_map<Arg, Register, ArgHash> regMap;   // Maps name to occupied register
