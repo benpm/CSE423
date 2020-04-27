@@ -4,9 +4,10 @@
 #include <string>
 #include <vector>
 
+// When adding registers, make sure to update USABLE_REGS
+// The size of regOccupied should be the number of registers we can USE (i.e. we cannut "USE" ebp/esp/pc)
+#define USABLE_REGS 4
 enum Register {
-    // When adding registers, make sure to update size of regOccupied in constructor of MemAllocator
-    // The size of regOccupied should be the number of registers we can USE (i.e. we cannut "USE" ebp/esp/pc)
     // Usable registers
     eax, ebx, ecx, edx,
     // Unusable registers

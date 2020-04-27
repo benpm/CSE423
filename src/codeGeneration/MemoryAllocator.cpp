@@ -5,8 +5,10 @@
 
 
 MemoryAllocator::MemoryAllocator(CodeGenerator& codeGen) :
-    codeGen(codeGen), regOccupied(4) // Number of open registers
+    codeGen(codeGen)
 {
+    this->regOccupied = std::vector<bool>(USABLE_REGS, false);
+    this->stackSize = 0;
 }
 
 InstrArg MemoryAllocator::getReg(const Arg& arg)

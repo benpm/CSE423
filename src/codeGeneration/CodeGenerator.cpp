@@ -61,8 +61,8 @@ void CodeGenerator::genADD(MemoryAllocator& allocator, const Statement& stmt)
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
-    Instruction sumInstr{Instruction::ADD,  {opA, opB}, fmt::format("{}, {}", stmt.args.at(1).toString(), stmt.args.at(2).toString())}; // add %opA, %opB
-    Instruction movInstr{Instruction::MOV, {opB, dest}, fmt::format("{}, {}", stmt.args.at(2).toString(), stmt.args.at(0).toString())}; // mov %opB, %dest
+    Instruction sumInstr{Instruction::ADD,  {opA, opB}}; // add %opA, %opB
+    Instruction movInstr{Instruction::MOV, {opB, dest}}; // mov %opB, %dest
 
     this->insert(sumInstr);
     this->insert(movInstr);
