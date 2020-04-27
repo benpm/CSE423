@@ -88,12 +88,15 @@ void MemoryAllocator::save(const Arg& arg)
             InstrArg src{reg}; // %reg
             InstrArg dest{Register::ebp, offset}; // offset(%ebp)
             Instruction instr(Instruction::MOV, {src, dest}); // mov %reg, offset(%ebp)
+            spdlog::debug("----> Restoring {} to {}", arg.toString(), dest.toString());
             codeGen.insert(instr);
         } else {
             // Push onto stack, mapping where on stack we are
             this->stackOffsetMap.emplace(arg, -this->stackSize);
-            InstrArg arg{reg}; // %reg
-            Instruction instr(Instruction::PUSH, {arg}); // push %reg
+            InstrArg regArg{reg}; // %reg
+            Instruction instr(Instruction::PUSH, {regArg}); // push %reg
+            spdlog::debug("----> Pushing {} to -{}(%ebp)", arg.toString(), this->stackSize);
+
             this->codeGen.insert(instr);
             // Increase stack size member
             this->stackSize += 4;
@@ -112,13 +115,12 @@ void MemoryAllocator::deregister(const std::unordered_set<Arg, ArgHash> args)
 
 void MemoryAllocator::deregister(const Arg& arg)
 {
-    spdlog::debug("--> Deregistering {}, Cur size {}", arg.toString(), this->regMap.size());
+    spdlog::debug("--> Deregistering {}", arg.toString());
     // Arg must be in register to deregister it. If its not we error
     if (this->regMap.count(arg)) {
         Register reg = this->regMap.at(arg);
         this->regMap.erase(arg);
         this->regOccupied.at(reg) = false;
-        spdlog::debug("----> new size {}", this->regMap.size());
         return;
     }
 

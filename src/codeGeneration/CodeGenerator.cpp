@@ -58,17 +58,16 @@ void CodeGenerator::genADD(MemoryAllocator& allocator, const Statement& stmt)
 {
     // dest = opA + opB
     InstrArg dest = allocator.getReg(stmt.args.at(0));
-    InstrArg opA = allocator.getReg(stmt.args.at(1));
-    InstrArg opB = allocator.getReg(stmt.args.at(2));
+    InstrArg opA  = allocator.getReg(stmt.args.at(1));
+    InstrArg opB  = allocator.getReg(stmt.args.at(2));
     
-    Instruction sumInstr{Instruction::ADD,  {opA, opB}}; // add %opA, %opB
+    Instruction sumInstr{Instruction::ADD, {opA, opB}};  // add %opA, %opB
     Instruction movInstr{Instruction::MOV, {opB, dest}}; // mov %opB, %dest
 
     this->insert(sumInstr);
     this->insert(movInstr);
 
     allocator.save(stmt.args.at(0));
-
     allocator.deregister({stmt.args.at(0), stmt.args.at(1), stmt.args.at(2)});
 }
 
@@ -84,6 +83,20 @@ void CodeGenerator::genDIV(MemoryAllocator& allocator, const Statement& stmt)
 
 void CodeGenerator::genSUB(MemoryAllocator& allocator, const Statement& stmt)
 {
+    // dest = arg1 - arg2
+    InstrArg dest = allocator.getReg(stmt.args.at(0));
+    InstrArg arg1 = allocator.getReg(stmt.args.at(1));
+    InstrArg arg2 = allocator.getReg(stmt.args.at(2));
+    
+    // Note that this is backwards, arg1 = arg1 - arg2, not arg2 = arg1 - arg2
+    Instruction subInstr{Instruction::SUB, {arg2, arg1}}; // sub %arg2, %arg1
+    Instruction movInstr{Instruction::MOV, {arg1, dest}}; // mov %arg1, %dest
+
+    this->insert(subInstr);
+    this->insert(movInstr);
+
+    allocator.save(stmt.args.at(0));
+    allocator.deregister({stmt.args.at(0), stmt.args.at(1), stmt.args.at(2)});
 
 }
 
@@ -101,7 +114,7 @@ void CodeGenerator::genASSIGN(MemoryAllocator& allocator, const Statement& stmt)
 {
     // dest = src
     InstrArg dest = allocator.getReg(stmt.args.at(0));
-    InstrArg src = allocator.getReg(stmt.args.at(1));
+    InstrArg src  = allocator.getReg(stmt.args.at(1));
 
     Instruction movInstr{Instruction::MOV, {src, dest}};
 
