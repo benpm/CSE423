@@ -74,7 +74,20 @@ void CodeGenerator::genADD(MemoryAllocator& allocator, const Statement& stmt)
 
 void CodeGenerator::genMUL(MemoryAllocator& allocator, const Statement& stmt)
 {
+    // dest = opA * opB
+    InstrArg dest = allocator.getReg(stmt.args.at(0));
+    InstrArg opA = allocator.getReg(stmt.args.at(1));
+    InstrArg opB = allocator.getReg(stmt.args.at(2));
+    
+    Instruction mulInstr{Instruction::IMUL, {opA, opB}}; // imul %opA, %opB
+    Instruction movInstr{Instruction::MOV,  {opB, dest}}; // mov %opB, %dest
 
+    this->insert(mulInstr);
+    this->insert(movInstr);
+
+    allocator.save(stmt.args.at(0));
+
+    allocator.deregister({stmt.args.at(0), stmt.args.at(1), stmt.args.at(2)});
 }
 
 void CodeGenerator::genDIV(MemoryAllocator& allocator, const Statement& stmt)
