@@ -24,6 +24,7 @@ public:
 
     MemoryAllocator(CodeGenerator& codeGen);
 
+    InstrArg get(const Arg& arg);
     InstrArg getReg(const Arg& arg);
     void save(const Arg& arg);
     void deregister(const Arg& arg);

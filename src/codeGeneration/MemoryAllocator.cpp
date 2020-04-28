@@ -11,6 +11,30 @@ MemoryAllocator::MemoryAllocator(CodeGenerator& codeGen) :
     this->stackSize = 0;
 }
 
+InstrArg MemoryAllocator::get(const Arg& arg)
+{
+    spdlog::debug("--> Getting location for {}", arg.toString());
+    
+    // Check if argument is already in a register, return the register if it is
+    if (this->regMap.count(arg)) {
+        return InstrArg{this->regMap.at(arg)};
+    }
+
+    // If on stack, return offset(%ebp)
+    if (this->stackOffsetMap.count(arg)) {
+        return InstrArg{Register::ebp, this->stackOffsetMap.at(arg)};
+    }
+
+    // If immediate return that immediate
+    if (arg.type != Arg::NAME) {
+        return InstrArg{arg};
+    }
+
+    // Not found, error
+    spdlog::error("MemoryAllocator::get -> {} not found!", arg.toString());
+    exit(EXIT_FAILURE);
+}
+
 InstrArg MemoryAllocator::getReg(const Arg& arg)
 {
     spdlog::debug("--> Getting register for {}", arg.toString());

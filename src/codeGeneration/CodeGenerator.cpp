@@ -16,10 +16,13 @@ void CodeGenerator::genFunction(const Function& func)
 {
     MemoryAllocator allocator(*this);
 
-    // <-- Insert function header stuff HERE
+    // Function label as well as saving / creating call frame
+    this->insert({fmt::format("; FUNCTION {}", func.name)});
     this->insert({fmt::format("{}:", func.name)});
+    this->insert({Instruction::PUSH, {Register::ebp}});
+    this->insert({Instruction::MOV, {Register::ebp, Register::esp}});
     for (const BasicBlock& block : func.blocks) {
-        // <-- Insert label
+        // Jump label for this basic block
         this->insert({fmt::format("BB{}:", block.label)});
         for (const Statement& stmt : block.statements) {
             this->insert({fmt::format("; {}", stmt.toString())});
@@ -309,14 +312,43 @@ void CodeGenerator::genJUMP_IF_FALSE(MemoryAllocator& allocator, const Statement
 
 void CodeGenerator::genRETURN(MemoryAllocator& allocator, const Statement& stmt)
 {
+    // Restore old call frame
+    Instruction mov{Instruction::MOV, {Register::esp, Register::ebp}};
+    Instruction pop{Instruction::POP, {Register::ebp}};
+    this->insert(mov);
+    this->insert(pop);
+    // Place return arg into %eax, add return instruction
     allocator.insertAt(stmt.args.at(0), Register::eax);
     Instruction ret{Instruction::RET, {}};
     this->insert(ret);
+    allocator.deregister(stmt.args.at(0));
 }
 
 void CodeGenerator::genCALL(MemoryAllocator& allocator, const Statement& stmt)
 {
-
+    // Push all arguments onto the stack (in reverse order!)
+    int argsSize = 0;
+    for (auto it = stmt.args.rbegin(); it < stmt.args.rend() - 2; it++) {
+        this->insert({Instruction::PUSH, {allocator.get(*it)}});
+        argsSize += 4;
+    }
+    // Clear %eax
+    allocator.evict(Register::eax);
+    // Get a register for return value
+    InstrArg result = allocator.getReg(stmt.args.at(0));
+    // TODO: Clear other registers
+    // Insert call instruction (function label / name is second argument of CALL statement)
+    Instruction callInstr{Instruction::CALL, {std::string(stmt.args.at(1).val.sval)}};
+    this->insert(callInstr);
+    // Remove call arguments from frame
+    if (argsSize > 0) {
+        Instruction addInstr{Instruction::ADD, {argsSize, Register::esp}};
+        this->insert(addInstr);
+    }
+    // Save out result
+    // Instruction movInstr{Instruction::MOV, {{Register::eax}, result}, "save result"};
+    allocator.save(stmt.args.at(0));
+    allocator.deregister(stmt.args.at(0));
 }
 
 void CodeGenerator::genNO_OP(MemoryAllocator& allocator, const Statement& stmt)

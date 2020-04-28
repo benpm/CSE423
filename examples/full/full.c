@@ -34,7 +34,7 @@ int main()
 
     // Testing function calls
     DF = fun(fun(DF, 0.101 * 2), 0.9);
-	printf("test: %f\n", DF);
+	// printf("test: %f\n", DF);
 
     DF = DF * globA * globB;
     // Testing conditional statements

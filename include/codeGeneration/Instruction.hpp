@@ -14,6 +14,7 @@ enum Register {
     eax, ebx, ecx, edx,
     // Unusable registers
     no_reg,
+    esp = 126,
     ebp = 127
 };
 
