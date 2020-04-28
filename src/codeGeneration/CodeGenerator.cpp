@@ -91,7 +91,24 @@ void CodeGenerator::genMUL(MemoryAllocator& allocator, const Statement& stmt)
 
 void CodeGenerator::genDIV(MemoryAllocator& allocator, const Statement& stmt)
 {
+    // Evict whatever was in %eax previously, saving it if needed, moving dividend in
+    allocator.insertAt(stmt.args.at(1), Register::eax);
+    // Evict whatever was in %edx previously, saving it if needed, moving result (remainder) in
+    InstrArg result = allocator.getReg(stmt.args.at(0));
+    // Divisor is argument for idiv
+    InstrArg arg = allocator.getReg(stmt.args.at(2));
+    // Clear %eax
+    allocator.evict(Register::eax);
+    // Division instruction (%eax(arg1)/arg(arg2))
+    Instruction idivInstr{Instruction::IDIV, {arg}}; // idiv %arg
+    // Move instruction
+    Instruction movInstr{Instruction::MOV, {{Register::eax}, result}, "save quotient"};
 
+    this->insert(idivInstr);
+    this->insert(movInstr);
+    // This will save the quotient, stored in %eax, to result loc
+    allocator.save(stmt.args.at(0));
+    allocator.deregister({stmt.args.at(0), stmt.args.at(1), stmt.args.at(2)});
 }
 
 void CodeGenerator::genSUB(MemoryAllocator& allocator, const Statement& stmt)
@@ -130,14 +147,24 @@ void CodeGenerator::genMOD(MemoryAllocator& allocator, const Statement& stmt)
 
     this->insert(idivInstr);
     this->insert(movInstr);
-    // This will save the remainder, stored in %eax, to result loc
+    // This will save the remainder, stored in %edx, to result loc
     allocator.save(stmt.args.at(0));
     allocator.deregister({stmt.args.at(0), stmt.args.at(1), stmt.args.at(2)});
 }
 
 void CodeGenerator::genMINUS(MemoryAllocator& allocator, const Statement& stmt)
 {
+    // dest = -op
+    InstrArg dest = allocator.getReg(stmt.args.at(0));
+    InstrArg op = allocator.getReg(stmt.args.at(1));
+    
+    Instruction negInstr{Instruction::NEG, {dest}}; // neg %op
+    Instruction movInstr{Instruction::MOV, {op, dest}}; // mov %op, %dest
 
+    this->insert(negInstr);
+    this->insert(movInstr);
+    allocator.save(stmt.args.at(0));
+    allocator.deregister({stmt.args.at(0), stmt.args.at(1)});
 }
 
 void CodeGenerator::genASSIGN(MemoryAllocator& allocator, const Statement& stmt)
@@ -177,7 +204,17 @@ void CodeGenerator::genJUMP_LT(MemoryAllocator& allocator, const Statement& stmt
 
 void CodeGenerator::genJUMP_GT(MemoryAllocator& allocator, const Statement& stmt)
 {
+    std::string label = fmt::format("BB{}", stmt.args.at(0).val.ival);
+    InstrArg opA = allocator.getReg(stmt.args.at(1));
+    InstrArg opB = allocator.getReg(stmt.args.at(2));
+    
+    Instruction cmp{Instruction::CMP, {opA, opB}}; // cmp %opA, $opB | opA - opB
+    Instruction jmpge{Instruction::JG, {label}};   // jg label       | if opA - opB > 0
+    
+    this->insert(cmp);
+    this->insert(jmpge);
 
+    allocator.deregister({stmt.args.at(1), stmt.args.at(2)});
 }
 
 void CodeGenerator::genJUMP_LE(MemoryAllocator& allocator, const Statement& stmt)
@@ -212,7 +249,17 @@ void CodeGenerator::genJUMP_GE(MemoryAllocator& allocator, const Statement& stmt
 
 void CodeGenerator::genJUMP_EQ(MemoryAllocator& allocator, const Statement& stmt)
 {
+    std::string label = fmt::format("BB{}", stmt.args.at(0).val.ival);
+    InstrArg opA = allocator.getReg(stmt.args.at(1));
+    InstrArg opB = allocator.getReg(stmt.args.at(2));
+    
+    Instruction cmp{Instruction::CMP, {opA, opB}}; // cmp %opA, $opB | opA - opB
+    Instruction jmpneq{Instruction::JE, {label}};  // jle label      | if opA - opB == 0
+    
+    this->insert(cmp);
+    this->insert(jmpneq);
 
+    allocator.deregister({stmt.args.at(1), stmt.args.at(2)});
 }
 
 void CodeGenerator::genJUMP_NEQ(MemoryAllocator& allocator, const Statement& stmt)
@@ -222,7 +269,7 @@ void CodeGenerator::genJUMP_NEQ(MemoryAllocator& allocator, const Statement& stm
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
     Instruction cmp{Instruction::CMP, {opA, opB}}; // cmp %opA, $opB | opA - opB
-    Instruction jmpneq{Instruction::JNE, {label}};  // jle label      | if opA - opB <= 0
+    Instruction jmpneq{Instruction::JNE, {label}}; // jle label      | if opA - opB != 0
     
     this->insert(cmp);
     this->insert(jmpneq);
@@ -247,7 +294,17 @@ void CodeGenerator::genJUMP_IF_TRUE(MemoryAllocator& allocator, const Statement&
 
 void CodeGenerator::genJUMP_IF_FALSE(MemoryAllocator& allocator, const Statement& stmt)
 {
+    std::string label = fmt::format("BB{}", stmt.args.at(0).val.ival);
+    InstrArg opA = allocator.getReg(stmt.args.at(1));
+    InstrArg opB = allocator.getReg(stmt.args.at(2));
+    
+    Instruction cmp{Instruction::CMP, {opA, opB}}; // cmp %opA, $opB | opA - opB
+    Instruction jmpnz{Instruction::JZ, {label}};   // jz label       | if opA - opB == 0
+    
+    this->insert(cmp);
+    this->insert(jmpnz);
 
+    allocator.deregister({stmt.args.at(1), stmt.args.at(2)});
 }
 
 void CodeGenerator::genRETURN(MemoryAllocator& allocator, const Statement& stmt)
