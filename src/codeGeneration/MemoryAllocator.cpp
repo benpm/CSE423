@@ -16,8 +16,8 @@ InstrArg MemoryAllocator::getReg(const Arg& arg)
     spdlog::debug("--> Getting register for {}", arg.toString());
     // Check if argument is already in a register, return the register if it is
     if (this->regMap.count(arg)) {
-        spdlog::debug("----> already in {}", magic_enum::enum_name(this->regMap[arg]));
-        return InstrArg{this->regMap[arg]};
+        spdlog::debug("----> already in {}", magic_enum::enum_name(this->regMap.at(arg)));
+        return InstrArg{this->regMap.at(arg)};
     }
 
     // It is not in a register so we must check if it's on the stack
@@ -25,7 +25,7 @@ InstrArg MemoryAllocator::getReg(const Arg& arg)
     // If its not on the stack, just return a register for it
     Register openReg = this->getNextAvailReg(arg);
     if (this->stackOffsetMap.count(arg)) {
-        int offset = this->stackOffsetMap[arg];
+        int offset = this->stackOffsetMap.at(arg);
 
         InstrArg src{Register::ebp, offset}; // offset(%ebp)
         InstrArg dest{openReg};              // %reg
@@ -125,4 +125,46 @@ void MemoryAllocator::deregister(const Arg& arg)
     }
 
     spdlog::error("Deregistering a register that is not allocated! {}", arg.toString());
+}
+
+void MemoryAllocator::insertAt(const Arg& arg, Register reg)
+{
+    spdlog::debug("--> Inserting {} in {}", arg.toString(), magic_enum::enum_name(reg));
+
+    // Try to deallocate the occupied register
+    for (auto& pair : this->regMap) {
+        if (pair.second == reg) {
+            spdlog::debug("----> {} occupied, saving it out.", magic_enum::enum_name(reg));
+            this->save(pair.first);
+            this->deregister(pair.first);
+            break;
+        }
+    }
+
+    if (this->regMap.count(arg)) {
+        InstrArg src{this->regMap.at(arg)};
+        InstrArg dest{reg};
+        Instruction mov{Instruction::MOV, {src, dest}};
+        spdlog::debug("----> {} In {}, moving to {}", arg.toString(), src.toString(), magic_enum::enum_name(reg));
+
+        this->codeGen.insert(mov);
+        return;
+    }
+
+    // It is not in a register so we must check if it's on the stack
+    if (this->stackOffsetMap.count(arg)) {
+        int offset = this->stackOffsetMap.at(arg);
+
+        InstrArg src{Register::ebp, offset}; // offset(%ebp)
+        InstrArg dest{reg};                  // %reg
+        Instruction loadInstr(Instruction::MOV, {src, dest}); // mov offset(%ebp) %reg
+
+        spdlog::debug("----> {} at {}, moving to {}", arg.toString(), src.toString(), magic_enum::enum_name(reg));
+
+        this->codeGen.insert(loadInstr);
+        return;
+    }
+
+    spdlog::error("Inserting an argument {} at {} that doesnt exist yet!", arg.toString(), magic_enum::enum_name(reg));
+    exit(EXIT_FAILURE);
 }

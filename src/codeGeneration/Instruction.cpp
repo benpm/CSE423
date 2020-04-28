@@ -62,10 +62,11 @@ std::string Instruction::toString() const
     }
 
     std::string str = fmt::format("\t{} ", opToStr.at(this->opCode));
-    for (int i = 0; i < (this->args.size() - 1); i++) {
-        str += fmt::format("{}, ", args[i].toString());
+    for (int i = 0; i < this->args.size(); i++) {
+        std::string fmtstr = (i < this->args.size()) ? "{}, "  : "{}";
+        str += fmt::format(fmtstr, args.at(i).toString());
     }
-    str += fmt::format("{}", args.back().toString());
+
     if (this->comment.size() != 0) {
         str += fmt::format(" ;{}", this->comment);
     }

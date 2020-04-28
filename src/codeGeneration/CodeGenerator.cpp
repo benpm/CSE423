@@ -205,7 +205,9 @@ void CodeGenerator::genJUMP_IF_FALSE(MemoryAllocator& allocator, const Statement
 
 void CodeGenerator::genRETURN(MemoryAllocator& allocator, const Statement& stmt)
 {
-
+    allocator.insertAt(stmt.args.at(0), Register::eax);
+    Instruction ret{Instruction::RET, {}};
+    this->insert(ret);
 }
 
 void CodeGenerator::genCALL(MemoryAllocator& allocator, const Statement& stmt)
