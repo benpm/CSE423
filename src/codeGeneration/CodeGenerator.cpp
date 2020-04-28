@@ -97,7 +97,7 @@ void CodeGenerator::genDIV(MemoryAllocator& allocator, const Statement& stmt)
     InstrArg result = allocator.getReg(stmt.args.at(0));
     // Divisor is argument for idiv
     InstrArg arg = allocator.getReg(stmt.args.at(2));
-    // Clear %eax
+    // Clear %edx
     allocator.evict(Register::edx);
     // Division instruction (%eax(arg1)/arg(arg2))
     Instruction idivInstr{Instruction::IDIV, {arg}}; // idiv %arg
