@@ -158,7 +158,7 @@ void CodeGenerator::genMINUS(MemoryAllocator& allocator, const Statement& stmt)
     InstrArg dest = allocator.getReg(stmt.args.at(0));
     InstrArg op = allocator.getReg(stmt.args.at(1));
     
-    Instruction negInstr{Instruction::NEG, {dest}}; // neg %op
+    Instruction negInstr{Instruction::NEG, {op}}; // neg %op
     Instruction movInstr{Instruction::MOV, {op, dest}}; // mov %op, %dest
 
     this->insert(negInstr);
