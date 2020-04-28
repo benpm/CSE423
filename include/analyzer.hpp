@@ -7,6 +7,7 @@
  */
 #pragma once
 
+#include <set>
 #include <utility>
 #include <vector>
 #include <ast.hpp>
@@ -18,8 +19,8 @@
  */
 struct Error {
     enum Category {
-        UnusedVariable, UnusedFunction, UnusedLabel, // Warnings
-        UndeclaredVariable, MainUndefined, VariableRedclaration, UninitializedVariableUse // Errors
+        UnusedVariable, UnusedFunction, UnusedLabel, UninitializedVariableUse, // Warnings
+        UndeclaredVariable, MainUndefined, Redeclaration // Errors
     };
 
     Category category;
@@ -41,9 +42,20 @@ struct Error {
  */
 class SemanticAnalyzer {
 private:
+    std::set<Symbol*> initialized;
+    std::set<Symbol*> used;
     std::vector<Error> errors;
 
-    void analyzeProgram(AST &ast, SymbolTable &table);
+    void analyzeProgram(AST const &ast);
+    void analyzeDeclaration(AST const *decl, std::set<std::string> &parentDecls);
+    void analyzeOperation(AST const *op, std::set<std::string> &parentDecls);
+    void analyzeFunction(AST const *func, std::set<std::string> parentDecls);
+    void analyzeIfElse(AST const *ifElse, std::set<std::string> parentDecls);
+    void analyzeFor(AST const *forLoop, std::set<std::string> parentDecls);
+    void analyzeWhile(AST const *whileLoop, std::set<std::string> parentDecls);
+    bool isDeclared(std::string name, std::set<std::string> const &decls);
+    bool isInitialized(Symbol *s);
+    bool isUsed(Symbol *s);
 
 public:
     bool hasWarning = false;
@@ -51,5 +63,5 @@ public:
 
     void printErrors();
 
-    SemanticAnalyzer(AST &ast, SymbolTable &table);
+    SemanticAnalyzer(AST &ast);
 };
