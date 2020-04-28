@@ -28,6 +28,7 @@ public:
     void save(const Arg& arg);
     void deregister(const Arg& arg);
     void deregister(const std::unordered_set<Arg, ArgHash> args);
+    void evict(Register reg);
     void insertAt(const Arg& arg, Register reg);
     
 private:

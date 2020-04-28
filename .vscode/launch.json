@@ -21,6 +21,26 @@
                     "ignoreFailures": true
                 }
             ],
+        },
+        {
+            "name": "Debug sc64 w/ test.c",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/sc64",
+            "args": ["${workspaceFolder}/build/test.c", "-r"],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}/build/",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "preLaunchTask": "Make",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
         }
     ]
 }

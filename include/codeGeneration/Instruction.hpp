@@ -3,6 +3,8 @@
 #include <variant>
 #include <string>
 #include <vector>
+#include <spdlog/formatter.h>
+#include <ir/statement.hpp>
 
 // When adding registers, make sure to update USABLE_REGS
 // The size of regOccupied should be the number of registers we can USE (i.e. we cannut "USE" ebp/esp/pc)
@@ -29,6 +31,17 @@ public:
 
     std::string toString() const;
 
+    InstrArg(const Arg& arg)           {
+        switch (arg.type) {
+        case Arg::FLOAT: this->arg = arg.val.fval; break;
+        case Arg::INT:   this->arg = arg.val.ival; break;
+        case Arg::CHAR:  this->arg = arg.val.cval; break;
+        case Arg::LABEL: this->arg = fmt::format("BB{}", arg.val.label); break;
+        default:
+            spdlog::error("Cannot handle given immediate arg type"); exit(EXIT_FAILURE);
+            break;
+        }
+    };
     InstrArg(int   imm)                {this->arg = imm;};
     InstrArg(float imm)                {this->arg = imm;};
     InstrArg(char  imm)                {this->arg = imm;};

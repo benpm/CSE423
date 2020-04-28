@@ -63,7 +63,7 @@ std::string Instruction::toString() const
 
     std::string str = fmt::format("\t{} ", opToStr.at(this->opCode));
     for (int i = 0; i < this->args.size(); i++) {
-        std::string fmtstr = (i < this->args.size()) ? "{}, "  : "{}";
+        std::string fmtstr = (i < this->args.size() - 1) ? "{}, "  : "{}";
         str += fmt::format(fmtstr, args.at(i).toString());
     }
 

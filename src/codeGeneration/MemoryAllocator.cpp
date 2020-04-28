@@ -36,23 +36,8 @@ InstrArg MemoryAllocator::getReg(const Arg& arg)
 
     // If immediate, move the immediate into the register
     if (arg.type != Arg::NAME) {
-        switch (arg.type) {
-        case Arg::FLOAT:{
-            Instruction movInstr(Instruction::MOV, {arg.val.fval, openReg});
-            this->codeGen.insert(movInstr);
-            break;}
-        case Arg::INT:{
-            Instruction movInstr(Instruction::MOV, {arg.val.ival, openReg});
-            this->codeGen.insert(movInstr);
-            break;}
-        case Arg::CHAR:{
-            Instruction movInstr(Instruction::MOV, {arg.val.cval, openReg});
-            this->codeGen.insert(movInstr);
-            break;}
-        default:
-            spdlog::error("Unknown arg type"); exit(EXIT_FAILURE);
-            break;
-        }
+        Instruction movInstr(Instruction::MOV, {arg, openReg});
+        this->codeGen.insert(movInstr);
     }
 
     this->regMap.emplace(arg, openReg);
@@ -127,10 +112,8 @@ void MemoryAllocator::deregister(const Arg& arg)
     spdlog::error("Deregistering a register that is not allocated! {}", arg.toString());
 }
 
-void MemoryAllocator::insertAt(const Arg& arg, Register reg)
+void MemoryAllocator::evict(Register reg)
 {
-    spdlog::debug("--> Inserting {} in {}", arg.toString(), magic_enum::enum_name(reg));
-
     // Try to deallocate the occupied register
     for (auto& pair : this->regMap) {
         if (pair.second == reg) {
@@ -140,12 +123,41 @@ void MemoryAllocator::insertAt(const Arg& arg, Register reg)
             break;
         }
     }
+}
+
+void MemoryAllocator::insertAt(const Arg& arg, Register reg)
+{
+    spdlog::debug("--> Inserting {} in {}", arg.toString(), magic_enum::enum_name(reg));
+
+    this->evict(reg);
 
     if (this->regMap.count(arg)) {
         InstrArg src{this->regMap.at(arg)};
         InstrArg dest{reg};
+
+        this->save(arg);
+        this->deregister(arg);
+
         Instruction mov{Instruction::MOV, {src, dest}};
         spdlog::debug("----> {} In {}, moving to {}", arg.toString(), src.toString(), magic_enum::enum_name(reg));
+
+        this->regMap.emplace(arg, reg);
+        this->regOccupied.at(reg) = true;
+
+        this->codeGen.insert(mov);
+        return;
+    }
+
+    // Arg is an immediate, mov straight into the register
+    if (arg.type != Arg::NAME) {
+        InstrArg src{arg};
+        InstrArg dest{reg};
+
+        Instruction mov{Instruction::MOV, {src, dest}};
+        spdlog::debug("----> {} In {}, moving to {}", arg.toString(), src.toString(), magic_enum::enum_name(reg));
+
+        this->regMap.emplace(arg, reg);
+        this->regOccupied.at(reg) = true;
 
         this->codeGen.insert(mov);
         return;
@@ -161,6 +173,8 @@ void MemoryAllocator::insertAt(const Arg& arg, Register reg)
 
         spdlog::debug("----> {} at {}, moving to {}", arg.toString(), src.toString(), magic_enum::enum_name(reg));
 
+        this->regMap.emplace(arg, reg);
+        this->regOccupied.at(reg) = true;
         this->codeGen.insert(loadInstr);
         return;
     }

@@ -115,7 +115,24 @@ void CodeGenerator::genSUB(MemoryAllocator& allocator, const Statement& stmt)
 
 void CodeGenerator::genMOD(MemoryAllocator& allocator, const Statement& stmt)
 {
+    // Evict whatever was in %eax previously, saving it if needed, moving dividend in
+    allocator.insertAt(stmt.args.at(1), Register::eax);
+    // Evict whatever was in %edx previously, saving it if needed, moving result (remainder) in
+    InstrArg result = allocator.getReg(stmt.args.at(0));
+    // Divisor is argument for idiv
+    InstrArg arg = allocator.getReg(stmt.args.at(2));
+    // Clear %edx
+    allocator.evict(Register::edx);
+    // Division instruction (%eax(arg1)/arg(arg2))
+    Instruction idivInstr{Instruction::IDIV, {arg}}; // idiv %arg
+    // Move instruction
+    Instruction movInstr{Instruction::MOV, {{Register::edx}, result}, "save remainder"};
 
+    this->insert(idivInstr);
+    this->insert(movInstr);
+    // This will save the remainder, stored in %eax, to result loc
+    allocator.save(stmt.args.at(0));
+    allocator.deregister({stmt.args.at(0), stmt.args.at(1), stmt.args.at(2)});
 }
 
 void CodeGenerator::genMINUS(MemoryAllocator& allocator, const Statement& stmt)
