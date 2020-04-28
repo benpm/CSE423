@@ -162,7 +162,17 @@ void CodeGenerator::genJUMP(MemoryAllocator& allocator, const Statement& stmt)
 
 void CodeGenerator::genJUMP_LT(MemoryAllocator& allocator, const Statement& stmt)
 {
+    std::string label = fmt::format("BB{}", stmt.args.at(0).val.ival);
+    InstrArg opA = allocator.getReg(stmt.args.at(1));
+    InstrArg opB = allocator.getReg(stmt.args.at(2));
+    
+    Instruction cmp{Instruction::CMP, {opA, opB}}; // cmp %opA, $opB | opA - opB
+    Instruction jmplt{Instruction::JL, {label}};   // jl label       | if opA - opB < 0
+    
+    this->insert(cmp);
+    this->insert(jmplt);
 
+    allocator.deregister({stmt.args.at(1), stmt.args.at(2)});
 }
 
 void CodeGenerator::genJUMP_GT(MemoryAllocator& allocator, const Statement& stmt)
@@ -187,7 +197,17 @@ void CodeGenerator::genJUMP_LE(MemoryAllocator& allocator, const Statement& stmt
 
 void CodeGenerator::genJUMP_GE(MemoryAllocator& allocator, const Statement& stmt)
 {
+    std::string label = fmt::format("BB{}", stmt.args.at(0).val.ival);
+    InstrArg opA = allocator.getReg(stmt.args.at(1));
+    InstrArg opB = allocator.getReg(stmt.args.at(2));
+    
+    Instruction cmp{Instruction::CMP, {opA, opB}}; // cmp %opA, $opB | opA - opB
+    Instruction jmpge{Instruction::JGE, {label}};  // jge label      | if opA - opB >= 0
+    
+    this->insert(cmp);
+    this->insert(jmpge);
 
+    allocator.deregister({stmt.args.at(1), stmt.args.at(2)});
 }
 
 void CodeGenerator::genJUMP_EQ(MemoryAllocator& allocator, const Statement& stmt)
@@ -212,7 +232,17 @@ void CodeGenerator::genJUMP_NEQ(MemoryAllocator& allocator, const Statement& stm
 
 void CodeGenerator::genJUMP_IF_TRUE(MemoryAllocator& allocator, const Statement& stmt)
 {
+    std::string label = fmt::format("BB{}", stmt.args.at(0).val.ival);
+    InstrArg opA = allocator.getReg(stmt.args.at(1));
+    InstrArg opB = allocator.getReg(stmt.args.at(2));
+    
+    Instruction cmp{Instruction::CMP, {opA, opB}}; // cmp %opA, $opB | opA - opB
+    Instruction jmpnz{Instruction::JNZ, {label}};  // jnz label      | if opA - opB != 0
+    
+    this->insert(cmp);
+    this->insert(jmpnz);
 
+    allocator.deregister({stmt.args.at(1), stmt.args.at(2)});
 }
 
 void CodeGenerator::genJUMP_IF_FALSE(MemoryAllocator& allocator, const Statement& stmt)
