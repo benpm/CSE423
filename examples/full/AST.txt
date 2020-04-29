@@ -169,11 +169,6 @@ root
        │     │     ├─[4] float_const (0.101000)
        │     │     └─[4] int_const (2)
        │     └─[4] float_const (0.900000)
-       ├─[4] call
-       │ ├─[4] id (printf)
-       │ └─[4] args
-       │   ├─[4] string_const ("test: %f\n")
-       │   └─[4] id (DF)
        ├─[4] assignment
        │ ├─[4] id (DF)
        │ └─[4] mul

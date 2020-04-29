@@ -189,13 +189,6 @@
 <0.9, FLOATCONST>
 <), RPAREN>
 <;, SEMICOLON>
-<printf, ID>
-<(, LPAREN>
-<"test: %f\n", STRINGLIT>
-<,, COMMA>
-<DF, ID>
-<), RPAREN>
-<;, SEMICOLON>
 <DF, ID>
 <=, EQUAL>
 <DF, ID>

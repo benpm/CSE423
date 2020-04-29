@@ -49,6 +49,7 @@ const std::unordered_map<AST::Label, Statement::Type> labelMap {
     {AST::decr,         Statement::MINUS},
     {AST::assignment,   Statement::ASSIGN},
     {AST::args,         Statement::CALL},
+    {AST::call,         Statement::CALL},
     {AST::return_stmt,  Statement::RETURN}
 };
 
@@ -141,10 +142,12 @@ Arg BasicBlock::expand(const AST* ast, bool start)
 
     // Function calls
     if (ast->label == AST::call) {
-        // Add function identifier to args
-        args.push_back(Arg(ast->children[0]->data.sval));
         // Set current ast node to the args child so that function args can be added properly
-        ast = ast->children[1];
+        if (ast->children.size() > 1) {
+            // Add function identifier to args
+            args.push_back(Arg(ast->children.at(0)->data.sval));
+            ast = ast->children.at(1);
+        }
     }
 
     // Constants, identifiers

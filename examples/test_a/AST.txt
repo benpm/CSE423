@@ -8,61 +8,33 @@ root
      │ ├─[1] declaration
      │ │ ├─[1] int_type
      │ │ └─[1] assignment
-     │ │   ├─[1] id (value)
-     │ │   └─[1] unary_minus
-     │ │     └─[1] int_const (5)
-     │ ├─[1] declaration
-     │ │ ├─[1] float_type
-     │ │ └─[1] assignment
-     │ │   ├─[1] id (a)
-     │ │   └─[1] float_const (10.100000)
+     │ │   ├─[1] id (i)
+     │ │   └─[1] int_const (0)
      │ ├─[1] declaration
      │ │ ├─[1] int_type
      │ │ └─[1] assignment
-     │ │   ├─[1] id (hek)
-     │ │   └─[1] mul
-     │ │     ├─[1] int_const (5)
-     │ │     └─[1] unary_minus
-     │ │       └─[1] int_const (18)
-     │ ├─[1] declaration
-     │ │ ├─[1] char_type
-     │ │ └─[1] assignment
-     │ │   ├─[1] id (str)
-     │ │   └─[1] char_const (b)
-     │ ├─[1] declaration
-     │ │ ├─[1] char_type
-     │ │ └─[1] assignment
-     │ │   ├─[1] id (str2)
-     │ │   └─[1] char_const (c)
+     │ │   ├─[1] id (j)
+     │ │   └─[1] id (i)
      │ └─[1] declaration
-     │   ├─[1] char_type
+     │   ├─[1] int_type
      │   └─[1] assignment
-     │     ├─[1] id (a)
-     │     └─[1] char_const (	)
+     │     ├─[1] id (k)
+     │     └─[1] int_const (10)
      └─[2] list
-       ├─[3] for_stmt
-       │ ├─[3] declaration
-       │ │ ├─[3] int_type
-       │ │ └─[3] assignment
-       │ │   ├─[3] id (i)
-       │ │   └─[3] int_const (0)
-       │ ├─[3] lt
-       │ │ ├─[3] id (i)
-       │ │ └─[3] int_const (111)
-       │ ├─[3] incr
-       │ │ └─[3] id (i)
-       │ ├─[4] dec_list
-       │ └─[4] list
-       │   └─[5] if_stmt
-       │     ├─[5] equal
-       │     │ ├─[5] modulo
-       │     │ │ ├─[5] id (i)
-       │     │ │ └─[5] int_const (10)
-       │     │ └─[5] int_const (5)
-       │     ├─[5] dec_list
-       │     └─[6] list
-       │       └─[6] plus_equal
-       │         ├─[6] id (value)
-       │         └─[6] id (i)
+       ├─[2] assignment
+       │ ├─[2] id (i)
+       │ └─[2] sum
+       │   ├─[2] id (i)
+       │   └─[2] id (k)
+       ├─[2] assignment
+       │ ├─[2] id (j)
+       │ └─[2] sum
+       │   ├─[2] id (i)
+       │   └─[2] int_const (7)
+       ├─[2] assignment
+       │ ├─[2] id (k)
+       │ └─[2] sum
+       │   ├─[2] int_const (4)
+       │   └─[2] int_const (20)
        └─[2] return_stmt
-         └─[2] id (value)
+         └─[2] id (i)
