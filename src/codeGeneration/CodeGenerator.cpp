@@ -7,6 +7,9 @@
 CodeGenerator::CodeGenerator(const Program& program)
 {
     // <-- Insert program header stuff HERE
+    this->insert({".text"});
+    this->insert({".globl main"});
+    this->insert({".type main, @function"});
     for (const auto& pair : program.functions) {
         this->genFunction(pair.second);
     }
@@ -16,17 +19,18 @@ void CodeGenerator::genFunction(const Function& func)
 {
     this->curFuncName = func.name;
     MemoryAllocator allocator(*this);
+    allocator.stackSize = 4;
 
     // Function label as well as saving / creating call frame
-    this->insert({fmt::format("; FUNCTION {}", func.name)});
+    this->insert({fmt::format("# FUNCTION {}", func.name)});
     this->insert({fmt::format("{}:", func.name)});
     this->insert({Instruction::PUSH, {Register::ebp}});
-    this->insert({Instruction::MOV, {Register::ebp, Register::esp}});
+    this->insert({Instruction::MOV, {Register::esp, Register::ebp}});
     for (const BasicBlock& block : func.blocks) {
         // Jump label for this basic block
-        this->insert({fmt::format("{}_{}:", this->curFuncName, block.label)});
+        this->insert({fmt::format(".{}.{}:", this->curFuncName, block.label)});
         for (const Statement& stmt : block.statements) {
-            this->insert({fmt::format("; {}", stmt.toString())});
+            this->insert({fmt::format("# {}", stmt.toString())});
             this->genStatement(allocator, stmt);
         }
     }
@@ -186,14 +190,14 @@ void CodeGenerator::genASSIGN(MemoryAllocator& allocator, const Statement& stmt)
 
 void CodeGenerator::genJUMP(MemoryAllocator& allocator, const Statement& stmt)
 {
-    std::string label = fmt::format("{}_{}:", this->curFuncName, stmt.args.at(0).val.label);
+    std::string label = fmt::format(".{}.{}:", this->curFuncName, stmt.args.at(0).val.label);
     Instruction jmp{Instruction::JMP, {label}};
     this->insert(jmp);
 }
 
 void CodeGenerator::genJUMP_LT(MemoryAllocator& allocator, const Statement& stmt)
 {
-    std::string label = fmt::format("{}_{}:", this->curFuncName, stmt.args.at(0).val.label);
+    std::string label = fmt::format(".{}.{}:", this->curFuncName, stmt.args.at(0).val.label);
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
@@ -208,7 +212,7 @@ void CodeGenerator::genJUMP_LT(MemoryAllocator& allocator, const Statement& stmt
 
 void CodeGenerator::genJUMP_GT(MemoryAllocator& allocator, const Statement& stmt)
 {
-    std::string label = fmt::format("{}_{}:", this->curFuncName, stmt.args.at(0).val.label);
+    std::string label = fmt::format(".{}.{}:", this->curFuncName, stmt.args.at(0).val.label);
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
@@ -223,7 +227,7 @@ void CodeGenerator::genJUMP_GT(MemoryAllocator& allocator, const Statement& stmt
 
 void CodeGenerator::genJUMP_LE(MemoryAllocator& allocator, const Statement& stmt)
 {
-    std::string label = fmt::format("{}_{}:", this->curFuncName, stmt.args.at(0).val.label);
+    std::string label = fmt::format(".{}.{}:", this->curFuncName, stmt.args.at(0).val.label);
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
@@ -238,7 +242,7 @@ void CodeGenerator::genJUMP_LE(MemoryAllocator& allocator, const Statement& stmt
 
 void CodeGenerator::genJUMP_GE(MemoryAllocator& allocator, const Statement& stmt)
 {
-    std::string label = fmt::format("{}_{}:", this->curFuncName, stmt.args.at(0).val.label);
+    std::string label = fmt::format(".{}.{}:", this->curFuncName, stmt.args.at(0).val.label);
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
@@ -253,7 +257,7 @@ void CodeGenerator::genJUMP_GE(MemoryAllocator& allocator, const Statement& stmt
 
 void CodeGenerator::genJUMP_EQ(MemoryAllocator& allocator, const Statement& stmt)
 {
-    std::string label = fmt::format("{}_{}:", this->curFuncName, stmt.args.at(0).val.label);
+    std::string label = fmt::format(".{}.{}:", this->curFuncName, stmt.args.at(0).val.label);
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
@@ -268,7 +272,7 @@ void CodeGenerator::genJUMP_EQ(MemoryAllocator& allocator, const Statement& stmt
 
 void CodeGenerator::genJUMP_NEQ(MemoryAllocator& allocator, const Statement& stmt)
 {
-    std::string label = fmt::format("{}_{}:", this->curFuncName, stmt.args.at(0).val.label);
+    std::string label = fmt::format(".{}.{}:", this->curFuncName, stmt.args.at(0).val.label);
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
@@ -283,7 +287,7 @@ void CodeGenerator::genJUMP_NEQ(MemoryAllocator& allocator, const Statement& stm
 
 void CodeGenerator::genJUMP_IF_TRUE(MemoryAllocator& allocator, const Statement& stmt)
 {
-    std::string label = fmt::format("{}_{}:", this->curFuncName, stmt.args.at(0).val.label);
+    std::string label = fmt::format(".{}.{}:", this->curFuncName, stmt.args.at(0).val.label);
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
@@ -298,7 +302,7 @@ void CodeGenerator::genJUMP_IF_TRUE(MemoryAllocator& allocator, const Statement&
 
 void CodeGenerator::genJUMP_IF_FALSE(MemoryAllocator& allocator, const Statement& stmt)
 {
-    std::string label = fmt::format("{}_{}:", this->curFuncName, stmt.args.at(0).val.label);
+    std::string label = fmt::format(".{}.{}:", this->curFuncName, stmt.args.at(0).val.label);
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
@@ -313,13 +317,16 @@ void CodeGenerator::genJUMP_IF_FALSE(MemoryAllocator& allocator, const Statement
 
 void CodeGenerator::genRETURN(MemoryAllocator& allocator, const Statement& stmt)
 {
+    // Place return arg into %eax
+    allocator.insertAt(stmt.args.at(0), Register::eax);
     // Restore old call frame
+    Instruction add{Instruction::ADD, {allocator.stackSize, Register::esp}};
     Instruction mov{Instruction::MOV, {Register::esp, Register::ebp}};
     Instruction pop{Instruction::POP, {Register::ebp}};
+    this->insert(add);
     this->insert(mov);
     this->insert(pop);
-    // Place return arg into %eax, add return instruction
-    allocator.insertAt(stmt.args.at(0), Register::eax);
+    // Add return instruction
     Instruction ret{Instruction::RET, {}};
     this->insert(ret);
     allocator.deregister(stmt.args.at(0));

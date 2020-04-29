@@ -66,7 +66,7 @@ Arg createAlias(const AST* idnode)
     const SymbolTable* scope = declScope->parent;
     while (scope) {
         if (scope->table.count(idnode->data.sval)) {
-            std::string newName = fmt::format("{}_{}", declScope->tableID, idnode->data.sval);
+            std::string newName = fmt::format(".{}.{}", declScope->tableID, idnode->data.sval);
             return Arg(strdup(newName.c_str()), idType);
         }
         scope = scope->parent;

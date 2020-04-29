@@ -68,7 +68,7 @@ std::string Instruction::toString() const
     }
 
     if (this->comment.size() != 0) {
-        str += fmt::format(" ;{}", this->comment);
+        str += fmt::format(" # {}", this->comment);
     }
 
     return str;
