@@ -206,3 +206,12 @@ void MemoryAllocator::insertAt(const Arg& arg, Register reg)
     spdlog::error("Inserting an argument {} at {} that doesnt exist yet!", arg.toString(), magic_enum::enum_name(reg));
     exit(EXIT_FAILURE);
 }
+
+void MemoryAllocator::clear()
+{
+    for (int i = 0; i < regOccupied.size(); i++) {
+        if (regOccupied.at(i)) {
+            this->evict((Register)i);
+        }
+    }
+}

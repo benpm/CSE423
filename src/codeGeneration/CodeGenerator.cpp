@@ -332,11 +332,10 @@ void CodeGenerator::genCALL(MemoryAllocator& allocator, const Statement& stmt)
         this->insert({Instruction::PUSH, {allocator.get(*it)}});
         argsSize += 4;
     }
-    // Clear %eax
-    allocator.evict(Register::eax);
+    // Clear all registers (including %eax)
+    allocator.clear();
     // Get a register for return value
     InstrArg result = allocator.getReg(stmt.args.at(0));
-    // TODO: Clear other registers
     // Insert call instruction (function label / name is second argument of CALL statement)
     Instruction callInstr{Instruction::CALL, {std::string(stmt.args.at(1).val.sval)}};
     this->insert(callInstr);
