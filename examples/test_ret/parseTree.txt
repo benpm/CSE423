@@ -1,0 +1,127 @@
+PROGRAM | Line num: 1
+ └─DECLARATION_LIST | Line num: 11
+   ├─DECLARATION_LIST | Line num: 6
+   │ ├─DECLARATION_LIST | Line num: 1
+   │ │ └─DECLARATION | Line num: 1
+   │ │   └─FUN_DECLARATION | Line num: 1
+   │ │     ├─INT | Line num: 1
+   │ │     ├─ID | Line num: 1 (funA)
+   │ │     ├─PARAMS | Line num: 1
+   │ │     └─STATEMENT | Line num: 2
+   │ │       └─COMPOUND_STMT | Line num: 2
+   │ │         ├─LOCAL_DECLARATIONS | Line num: 2
+   │ │         └─STATEMENT_LIST | Line num: 3
+   │ │           └─STATEMENT | Line num: 3
+   │ │             └─RETURN_STMT | Line num: 3
+   │ │               └─EXPRESSION | Line num: 3
+   │ │                 └─SIMPLE_EXPRESSION | Line num: 3
+   │ │                   └─AND_EXPRESSION | Line num: 3
+   │ │                     └─UNARY_REL_EXPRESSION | Line num: 3
+   │ │                       └─REL_EXPRESSION | Line num: 3
+   │ │                         └─SUM_EXPRESSION | Line num: 3
+   │ │                           └─MUL_EXPRESSION | Line num: 3
+   │ │                             └─UNARY_EXPRESSION | Line num: 3
+   │ │                               └─FACTOR | Line num: 3
+   │ │                                 └─IMMUTABLE | Line num: 3
+   │ │                                   └─INTCONST | Line num: 3 (3)
+   │ └─DECLARATION | Line num: 6
+   │   └─FUN_DECLARATION | Line num: 6
+   │     ├─INT | Line num: 6
+   │     ├─ID | Line num: 6 (funB)
+   │     ├─PARAMS | Line num: 6
+   │     └─STATEMENT | Line num: 7
+   │       └─COMPOUND_STMT | Line num: 7
+   │         ├─LOCAL_DECLARATIONS | Line num: 7
+   │         └─STATEMENT_LIST | Line num: 8
+   │           └─STATEMENT | Line num: 8
+   │             └─RETURN_STMT | Line num: 8
+   │               └─EXPRESSION | Line num: 8
+   │                 └─SIMPLE_EXPRESSION | Line num: 8
+   │                   └─AND_EXPRESSION | Line num: 8
+   │                     └─UNARY_REL_EXPRESSION | Line num: 8
+   │                       └─REL_EXPRESSION | Line num: 8
+   │                         └─SUM_EXPRESSION | Line num: 8
+   │                           └─MUL_EXPRESSION | Line num: 8
+   │                             └─UNARY_EXPRESSION | Line num: 8
+   │                               └─FACTOR | Line num: 8
+   │                                 └─IMMUTABLE | Line num: 8
+   │                                   └─INTCONST | Line num: 8 (4)
+   └─DECLARATION | Line num: 11
+     └─FUN_DECLARATION | Line num: 11
+       ├─INT | Line num: 11
+       ├─ID | Line num: 11 (main)
+       ├─PARAMS | Line num: 11
+       └─STATEMENT | Line num: 12
+         └─COMPOUND_STMT | Line num: 12
+           ├─LOCAL_DECLARATIONS | Line num: 12
+           └─STATEMENT_LIST | Line num: 13
+             └─STATEMENT | Line num: 13
+               └─RETURN_STMT | Line num: 13
+                 └─EXPRESSION | Line num: 13
+                   └─SIMPLE_EXPRESSION | Line num: 13
+                     └─AND_EXPRESSION | Line num: 13
+                       └─UNARY_REL_EXPRESSION | Line num: 13
+                         └─REL_EXPRESSION | Line num: 13
+                           └─SUM_EXPRESSION | Line num: 13
+                             ├─SUM_EXPRESSION | Line num: 13
+                             │ └─MUL_EXPRESSION | Line num: 13
+                             │   └─UNARY_EXPRESSION | Line num: 13
+                             │     └─FACTOR | Line num: 13
+                             │       └─IMMUTABLE | Line num: 13
+                             │         └─CALL | Line num: 13
+                             │           ├─ID | Line num: 13 (funA)
+                             ├─PLUS | Line num: 13
+                             └─MUL_EXPRESSION | Line num: 13
+                               └─UNARY_EXPRESSION | Line num: 13
+                                 └─FACTOR | Line num: 13
+                                   └─IMMUTABLE | Line num: 13
+                                     └─CALL | Line num: 13
+                                       ├─ID | Line num: 13 (funB)
+.text
+.globl main
+.type main, @function
+# FUNCTION funA
+funA:
+	push %rbp
+	mov %rsp, %rbp
+.funA.0:
+# (3) <[int][RETURN], 3>
+	mov $3, %rax
+	add $0, %rsp
+	mov %rsp, %rbp
+	pop %rbp
+	ret 
+# FUNCTION funB
+funB:
+	push %rbp
+	mov %rsp, %rbp
+.funB.0:
+# (8) <[int][RETURN], 4>
+	mov $4, %rax
+	add $0, %rsp
+	mov %rsp, %rbp
+	pop %rbp
+	ret 
+# FUNCTION main
+main:
+	push %rbp
+	mov %rsp, %rbp
+.main.0:
+# (13) <[int][CALL], (int)#0, (int)funA>
+	call funA
+	push %rax
+# (13) <[int][CALL], (int)#1, (int)funB>
+	call funB
+	push %rax
+# (13) <[int][ADD], (int)#2, (int)#0, (int)#1>
+	mov -8(%rbp), %rbx
+	mov -16(%rbp), %rcx
+	add %rbx, %rcx
+	mov %rcx, %rax
+	push %rax
+# (13) <[int][RETURN], (int)#2>
+	mov -24(%rbp), %rax
+	add $24, %rsp
+	mov %rsp, %rbp
+	pop %rbp
+	ret 
