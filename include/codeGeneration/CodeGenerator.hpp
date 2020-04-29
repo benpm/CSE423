@@ -8,6 +8,8 @@ class MemoryAllocator;
 class CodeGenerator
 {
 private:
+    std::string curFuncName;
+
     void genFunction(const Function& func);
     void genStatement(MemoryAllocator& allocator, const Statement& stmt);
     void genADD(MemoryAllocator& allocator, const Statement& stmt);

@@ -14,6 +14,7 @@ CodeGenerator::CodeGenerator(const Program& program)
 
 void CodeGenerator::genFunction(const Function& func)
 {
+    this->curFuncName = func.name;
     MemoryAllocator allocator(*this);
 
     // Function label as well as saving / creating call frame
@@ -23,7 +24,7 @@ void CodeGenerator::genFunction(const Function& func)
     this->insert({Instruction::MOV, {Register::ebp, Register::esp}});
     for (const BasicBlock& block : func.blocks) {
         // Jump label for this basic block
-        this->insert({fmt::format("BB{}:", block.label)});
+        this->insert({fmt::format("{}_{}:", this->curFuncName, block.label)});
         for (const Statement& stmt : block.statements) {
             this->insert({fmt::format("; {}", stmt.toString())});
             this->genStatement(allocator, stmt);
@@ -185,14 +186,14 @@ void CodeGenerator::genASSIGN(MemoryAllocator& allocator, const Statement& stmt)
 
 void CodeGenerator::genJUMP(MemoryAllocator& allocator, const Statement& stmt)
 {
-    std::string label = fmt::format("BB{}", stmt.args.at(0).val.ival);
+    std::string label = fmt::format("{}_{}:", this->curFuncName, stmt.args.at(0).val.label);
     Instruction jmp{Instruction::JMP, {label}};
     this->insert(jmp);
 }
 
 void CodeGenerator::genJUMP_LT(MemoryAllocator& allocator, const Statement& stmt)
 {
-    std::string label = fmt::format("BB{}", stmt.args.at(0).val.ival);
+    std::string label = fmt::format("{}_{}:", this->curFuncName, stmt.args.at(0).val.label);
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
@@ -207,7 +208,7 @@ void CodeGenerator::genJUMP_LT(MemoryAllocator& allocator, const Statement& stmt
 
 void CodeGenerator::genJUMP_GT(MemoryAllocator& allocator, const Statement& stmt)
 {
-    std::string label = fmt::format("BB{}", stmt.args.at(0).val.ival);
+    std::string label = fmt::format("{}_{}:", this->curFuncName, stmt.args.at(0).val.label);
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
@@ -222,7 +223,7 @@ void CodeGenerator::genJUMP_GT(MemoryAllocator& allocator, const Statement& stmt
 
 void CodeGenerator::genJUMP_LE(MemoryAllocator& allocator, const Statement& stmt)
 {
-    std::string label = fmt::format("BB{}", stmt.args.at(0).val.ival);
+    std::string label = fmt::format("{}_{}:", this->curFuncName, stmt.args.at(0).val.label);
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
@@ -237,7 +238,7 @@ void CodeGenerator::genJUMP_LE(MemoryAllocator& allocator, const Statement& stmt
 
 void CodeGenerator::genJUMP_GE(MemoryAllocator& allocator, const Statement& stmt)
 {
-    std::string label = fmt::format("BB{}", stmt.args.at(0).val.ival);
+    std::string label = fmt::format("{}_{}:", this->curFuncName, stmt.args.at(0).val.label);
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
@@ -252,7 +253,7 @@ void CodeGenerator::genJUMP_GE(MemoryAllocator& allocator, const Statement& stmt
 
 void CodeGenerator::genJUMP_EQ(MemoryAllocator& allocator, const Statement& stmt)
 {
-    std::string label = fmt::format("BB{}", stmt.args.at(0).val.ival);
+    std::string label = fmt::format("{}_{}:", this->curFuncName, stmt.args.at(0).val.label);
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
@@ -267,7 +268,7 @@ void CodeGenerator::genJUMP_EQ(MemoryAllocator& allocator, const Statement& stmt
 
 void CodeGenerator::genJUMP_NEQ(MemoryAllocator& allocator, const Statement& stmt)
 {
-    std::string label = fmt::format("BB{}", stmt.args.at(0).val.ival);
+    std::string label = fmt::format("{}_{}:", this->curFuncName, stmt.args.at(0).val.label);
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
@@ -282,7 +283,7 @@ void CodeGenerator::genJUMP_NEQ(MemoryAllocator& allocator, const Statement& stm
 
 void CodeGenerator::genJUMP_IF_TRUE(MemoryAllocator& allocator, const Statement& stmt)
 {
-    std::string label = fmt::format("BB{}", stmt.args.at(0).val.ival);
+    std::string label = fmt::format("{}_{}:", this->curFuncName, stmt.args.at(0).val.label);
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
@@ -297,7 +298,7 @@ void CodeGenerator::genJUMP_IF_TRUE(MemoryAllocator& allocator, const Statement&
 
 void CodeGenerator::genJUMP_IF_FALSE(MemoryAllocator& allocator, const Statement& stmt)
 {
-    std::string label = fmt::format("BB{}", stmt.args.at(0).val.ival);
+    std::string label = fmt::format("{}_{}:", this->curFuncName, stmt.args.at(0).val.label);
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     

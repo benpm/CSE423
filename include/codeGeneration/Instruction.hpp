@@ -32,12 +32,11 @@ public:
 
     std::string toString() const;
 
-    InstrArg(const Arg& arg)           {
+    InstrArg(const Arg& arg) {
         switch (arg.type) {
         case Arg::FLOAT: this->arg = arg.val.fval; break;
         case Arg::INT:   this->arg = arg.val.ival; break;
         case Arg::CHAR:  this->arg = arg.val.cval; break;
-        case Arg::LABEL: this->arg = fmt::format("BB{}", arg.val.label); break;
         default:
             spdlog::error("Cannot handle given immediate arg type"); exit(EXIT_FAILURE);
             break;
