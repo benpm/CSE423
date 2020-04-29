@@ -45,6 +45,8 @@ def test_file(path):
 
     if gccres == sc64res:
         print(f"{green}Test passed!!{stop}")
+    else:
+        print(f"{red}Test failed!!{stop}")
 
     run_command("rm tmpGCC tmpSC64 tmpSC64.s")
 
