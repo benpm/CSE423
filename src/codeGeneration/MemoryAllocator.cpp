@@ -215,3 +215,9 @@ void MemoryAllocator::clear()
         }
     }
 }
+
+void MemoryAllocator::parameter(const Arg& arg, int n)
+{
+    this->stackOffsetMap.emplace(arg, n * 8);
+    codeGen.insert({fmt::format("# param {} at {}(%rbp)", arg.toString(), n * 8)});
+}

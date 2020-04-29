@@ -32,7 +32,7 @@ public:
     void evict(Register reg);
     void clear();
     void insertAt(const Arg& arg, Register reg);
-    
+    void parameter(const Arg& arg, int n);
 private:
     Register getNextAvailReg(const Arg& arg);
 };

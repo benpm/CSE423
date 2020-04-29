@@ -21,11 +21,21 @@ void CodeGenerator::genFunction(const Function& func)
     MemoryAllocator allocator(*this);
     allocator.stackSize = WORD_SIZE;
 
-    // Function label as well as saving / creating call frame
+    // Indicate function
     this->insert({fmt::format("# FUNCTION {}", func.name)});
+
+    // Populate memory allocator map with stack locations of parameters
+    int n = 2;
+    for (const Arg& param : func.parameters) {
+        allocator.parameter(param, n);
+        n += 1;
+    }
+
+    // Function label, create frame
     this->insert({fmt::format("{}:", func.name)});
     this->insert({Instruction::PUSH, {Register::rbp}});
     this->insert({Instruction::MOV, {Register::rsp, Register::rbp}});
+
     for (const BasicBlock& block : func.blocks) {
         // Jump label for this basic block
         this->insert({fmt::format(".{}.{}:", this->curFuncName, block.label)});
@@ -201,7 +211,7 @@ void CodeGenerator::genJUMP_LT(MemoryAllocator& allocator, const Statement& stmt
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
-    Instruction cmp{Instruction::CMP, {opA, opB}}; // cmp %opA, $opB | opA - opB
+    Instruction cmp{Instruction::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
     Instruction jmplt{Instruction::JL, {label}};   // jl label       | if opA - opB < 0
     
     this->insert(cmp);
@@ -216,7 +226,7 @@ void CodeGenerator::genJUMP_GT(MemoryAllocator& allocator, const Statement& stmt
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
-    Instruction cmp{Instruction::CMP, {opA, opB}}; // cmp %opA, $opB | opA - opB
+    Instruction cmp{Instruction::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
     Instruction jmpge{Instruction::JG, {label}};   // jg label       | if opA - opB > 0
     
     this->insert(cmp);
@@ -231,7 +241,7 @@ void CodeGenerator::genJUMP_LE(MemoryAllocator& allocator, const Statement& stmt
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
-    Instruction cmp{Instruction::CMP, {opA, opB}}; // cmp %opA, $opB | opA - opB
+    Instruction cmp{Instruction::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
     Instruction jmple{Instruction::JLE, {label}};  // jle label      | if opA - opB <= 0
     
     this->insert(cmp);
@@ -246,7 +256,7 @@ void CodeGenerator::genJUMP_GE(MemoryAllocator& allocator, const Statement& stmt
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
-    Instruction cmp{Instruction::CMP, {opA, opB}}; // cmp %opA, $opB | opA - opB
+    Instruction cmp{Instruction::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
     Instruction jmpge{Instruction::JGE, {label}};  // jge label      | if opA - opB >= 0
     
     this->insert(cmp);
@@ -261,7 +271,7 @@ void CodeGenerator::genJUMP_EQ(MemoryAllocator& allocator, const Statement& stmt
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
-    Instruction cmp{Instruction::CMP, {opA, opB}}; // cmp %opA, $opB | opA - opB
+    Instruction cmp{Instruction::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
     Instruction jmpneq{Instruction::JE, {label}};  // jle label      | if opA - opB == 0
     
     this->insert(cmp);
@@ -276,7 +286,7 @@ void CodeGenerator::genJUMP_NEQ(MemoryAllocator& allocator, const Statement& stm
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
-    Instruction cmp{Instruction::CMP, {opA, opB}}; // cmp %opA, $opB | opA - opB
+    Instruction cmp{Instruction::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
     Instruction jmpneq{Instruction::JNE, {label}}; // jle label      | if opA - opB != 0
     
     this->insert(cmp);
@@ -291,7 +301,7 @@ void CodeGenerator::genJUMP_IF_TRUE(MemoryAllocator& allocator, const Statement&
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
-    Instruction cmp{Instruction::CMP, {opA, opB}}; // cmp %opA, $opB | opA - opB
+    Instruction cmp{Instruction::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
     Instruction jmpnz{Instruction::JNZ, {label}};  // jnz label      | if opA - opB != 0
     
     this->insert(cmp);
@@ -306,7 +316,7 @@ void CodeGenerator::genJUMP_IF_FALSE(MemoryAllocator& allocator, const Statement
     InstrArg opA = allocator.getReg(stmt.args.at(1));
     InstrArg opB = allocator.getReg(stmt.args.at(2));
     
-    Instruction cmp{Instruction::CMP, {opA, opB}}; // cmp %opA, $opB | opA - opB
+    Instruction cmp{Instruction::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
     Instruction jmpnz{Instruction::JZ, {label}};   // jz label       | if opA - opB == 0
     
     this->insert(cmp);
@@ -320,12 +330,12 @@ void CodeGenerator::genRETURN(MemoryAllocator& allocator, const Statement& stmt)
     // Place return arg into %eax
     allocator.insertAt(stmt.args.at(0), Register::rax);
     // Restore old call frame
-    Instruction add{Instruction::ADD, {allocator.stackSize - WORD_SIZE, Register::rsp}};
-    Instruction mov{Instruction::MOV, {Register::rsp, Register::rbp}};
-    Instruction pop{Instruction::POP, {Register::rbp}};
-    this->insert(add);
-    this->insert(mov);
-    this->insert(pop);
+    this->insert({fmt::format("# stack size is {}", allocator.stackSize)});
+    // Move the stack pointer back to the base pointer
+    this->insert({Instruction::MOV, {Register::rbp, Register::rdx}});
+    this->insert({Instruction::SUB, {Register::rsp, Register::rdx}});
+    this->insert({Instruction::ADD, {Register::rdx, Register::rsp}});
+    this->insert({Instruction::POP, {Register::rbp}});
     // Add return instruction
     Instruction ret{Instruction::RET, {}};
     this->insert(ret);
