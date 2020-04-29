@@ -22,7 +22,7 @@ InstrArg MemoryAllocator::get(const Arg& arg)
 
     // If on stack, return offset(%ebp)
     if (this->stackOffsetMap.count(arg)) {
-        return InstrArg{Register::ebp, this->stackOffsetMap.at(arg)};
+        return InstrArg{Register::rbp, this->stackOffsetMap.at(arg)};
     }
 
     // If immediate return that immediate
@@ -51,7 +51,7 @@ InstrArg MemoryAllocator::getReg(const Arg& arg)
     if (this->stackOffsetMap.count(arg)) {
         int offset = this->stackOffsetMap.at(arg);
 
-        InstrArg src{Register::ebp, offset}; // offset(%ebp)
+        InstrArg src{Register::rbp, offset}; // offset(%ebp)
         InstrArg dest{openReg};              // %reg
         Instruction loadInstr(Instruction::MOV, {src, dest}); // mov offset(%ebp) %reg
 
@@ -95,7 +95,7 @@ void MemoryAllocator::save(const Arg& arg)
             int offset = this->stackOffsetMap.at(arg);
             // Move from register to location on stack
             InstrArg src{reg}; // %reg
-            InstrArg dest{Register::ebp, offset}; // offset(%ebp)
+            InstrArg dest{Register::rbp, offset}; // offset(%ebp)
             Instruction instr(Instruction::MOV, {src, dest}); // mov %reg, offset(%ebp)
             spdlog::debug("----> Restoring {} to {}", arg.toString(), dest.toString());
             codeGen.insert(instr);
@@ -108,7 +108,7 @@ void MemoryAllocator::save(const Arg& arg)
 
             this->codeGen.insert(instr);
             // Increase stack size member
-            this->stackSize += 4;
+            this->stackSize += WORD_SIZE;
         }
     } else {
         spdlog::error("Cannot save {}, arg not assigned a register", arg.toString());
@@ -191,7 +191,7 @@ void MemoryAllocator::insertAt(const Arg& arg, Register reg)
     if (this->stackOffsetMap.count(arg)) {
         int offset = this->stackOffsetMap.at(arg);
 
-        InstrArg src{Register::ebp, offset}; // offset(%ebp)
+        InstrArg src{Register::rbp, offset}; // offset(%ebp)
         InstrArg dest{reg};                  // %reg
         Instruction loadInstr(Instruction::MOV, {src, dest}); // mov offset(%ebp) %reg
 

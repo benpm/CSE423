@@ -19,13 +19,13 @@ void CodeGenerator::genFunction(const Function& func)
 {
     this->curFuncName = func.name;
     MemoryAllocator allocator(*this);
-    allocator.stackSize = 4;
+    allocator.stackSize = WORD_SIZE;
 
     // Function label as well as saving / creating call frame
     this->insert({fmt::format("# FUNCTION {}", func.name)});
     this->insert({fmt::format("{}:", func.name)});
-    this->insert({Instruction::PUSH, {Register::ebp}});
-    this->insert({Instruction::MOV, {Register::esp, Register::ebp}});
+    this->insert({Instruction::PUSH, {Register::rbp}});
+    this->insert({Instruction::MOV, {Register::rsp, Register::rbp}});
     for (const BasicBlock& block : func.blocks) {
         // Jump label for this basic block
         this->insert({fmt::format(".{}.{}:", this->curFuncName, block.label)});
@@ -100,17 +100,17 @@ void CodeGenerator::genMUL(MemoryAllocator& allocator, const Statement& stmt)
 void CodeGenerator::genDIV(MemoryAllocator& allocator, const Statement& stmt)
 {
     // Evict whatever was in %eax previously, saving it if needed, moving dividend in
-    allocator.insertAt(stmt.args.at(1), Register::eax);
+    allocator.insertAt(stmt.args.at(1), Register::rax);
     // Evict whatever was in %edx previously, saving it if needed, moving result (remainder) in
     InstrArg result = allocator.getReg(stmt.args.at(0));
     // Divisor is argument for idiv
     InstrArg arg = allocator.getReg(stmt.args.at(2));
     // Clear %edx
-    allocator.evict(Register::edx);
+    allocator.evict(Register::rdx);
     // Division instruction (%eax(arg1)/arg(arg2))
     Instruction idivInstr{Instruction::IDIV, {arg}}; // idiv %arg
     // Move instruction
-    Instruction movInstr{Instruction::MOV, {{Register::eax}, result}, "save quotient"};
+    Instruction movInstr{Instruction::MOV, {{Register::rax}, result}, "save quotient"};
 
     this->insert(idivInstr);
     this->insert(movInstr);
@@ -141,17 +141,17 @@ void CodeGenerator::genSUB(MemoryAllocator& allocator, const Statement& stmt)
 void CodeGenerator::genMOD(MemoryAllocator& allocator, const Statement& stmt)
 {
     // Evict whatever was in %eax previously, saving it if needed, moving dividend in
-    allocator.insertAt(stmt.args.at(1), Register::eax);
+    allocator.insertAt(stmt.args.at(1), Register::rax);
     // Evict whatever was in %edx previously, saving it if needed, moving result (remainder) in
     InstrArg result = allocator.getReg(stmt.args.at(0));
     // Divisor is argument for idiv
     InstrArg arg = allocator.getReg(stmt.args.at(2));
     // Clear %edx
-    allocator.evict(Register::edx);
+    allocator.evict(Register::rdx);
     // Division instruction (%eax(arg1)/arg(arg2))
     Instruction idivInstr{Instruction::IDIV, {arg}}; // idiv %arg
     // Move instruction
-    Instruction movInstr{Instruction::MOV, {{Register::edx}, result}, "save remainder"};
+    Instruction movInstr{Instruction::MOV, {{Register::rdx}, result}, "save remainder"};
 
     this->insert(idivInstr);
     this->insert(movInstr);
@@ -318,11 +318,11 @@ void CodeGenerator::genJUMP_IF_FALSE(MemoryAllocator& allocator, const Statement
 void CodeGenerator::genRETURN(MemoryAllocator& allocator, const Statement& stmt)
 {
     // Place return arg into %eax
-    allocator.insertAt(stmt.args.at(0), Register::eax);
+    allocator.insertAt(stmt.args.at(0), Register::rax);
     // Restore old call frame
-    Instruction add{Instruction::ADD, {allocator.stackSize, Register::esp}};
-    Instruction mov{Instruction::MOV, {Register::esp, Register::ebp}};
-    Instruction pop{Instruction::POP, {Register::ebp}};
+    Instruction add{Instruction::ADD, {allocator.stackSize - WORD_SIZE, Register::rsp}};
+    Instruction mov{Instruction::MOV, {Register::rsp, Register::rbp}};
+    Instruction pop{Instruction::POP, {Register::rbp}};
     this->insert(add);
     this->insert(mov);
     this->insert(pop);
@@ -338,7 +338,7 @@ void CodeGenerator::genCALL(MemoryAllocator& allocator, const Statement& stmt)
     int argsSize = 0;
     for (auto it = stmt.args.rbegin(); it < stmt.args.rend() - 2; it++) {
         this->insert({Instruction::PUSH, {allocator.get(*it)}});
-        argsSize += 4;
+        argsSize += WORD_SIZE;
     }
     // Clear all registers (including %eax)
     allocator.clear();
@@ -349,7 +349,7 @@ void CodeGenerator::genCALL(MemoryAllocator& allocator, const Statement& stmt)
     this->insert(callInstr);
     // Remove call arguments from frame
     if (argsSize > 0) {
-        Instruction addInstr{Instruction::ADD, {argsSize, Register::esp}};
+        Instruction addInstr{Instruction::ADD, {argsSize, Register::rsp}};
         this->insert(addInstr);
     }
     // Save out result

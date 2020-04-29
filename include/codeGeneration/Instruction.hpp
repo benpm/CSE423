@@ -9,13 +9,14 @@
 // When adding registers, make sure to update USABLE_REGS
 // The size of regOccupied should be the number of registers we can USE (i.e. we cannut "USE" ebp/esp/pc)
 #define USABLE_REGS 4
+#define WORD_SIZE 8
 enum Register {
     // Usable registers
-    eax, ebx, ecx, edx,
+    rax, rbx, rcx, rdx,
     // Unusable registers
     no_reg,
-    esp = 126,
-    ebp = 127
+    rsp = 126,
+    rbp = 127
 };
 
 class InstrArg
