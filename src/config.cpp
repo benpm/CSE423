@@ -26,7 +26,7 @@ Config::Config(int argc, char **argv)
     this->setupLogger();
 
     int opt;
-    while ((opt = getopt(argc, argv, "lhtapsroi:c:")) != -1) {
+    while ((opt = getopt(argc, argv, "lhtapsSdroi:c:")) != -1) {
         switch (opt) {
         // Print usage message
         case 'h':
@@ -63,9 +63,20 @@ Config::Config(int argc, char **argv)
         case 'o':
             this->optimize = true;
             break;
+        // Print the program intermediate representation
+        case 'S':
+            this->printASM = true;
+            break;
+        // Optimizes IR before printing
+        case 'd':
+            this->printDebug = true;
+            spdlog::set_level(spdlog::level::debug);
+            break;
+        // Input IR CSV file
         case 'i':
             this->inputCSV = optarg;
             break;
+        // Output IR CSV file
         case 'c':
             this->outputCSV = optarg;
             break;
@@ -79,6 +90,18 @@ Config::Config(int argc, char **argv)
         }
     }
 
+    if (!this->printTokens
+        && !this->printAST
+        && !this->printParseTree
+        && !this->printSymbolTable
+        && !this->printIR
+        && !this->printASM
+        && this->outputCSV.empty()) {
+        spdlog::warn("You must specify at least one output flag! Exiting.");
+        this->usage(argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
     if (this->printTokens)
         spdlog::info("Token printing enabled");
     if (this->printAST)
@@ -90,7 +113,11 @@ Config::Config(int argc, char **argv)
     if (this->printIR)
         spdlog::info("IR printing enabled");
     if (this->optimize)
-        spdlog::info("optimizer enabled");
+        spdlog::info("Optimizer enabled");
+    if (this->printASM)
+        spdlog::info("Assembly code gen enabled");
+    if (this->printDebug)
+        spdlog::info("Debug messages enabled");
     if (!this->inputCSV.empty())
         spdlog::info("IR input enabled");
     if (!this->outputCSV.empty())
@@ -116,7 +143,7 @@ Config::Config(int argc, char **argv)
  *
  */
 void Config::usage(std::string exec_name) {
-    std::cout << "Usage: " << exec_name << " [FILE_TO_PARSE] [-htpasrl]"
+    std::cout << "Usage: " << exec_name << " [FILE_TO_PARSE] [-htpasrlSd]"
                                            "[-i INPUT_CSV] [-c OUTPUT_CSV]" << std::endl;
     std::cout << "  -h\t Print this help message" << std::endl
               << "  -t\t Print the tokens found in the file" << std::endl
@@ -125,6 +152,8 @@ void Config::usage(std::string exec_name) {
               << "  -s\t Print the symbol table" << std::endl
               << "  -r\t Print the IR" << std::endl
               << "  -o\t Enable IR optimizer" << std::endl
+              << "  -S\t Generate and print assembly output" << std::endl
+              << "  -d\t Enable debug messages" << std::endl
               << "  -i\t Use the CSV representation of an IR as input program" << std::endl
               << "  -c\t Output the IR to a CSV file" << std::endl
               << "  -l\t Hide logging messages (except errors)" << std::endl;
@@ -134,6 +163,6 @@ void Config::setupLogger()
 {
     // Logging configuration    
     spdlog::set_default_logger(spdlog::stderr_color_st("console"));
-    spdlog::set_level(spdlog::level::debug);
+    spdlog::set_level(spdlog::level::info);
     spdlog::set_pattern("[%^%l%$] %v");
 }

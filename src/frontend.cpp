@@ -37,6 +37,12 @@ int main(int argc, char **argv)
         // Create IR program
         Program program(ast);
 
+        // Optimize IR program
+        if (config.optimize) {
+            Optimizer optimizer;
+            optimizer.optimize(program);
+        }
+
         if (config.printSymbolTable) {
             spdlog::info("Symbol table:");
             symbolTable.print();
@@ -53,18 +59,25 @@ int main(int argc, char **argv)
             spdlog::info("IR output as CSV to {}", config.outputCSV);
             program.outputToFile(config.outputCSV);
         }
-        if (config.optimize) {
-            Optimizer optimizer;
-            optimizer.optimize(program);
-        }
         if (config.printIR) {
             spdlog::info("IR:");
             program.print();
         }
-
-        CodeGenerator codeGenerator(program);
+        if (config.printASM) {
+            // Generate assembly code
+            CodeGenerator codeGenerator(program, config.printDebug);
+            spdlog::info("x86_64 Assembly Output:");
+            if (!config.printDebug) {
+                codeGenerator.print();
+            }
+        }
     } else {
+        // Load IR program from CSV
         Program program(config.inputCSV);
+        if (config.optimize) {
+            Optimizer optimizer;
+            optimizer.optimize(program);
+        }
 
         if (config.printSymbolTable)
             spdlog::info("IR as input, ignoring symbol table print flag");
@@ -79,6 +92,11 @@ int main(int argc, char **argv)
         if (config.printIR) {
             spdlog::info("IR:");
             program.print();
+        }
+        if (config.printASM) {
+            CodeGenerator codeGenerator(program, config.printDebug);
+            spdlog::info("x86_64 Assembly Output:");
+            codeGenerator.print();
         }
     }
 

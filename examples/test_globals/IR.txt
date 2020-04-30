@@ -1,0 +1,41 @@
+ BB4294967295 [globals]
+  │(1) <[int][MUL], (int)#0, 2, 3>
+  │(1) <[int][ADD], (int)v, 1, (int)#0>
+  │(2) <[int][MUL], (int)#0, 12, 6>
+  │(2) <[int][DIV], (int)x, 7, (int)#0>
+  │(3) <[int][ASSIGN], (int)z, 13>
+  └────────────────────
+
+fun()
+  BB0 [combined]
+  │(7) <[int][ADD], (int)v, (int)v, 9>
+  │(8) <[int][ADD], (int)#0, 1, (int)v>
+  │(8) <[int][ADD], (int)x, (int)x, (int)#0>
+  │(9) <[int][ADD], (int)#0, 3, (int)x>
+  │(9) <[int][ADD], (int)z, (int)z, (int)#0>
+  │(10) <[int][RETURN], (int)v>
+  └────────────────────
+
+main()
+  BB0 [combined]
+  │(15) <[int][ADD], (int)v, (int)v, 2>
+  │(16) <[int][ASSIGN], (int)x, 3>
+  │(17) <[int][ASSIGN], (int)i, 0>
+  └────────────────────
+  BB3 [lt]
+  │(17) <[JUMP_LT], <4>, (int)i, 7>
+  │(17) <[JUMP], <6>>
+  └────────────────────
+  BB4 [combined]
+  │(18) <[int][CALL], (int)#0, (int)fun>
+  │(18) <[int][ADD], (int)x, (int)x, (int)#0>
+  │(17) <[int][ADD], (int)i, (int)i, 1>
+  │(17) <[JUMP], <3>>
+  └────────────────────
+  BB6 [return_stmt]
+  │(20) <[int][ADD], (int)#0, (int)v, (int)x>
+  │(20) <[int][ADD], (int)#1, (int)#0, (int)z>
+  │(20) <[int][RETURN], (int)#1>
+  └────────────────────
+
+

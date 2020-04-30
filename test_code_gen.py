@@ -8,7 +8,7 @@ green = '\033[92m'
 
 def compile_sc64(path, silent=True):
     failed = 0
-    failed += run_command(f"./build/sc64 -l {path} tmpSC64.s > tmpSC64.s", stdout=None)
+    failed += run_command(f"./build/sc64 -Sl {path} tmpSC64.s > tmpSC64.s", stdout=None)
     failed += run_command("gcc -c tmpSC64.s -o tmpSC64.o")
     failed += run_command("gcc tmpSC64.o -o tmpSC64")
     print(f"{red} FAILED!{stop}" if failed != 0 else f"{green} DONE!{stop}")

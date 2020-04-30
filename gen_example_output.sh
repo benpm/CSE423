@@ -17,6 +17,8 @@ compilerFlags=(
     s # Symbol Table
     r # IR
     or # Optimization
+    S # Assembly
+    oS # Optimized assembly
 )
 compilerFlagNames=(
     tokens
@@ -25,6 +27,8 @@ compilerFlagNames=(
     symbolTable
     IR
     optimization
+    assembly
+    optimized_assembly
 )
 
 # IR CSV flag

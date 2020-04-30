@@ -4,8 +4,9 @@
 #include <unordered_set>
 #include <iostream>
 
-CodeGenerator::CodeGenerator(const Program& program)
+CodeGenerator::CodeGenerator(const Program& program, bool printDebug)
 {
+    this->printDebug = printDebug;
     // <-- Insert program header stuff HERE
     this->insert({".text"});
     this->insert({".globl main"});
@@ -376,10 +377,12 @@ void CodeGenerator::genNO_OP(MemoryAllocator& allocator, const Statement& stmt)
 void CodeGenerator::insert(const Instruction& instr)
 {
     this->instrs.push_back(instr);
-    std::cout << instr.toString() << std::endl;
+    if (this->printDebug) {
+        fmt::print(instr.toString() + "\n");
+    }
 }
 
-void CodeGenerator::printInstructs()
+void CodeGenerator::print()
 {
     for (const Instruction& instr : this->instrs)
     {

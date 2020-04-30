@@ -1,0 +1,49 @@
+ BB4294967295 [globals]
+  └────────────────────
+
+main()
+  BB0 [combined]
+  │(3) <[int][ASSIGN], (int)x, 3>
+  │(4) <[int][ASSIGN], (int)i, 0>
+  └────────────────────
+  BB2 [lt]
+  │(4) <[JUMP_LT], <3>, (int)i, 13>
+  │(4) <[JUMP], <14>>
+  └────────────────────
+  BB3 [combined]
+  │(5) <[int][MUL], (int)#0, (int)x, (int)i>
+  │(5) <[int][ADD], (int)x, (int)x, (int)#0>
+  │(6) <[int][ASSIGN], (int)j, 0>
+  └────────────────────
+  BB5 [lt]
+  │(6) <[JUMP_LT], <6>, (int)j, 56>
+  │(6) <[JUMP], <13>>
+  └────────────────────
+  BB6 [combined]
+  │(7) <[int][ASSIGN], (int)z, 2>
+  │(8) <[int][MINUS], (int)x, (int)x, (int)j>
+  └────────────────────
+  BB8 [lt]
+  │(9) <[JUMP_LT], <9>, (int)z, 100>
+  │(9) <[JUMP], <11>>
+  └────────────────────
+  BB9 [combined]
+  │(10) <[int][MUL], (int)#0, (int)x, (int)x>
+  │(10) <[int][ADD], (int)z, (int)z, (int)#0>
+  │(9) <[JUMP], <8>>
+  └────────────────────
+  BB11 [combined]
+  │(12) <[int][MOD], (int)#0, (int)z, (int)j>
+  │(12) <[int][ADD], (int)x, (int)x, (int)#0>
+  │(6) <[int][ADD], (int)j, (int)j, 2>
+  │(6) <[JUMP], <5>>
+  └────────────────────
+  BB13 [for_post]
+  │(4) <[int][ADD], (int)i, (int)i, 1>
+  │(4) <[JUMP], <2>>
+  └────────────────────
+  BB14 [return_stmt]
+  │(15) <[int][RETURN], (int)x>
+  └────────────────────
+
+

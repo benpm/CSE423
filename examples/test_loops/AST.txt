@@ -1,0 +1,71 @@
+root
+ └─[0] dec_list
+   └─[1] function
+     ├─[1] int_type
+     ├─[1] id (main)
+     ├─[1] params
+     ├─[1] dec_list
+     │ └─[1] declaration
+     │   ├─[1] int_type
+     │   └─[1] assignment
+     │     ├─[1] id (x)
+     │     └─[1] int_const (3)
+     └─[2] list
+       ├─[3] for_stmt
+       │ ├─[3] declaration
+       │ │ ├─[3] int_type
+       │ │ └─[3] assignment
+       │ │   ├─[3] id (i)
+       │ │   └─[3] int_const (0)
+       │ ├─[3] lt
+       │ │ ├─[3] id (i)
+       │ │ └─[3] int_const (13)
+       │ ├─[3] incr
+       │ │ └─[3] id (i)
+       │ ├─[4] dec_list
+       │ └─[4] list
+       │   ├─[4] plus_equal
+       │   │ ├─[4] id (x)
+       │   │ └─[4] mul
+       │   │   ├─[4] id (x)
+       │   │   └─[4] id (i)
+       │   └─[5] for_stmt
+       │     ├─[5] declaration
+       │     │ ├─[5] int_type
+       │     │ └─[5] assignment
+       │     │   ├─[5] id (j)
+       │     │   └─[5] int_const (0)
+       │     ├─[5] lt
+       │     │ ├─[5] id (j)
+       │     │ └─[5] int_const (56)
+       │     ├─[5] plus_equal
+       │     │ ├─[5] id (j)
+       │     │ └─[5] int_const (2)
+       │     ├─[6] dec_list
+       │     │ └─[6] declaration
+       │     │   ├─[6] int_type
+       │     │   └─[6] assignment
+       │     │     ├─[6] id (z)
+       │     │     └─[6] int_const (2)
+       │     └─[6] list
+       │       ├─[6] minus_equal
+       │       │ ├─[6] id (x)
+       │       │ └─[6] id (j)
+       │       ├─[7] while_stmt
+       │       │ ├─[7] lt
+       │       │ │ ├─[7] id (z)
+       │       │ │ └─[7] int_const (100)
+       │       │ ├─[8] dec_list
+       │       │ └─[8] list
+       │       │   └─[8] plus_equal
+       │       │     ├─[8] id (z)
+       │       │     └─[8] mul
+       │       │       ├─[8] id (x)
+       │       │       └─[8] id (x)
+       │       └─[6] plus_equal
+       │         ├─[6] id (x)
+       │         └─[6] modulo
+       │           ├─[6] id (z)
+       │           └─[6] id (j)
+       └─[2] return_stmt
+         └─[2] id (x)

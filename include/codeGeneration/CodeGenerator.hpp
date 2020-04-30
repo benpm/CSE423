@@ -9,6 +9,7 @@ class CodeGenerator
 {
 private:
     std::string curFuncName;
+    bool printDebug;
 
     void genFunction(const Function& func);
     void genStatement(MemoryAllocator& allocator, const Statement& stmt);
@@ -33,9 +34,9 @@ private:
     void genNO_OP(MemoryAllocator& allocator, const Statement& stmt);
 public:
     std::vector<Instruction> instrs;
-    CodeGenerator(const Program& program);
+    CodeGenerator(const Program& program, bool printDebug);
 
     void insert(const Instruction& instr);
 
-    void printInstructs();
+    void print();
 };

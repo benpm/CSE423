@@ -1,0 +1,24 @@
+ BB4294967295 [globals]
+  └────────────────────
+
+refun((int)x, )
+  BB0 [combined]
+  │(2) <[int][ADD], (int)x, (int)x, 3>
+  │(3) <[JUMP_LT], <2>, (int)x, 1239>
+  │(3) <[JUMP], <3>>
+  └────────────────────
+  BB2 [call]
+  │(4) <[int][MUL], (int)#0, (int)x, 2>
+  │(4) <[int][CALL], (int)#1, refun, (int)#0>
+  └────────────────────
+  BB3 [return_stmt]
+  │(6) <[int][RETURN], (int)x>
+  └────────────────────
+
+main()
+  BB0 [return_stmt]
+  │(11) <[int][CALL], (int)#0, refun, 1>
+  │(11) <[int][RETURN], (int)#0>
+  └────────────────────
+
+
