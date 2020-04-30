@@ -223,6 +223,12 @@ size_t SymbolTable::getDepth()
     return depth;
 }
 
+/**
+ * Get a pointer to a Symbol, searching up the tree if necessary
+ * 
+ * @param name The name of symbol
+ * @return A Symbol pointer, or nullptr if not found
+ */
 Symbol *SymbolTable::getSymbol(const char *name)
 {
     SymbolTable* table = this;
@@ -235,7 +241,7 @@ Symbol *SymbolTable::getSymbol(const char *name)
 }
 
 /**
- * @brief Get the Symbol Type of the name, searching up the tree if necessary
+ * Get the Symbol Type of the name, searching up the tree if necessary
  * 
  * @param name The name of symbol
  * @return Symbol::Type The type of the symbol
