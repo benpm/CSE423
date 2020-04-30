@@ -15,14 +15,14 @@ compilerFlags=(
     oS # Optimized assembly
 )
 compilerFlagNames=(
-    tokens
-    parseTree
-    AST
-    symbolTable
-    IR
-    optimization
-    assembly
-    optimized_assembly
+    tokens.txt
+    parseTree.txt
+    AST.txt
+    symbolTable.txt
+    IR.txt
+    optimization.txt
+    assembly.s
+    optimized_assembly.s
 )
 
 csvFlag=c
@@ -57,7 +57,7 @@ do
     do 
         flag=${compilerFlags[i]}
         flagName=${compilerFlagNames[i]}
-        outName=$dir/$flagName.txt
+        outName=$dir/$flagName
 
         printf "\tDiffing %s... " $flagName
 
