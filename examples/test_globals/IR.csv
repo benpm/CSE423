@@ -1,8 +1,6 @@
 BB,4294967295,globals
-stmt,1,int,MUL,int #0,2,3
-stmt,1,int,ADD,int v,1,int #0
-stmt,2,int,MUL,int #0,12,6
-stmt,2,int,DIV,int x,7,int #0
+stmt,1,int,ASSIGN,int v,7
+stmt,2,int,ASSIGN,int x,0
 stmt,3,int,ASSIGN,int z,13
 func,fun
 BB,0,combined

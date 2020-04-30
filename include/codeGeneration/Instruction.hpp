@@ -11,10 +11,11 @@
 #define USABLE_REGS 4
 #define WORD_SIZE 8
 enum Register {
-    // Usable registers
+    // General registers
     rax, rbx, rcx, rdx,
-    // Unusable registers
+    // Special registers
     no_reg,
+    rip = 125,
     rsp = 126,
     rbp = 127
 };
@@ -28,7 +29,8 @@ public:
         char,          // Character immediate
         std::string,   // Label/function name
         Register,      // Register
-        std::pair<Register, int> // Mem address with offset i.e. -12(%ebp)
+        std::pair<Register, int>, // Mem address with offset i.e. -12(%rbp)
+        std::pair<Register, std::string> // Mem address with labeled offset i.e. foo(%rbp)
     > arg;
 
     std::string toString() const;
@@ -38,6 +40,7 @@ public:
         case Arg::FLOAT: this->arg = arg.val.fval; break;
         case Arg::INT:   this->arg = arg.val.ival; break;
         case Arg::CHAR:  this->arg = arg.val.cval; break;
+        case Arg::NAME:  this->arg = arg.val.sval; break;
         default:
             spdlog::error("Cannot handle given immediate arg type"); exit(EXIT_FAILURE);
             break;
@@ -49,6 +52,7 @@ public:
     InstrArg(std::string label)        {this->arg = label;};
     InstrArg(Register reg)             {this->arg = reg;};
     InstrArg(Register reg, int offset) {this->arg = std::pair<Register, int>{reg, offset};};
+    InstrArg(Register reg, std::string offset) {this->arg = std::pair<Register, std::string>{reg, offset};};
 };
 
 class Instruction

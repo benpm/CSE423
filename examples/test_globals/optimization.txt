@@ -1,8 +1,6 @@
  BB4294967295 [globals]
-  │(1) <[int][MUL], (int)#0, 2, 3>
-  │(1) <[int][ADD], (int)v, 1, (int)#0>
-  │(2) <[int][MUL], (int)#0, 12, 6>
-  │(2) <[int][DIV], (int)x, 7, (int)#0>
+  │(1) <[int][ASSIGN], (int)v, 7>
+  │(2) <[int][ASSIGN], (int)x, 0>
   │(3) <[int][ASSIGN], (int)z, 13>
   └────────────────────
 

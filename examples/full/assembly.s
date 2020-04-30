@@ -1,6 +1,18 @@
+.globl globA
+.data
+.align 8
+.type globA, @object
+.size globA, 8
+globA: .quad 3
+.globl globB
+.data
+.align 8
+.type globB, @object
+.size globB, 8
+globB: .quad 4
 .text
-.globl main
-.type main, @function
+.globl fun
+.type fun, @function
 # FUNCTION fun
 # param (float)V at 16(%rbp)
 # param (float)XKAD at 24(%rbp)
@@ -28,6 +40,9 @@ fun:
 	add %rdx, %rsp
 	pop %rbp
 	ret 
+.text
+.globl main
+.type main, @function
 # FUNCTION main
 main:
 	push %rbp
@@ -81,7 +96,7 @@ main:
 	mov %rcx, %rax
 	push %rax
 # (16) <[float][MUL], (float)DF, 0.800000, (int)n2>
-	mov $0.8, %rbx
+	mov $0.800000, %rbx
 	mov -40(%rbp), %rcx
 	imul %rbx, %rcx
 	mov %rcx, %rax
@@ -224,7 +239,7 @@ main:
 	jmp .main.6
 .main.23:
 # (36) <[float][MUL], (float)#0, 0.101000, 2>
-	mov $0.101, %rbx
+	mov $0.101000, %rbx
 	mov $2, %rcx
 	imul %rbx, %rcx
 	mov %rcx, %rax
@@ -236,7 +251,7 @@ main:
 	add $16, %rsp
 	push %rax
 # (36) <[float][CALL], (float)DF, fun, (float)#1, 0.900000>
-	push $0.9
+	push $0.900000
 	push -128(%rbp)
 	mov -56(%rbp), %rax
 	call fun
@@ -245,12 +260,14 @@ main:
 # (39) <[float][MUL], (float)#0, (float)DF, (int)globA>
 	mov -120(%rbp), %rax
 	mov -56(%rbp), %rbx
+	mov globA(%rip), %rcx
 	imul %rbx, %rcx
 	mov %rcx, %rax
 	mov %rax, -120(%rbp)
 # (39) <[float][MUL], (float)DF, (float)#0, (int)globB>
 	mov -56(%rbp), %rax
 	mov -120(%rbp), %rbx
+	mov globB(%rip), %rcx
 	imul %rbx, %rcx
 	mov %rcx, %rax
 	mov %rax, -56(%rbp)
@@ -262,7 +279,7 @@ main:
 	mov %rax, -120(%rbp)
 # (41) <[float][SUB], (float)#1, 0.800000, (float)#0>
 	mov -128(%rbp), %rax
-	mov $0.8, %rbx
+	mov $0.800000, %rbx
 	mov -120(%rbp), %rcx
 	sub %rcx, %rbx
 	mov %rbx, %rax
@@ -333,7 +350,7 @@ main:
 .main.36:
 # (48) <[float][MINUS], (float)#0, 0.600000>
 	mov -120(%rbp), %rax
-	mov $0.6, %rbx
+	mov $0.600000, %rbx
 	neg %rbx
 	mov %rbx, %rax
 	mov %rax, -120(%rbp)
@@ -345,7 +362,7 @@ main:
 	mov %rax, -56(%rbp)
 # (49) <[JUMP_EQ], <38>, (float)DF, 0.000000>
 	mov -56(%rbp), %rax
-	mov $0, %rbx
+	mov $0.000000, %rbx
 	cmp %rbx, %rax
 	je .main.38
 # (49) <[JUMP], <39>>
@@ -353,7 +370,7 @@ main:
 .main.38:
 # (50) <[float][ASSIGN], (float)DF, 1.010000>
 	mov -56(%rbp), %rax
-	mov $1.01, %rbx
+	mov $1.010000, %rbx
 	mov %rbx, %rax
 	mov %rax, -56(%rbp)
 .main.39:

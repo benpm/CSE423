@@ -10,6 +10,7 @@
 #include <sstream>
 #include <string>
 #include <ir/program.hpp>
+#include <optimizer.hpp>
 #include <spdlog/spdlog.h>
 
 /**
@@ -31,6 +32,11 @@ Program::Program(const AST& ast) : globals(0, -1, "globals")
             globals.expand(child->children[1]);
         }
     }
+
+    // Force globals block to be single constant assignment only
+    // This is expected by the code generator!
+    Optimizer optimizer;
+    optimizer.optimize(globals);
 
     spdlog::info("IR building done");
 }

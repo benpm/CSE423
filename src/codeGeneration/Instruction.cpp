@@ -15,12 +15,18 @@ std::string InstrArg::toString() const
             memLoc.second,
             magic_enum::enum_name(memLoc.first)
         );
+    } else if (std::holds_alternative<std::pair<Register, std::string>>(this->arg)) {
+        std::pair<Register, std::string> memLoc = std::get<std::pair<Register, std::string>>(this->arg);
+        return fmt::format("{}(%{})", 
+            memLoc.second,
+            magic_enum::enum_name(memLoc.first)
+        );
     } else if (std::holds_alternative<int>(this->arg)) {
         int imm = std::get<int>(this->arg);
         return fmt::format("${}", imm);
     } else if (std::holds_alternative<float>(this->arg)) {
         float imm = std::get<float>(this->arg);
-        return fmt::format("${}", imm);
+        return fmt::format("${:f}", imm);
     } else if (std::holds_alternative<char>(this->arg)) {
         char imm = std::get<char>(this->arg);
         return fmt::format("${}", imm);

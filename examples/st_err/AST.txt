@@ -32,14 +32,19 @@ root
      ├─[1] int_type
      ├─[1] id (main)
      ├─[1] params
-     └─[1] dec_list
-       ├─[1] declaration
-       │ ├─[1] int_type
-       │ └─[1] assignment
-       │   ├─[1] id (g)
-       │   └─[1] int_const (3)
-       └─[1] declaration
-         ├─[1] int_type
-         └─[1] assignment
-           ├─[1] id (h)
-           └─[1] int_const (3)
+     ├─[1] dec_list
+     │ ├─[1] declaration
+     │ │ ├─[1] int_type
+     │ │ └─[1] assignment
+     │ │   ├─[1] id (g)
+     │ │   └─[1] int_const (3)
+     │ └─[1] declaration
+     │   ├─[1] int_type
+     │   └─[1] assignment
+     │     ├─[1] id (h)
+     │     └─[1] int_const (3)
+     └─[2] list
+       └─[2] return_stmt
+         └─[2] sum
+           ├─[2] id (g)
+           └─[2] id (h)

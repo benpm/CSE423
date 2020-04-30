@@ -6,4 +6,5 @@ int main()
 {
     int g = 3;
     int h = 3;
+    return g + h;
 }

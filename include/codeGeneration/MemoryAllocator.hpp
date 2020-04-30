@@ -19,8 +19,8 @@ public:
     int stackSize = 0; // Used to determine offset
 
 	std::vector<bool> regOccupied;               // Indexed by register enum
-	std::unordered_map<Arg, Register, ArgHash> regMap;   // Maps name to occupied register
-	std::unordered_map<Arg, int, ArgHash> stackOffsetMap;   // Maps name to offset in stack
+	std::unordered_map<Arg, InstrArg, ArgHash> regMap;   // Maps name to occupied register
+	std::unordered_map<Arg, InstrArg, ArgHash> storageMap;   // Maps name to offset in stack
 
     MemoryAllocator(CodeGenerator& codeGen);
 

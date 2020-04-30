@@ -1,6 +1,18 @@
+.globl globA
+.data
+.align 8
+.type globA, @object
+.size globA, 8
+globA: .quad 3
+.globl globB
+.data
+.align 8
+.type globB, @object
+.size globB, 8
+globB: .quad 4
 .text
-.globl main
-.type main, @function
+.globl fun
+.type fun, @function
 # FUNCTION fun
 # param (float)V at 16(%rbp)
 # param (float)XKAD at 24(%rbp)
@@ -28,6 +40,9 @@ fun:
 	add %rdx, %rsp
 	pop %rbp
 	ret 
+.text
+.globl main
+.type main, @function
 # FUNCTION main
 main:
 	push %rbp
@@ -42,7 +57,7 @@ main:
 	mov %rbx, %rax
 	push %rax
 # (16) <[float][ASSIGN], (float)DF, 64.800003>
-	mov $64.8, %rbx
+	mov $64.800003, %rbx
 	mov %rbx, %rax
 	push %rax
 # (17) <[char][ASSIGN], (char)G, 'G'>
@@ -173,13 +188,13 @@ main:
 	jmp .main.6
 .main.23:
 # (36) <[float][CALL], (float)#1, fun, (float)DF, 0.202000>
-	push $0.202
+	push $0.202000
 	push -24(%rbp)
 	call fun
 	add $16, %rsp
 	push %rax
 # (36) <[float][CALL], (float)DF, fun, (float)#1, 0.900000>
-	push $0.9
+	push $0.900000
 	push -88(%rbp)
 	mov -24(%rbp), %rax
 	call fun
@@ -187,12 +202,14 @@ main:
 	mov %rax, -24(%rbp)
 # (39) <[float][MUL], (float)#0, (float)DF, (int)globA>
 	mov -24(%rbp), %rbx
+	mov globA(%rip), %rcx
 	imul %rbx, %rcx
 	mov %rcx, %rax
 	push %rax
 # (39) <[float][MUL], (float)DF, (float)#0, (int)globB>
 	mov -24(%rbp), %rax
 	mov -96(%rbp), %rbx
+	mov globB(%rip), %rcx
 	imul %rbx, %rcx
 	mov %rcx, %rax
 	mov %rax, -24(%rbp)
@@ -204,7 +221,7 @@ main:
 	mov %rax, -96(%rbp)
 # (41) <[float][SUB], (float)#1, 0.800000, (float)#0>
 	mov -88(%rbp), %rax
-	mov $0.8, %rbx
+	mov $0.800000, %rbx
 	mov -96(%rbp), %rcx
 	sub %rcx, %rbx
 	mov %rbx, %rax
@@ -275,13 +292,13 @@ main:
 .main.36:
 # (48) <[float][ADD], (float)DF, (float)DF, -0.600000>
 	mov -24(%rbp), %rax
-	mov $-0.6, %rbx
+	mov $-0.600000, %rbx
 	add %rax, %rbx
 	mov %rbx, %rax
 	mov %rax, -24(%rbp)
 # (49) <[JUMP_EQ], <38>, (float)DF, 0.000000>
 	mov -24(%rbp), %rax
-	mov $0, %rbx
+	mov $0.000000, %rbx
 	cmp %rbx, %rax
 	je .main.38
 # (49) <[JUMP], <39>>

@@ -1,6 +1,6 @@
 .text
-.globl main
-.type main, @function
+.globl refun
+.type refun, @function
 # FUNCTION refun
 # param (int)x at 16(%rbp)
 refun:
@@ -41,6 +41,9 @@ refun:
 	add %rdx, %rsp
 	pop %rbp
 	ret 
+.text
+.globl main
+.type main, @function
 # FUNCTION main
 main:
 	push %rbp

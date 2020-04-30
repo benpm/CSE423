@@ -7,20 +7,41 @@
 CodeGenerator::CodeGenerator(const Program& program, bool printDebug)
 {
     this->printDebug = printDebug;
-    // <-- Insert program header stuff HERE
-    this->insert({".text"});
-    this->insert({".globl main"});
-    this->insert({".type main, @function"});
+
+    // Insert globals into data section (from a block of assignments, ass for short)
+    for (const Statement& ass : program.globals.statements) {
+        const std::string name = ass.args.at(0).val.sval;
+        const Arg& value = ass.args.at(1);
+        this->insert({fmt::format(".globl {}", name)});
+        this->insert({".data"});
+        this->insert({fmt::format(".align 8", name)});
+        this->insert({fmt::format(".type {}, @object", name)});
+        this->insert({fmt::format(".size {}, 8", name)});
+        this->insert({fmt::format("{}: .quad {}", name, value.toString())});
+    }
+
+    // Generate code for functions
     for (const auto& pair : program.functions) {
-        this->genFunction(pair.second);
+        this->insert({".text"});
+        this->insert({fmt::format(".globl {}", pair.first)});
+        this->insert({fmt::format(".type {}, @function", pair.first)});
+        this->genFunction(program, pair.second);
     }
 }
 
-void CodeGenerator::genFunction(const Function& func)
+void CodeGenerator::genFunction(const Program& program, const Function& func)
 {
     this->curFuncName = func.name;
     MemoryAllocator allocator(*this);
     allocator.stackSize = WORD_SIZE;
+
+    // Insert globals (from a block of assignments, ass for short)
+    for (const Statement& ass : program.globals.statements) {
+        allocator.storageMap.emplace(ass.args.at(0), InstrArg{
+            Register::rip,
+            std::string(ass.args.at(0).val.sval)
+        });
+    }
 
     // Indicate function
     this->insert({fmt::format("# FUNCTION {}", func.name)});

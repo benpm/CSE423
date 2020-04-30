@@ -11,7 +11,7 @@ private:
     std::string curFuncName;
     bool printDebug;
 
-    void genFunction(const Function& func);
+    void genFunction(const Program& program, const Function& func);
     void genStatement(MemoryAllocator& allocator, const Statement& stmt);
     void genADD(MemoryAllocator& allocator, const Statement& stmt);
     void genMUL(MemoryAllocator& allocator, const Statement& stmt);

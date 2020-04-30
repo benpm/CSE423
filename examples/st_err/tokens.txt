@@ -38,4 +38,9 @@
 <=, EQUAL>
 <3, INTCONST>
 <;, SEMICOLON>
+<return, RETURN>
+<g, ID>
+<+, PLUS>
+<h, ID>
+<;, SEMICOLON>
 <}, RBRACE>

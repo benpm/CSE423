@@ -8,6 +8,7 @@
 
 main()
   BB0 [combined]
+  │(9) <[int][RETURN], 6>
   └────────────────────
 
 

@@ -1,6 +1,6 @@
 .text
-.globl main
-.type main, @function
+.globl funA
+.type funA, @function
 # FUNCTION funA
 funA:
 	push %rbp
@@ -14,6 +14,9 @@ funA:
 	add %rdx, %rsp
 	pop %rbp
 	ret 
+.text
+.globl funB
+.type funB, @function
 # FUNCTION funB
 funB:
 	push %rbp
@@ -27,6 +30,9 @@ funB:
 	add %rdx, %rsp
 	pop %rbp
 	ret 
+.text
+.globl main
+.type main, @function
 # FUNCTION main
 main:
 	push %rbp

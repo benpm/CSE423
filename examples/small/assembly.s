@@ -27,7 +27,7 @@ main:
 	mov %rcx, %rax
 	push %rax
 # (6) <[float][MINUS], (float)d, 8.011609>
-	mov $8.01161, %rbx
+	mov $8.011609, %rbx
 	neg %rbx
 	mov %rbx, %rax
 	push %rax

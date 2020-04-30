@@ -129,3 +129,22 @@ PROGRAM | Line num: 1
            │                     └─FACTOR | Line num: 8
            │                       └─IMMUTABLE | Line num: 8
            │                         └─INTCONST | Line num: 8 (3)
+           └─STATEMENT_LIST | Line num: 9
+             └─STATEMENT | Line num: 9
+               └─RETURN_STMT | Line num: 9
+                 └─EXPRESSION | Line num: 9
+                   └─SIMPLE_EXPRESSION | Line num: 9
+                     └─AND_EXPRESSION | Line num: 9
+                       └─UNARY_REL_EXPRESSION | Line num: 9
+                         └─REL_EXPRESSION | Line num: 9
+                           └─SUM_EXPRESSION | Line num: 9
+                             ├─SUM_EXPRESSION | Line num: 9
+                             │ └─MUL_EXPRESSION | Line num: 9
+                             │   └─UNARY_EXPRESSION | Line num: 9
+                             │     └─FACTOR | Line num: 9
+                             │       └─ID | Line num: 9 (g)
+                             ├─PLUS | Line num: 9
+                             └─MUL_EXPRESSION | Line num: 9
+                               └─UNARY_EXPRESSION | Line num: 9
+                                 └─FACTOR | Line num: 9
+                                   └─ID | Line num: 9 (h)
