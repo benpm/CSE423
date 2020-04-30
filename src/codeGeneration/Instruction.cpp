@@ -38,27 +38,27 @@ std::string InstrArg::toString() const
     return "Frick";
 }
 
-std::map<Instruction::OpCode, std::string> opToStr {
-    {Instruction::OpCode::ADD,  "add"},
-    {Instruction::OpCode::IMUL, "imul"},
-    {Instruction::OpCode::IDIV, "idiv"},
-    {Instruction::OpCode::SUB,  "sub"},
-    {Instruction::OpCode::NEG,  "neg"},
-    {Instruction::OpCode::MOV,  "mov"},
-    {Instruction::OpCode::PUSH, "push"},
-    {Instruction::OpCode::POP,  "pop"},
-    {Instruction::OpCode::JMP,  "jmp"},
-    {Instruction::OpCode::JE,   "je"},
-    {Instruction::OpCode::JNE,  "jne"},
-    {Instruction::OpCode::JG,   "jg"},
-    {Instruction::OpCode::JGE,  "jge"},
-    {Instruction::OpCode::JL,   "jl"},
-    {Instruction::OpCode::JLE,  "jle"},
-    {Instruction::OpCode::JZ,   "jz"},
-    {Instruction::OpCode::JNZ,  "jnz"},
-    {Instruction::OpCode::RET,  "ret"},
-    {Instruction::OpCode::CALL, "call"},
-    {Instruction::OpCode::CMP,  "cmp"}
+std::map<OpCode, std::string> opToStr {
+    {OpCode::ADD,  "add"},
+    {OpCode::IMUL, "imul"},
+    {OpCode::IDIV, "idiv"},
+    {OpCode::SUB,  "sub"},
+    {OpCode::NEG,  "neg"},
+    {OpCode::MOV,  "mov"},
+    {OpCode::PUSH, "push"},
+    {OpCode::POP,  "pop"},
+    {OpCode::JMP,  "jmp"},
+    {OpCode::JE,   "je"},
+    {OpCode::JNE,  "jne"},
+    {OpCode::JG,   "jg"},
+    {OpCode::JGE,  "jge"},
+    {OpCode::JL,   "jl"},
+    {OpCode::JLE,  "jle"},
+    {OpCode::JZ,   "jz"},
+    {OpCode::JNZ,  "jnz"},
+    {OpCode::RET,  "ret"},
+    {OpCode::CALL, "call"},
+    {OpCode::CMP,  "cmp"}
 };
 
 std::string Instruction::toString() const

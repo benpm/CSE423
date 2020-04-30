@@ -15,19 +15,12 @@ InstrArg MemoryAllocator::get(const Arg& arg)
 {
     spdlog::debug("--> Getting location for {}", arg.toString());
     
-    // Check if argument is already in a register, return the register if it is
-    if (this->regMap.count(arg)) {
+    if (this->regMap.count(arg)) { // Argument is already in a register, return reg
         return this->regMap.at(arg);
-    }
-
-    // If on stack, return offset(%ebp)
-    if (this->storageMap.count(arg)) {
+    } else if (this->storageMap.count(arg)) { // If on stack, return offset(%ebp)
         return this->storageMap.at(arg);
-    }
-
-    // If immediate return that immediate
-    if (arg.type != Arg::NAME) {
-        return InstrArg{arg};
+    } if (arg.type != Arg::NAME) {  // If immediate return that immediate
+        return arg;
     }
 
     // Not found, error
@@ -41,29 +34,28 @@ InstrArg MemoryAllocator::getReg(const Arg& arg)
     // Check if argument is already in a register, return the register if it is
     if (this->regMap.count(arg)) {
         spdlog::debug("----> already in {}", this->regMap.at(arg).toString());
-        return this->regMap.at(arg);
+        return InstrArg{this->regMap.at(arg)};
     }
 
     // It is not in a register so we must check if it's on the stack
     // If it is, move it in to register openReg and return
     // If its not on the stack, just return a register for it
-    Register openReg = this->getNextAvailReg(arg);
-    if (this->storageMap.count(arg)) {
-        InstrArg src = this->storageMap.at(arg); // offset(%ebp)
-        InstrArg dest{openReg};              // %reg
-        Instruction loadInstr(Instruction::MOV, {src, dest}); // mov offset(%ebp) %reg
+    InstrArg dest{this->getNextAvailReg(arg)};
+    InstrArg src;
+    this->regMap.emplace(arg, dest);
 
-        this->codeGen.insert(loadInstr);
+    if (arg.type != Arg::NAME) { // Its an immediate value
+        src = arg;
+    } else if (this->storageMap.count(arg)) { // Its on the stack
+        src = this->storageMap.at(arg); // offset(%ebp)
+    } else {
+        return dest;
     }
 
-    // If immediate, move the immediate into the register
-    if (arg.type != Arg::NAME) {
-        Instruction movInstr(Instruction::MOV, {arg, openReg});
-        this->codeGen.insert(movInstr);
-    }
+    Instruction loadInstr{OpCode::MOV, {src, dest}};
+    this->codeGen.insert(loadInstr);
 
-    this->regMap.emplace(arg, InstrArg{openReg});
-    return openReg;
+    return dest;
 }
 
 Register MemoryAllocator::getNextAvailReg(const Arg& arg)
@@ -84,30 +76,27 @@ Register MemoryAllocator::getNextAvailReg(const Arg& arg)
 void MemoryAllocator::save(const Arg& arg)
 {
     spdlog::debug("--> Saving {}", arg.toString());
-    
-    assert(arg.type == Arg::Type::NAME);
-    if (this->regMap.count(arg)) {
-        if (this->storageMap.count(arg)) {
-            // Move from register to location on stack
-            InstrArg src = this->regMap.at(arg); // %reg
-            InstrArg dest = this->storageMap.at(arg); // offset(%ebp)
-            Instruction instr(Instruction::MOV, {src, dest}); // mov %reg, offset(%ebp)
-            spdlog::debug("----> Restoring {} to {}", arg.toString(), dest.toString());
-            codeGen.insert(instr);
-        } else {
-            // Push onto stack, mapping where on stack we are
-            this->storageMap.emplace(arg, InstrArg{Register::rbp, -this->stackSize});
-            InstrArg regArg = this->regMap.at(arg); // %reg
-            Instruction instr(Instruction::PUSH, {regArg}); // push %reg
-            spdlog::debug("----> Pushing {} to -{}(%ebp)", arg.toString(), this->stackSize);
 
-            this->codeGen.insert(instr);
-            // Increase stack size member
-            this->stackSize += WORD_SIZE;
-        }
-    } else {
+    if (this->regMap.count(arg) == 0) {
         spdlog::error("Cannot save {}, arg not assigned a register", arg.toString());
+        exit(EXIT_FAILURE);
     }
+    assert(arg.type == Arg::Type::NAME);
+
+    InstrArg src{this->regMap.at(arg)};
+    Instruction instr;
+    if (this->storageMap.count(arg)) { // Move from register to location on stack
+        InstrArg dest = this->storageMap.at(arg);
+        instr = {OpCode::MOV, {src, dest}}; // mov %reg, offset(%ebp)
+        spdlog::debug("----> Restoring {} to {}", arg.toString(), dest.toString());
+    } else { // Push onto stack, mapping where on stack we are
+        instr = {OpCode::PUSH, {src}}; // push %reg
+        this->storageMap.emplace(arg, InstrArg{Register::rbp, -this->stackSize});
+        this->stackSize += WORD_SIZE; // Increase stack size member
+        spdlog::debug("----> Pushing {} to -{}(%ebp)", arg.toString(), this->stackSize);
+    }
+
+    this->codeGen.insert(instr);
 }
 
 void MemoryAllocator::deregister(const std::unordered_set<Arg, ArgHash> args)
@@ -150,54 +139,27 @@ void MemoryAllocator::insertAt(const Arg& arg, Register reg)
 
     this->evict(reg);
 
-    if (this->regMap.count(arg)) {
-        InstrArg src = this->regMap.at(arg);
-        InstrArg dest{reg};
-
+    InstrArg dest{reg};
+    InstrArg src;
+    if (this->regMap.count(arg)) { // In a register
+        src = this->regMap.at(arg);
         this->save(arg);
         this->deregister(arg);
-
-        Instruction mov{Instruction::MOV, {src, dest}};
-        spdlog::debug("----> {} In {}, moving to {}", arg.toString(), src.toString(), magic_enum::enum_name(reg));
-
-        this->regMap.emplace(arg, InstrArg{reg});
-        this->regOccupied.at(reg) = true;
-
-        this->codeGen.insert(mov);
-        return;
+    } else if (arg.type != Arg::NAME) { // Arg is an immediate, mov straight into the register
+        src = arg;
+    } else if (this->storageMap.count(arg)) { // Not reg/imm, on stack?
+        src = this->storageMap.at(arg); // offset(%ebp)
+    } else {
+        spdlog::error("Inserting an argument {} at {} that doesnt exist yet!", arg.toString(), magic_enum::enum_name(reg));
+        exit(EXIT_FAILURE);
     }
 
-    // Arg is an immediate, mov straight into the register
-    if (arg.type != Arg::NAME) {
-        InstrArg src{arg};
-        InstrArg dest{reg};
+    spdlog::debug("----> {} In {}, moving to {}", arg.toString(), src.toString(), magic_enum::enum_name(reg));
 
-        Instruction mov{Instruction::MOV, {src, dest}};
-        spdlog::debug("----> {} In {}, moving to {}", arg.toString(), src.toString(), magic_enum::enum_name(reg));
-
-        this->regMap.emplace(arg, InstrArg{reg});
-        this->regOccupied.at(reg) = true;
-
-        this->codeGen.insert(mov);
-        return;
-    }
-
-    // It is not in a register so we must check if it's on the stack
-    if (this->storageMap.count(arg)) {
-        InstrArg src = this->storageMap.at(arg); // offset(%ebp)
-        InstrArg dest{reg};                  // %reg
-        Instruction loadInstr(Instruction::MOV, {src, dest}); // mov offset(%ebp) %reg
-
-        spdlog::debug("----> {} at {}, moving to {}", arg.toString(), src.toString(), magic_enum::enum_name(reg));
-
-        this->regMap.emplace(arg, InstrArg{reg});
-        this->regOccupied.at(reg) = true;
-        this->codeGen.insert(loadInstr);
-        return;
-    }
-
-    spdlog::error("Inserting an argument {} at {} that doesnt exist yet!", arg.toString(), magic_enum::enum_name(reg));
-    exit(EXIT_FAILURE);
+    Instruction mov{OpCode::MOV, {src, dest}};
+    this->regMap.emplace(arg, dest);
+    this->regOccupied.at(reg) = true;
+    this->codeGen.insert(mov);
 }
 
 void MemoryAllocator::clear()
