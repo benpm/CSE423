@@ -1,4 +1,4 @@
-[frontend][warning] line 12: unused variable ‘n3’
+[frontend][warning] line 15: unused variable ‘n3’
  BB4294967295 [globals]
   │(1) <[int][ASSIGN], (int)globA, 3>
   │(2) <[int][ASSIGN], (int)globB, 4>
@@ -6,8 +6,7 @@
 
 fun((float)V, (float)XKAD, )
   BB0 [combined]
-  │(6) <[float][ADD], (float)#0, (float)XKAD, (float)V>
-  │(6) <[float][ASSIGN], (float)n1, (float)#0>
+  │(6) <[float][ADD], (float)n1, (float)XKAD, (float)V>
   │(7) <[float][MUL], (float)#0, (float)n1, 80>
   │(7) <[float][RETURN], (float)#0>
   └────────────────────
@@ -17,16 +16,12 @@ main()
   │(13) <[int][MINUS], (int)#0, 2>
   │(13) <[int][DIV], (int)#1, 18, (int)#0>
   │(13) <[int][MUL], (int)#2, 15, (int)#1>
-  │(13) <[int][MOD], (int)#3, (int)#2, 18>
-  │(13) <[int][ASSIGN], (int)n1, (int)#3>
-  │(14) <[int][MUL], (int)#0, (int)n1, (int)n1>
-  │(14) <[int][ASSIGN], (int)n2, (int)#0>
+  │(13) <[int][MOD], (int)n1, (int)#2, 18>
+  │(14) <[int][MUL], (int)n2, (int)n1, (int)n1>
   │(15) <[int][ADD], (int)#0, (int)n1, (int)n1>
   │(15) <[int][ADD], (int)#1, (int)#0, (int)n2>
-  │(15) <[int][ADD], (int)#2, (int)#1, (int)n2>
-  │(15) <[int][ASSIGN], (int)n3, (int)#2>
-  │(16) <[float][MUL], (float)#0, 0.800000, (int)n2>
-  │(16) <[float][ASSIGN], (float)DF, (float)#0>
+  │(15) <[int][ADD], (int)n3, (int)#1, (int)n2>
+  │(16) <[float][MUL], (float)DF, 0.800000, (int)n2>
   │(17) <[char][ASSIGN], (char)G, 'G'>
   │(20) <[int][ASSIGN], (int)i, 0>
   └────────────────────
@@ -84,12 +79,10 @@ main()
   BB23 [combined]
   │(36) <[float][MUL], (float)#0, 0.101000, 2>
   │(36) <[float][CALL], (float)#1, fun, (float)DF, (float)#0>
-  │(36) <[float][CALL], (float)#2, fun, (float)#1, 0.900000>
-  │(36) <[float][ASSIGN], (float)DF, (float)#2>
+  │(36) <[float][CALL], (float)DF, fun, (float)#1, 0.900000>
   │(37) <[float][CALL], (float)#0, printf, "test: %f\n", (float)DF>
   │(39) <[float][MUL], (float)#0, (float)DF, (int)globA>
-  │(39) <[float][MUL], (float)#1, (float)#0, (int)globB>
-  │(39) <[float][ASSIGN], (float)DF, (float)#1>
+  │(39) <[float][MUL], (float)DF, (float)#0, (int)globB>
   │(41) <[float][MINUS], (float)#0, (float)DF>
   │(41) <[float][SUB], (float)#1, 0.800000, (float)#0>
   │(41) <[JUMP_LT], <27>, (float)DF, (float)#1>
