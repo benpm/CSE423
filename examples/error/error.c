@@ -12,8 +12,8 @@ char bar() { // Warning: unused function bar
     return 'c';
 }
 
-int fun(int d) {
-    return d;
+int fun(int d) { // Warning: unused parameter
+    return 4;
 }
 
 int a = 5;
