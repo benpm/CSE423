@@ -19,8 +19,8 @@
  */
 struct Error {
     enum Category {
-        UnusedVariable, UnusedFunction, UnusedLabel, UninitializedVariable, ShadowedVariable, // Warnings
-        UndeclaredVariable, ImproperUse, MainUndefined, Redeclaration // Errors
+        UnusedVariable, UnusedFunction, UninitializedVariable, ShadowedVariable, // Warnings
+        UndeclaredVariable, UndefinedLabel, ImproperUse, Redeclaration // Errors
     };
 
     Category category;
@@ -33,7 +33,6 @@ struct Error {
     void printMessage();
 
     Error(Category cat, uint lineno, std::string name);
-    Error(Category cat) : Error(cat, 1, "") {};
 };
 
 /**

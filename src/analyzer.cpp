@@ -25,12 +25,10 @@ Error::Error(Category cat, uint lineno, std::string name)
     const std::map<Category, const std::string> templateMap {
         {Category::UnusedVariable, "line {}: unused variable ‘{}’"},
         {Category::UnusedFunction, "line {}: unused function ‘{}’"},
-        {Category::UnusedLabel, "line {}: unused label ‘{}’"},
         {Category::UndeclaredVariable, "line {}: attempt to use undeclared variable ‘{}’"},
+        {Category::UndefinedLabel, "line {}: attempt to use undefined label ‘{}’"},
         {Category::ShadowedVariable, "line {}: declaration shadows earlier declaration of ‘{}’"},
         {Category::ImproperUse, "line {}: improper use of symbol ‘{}’"},
-        {Category::MainUndefined, "must define function ‘main’ which returns type ‘int’ "
-                                  "and has no paramaters"},
         {Category::Redeclaration, "line {}: redeclaration of symbol ‘{}’"},
         {Category::UninitializedVariable, "line {}: attempt to use uninitialized variable ‘{}’"}
     };
@@ -43,7 +41,6 @@ Error::Error(Category cat, uint lineno, std::string name)
     switch (cat) {
         case Category::UnusedVariable:
         case Category::UnusedFunction:
-        case Category::UnusedLabel:
         case Category::UninitializedVariable:
         case Category::ShadowedVariable:
             isFatal = false;
@@ -59,14 +56,10 @@ Error::Error(Category cat, uint lineno, std::string name)
  */
 void Error::printMessage()
 {
-    if (isFatal) {
-        if (category == Category::MainUndefined)
-            spdlog::error(messageTemplate);
-        else
-            spdlog::error(messageTemplate, lineNumber, varName);
-    } else {
+    if (isFatal)
+        spdlog::error(messageTemplate, lineNumber, varName);
+    else
         spdlog::warn(messageTemplate, lineNumber, varName);
-    }
 }
 
 /**
@@ -430,7 +423,8 @@ void SemanticAnalyzer::analyzeGoto(AST const *gotoStmt, std::set<std::string> co
     std::string labelName = gotoStmt->children[0]->data.sval;
     Symbol *label = gotoStmt->inScope->getSymbol(labelName.c_str());
     if (!label || label->category != Symbol::Category::Label) {
-
+        errors.emplace_back(Error::Category::UndefinedLabel, gotoStmt->children[0]->lineNum,
+                            labelName);
     }
 }
 
