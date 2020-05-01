@@ -1,3 +1,4 @@
+[frontend][warning] line 12: unused variable ‘n3’
 fun((float)V, (float)XKAD, )
   BB0 [combined]
   │(3) <[float][ADD], (float)#0, (float)XKAD, (float)V>

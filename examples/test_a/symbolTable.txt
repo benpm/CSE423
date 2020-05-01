@@ -1,39 +1,5 @@
-+----------------------------+
-| Table ID: 0     __GLOBAL__ |
-+----------------------------+
-| main | Int    | Function   |
-+----------------------------+
-  +----------------------------+
-  | Table ID: 1         main() |
-  +----------------------------+
-  | a     | Float  | Local     |
-  | hek   | Int    | Local     |
-  | str   | Char   | Local     |
-  | str2  | Char   | Local     |
-  | value | Int    | Local     |
-  +----------------------------+
-    +----------------------------+
-    | Table ID: 2           list |
-    +----------------------------+
-    |                            |
-    +----------------------------+
-      +----------------------------+
-      | Table ID: 3       for_stmt |
-      +----------------------------+
-      | i | Int    | Local         |
-      +----------------------------+
-        +----------------------------+
-        | Table ID: 4           list |
-        +----------------------------+
-        |                            |
-        +----------------------------+
-          +----------------------------+
-          | Table ID: 5        if_stmt |
-          +----------------------------+
-          |                            |
-          +----------------------------+
-            +----------------------------+
-            | Table ID: 6           list |
-            +----------------------------+
-            |                            |
-            +----------------------------+
+[frontend][warning] line 3: unused variable ‘a’
+[frontend][warning] line 5: unused variable ‘hek’
+[frontend][warning] line 6: unused variable ‘str’
+[frontend][warning] line 7: unused variable ‘str2’
+[frontend][error] line 13: redeclaration of symbol ‘a’

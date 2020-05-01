@@ -1,3 +1,4 @@
+[frontend][warning] line 6: unused variable ‘d’
 main()
   BB0 [combined]
   │(3) <[int][ASSIGN], (int)a, 42>

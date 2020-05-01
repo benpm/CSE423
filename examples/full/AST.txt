@@ -1,3 +1,4 @@
+[frontend][warning] line 12: unused variable ‘n3’
 root
  └─[0] dec_list
    ├─[1] function
