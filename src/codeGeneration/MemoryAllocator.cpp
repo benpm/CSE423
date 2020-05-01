@@ -28,6 +28,20 @@ InstrArg MemoryAllocator::get(const Arg& arg)
     exit(EXIT_FAILURE);
 }
 
+void MemoryAllocator::allocateArg(const Arg& arg)
+{
+    if ((this->storageMap.count(arg) == 0) && (arg.type == Arg::NAME)) {
+        Instruction instr{OpCode::PUSH, {0}, arg.toString()}; // push $0
+
+        this->storageMap.emplace(arg, InstrArg{Register::rbp, -this->stackSize});
+        this->stackSize += WORD_SIZE; // Increase stack size member
+
+        this->codeGen.insert(instr);
+        spdlog::debug("----> Pushing {} to -{}(%ebp)", arg.toString(), this->stackSize);
+    }
+}
+
+
 InstrArg MemoryAllocator::getReg(const Arg& arg)
 {
     spdlog::debug("--> Getting register for {}", arg.toString());

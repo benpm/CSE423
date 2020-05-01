@@ -58,6 +58,15 @@ void CodeGenerator::genFunction(const Program& program, const Function& func)
     this->insert({OpCode::PUSH, {Register::rbp}});
     this->insert({OpCode::MOV, {Register::rsp, Register::rbp}});
 
+    // Allocate stack space for args
+    for (const BasicBlock& block : func.blocks) {
+        for (const Statement& stmt: block.statements) {
+            for (const Arg& arg : stmt.args) {
+                allocator.allocateArg(arg);
+            }
+        }
+    }
+
     for (const BasicBlock& block : func.blocks) {
         // Jump label for this basic block
         this->insert({fmt::format(".{}.{}:", this->curFuncName, block.label)});

@@ -33,6 +33,7 @@ public:
     void clear();
     void insertAt(const Arg& arg, Register reg);
     void parameter(const Arg& arg, int n);
+    void allocateArg(const Arg& arg);
 private:
     Register getNextAvailReg(const Arg& arg);
 };
