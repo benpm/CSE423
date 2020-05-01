@@ -45,6 +45,7 @@ private:
     std::set<Symbol*> initialized;
     std::set<Symbol*> used;
     std::map<std::string, uint> functionParamCount;
+    std::map<Symbol *, uint> symbolLineNumber;
     std::vector<Error> errors;
 
     void analyzeProgram(AST const &ast);
@@ -57,11 +58,11 @@ private:
     void analyzeIfElse(AST const *ifElse, std::set<std::string> const &parentDecls);
     void analyzeFor(AST const *forLoop, std::set<std::string> const &parentDecls);
     void analyzeWhile(AST const *whileLoop, std::set<std::string> const &parentDecls);
-    void analyzeLabel(AST const *labelStmt, std::set<std::string> const &parentDecls);
     void analyzeGoto(AST const *gotoStmt, std::set<std::string> const &parentDecls);
     bool isDeclared(std::string name, std::set<std::string> const &decls);
     bool isInitialized(Symbol *s);
     bool isUsed(Symbol *s);
+    static bool errorComp(Error a, Error b);
 
 public:
     bool hasWarning = false;

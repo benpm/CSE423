@@ -5,6 +5,7 @@
  * @date 2020-03-07
  *
  */
+#include <algorithm>
 #include <map>
 #include <set>
 #include <spdlog/spdlog.h>
@@ -30,7 +31,7 @@ Error::Error(Category cat, uint lineno, std::string name)
         {Category::UndefinedLabel, "line {}: attempt to use undefined label ‘{}’"},
         {Category::ShadowedVariable, "line {}: declaration shadows earlier declaration of ‘{}’"},
         {Category::ImproperUse, "line {}: improper use of symbol ‘{}’"},
-        {Category::WrongArgCount, "line {}: wrong number of parameters given to function ‘{}’"},
+        {Category::WrongArgCount, "line {}: wrong number of arguments given to function ‘{}’"},
         {Category::Redeclaration, "line {}: redeclaration of symbol ‘{}’"},
         {Category::UninitializedVariable, "line {}: attempt to use uninitialized variable ‘{}’"}
     };
@@ -43,6 +44,7 @@ Error::Error(Category cat, uint lineno, std::string name)
     switch (cat) {
         case Category::UnusedVariable:
         case Category::UnusedFunction:
+        case Category::UnusedParam:
         case Category::UninitializedVariable:
         case Category::ShadowedVariable:
             isFatal = false;
@@ -72,6 +74,9 @@ SemanticAnalyzer::SemanticAnalyzer(AST &ast)
 {
     analyzeProgram(ast);
 
+    // Sort errors by line number
+    std::sort(errors.begin(), errors.end(), errorComp);
+
     // Flag errors and warnings
     for (Error error : errors) {
         if (error.isFatal)
@@ -94,15 +99,30 @@ SemanticAnalyzer::SemanticAnalyzer(AST &ast)
 void SemanticAnalyzer::analyzeProgram(AST const &ast)
 {
     std::set<std::string> globalDeclarations;
-    for (AST *child: ast.children[0]->children) {
+    for (AST *child : ast.children[0]->children) {
         switch (child->label) {
             case AST::Label::declaration:
                 // Traverse declaration AST
-                analyzeDeclaration(child, globalDeclarations, globalDeclarations);
+                analyzeDeclaration(child, globalDeclarations, std::set<std::string>());
                 break;
             case AST::Label::function:
                 // Traverse function AST
                 analyzeFunction(child, globalDeclarations);
+        }
+    }
+
+    for (auto var : ast.children[0]->inScope->table) {
+        if (var.first == "main")
+            continue;
+        if (!isUsed(ast.children[0]->inScope->getSymbol(var.first.c_str()))) {
+            uint line = symbolLineNumber[ast.children[0]->inScope->getSymbol(var.first.c_str())];
+            switch (var.second.category) {
+                case Symbol::Category::Function:
+                    errors.emplace_back(Error::Category::UnusedFunction, line, var.first);
+                    break;
+                case Symbol::Category::Local:
+                    errors.emplace_back(Error::Category::UnusedVariable, line, var.first);
+            }
         }
     }
 }
@@ -123,8 +143,11 @@ void SemanticAnalyzer::analyzeFunction(AST const *func, std::set<std::string> &p
         // Error: symbol being redeclared
         errors.emplace_back(Error::Category::Redeclaration, func->children[1]->lineNum,
                             symbolName);
+    } else {
+        parentDecls.insert(symbolName);
+        symbolLineNumber[func->ownsScope->getSymbol(symbolName.c_str())] =
+            func->lineNum;
     }
-    parentDecls.insert(symbolName);
 
     functionParamCount[symbolName] = func->children[2]->children.size() / 2;
     for (AST const *param : func->children[2]->children) {
@@ -141,6 +164,20 @@ void SemanticAnalyzer::analyzeFunction(AST const *func, std::set<std::string> &p
     localDecls.insert(parentDecls.begin(), parentDecls.end());
     for (AST const *stmt : func->children[4]->children)
         analyzeTerm(stmt, localDecls);
+
+    // Check for unused variables
+    for (auto var : func->ownsScope->table) {
+        if (!isUsed(func->ownsScope->getSymbol(var.first.c_str()))) {
+            uint line = symbolLineNumber[func->ownsScope->getSymbol(var.first.c_str())];
+            switch (var.second.category) {
+                case Symbol::Category::Parameter:
+                    errors.emplace_back(Error::Category::UnusedParam, line, var.first);
+                    break;
+                case Symbol::Category::Local:
+                    errors.emplace_back(Error::Category::UnusedVariable, line, var.first);
+            }
+        }
+    }
 }
 
 /**
@@ -163,6 +200,8 @@ void SemanticAnalyzer::analyzeDeclaration(AST const *decl, std::set<std::string>
             errors.emplace_back(Error::Category::Redeclaration, decl->lineNum, symbolName);
         } else {
             localDecls.insert(symbolName);
+            symbolLineNumber[decl->inScope->getSymbol(symbolName.c_str())] =
+                decl->children[1]->children[0]->lineNum;
         }
 
         if (isDeclared(symbolName, parentDecls)) {
@@ -180,8 +219,16 @@ void SemanticAnalyzer::analyzeDeclaration(AST const *decl, std::set<std::string>
         if (isDeclared(symbolName, localDecls)) {
             // Error: symbol being redeclared
             errors.emplace_back(Error::Category::Redeclaration, decl->lineNum, symbolName);
+        } else {
+            localDecls.insert(symbolName);
+            symbolLineNumber[decl->inScope->getSymbol(symbolName.c_str())] =
+                decl->children[1]->lineNum;
         }
-        localDecls.insert(symbolName);
+
+        if (isDeclared(symbolName, parentDecls)) {
+            // Warning: symbol being shadowed
+            errors.emplace_back(Error::Category::ShadowedVariable, decl->lineNum, symbolName);
+        }
     }
 }
 
@@ -236,6 +283,13 @@ void SemanticAnalyzer::analyzeTerm(AST const *term, std::set<std::string> const 
                 // Error: variable not declared
                 errors.emplace_back(Error::Category::UndeclaredVariable,
                                     term->lineNum, symbolName);
+            } else if (term->inScope->getSymbol(symbolName.c_str())->category
+                    != Symbol::Category::Local
+                    && term->inScope->getSymbol(symbolName.c_str())->category
+                    != Symbol::Category::Parameter) {
+                // Error: improper use of function as variable
+                errors.emplace_back(Error::Category::ImproperUse,
+                                    term->lineNum, symbolName);
             } else if (!isInitialized(term->inScope->getSymbol(symbolName.c_str()))) {
                 // Warning: variable not initialized
                 errors.emplace_back(Error::Category::UninitializedVariable,
@@ -265,7 +319,6 @@ void SemanticAnalyzer::analyzeTerm(AST const *term, std::set<std::string> const 
             analyzeWhile(term, parentDecls);
             break;
         case AST::Label::label_stmt:
-            analyzeLabel(term, parentDecls);
             break;
         case AST::Label::goto_stmt:
             analyzeGoto(term, parentDecls);
@@ -321,6 +374,8 @@ void SemanticAnalyzer::analyzeCall(AST const *call, std::set<std::string> const 
                         errors.emplace_back(Error::Category::UninitializedVariable,
                                             arg->lineNum, argName);
                     }
+                    if (isDeclared(argName, parentDecls))
+                        used.insert(call->inScope->getSymbol(argName.c_str()));
                     break; }
                 case AST::Label::call:
                     analyzeCall(arg, parentDecls);
@@ -352,6 +407,17 @@ void SemanticAnalyzer::analyzeIfElse(AST const *ifElse, std::set<std::string> co
 
     switch (ifElse->label) {
         case AST::Label::if_stmt:
+            analyzeTerm(ifElse->children[0], parentDecls);
+            for (AST const *decl : ifElse->children[1]->children)
+                analyzeDeclaration(decl, localDecls, parentDecls);
+
+            localDecls.insert(parentDecls.begin(), parentDecls.end());
+            for (AST const *stmt : ifElse->children[2]->children)
+                analyzeTerm(stmt, parentDecls);
+            
+            for (auto it = ifElse->children.begin() + 3; it < ifElse->children.end(); it++)
+                analyzeIfElse(*it, parentDecls);
+            break;
         case AST::Label::else_if:
             analyzeTerm(ifElse->children[0], parentDecls);
             for (AST const *decl : ifElse->children[1]->children)
@@ -368,6 +434,20 @@ void SemanticAnalyzer::analyzeIfElse(AST const *ifElse, std::set<std::string> co
             localDecls.insert(parentDecls.begin(), parentDecls.end());
             for (AST const *stmt : ifElse->children[1]->children)
                 analyzeTerm(stmt, localDecls);
+    }
+
+    // Check for unused variables
+    for (auto var : ifElse->ownsScope->table) {
+        if (!isUsed(ifElse->ownsScope->getSymbol(var.first.c_str()))) {
+            uint line = symbolLineNumber[ifElse->ownsScope->getSymbol(var.first.c_str())];
+            switch (var.second.category) {
+                case Symbol::Category::Parameter:
+                    errors.emplace_back(Error::Category::UnusedParam, line, var.first);
+                    break;
+                case Symbol::Category::Local:
+                    errors.emplace_back(Error::Category::UnusedVariable, line, var.first);
+            }
+        }
     }
 }
 
@@ -395,6 +475,20 @@ void SemanticAnalyzer::analyzeFor(AST const *forLoop, std::set<std::string> cons
     localDecls.insert(parentDecls.begin(), parentDecls.end());
     for (AST const *stmt : forLoop->children[4]->children)
         analyzeTerm(stmt, localDecls);
+
+    // Check for unused variables
+    for (auto var : forLoop->ownsScope->table) {
+        if (!isUsed(forLoop->ownsScope->getSymbol(var.first.c_str()))) {
+            uint line = symbolLineNumber[forLoop->ownsScope->getSymbol(var.first.c_str())];
+            switch (var.second.category) {
+                case Symbol::Category::Parameter:
+                    errors.emplace_back(Error::Category::UnusedParam, line, var.first);
+                    break;
+                case Symbol::Category::Local:
+                    errors.emplace_back(Error::Category::UnusedVariable, line, var.first);
+            }
+        }
+    }
 }
 
 /**
@@ -415,17 +509,20 @@ void SemanticAnalyzer::analyzeWhile(AST const *whileLoop, std::set<std::string> 
     localDecls.insert(parentDecls.begin(), parentDecls.end());
     for (AST const *stmt : whileLoop->children[2]->children)
         analyzeTerm(stmt, localDecls);
-}
 
-/**
- * Analyze a label statement AST
- *
- * @param labelStmt The AST subtree node to traverse (must be a label statement)
- * @param parentDecls A reference to the parent scope declarations
- *
- */
-void SemanticAnalyzer::analyzeLabel(AST const *labelStmt, std::set<std::string> const &parentDecls)
-{
+    // Check for unused variables
+    for (auto var : whileLoop->ownsScope->table) {
+        if (!isUsed(whileLoop->ownsScope->getSymbol(var.first.c_str()))) {
+            uint line = symbolLineNumber[whileLoop->ownsScope->getSymbol(var.first.c_str())];
+            switch (var.second.category) {
+                case Symbol::Category::Parameter:
+                    errors.emplace_back(Error::Category::UnusedParam, line, var.first);
+                    break;
+                case Symbol::Category::Local:
+                    errors.emplace_back(Error::Category::UnusedVariable, line, var.first);
+            }
+        }
+    }
 }
 
 /**
@@ -485,6 +582,22 @@ bool SemanticAnalyzer::isUsed(Symbol *s)
     return bool(used.find(s) != used.end());
 }
 
+/**
+ * Compare two errors by line number (used for sorting)
+ *
+ * @param a The first error to compare
+ * @param b The second error to compare
+ *
+ * @return true if error a occurs before b
+ */
+bool SemanticAnalyzer::errorComp(Error a, Error b)
+{
+    return bool(a.lineNumber < b.lineNumber);
+}
+
+/**
+ * Pretty-preint the program warnings and errors
+ */
 void SemanticAnalyzer::printErrors()
 {
     for (Error err : errors)

@@ -1,16 +1,14 @@
 int foo() {
     int n;
-    int d;
-    int n = 10; // Error: variable redeclared
-    for (int n = 1; n < 10; n++) { // Warning; variable shadowed
+    int d; // Warning: unused variable d
+    int n = 10; // Error: variable n redeclared
+    for (int n = 1; n < 10; n++) { // Warning: variable n shadowed
         d = 5;
     }
-phoo: // Warning: unused label
     return n;
 }
 
-// Warning: unused function
-char bar() {
+char bar() { // Warning: unused function bar
     return 'c';
 }
 
@@ -18,11 +16,14 @@ int fun(int d) {
     return d;
 }
 
+int a = 5;
+
 int main() {
-    int a;
+    float a; // Warning: variable a shadowed
     int b = 10, c = 11; // Warning: unused variable c
     int d = a + b; // Warning: uninitialized variable a
     fun(1, 2); // Error: incorrect number of parameters
+    d = b + fun;
     goto bar;
 bar:
     goto foo; // Error: undefined label
