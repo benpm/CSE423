@@ -1,115 +1,121 @@
+BB,4294967295,globals
+stmt,1,int,ASSIGN,int globA,3
+stmt,2,int,ASSIGN,int globB,4
 func,fun,float V,float XKAD
 BB,0,combined
-stmt,3,float,ADD,float #0,float XKAD,float V
-stmt,3,float,ASSIGN,float n1,float #0
-stmt,4,float,MUL,float #1,float n1,80
-stmt,4,float,RETURN,float #1
+stmt,6,float,ADD,float #0,float XKAD,float V
+stmt,6,float,ASSIGN,float n1,float #0
+stmt,7,float,MUL,float #0,float n1,80
+stmt,7,float,RETURN,float #0
 func,main
 BB,0,combined
-stmt,10,int,MINUS,int #2,2
-stmt,10,int,DIV,int #3,18,int #2
-stmt,10,int,MUL,int #4,15,int #3
-stmt,10,int,MOD,int #5,int #4,18
-stmt,10,int,ASSIGN,int n1,int #5
-stmt,11,int,MUL,int #6,int n1,int n1
-stmt,11,int,ASSIGN,int n2,int #6
-stmt,12,int,ADD,int #7,int n1,int n1
-stmt,12,int,ADD,int #8,int #7,int n2
-stmt,12,int,ADD,int #9,int #8,int n2
-stmt,12,int,ASSIGN,int n3,int #9
-stmt,13,float,MUL,float #A,0.800000,int n2
-stmt,13,float,ASSIGN,float DF,float #A
-stmt,14,char,ASSIGN,char G,'G'
-stmt,17,int,ASSIGN,int i,0
+stmt,13,int,MINUS,int #0,2
+stmt,13,int,DIV,int #1,18,int #0
+stmt,13,int,MUL,int #2,15,int #1
+stmt,13,int,MOD,int #3,int #2,18
+stmt,13,int,ASSIGN,int n1,int #3
+stmt,14,int,MUL,int #0,int n1,int n1
+stmt,14,int,ASSIGN,int n2,int #0
+stmt,15,int,ADD,int #0,int n1,int n1
+stmt,15,int,ADD,int #1,int #0,int n2
+stmt,15,int,ADD,int #2,int #1,int n2
+stmt,15,int,ASSIGN,int n3,int #2
+stmt,16,float,MUL,float #0,0.800000,int n2
+stmt,16,float,ASSIGN,float DF,float #0
+stmt,17,char,ASSIGN,char G,'G'
+stmt,20,int,ASSIGN,int i,0
 BB,6,lt
-stmt,17,int,MUL,int #B,int n2,int n1
-stmt,17,int,DIV,int #C,int #B,2
-stmt,17,none,JUMP_LT,7,int i,int #C
-stmt,17,none,JUMP,23
+stmt,20,int,MUL,int #0,int n2,int n1
+stmt,20,int,DIV,int #1,int #0,2
+stmt,20,none,JUMP_LT,7,int i,int #1
+stmt,20,none,JUMP,23
 BB,7,combined
-stmt,18,int,ASSIGN,int f,10
-stmt,19,none,JUMP,23
+stmt,21,int,ASSIGN,int f,10
+stmt,22,none,JUMP,23
 BB,9,assignment
-stmt,20,int,ASSIGN,int j,0
+stmt,23,int,ASSIGN,int j,0
 BB,10,lt
-stmt,20,int,DIV,int #D,int n1,2
-stmt,20,int,ADD,int #E,int n2,int #D
-stmt,20,none,JUMP_LT,11,int j,int #E
-stmt,20,none,JUMP,22
+stmt,23,int,DIV,int #0,int n1,2
+stmt,23,int,ADD,int #1,int n2,int #0
+stmt,23,none,JUMP_LT,11,int j,int #1
+stmt,23,none,JUMP,22
 BB,11,assignment
-stmt,21,int,ASSIGN,int x,0
+stmt,24,int,ASSIGN,int x,0
 BB,12,lt
-stmt,22,none,JUMP_LT,15,int x,int n2
+stmt,25,none,JUMP_LT,15,int x,int n2
 BB,13,ge
-stmt,22,none,JUMP_GE,21,int x,int n2
-stmt,22,none,JUMP,15
+stmt,25,none,JUMP_GE,21,int x,int n2
+stmt,25,none,JUMP,15
 BB,14,fallthrough
-stmt,22,none,JUMP,21
+stmt,25,none,JUMP,21
 BB,15,combined
-stmt,23,int,ASSIGN,int z,10
-stmt,24,int,ASSIGN,int x2,3
-stmt,25,int,ADD,int #F,int z,int x
-stmt,25,int,ADD,int x2,int x2,int #F
-stmt,26,int,MINUS,int n2,int n2,int x
-stmt,27,none,JUMP,21
+stmt,26,int,ASSIGN,int z,10
+stmt,27,int,ASSIGN,int x2,3
+stmt,28,int,ADD,int #0,int z,int x
+stmt,28,int,ADD,int x2,int x2,int #0
+stmt,29,int,MINUS,int n2,int n2,int x
+stmt,30,none,JUMP,21
 BB,20,while_post
-stmt,22,none,JUMP,12
+stmt,25,none,JUMP,12
 BB,21,for_post
-stmt,20,int,ADD,int j,int j,1
-stmt,20,none,JUMP,10
+stmt,23,int,ADD,int j,int j,1
+stmt,23,none,JUMP,10
 BB,22,for_post
-stmt,17,int,ADD,int i,int i,1
-stmt,17,none,JUMP,6
+stmt,20,int,ADD,int i,int i,1
+stmt,20,none,JUMP,6
 BB,23,combined
-stmt,33,float,MUL,float #10,0.101000,2
-stmt,33,float,CALL,float #11,fun,float DF,float #10
-stmt,33,float,CALL,float #12,fun,float #11,0.900000
-stmt,33,float,ASSIGN,float DF,float #12
-stmt,34,float,CALL,float #13,printf,"test: %f\n",float DF
-stmt,37,float,MINUS,float #14,float DF
-stmt,37,float,SUB,float #15,0.800000,float #14
-stmt,37,none,JUMP_LT,26,float DF,float #15
-stmt,37,none,JUMP,43
-BB,26,noteq
-stmt,38,none,JUMP_NEQ,27,int n2,10
-stmt,38,none,JUMP,31
-BB,27,combined
-stmt,39,char,ASSIGN,char G,'H'
-stmt,40,int,MUL,int n1,int n1,1
-stmt,41,int,MOD,int n1,int n1,10
-stmt,42,int,ADD,int n1,int n1,1
-BB,31,le
-stmt,43,none,JUMP_GT,39,int n1,2
-BB,32,equal
-stmt,43,none,JUMP_EQ,36,char G,'H'
-BB,33,noteq
-stmt,43,none,JUMP_NEQ,36,int n2,100
-BB,34,fallthrough
-stmt,43,none,JUMP,39
+stmt,36,float,MUL,float #0,0.101000,2
+stmt,36,float,CALL,float #1,fun,float DF,float #0
+stmt,36,float,CALL,float #2,fun,float #1,0.900000
+stmt,36,float,ASSIGN,float DF,float #2
+stmt,37,float,CALL,float #0,printf,"test: %f\n",float DF
+stmt,39,float,MUL,float #0,float DF,int globA
+stmt,39,float,MUL,float #1,float #0,int globB
+stmt,39,float,ASSIGN,float DF,float #1
+stmt,41,float,MINUS,float #0,float DF
+stmt,41,float,SUB,float #1,0.800000,float #0
+stmt,41,none,JUMP_LT,27,float DF,float #1
+stmt,41,none,JUMP,44
+BB,27,noteq
+stmt,42,none,JUMP_NEQ,28,int n2,10
+stmt,42,none,JUMP,32
+BB,28,combined
+stmt,43,char,ASSIGN,char G,'H'
+stmt,44,int,MUL,int n1,int n1,1
+stmt,45,int,MOD,int n1,int n1,10
+stmt,46,int,ADD,int n1,int n1,1
+BB,32,le
+stmt,47,none,JUMP_GT,40,int n1,2
+BB,33,equal
+stmt,47,none,JUMP_EQ,37,char G,'H'
+BB,34,noteq
+stmt,47,none,JUMP_NEQ,37,int n2,100
 BB,35,fallthrough
-stmt,43,none,JUMP,36
-BB,36,combined
-stmt,44,float,MINUS,float #16,0.600000
-stmt,44,float,ADD,float DF,float DF,float #16
-stmt,45,none,JUMP_EQ,38,float DF,0.000000
-stmt,45,none,JUMP,39
-BB,38,assignment
-stmt,46,float,ASSIGN,float DF,1.010000
-BB,39,ge
-stmt,48,none,JUMP_GE,40,char G,'H'
-stmt,48,none,JUMP,42
-BB,40,combined
-stmt,49,int,MINUS,int n2,int n2,16
-stmt,50,int,MINUS,int n2,int n2,1
-BB,42,div_equal
-stmt,52,int,DIV,int n1,int n1,2
-BB,43,goto_stmt
-stmt,55,none,JUMP,45
-BB,44,return_stmt
-stmt,56,int,MINUS,int #17,1
-stmt,56,int,RETURN,int #17
-BB,45,combined
-stmt,57,none,NO_OP
-stmt,58,int,MUL,int #18,int n1,2
-stmt,58,int,RETURN,int #18
+stmt,47,none,JUMP,40
+BB,36,fallthrough
+stmt,47,none,JUMP,37
+BB,37,combined
+stmt,48,float,MINUS,float #0,0.600000
+stmt,48,float,ADD,float DF,float DF,float #0
+stmt,49,none,JUMP_EQ,39,float DF,0.000000
+stmt,49,none,JUMP,40
+BB,39,assignment
+stmt,50,float,ASSIGN,float DF,1.010000
+BB,40,ge
+stmt,52,none,JUMP_GE,41,char G,'H'
+stmt,52,none,JUMP,43
+BB,41,combined
+stmt,53,int,MINUS,int n2,int n2,16
+stmt,54,int,MINUS,int n2,int n2,1
+BB,43,div_equal
+stmt,56,int,DIV,int n1,int n1,2
+BB,44,goto_stmt
+stmt,59,none,JUMP,46
+BB,45,return_stmt
+stmt,60,int,MINUS,int #0,1
+stmt,60,int,RETURN,int #0
+BB,46,combined
+stmt,61,none,NO_OP
+stmt,62,int,MUL,int #0,int n1,2
+stmt,62,int,RETURN,int #0
 

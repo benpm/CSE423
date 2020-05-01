@@ -2,8 +2,10 @@
 +----------------------------+
 | Table ID: 0     __GLOBAL__ |
 +----------------------------+
-| fun  | Float  | Function   |
-| main | Int    | Function   |
+| fun   | Float  | Function  |
+| globA | Int    | Local     |
+| globB | Int    | Local     |
+| main  | Int    | Function  |
 +----------------------------+
   +----------------------------+
   | Table ID: 1          fun() |

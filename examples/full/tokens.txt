@@ -1,4 +1,14 @@
 [frontend][warning] line 12: unused variable ‘n3’
+<int, INT>
+<globA, ID>
+<=, EQUAL>
+<3, INTCONST>
+<;, SEMICOLON>
+<int, INT>
+<globB, ID>
+<=, EQUAL>
+<4, INTCONST>
+<;, SEMICOLON>
 <float, FLOAT>
 <fun, ID>
 <(, LPAREN>
@@ -186,6 +196,14 @@
 <,, COMMA>
 <DF, ID>
 <), RPAREN>
+<;, SEMICOLON>
+<DF, ID>
+<=, EQUAL>
+<DF, ID>
+<*, TIMES>
+<globA, ID>
+<*, TIMES>
+<globB, ID>
 <;, SEMICOLON>
 <if, IF>
 <(, LPAREN>

@@ -1,3 +1,6 @@
+int globA = 3;
+int globB = 4;
+
 // Testing callable function
 float fun(float XKAD, float V) {
     float n1 = XKAD + V;
@@ -33,6 +36,7 @@ int main()
     DF = fun(fun(DF, 0.101 * 2), 0.9);
 	printf("test: %f\n", DF);
 
+    DF = DF * globA * globB;
     // Testing conditional statements
     if (DF < (0.8 - (-DF))) {
         if (n2 != 10) {

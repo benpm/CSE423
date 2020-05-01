@@ -131,8 +131,11 @@ BasicBlock::BasicBlock(uint label, std::string name, std::ifstream& csv)
  * @return A temporary variable that is intended to store the result of the op in the given AST
  *
  */
-Arg BasicBlock::expand(const AST* ast)
+Arg BasicBlock::expand(const AST* ast, bool start)
 {
+    if (start) {
+        BasicBlock::nextTemp = 0;
+    }
     std::vector<Arg> args;
     Arg temporary(0u);
 
@@ -184,7 +187,7 @@ Arg BasicBlock::expand(const AST* ast)
             // case AST::ge:
             case AST::equal:
             case AST::noteq:
-                args.push_back(this->expand(child));
+                args.push_back(this->expand(child, false));
                 break;
             // Identifier or constant value arguments
             case AST::id:
@@ -242,7 +245,13 @@ Arg BasicBlock::expand(const AST* ast)
 
     // Generate statement
     if (labelMap.count(ast->label)) {
-        this->statements.emplace_back(labelMap.at(ast->label), args);
+        if (ast->label == AST::assignment
+            && BasicBlock::nextTemp > 0) {
+            this->statements.back().args.at(0) = args.at(0);
+        } else {
+            Statement& stmt = this->statements.emplace_back(labelMap.at(ast->label), args);
+            stmt.lineNum = ast->lineNum;
+        }
     }
 
     return temporary;

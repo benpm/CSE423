@@ -55,6 +55,12 @@ void Optimizer::optimize(Program& program)
         Statement::JUMP_IF_TRUE, Statement::JUMP_IF_FALSE
     };
 
+    const std::set<Statement::Type> resultStmts {
+        Statement::ADD, Statement::MUL, Statement::DIV, Statement::SUB,
+        Statement::MOD, Statement::MINUS, Statement::NOT, Statement::ASSIGN,
+        Statement::CALL
+    };
+
     for (auto& item : program.functions) {
         bool proceed = false;
         do {
@@ -90,6 +96,7 @@ void Optimizer::optimize(Program& program)
             // Perform constant propagation
             std::vector<std::pair<const char*, size_t>> removeStmts;
             for (const auto& pair : lastAssigns) {
+                const bool isTemp = (pair.first[0] == '#');
                 const char* name = pair.first;
                 Arg value = stmts[pair.second].second.args.at(1);
                 size_t i = pair.second + 1;
@@ -100,13 +107,13 @@ void Optimizer::optimize(Program& program)
                     // Continue if no args
                     if (stmt.args.size() == 0)
                         continue;
-                    // Break if name is LHS
-                    if (stmt.args.at(0).type == Arg::NAME
+                    // Break if name is the result arg of operation
+                    if (resultStmts.count(stmt.type)
                         && strcmp(stmt.args.at(0).val.sval, name) == 0) {
                         break;
                     }
                     // Find and replace arg with value
-                    for (size_t argindx = 1; argindx < stmt.args.size(); argindx++) {
+                    for (size_t argindx = 0; argindx < stmt.args.size(); argindx++) {
                         if (stmt.args.at(argindx).type == Arg::NAME 
                             && strcmp(stmt.args.at(argindx).val.sval, name) == 0) {
                             if (jumpBlocks.count(block.label)
@@ -117,10 +124,16 @@ void Optimizer::optimize(Program& program)
                             proceed = true;
                         }
                     }
+                    // Break if temporary and non-temp assignment
+                    if (isTemp && stmt.type == Statement::ASSIGN
+                        && stmt.args.at(0).val.sval[0] != '#'
+                    ) {
+                        break;  
+                    }
                 }
                 // If we reached the end, remove assignment
                 stop:
-                if (i == stmts.size()) {
+                if (i == stmts.size() || isTemp) {
                     removeStmts.push_back(pair);
                 }
             }

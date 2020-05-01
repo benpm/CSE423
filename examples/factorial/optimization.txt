@@ -1,3 +1,6 @@
+ BB4294967295 [globals]
+  └────────────────────
+
 main()
   BB0 [combined]
   │(2) <[int][ASSIGN], (int)fact, 1>
@@ -20,7 +23,7 @@ main()
   │(6) <[JUMP], <5>>
   └────────────────────
   BB8 [combined]
-  │(9) <[int][CALL], (int)#1, printf, "Factorial of %d = %d", 10, (int)fact>
+  │(9) <[int][CALL], (int)#0, printf, "Factorial of %d = %d", 10, (int)fact>
   │(11) <[int][RETURN], 0>
   └────────────────────
 

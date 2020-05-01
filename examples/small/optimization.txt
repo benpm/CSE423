@@ -1,4 +1,7 @@
 [frontend][warning] line 6: unused variable ‘d’
+ BB4294967295 [globals]
+  └────────────────────
+
 main()
   BB0 [combined]
   │(8) <[JUMP_LT], <5>, 1110, 2>
