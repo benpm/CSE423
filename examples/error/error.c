@@ -1,5 +1,3 @@
-// Error: function main undefined
-
 int foo() {
     int n;
     int d;
@@ -12,12 +10,17 @@ phoo: // Warning: unused label
 }
 
 // Warning: unused function
-int foo2() {
+char bar() {
+    return 'c';
+}
+
+int main() {
     int a;
     int b = 10, c = 11; // Warning: unused variable c
     int d = a + b; // Warning: uninitialized variable a
     goto bar;
 bar:
+    goto foo; // Error: undefined label
     d(); // Error: improper use of symbol d
     return foo() * d + e; // Error: e not declared
 }
