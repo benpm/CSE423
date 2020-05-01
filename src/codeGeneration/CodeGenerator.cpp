@@ -61,8 +61,10 @@ void CodeGenerator::genFunction(const Program& program, const Function& func)
     // Allocate stack space for args
     for (const BasicBlock& block : func.blocks) {
         for (const Statement& stmt: block.statements) {
-            for (const Arg& arg : stmt.args) {
-                allocator.allocateArg(arg);
+            for (int i = 0; i < stmt.args.size(); i++) {
+                if (stmt.type == Statement::CALL && i == 1)
+                    continue;
+                allocator.allocateArg(stmt.args.at(i));
             }
         }
     }
@@ -106,9 +108,9 @@ void CodeGenerator::genStatement(MemoryAllocator& allocator, const Statement& st
 void CodeGenerator::genADD(MemoryAllocator& allocator, const Statement& stmt)
 {
     // dest = opA + opB
-    InstrArg dest = allocator.getReg(stmt.args.at(0));
-    InstrArg opA  = allocator.getReg(stmt.args.at(1));
-    InstrArg opB  = allocator.getReg(stmt.args.at(2));
+    InstrArg dest = allocator.allocateReg(stmt.args.at(0));
+    InstrArg opA  = allocator.allocateReg(stmt.args.at(1));
+    InstrArg opB  = allocator.allocateReg(stmt.args.at(2));
     
     Instruction sumInstr{OpCode::ADD, {opA, opB}};  // add %opA, %opB
     Instruction movInstr{OpCode::MOV, {opB, dest}}; // mov %opB, %dest
@@ -123,9 +125,9 @@ void CodeGenerator::genADD(MemoryAllocator& allocator, const Statement& stmt)
 void CodeGenerator::genMUL(MemoryAllocator& allocator, const Statement& stmt)
 {
     // dest = opA * opB
-    InstrArg dest = allocator.getReg(stmt.args.at(0));
-    InstrArg opA = allocator.getReg(stmt.args.at(1));
-    InstrArg opB = allocator.getReg(stmt.args.at(2));
+    InstrArg dest = allocator.allocateReg(stmt.args.at(0));
+    InstrArg opA = allocator.allocateReg(stmt.args.at(1));
+    InstrArg opB = allocator.allocateReg(stmt.args.at(2));
     
     Instruction mulInstr{OpCode::IMUL, {opA, opB}}; // imul %opA, %opB
     Instruction movInstr{OpCode::MOV,  {opB, dest}}; // mov %opB, %dest
@@ -143,9 +145,9 @@ void CodeGenerator::genDIV(MemoryAllocator& allocator, const Statement& stmt)
     // Evict whatever was in %eax previously, saving it if needed, moving dividend in
     allocator.insertAt(stmt.args.at(1), Register::rax);
     // Evict whatever was in %edx previously, saving it if needed, moving result (remainder) in
-    InstrArg result = allocator.getReg(stmt.args.at(0));
+    InstrArg result = allocator.allocateReg(stmt.args.at(0));
     // Divisor is argument for idiv
-    InstrArg arg = allocator.getReg(stmt.args.at(2));
+    InstrArg arg = allocator.allocateReg(stmt.args.at(2));
     // Clear %edx
     allocator.evict(Register::rdx);
     // Division instruction (%eax(arg1)/arg(arg2))
@@ -163,9 +165,9 @@ void CodeGenerator::genDIV(MemoryAllocator& allocator, const Statement& stmt)
 void CodeGenerator::genSUB(MemoryAllocator& allocator, const Statement& stmt)
 {
     // dest = arg1 - arg2
-    InstrArg dest = allocator.getReg(stmt.args.at(0));
-    InstrArg arg1 = allocator.getReg(stmt.args.at(1));
-    InstrArg arg2 = allocator.getReg(stmt.args.at(2));
+    InstrArg dest = allocator.allocateReg(stmt.args.at(0));
+    InstrArg arg1 = allocator.allocateReg(stmt.args.at(1));
+    InstrArg arg2 = allocator.allocateReg(stmt.args.at(2));
     
     // Note that this is backwards, arg1 = arg1 - arg2, not arg2 = arg1 - arg2
     Instruction subInstr{OpCode::SUB, {arg2, arg1}}; // sub %arg2, %arg1
@@ -184,9 +186,9 @@ void CodeGenerator::genMOD(MemoryAllocator& allocator, const Statement& stmt)
     // Evict whatever was in %eax previously, saving it if needed, moving dividend in
     allocator.insertAt(stmt.args.at(1), Register::rax);
     // Evict whatever was in %edx previously, saving it if needed, moving result (remainder) in
-    InstrArg result = allocator.getReg(stmt.args.at(0));
+    InstrArg result = allocator.allocateReg(stmt.args.at(0));
     // Divisor is argument for idiv
-    InstrArg arg = allocator.getReg(stmt.args.at(2));
+    InstrArg arg = allocator.allocateReg(stmt.args.at(2));
     // Clear %edx
     allocator.evict(Register::rdx);
     // Division instruction (%eax(arg1)/arg(arg2))
@@ -204,8 +206,8 @@ void CodeGenerator::genMOD(MemoryAllocator& allocator, const Statement& stmt)
 void CodeGenerator::genMINUS(MemoryAllocator& allocator, const Statement& stmt)
 {
     // dest = -op
-    InstrArg dest = allocator.getReg(stmt.args.at(0));
-    InstrArg op = allocator.getReg(stmt.args.at(1));
+    InstrArg dest = allocator.allocateReg(stmt.args.at(0));
+    InstrArg op = allocator.allocateReg(stmt.args.at(1));
     
     Instruction negInstr{OpCode::NEG, {op}}; // neg %op
     Instruction movInstr{OpCode::MOV, {op, dest}}; // mov %op, %dest
@@ -219,8 +221,8 @@ void CodeGenerator::genMINUS(MemoryAllocator& allocator, const Statement& stmt)
 void CodeGenerator::genASSIGN(MemoryAllocator& allocator, const Statement& stmt)
 {
     // dest = src
-    InstrArg dest = allocator.getReg(stmt.args.at(0));
-    InstrArg src  = allocator.getReg(stmt.args.at(1));
+    InstrArg dest = allocator.allocateReg(stmt.args.at(0));
+    InstrArg src  = allocator.allocateReg(stmt.args.at(1));
 
     Instruction movInstr{OpCode::MOV, {src, dest}};
 
@@ -239,8 +241,8 @@ void CodeGenerator::genJUMP(MemoryAllocator& allocator, const Statement& stmt)
 void CodeGenerator::genJUMP_LT(MemoryAllocator& allocator, const Statement& stmt)
 {
     std::string label = fmt::format(".{}.{}", this->curFuncName, stmt.args.at(0).val.label);
-    InstrArg opA = allocator.getReg(stmt.args.at(1));
-    InstrArg opB = allocator.getReg(stmt.args.at(2));
+    InstrArg opA = allocator.allocateReg(stmt.args.at(1));
+    InstrArg opB = allocator.allocateReg(stmt.args.at(2));
     
     Instruction cmp{OpCode::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
     Instruction jmplt{OpCode::JL, {label}};   // jl label       | if opA - opB < 0
@@ -254,8 +256,8 @@ void CodeGenerator::genJUMP_LT(MemoryAllocator& allocator, const Statement& stmt
 void CodeGenerator::genJUMP_GT(MemoryAllocator& allocator, const Statement& stmt)
 {
     std::string label = fmt::format(".{}.{}", this->curFuncName, stmt.args.at(0).val.label);
-    InstrArg opA = allocator.getReg(stmt.args.at(1));
-    InstrArg opB = allocator.getReg(stmt.args.at(2));
+    InstrArg opA = allocator.allocateReg(stmt.args.at(1));
+    InstrArg opB = allocator.allocateReg(stmt.args.at(2));
     
     Instruction cmp{OpCode::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
     Instruction jmpge{OpCode::JG, {label}};   // jg label       | if opA - opB > 0
@@ -269,8 +271,8 @@ void CodeGenerator::genJUMP_GT(MemoryAllocator& allocator, const Statement& stmt
 void CodeGenerator::genJUMP_LE(MemoryAllocator& allocator, const Statement& stmt)
 {
     std::string label = fmt::format(".{}.{}", this->curFuncName, stmt.args.at(0).val.label);
-    InstrArg opA = allocator.getReg(stmt.args.at(1));
-    InstrArg opB = allocator.getReg(stmt.args.at(2));
+    InstrArg opA = allocator.allocateReg(stmt.args.at(1));
+    InstrArg opB = allocator.allocateReg(stmt.args.at(2));
     
     Instruction cmp{OpCode::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
     Instruction jmple{OpCode::JLE, {label}};  // jle label      | if opA - opB <= 0
@@ -284,8 +286,8 @@ void CodeGenerator::genJUMP_LE(MemoryAllocator& allocator, const Statement& stmt
 void CodeGenerator::genJUMP_GE(MemoryAllocator& allocator, const Statement& stmt)
 {
     std::string label = fmt::format(".{}.{}", this->curFuncName, stmt.args.at(0).val.label);
-    InstrArg opA = allocator.getReg(stmt.args.at(1));
-    InstrArg opB = allocator.getReg(stmt.args.at(2));
+    InstrArg opA = allocator.allocateReg(stmt.args.at(1));
+    InstrArg opB = allocator.allocateReg(stmt.args.at(2));
     
     Instruction cmp{OpCode::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
     Instruction jmpge{OpCode::JGE, {label}};  // jge label      | if opA - opB >= 0
@@ -299,8 +301,8 @@ void CodeGenerator::genJUMP_GE(MemoryAllocator& allocator, const Statement& stmt
 void CodeGenerator::genJUMP_EQ(MemoryAllocator& allocator, const Statement& stmt)
 {
     std::string label = fmt::format(".{}.{}", this->curFuncName, stmt.args.at(0).val.label);
-    InstrArg opA = allocator.getReg(stmt.args.at(1));
-    InstrArg opB = allocator.getReg(stmt.args.at(2));
+    InstrArg opA = allocator.allocateReg(stmt.args.at(1));
+    InstrArg opB = allocator.allocateReg(stmt.args.at(2));
     
     Instruction cmp{OpCode::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
     Instruction jmpneq{OpCode::JE, {label}};  // jle label      | if opA - opB == 0
@@ -314,8 +316,8 @@ void CodeGenerator::genJUMP_EQ(MemoryAllocator& allocator, const Statement& stmt
 void CodeGenerator::genJUMP_NEQ(MemoryAllocator& allocator, const Statement& stmt)
 {
     std::string label = fmt::format(".{}.{}", this->curFuncName, stmt.args.at(0).val.label);
-    InstrArg opA = allocator.getReg(stmt.args.at(1));
-    InstrArg opB = allocator.getReg(stmt.args.at(2));
+    InstrArg opA = allocator.allocateReg(stmt.args.at(1));
+    InstrArg opB = allocator.allocateReg(stmt.args.at(2));
     
     Instruction cmp{OpCode::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
     Instruction jmpneq{OpCode::JNE, {label}}; // jle label      | if opA - opB != 0
@@ -329,8 +331,8 @@ void CodeGenerator::genJUMP_NEQ(MemoryAllocator& allocator, const Statement& stm
 void CodeGenerator::genJUMP_IF_TRUE(MemoryAllocator& allocator, const Statement& stmt)
 {
     std::string label = fmt::format(".{}.{}", this->curFuncName, stmt.args.at(0).val.label);
-    InstrArg opA = allocator.getReg(stmt.args.at(1));
-    InstrArg opB = allocator.getReg(stmt.args.at(2));
+    InstrArg opA = allocator.allocateReg(stmt.args.at(1));
+    InstrArg opB = allocator.allocateReg(stmt.args.at(2));
     
     Instruction cmp{OpCode::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
     Instruction jmpnz{OpCode::JNZ, {label}};  // jnz label      | if opA - opB != 0
@@ -344,8 +346,8 @@ void CodeGenerator::genJUMP_IF_TRUE(MemoryAllocator& allocator, const Statement&
 void CodeGenerator::genJUMP_IF_FALSE(MemoryAllocator& allocator, const Statement& stmt)
 {
     std::string label = fmt::format(".{}.{}", this->curFuncName, stmt.args.at(0).val.label);
-    InstrArg opA = allocator.getReg(stmt.args.at(1));
-    InstrArg opB = allocator.getReg(stmt.args.at(2));
+    InstrArg opA = allocator.allocateReg(stmt.args.at(1));
+    InstrArg opB = allocator.allocateReg(stmt.args.at(2));
     
     Instruction cmp{OpCode::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
     Instruction jmpnz{OpCode::JZ, {label}};   // jz label       | if opA - opB == 0
@@ -378,13 +380,13 @@ void CodeGenerator::genCALL(MemoryAllocator& allocator, const Statement& stmt)
     // Push all arguments onto the stack (in reverse order!)
     int argsSize = 0;
     for (auto it = stmt.args.rbegin(); it < stmt.args.rend() - 2; it++) {
-        this->insert({OpCode::PUSH, {allocator.get(*it)}});
+        this->insert({OpCode::PUSH, {allocator.getLoc(*it)}});
         argsSize += WORD_SIZE;
     }
     // Clear all registers (including %eax)
     allocator.clear();
     // Get a register for return value
-    InstrArg result = allocator.getReg(stmt.args.at(0));
+    InstrArg result = allocator.allocateReg(stmt.args.at(0));
     // Insert call instruction (function label / name is second argument of CALL statement)
     Instruction callInstr{OpCode::CALL, {std::string(stmt.args.at(1).val.sval)}};
     this->insert(callInstr);

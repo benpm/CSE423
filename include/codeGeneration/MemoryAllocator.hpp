@@ -24,8 +24,8 @@ public:
 
     MemoryAllocator(CodeGenerator& codeGen);
 
-    InstrArg get(const Arg& arg);
-    InstrArg getReg(const Arg& arg);
+    InstrArg getLoc(const Arg& arg);
+    InstrArg allocateReg(const Arg& arg);
     void save(const Arg& arg);
     void deregister(const Arg& arg);
     void deregister(const std::unordered_set<Arg, ArgHash> args);

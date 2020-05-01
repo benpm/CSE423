@@ -5,19 +5,25 @@
 main:
 	push %rbp
 	mov %rsp, %rbp
+	push $0 # (int)i
+	push $0 # (int)j
+	push $0 # (int)k
 .main.0:
 # (2) <[int][ASSIGN], (int)i, 0>
+	mov -8(%rbp), %rax
 	mov $0, %rbx
 	mov %rbx, %rax
-	push %rax
+	mov %rax, -8(%rbp)
 # (3) <[int][ASSIGN], (int)j, (int)i>
+	mov -16(%rbp), %rax
 	mov -8(%rbp), %rbx
 	mov %rbx, %rax
-	push %rax
+	mov %rax, -16(%rbp)
 # (4) <[int][ASSIGN], (int)k, 10>
+	mov -24(%rbp), %rax
 	mov $10, %rbx
 	mov %rbx, %rax
-	push %rax
+	mov %rax, -24(%rbp)
 # (5) <[int][ADD], (int)i, (int)i, (int)k>
 	mov -8(%rbp), %rax
 	mov -24(%rbp), %rbx

@@ -6,6 +6,8 @@
 refun:
 	push %rbp
 	mov %rsp, %rbp
+	push $0 # (int)#0
+	push $0 # (int)#1
 .refun.0:
 # (2) <[int][ADD], (int)x, (int)x, 3>
 	mov 16(%rbp), %rax
@@ -22,16 +24,18 @@ refun:
 	jmp .refun.3
 .refun.2:
 # (4) <[int][MUL], (int)#0, (int)x, 2>
+	mov -8(%rbp), %rax
 	mov 16(%rbp), %rbx
 	mov $2, %rcx
 	imul %rbx, %rcx
 	mov %rcx, %rax
-	push %rax
+	mov %rax, -8(%rbp)
 # (4) <[int][CALL], (int)#1, refun, (int)#0>
 	push -8(%rbp)
+	mov -16(%rbp), %rax
 	call refun
 	add $8, %rsp
-	push %rax
+	mov %rax, -16(%rbp)
 .refun.3:
 # (6) <[int][RETURN], (int)x>
 	mov 16(%rbp), %rax
@@ -48,12 +52,14 @@ refun:
 main:
 	push %rbp
 	mov %rsp, %rbp
+	push $0 # (int)#0
 .main.0:
 # (11) <[int][CALL], (int)#0, refun, 1>
 	push $1
+	mov -8(%rbp), %rax
 	call refun
 	add $8, %rsp
-	push %rax
+	mov %rax, -8(%rbp)
 # (11) <[int][RETURN], (int)#0>
 	mov -8(%rbp), %rax
 # stack size is 16

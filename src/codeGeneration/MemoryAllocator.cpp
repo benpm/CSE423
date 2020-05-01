@@ -11,7 +11,7 @@ MemoryAllocator::MemoryAllocator(CodeGenerator& codeGen) :
     this->stackSize = 0;
 }
 
-InstrArg MemoryAllocator::get(const Arg& arg)
+InstrArg MemoryAllocator::getLoc(const Arg& arg)
 {
     spdlog::debug("--> Getting location for {}", arg.toString());
     
@@ -42,7 +42,7 @@ void MemoryAllocator::allocateArg(const Arg& arg)
 }
 
 
-InstrArg MemoryAllocator::getReg(const Arg& arg)
+InstrArg MemoryAllocator::allocateReg(const Arg& arg)
 {
     spdlog::debug("--> Getting register for {}", arg.toString());
     // Check if argument is already in a register, return the register if it is
@@ -95,22 +95,18 @@ void MemoryAllocator::save(const Arg& arg)
         spdlog::error("Cannot save {}, arg not assigned a register", arg.toString());
         exit(EXIT_FAILURE);
     }
+    if (this->storageMap.count(arg) == 0) {
+        spdlog::error("Cannot save {}, arg not a non-register location!", arg.toString());
+        exit(EXIT_FAILURE);
+    }
     assert(arg.type == Arg::Type::NAME);
 
     InstrArg src{this->regMap.at(arg)};
-    Instruction instr;
-    if (this->storageMap.count(arg)) { // Move from register to location on stack
-        InstrArg dest = this->storageMap.at(arg);
-        instr = {OpCode::MOV, {src, dest}}; // mov %reg, offset(%ebp)
-        spdlog::debug("----> Restoring {} to {}", arg.toString(), dest.toString());
-    } else { // Push onto stack, mapping where on stack we are
-        instr = {OpCode::PUSH, {src}}; // push %reg
-        this->storageMap.emplace(arg, InstrArg{Register::rbp, -this->stackSize});
-        this->stackSize += WORD_SIZE; // Increase stack size member
-        spdlog::debug("----> Pushing {} to -{}(%ebp)", arg.toString(), this->stackSize);
-    }
-
+    InstrArg dest = this->storageMap.at(arg);
+    Instruction instr = {OpCode::MOV, {src, dest}}; // mov %reg, offset(%ebp)
     this->codeGen.insert(instr);
+
+    spdlog::debug("----> Restoring {} to {}", arg.toString(), dest.toString());
 }
 
 void MemoryAllocator::deregister(const std::unordered_set<Arg, ArgHash> args)
@@ -164,7 +160,7 @@ void MemoryAllocator::insertAt(const Arg& arg, Register reg)
     } else if (this->storageMap.count(arg)) { // Not reg/imm, on stack?
         src = this->storageMap.at(arg); // offset(%ebp)
     } else {
-        spdlog::error("Inserting an argument {} at {} that doesnt exist yet!", arg.toString(), magic_enum::enum_name(reg));
+        spdlog::error("Inserting an argument {} at {} that doesnt exist!", arg.toString(), magic_enum::enum_name(reg));
         exit(EXIT_FAILURE);
     }
 

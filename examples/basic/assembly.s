@@ -5,11 +5,13 @@
 main:
 	push %rbp
 	mov %rsp, %rbp
+	push $0 # (int)foo
 .main.0:
 # (2) <[int][ASSIGN], (int)foo, 420>
+	mov -8(%rbp), %rax
 	mov $420, %rbx
 	mov %rbx, %rax
-	push %rax
+	mov %rax, -8(%rbp)
 # (3) <[JUMP_GT], <2>, (int)foo, 10>
 	mov -8(%rbp), %rax
 	mov $10, %rbx

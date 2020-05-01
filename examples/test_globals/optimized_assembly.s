@@ -23,6 +23,7 @@ z: .quad 13
 fun:
 	push %rbp
 	mov %rsp, %rbp
+	push $0 # (int)#0
 .fun.0:
 # (7) <[int][ADD], (int)v, (int)v, 9>
 	mov v(%rip), %rax
@@ -31,11 +32,12 @@ fun:
 	mov %rbx, %rax
 	mov %rax, v(%rip)
 # (8) <[int][ADD], (int)#0, 1, (int)v>
+	mov -8(%rbp), %rax
 	mov $1, %rbx
 	mov v(%rip), %rcx
 	add %rbx, %rcx
 	mov %rcx, %rax
-	push %rax
+	mov %rax, -8(%rbp)
 # (8) <[int][ADD], (int)x, (int)x, (int)#0>
 	mov x(%rip), %rax
 	mov -8(%rbp), %rbx
@@ -70,6 +72,9 @@ fun:
 main:
 	push %rbp
 	mov %rsp, %rbp
+	push $0 # (int)i
+	push $0 # (int)#0
+	push $0 # (int)#1
 .main.0:
 # (15) <[int][ADD], (int)v, (int)v, 2>
 	mov v(%rip), %rax
@@ -83,9 +88,10 @@ main:
 	mov %rbx, %rax
 	mov %rax, x(%rip)
 # (17) <[int][ASSIGN], (int)i, 0>
+	mov -8(%rbp), %rax
 	mov $0, %rbx
 	mov %rbx, %rax
-	push %rax
+	mov %rax, -8(%rbp)
 .main.3:
 # (17) <[JUMP_LT], <4>, (int)i, 7>
 	mov -8(%rbp), %rax
@@ -96,8 +102,9 @@ main:
 	jmp .main.6
 .main.4:
 # (18) <[int][CALL], (int)#0, (int)fun>
+	mov -16(%rbp), %rax
 	call fun
-	push %rax
+	mov %rax, -16(%rbp)
 # (18) <[int][ADD], (int)x, (int)x, (int)#0>
 	mov x(%rip), %rax
 	mov -16(%rbp), %rbx
@@ -121,11 +128,12 @@ main:
 	mov %rcx, %rax
 	mov %rax, -16(%rbp)
 # (20) <[int][ADD], (int)#1, (int)#0, (int)z>
+	mov -24(%rbp), %rax
 	mov -16(%rbp), %rbx
 	mov z(%rip), %rcx
 	add %rbx, %rcx
 	mov %rcx, %rax
-	push %rax
+	mov %rax, -24(%rbp)
 # (20) <[int][RETURN], (int)#1>
 	mov -24(%rbp), %rax
 # stack size is 32
