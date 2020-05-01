@@ -19,8 +19,8 @@
  */
 struct Error {
     enum Category {
-        UnusedVariable, UnusedFunction, UnusedLabel, UninitializedVariable, // Warnings
-        UndeclaredVariable, CallVariable, UndefinedFunction, MainUndefined, Redeclaration // Errors
+        UnusedVariable, UnusedFunction, UnusedLabel, UninitializedVariable, ShadowedVariable, // Warnings
+        UndeclaredVariable, ImproperUse, MainUndefined, Redeclaration // Errors
     };
 
     Category category;
@@ -47,14 +47,15 @@ private:
     std::vector<Error> errors;
 
     void analyzeProgram(AST const &ast);
-    void analyzeFunction(AST const *func, std::set<std::string> parentDecls);
-    void analyzeDeclaration(AST const *decl, std::set<std::string> &parentDecls);
+    void analyzeFunction(AST const *func, std::set<std::string> &parentDecls);
+    void analyzeDeclaration(AST const *decl, std::set<std::string> &localDecls,
+                            std::set<std::string> const &parentDecls);
     void analyzeOperation(AST const *op, std::set<std::string> const &parentDecls);
     void analyzeTerm(AST const *term, std::set<std::string> const &parentDecls);
     void analyzeCall(AST const *call, std::set<std::string> const &parentDecls);
-    void analyzeIfElse(AST const *ifElse, std::set<std::string> parentDecls);
-    void analyzeFor(AST const *forLoop, std::set<std::string> parentDecls);
-    void analyzeWhile(AST const *whileLoop, std::set<std::string> parentDecls);
+    void analyzeIfElse(AST const *ifElse, std::set<std::string> const &parentDecls);
+    void analyzeFor(AST const *forLoop, std::set<std::string> const &parentDecls);
+    void analyzeWhile(AST const *whileLoop, std::set<std::string> const &parentDecls);
     void analyzeLabel(AST const *labelStmt, std::set<std::string> const &parentDecls);
     void analyzeGoto(AST const *gotoStmt, std::set<std::string> const &parentDecls);
     bool isDeclared(std::string name, std::set<std::string> const &decls);

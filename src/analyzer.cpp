@@ -23,15 +23,16 @@
 Error::Error(Category cat, uint lineno, std::string name)
 {
     const std::map<Category, const std::string> templateMap {
-        {Category::UnusedVariable, "line {}: unused variable `{}`"},
-        {Category::UnusedFunction, "line {}: unused function `{}`"},
-        {Category::UnusedLabel, "line {}: unused label `{}`"},
-        {Category::UndeclaredVariable, "line {}: attempt to use undeclared variable `{}`"},
-        {Category::UndefinedFunction, "line {}: attempt to use undefined function `{}`"},
-        {Category::MainUndefined, "must define function `main` which returns `int` "
+        {Category::UnusedVariable, "line {}: unused variable ‘{}’"},
+        {Category::UnusedFunction, "line {}: unused function ‘{}’"},
+        {Category::UnusedLabel, "line {}: unused label ‘{}’"},
+        {Category::UndeclaredVariable, "line {}: attempt to use undeclared variable ‘{}’"},
+        {Category::ShadowedVariable, "line {}: declaration shadows earlier declaration of ‘{}’"},
+        {Category::ImproperUse, "line {}: improper use of symbol ‘{}’"},
+        {Category::MainUndefined, "must define function ‘main’ which returns type ‘int’ "
                                   "and has no paramaters"},
-        {Category::Redeclaration, "line {}: redeclaration of variable `{}`"},
-        {Category::UninitializedVariable, "line {}: attempt to use uninitialized variable `{}`"}
+        {Category::Redeclaration, "line {}: redeclaration of symbol ‘{}’"},
+        {Category::UninitializedVariable, "line {}: attempt to use uninitialized variable ‘{}’"}
     };
 
     this->category = cat;
@@ -44,6 +45,7 @@ Error::Error(Category cat, uint lineno, std::string name)
         case Category::UnusedFunction:
         case Category::UnusedLabel:
         case Category::UninitializedVariable:
+        case Category::ShadowedVariable:
             isFatal = false;
             break;
         default:
@@ -101,7 +103,7 @@ void SemanticAnalyzer::analyzeProgram(AST const &ast)
         switch (child->label) {
             case AST::Label::declaration:
                 // Traverse declaration AST
-                analyzeDeclaration(child, globalDeclarations);
+                analyzeDeclaration(child, globalDeclarations, globalDeclarations);
                 break;
             case AST::Label::function:
                 // Traverse function AST
@@ -117,27 +119,32 @@ void SemanticAnalyzer::analyzeProgram(AST const &ast)
  * @param parentDecls A mutable copy of the parent scope declarations
  *
  */
-void SemanticAnalyzer::analyzeFunction(AST const *func, std::set<std::string> parentDecls)
+void SemanticAnalyzer::analyzeFunction(AST const *func, std::set<std::string> &parentDecls)
 {
+    std::set<std::string> localDecls;
+
     std::string symbolName = func->children[1]->data.sval;
     if (isDeclared(symbolName, parentDecls)) {
-            // Error: symbol being redeclared
-            errors.emplace_back(Error::Category::Redeclaration, func->children[1]->lineNum, symbolName);
+        // Error: symbol being redeclared
+        errors.emplace_back(Error::Category::Redeclaration, func->children[1]->lineNum,
+                            symbolName);
     }
+    parentDecls.insert(symbolName);
 
     for (AST const *param : func->children[2]->children) {
         if (param->label == AST::Label::id) {
             std::string paramName = param->data.sval;
-            parentDecls.insert(paramName);
+            localDecls.insert(paramName);
             initialized.insert(param->inScope->getSymbol(paramName.c_str()));
         }
     }
 
     for (AST const *decl : func->children[3]->children)
-        analyzeDeclaration(decl, parentDecls);
+        analyzeDeclaration(decl, localDecls, parentDecls);
 
+    localDecls.insert(parentDecls.begin(), parentDecls.end());
     for (AST const *stmt : func->children[4]->children)
-        analyzeTerm(stmt, parentDecls);
+        analyzeTerm(stmt, localDecls);
 }
 
 /**
@@ -147,26 +154,38 @@ void SemanticAnalyzer::analyzeFunction(AST const *func, std::set<std::string> pa
  * @param parentDecls A mutable reference to the parent scope declarations
  *
  */
-void SemanticAnalyzer::analyzeDeclaration(AST const *decl, std::set<std::string> &parentDecls)
+void SemanticAnalyzer::analyzeDeclaration(AST const *decl, std::set<std::string> &localDecls,
+                                          std::set<std::string> const &parentDecls)
 {
+    std::set<std::string> liveDecls;
+
     if (decl->children[1]->label == AST::Label::assignment) {
         // Get name of identifier
         std::string symbolName = decl->children[1]->children[0]->data.sval;
-        if (isDeclared(symbolName, parentDecls)) {
+        if (isDeclared(symbolName, localDecls)) {
             // Error: symbol being redeclared
             errors.emplace_back(Error::Category::Redeclaration, decl->lineNum, symbolName);
+        } else {
+            localDecls.insert(symbolName);
         }
-        parentDecls.insert(symbolName);
+
+        if (isDeclared(symbolName, parentDecls)) {
+            // Warning: symbol being shadowed
+            errors.emplace_back(Error::Category::ShadowedVariable, decl->lineNum, symbolName);
+        }
+
+        liveDecls.insert(localDecls.begin(), localDecls.end());
+        liveDecls.insert(parentDecls.begin(), parentDecls.end());
         // Analyze rvalue of assignment operator
-        analyzeOperation(decl->children[1], parentDecls);
+        analyzeOperation(decl->children[1], liveDecls);
     } else {
         // Get name of identifier
         std::string symbolName = decl->children[1]->data.sval;
-        if (isDeclared(symbolName, parentDecls)) {
+        if (isDeclared(symbolName, localDecls)) {
             // Error: symbol being redeclared
             errors.emplace_back(Error::Category::Redeclaration, decl->lineNum, symbolName);
         }
-        parentDecls.insert(symbolName);
+        localDecls.insert(symbolName);
     }
 }
 
@@ -271,15 +290,11 @@ void SemanticAnalyzer::analyzeTerm(AST const *term, std::set<std::string> const 
 void SemanticAnalyzer::analyzeCall(AST const *call, std::set<std::string> const &parentDecls)
 {
     std::string symbolName = call->children[0]->data.sval;
-    if (!isDeclared(symbolName, parentDecls)) {
-        // Error: function not defined
-        errors.emplace_back(Error::Category::UndefinedFunction, call->lineNum, symbolName);
-    }
 
     if (std::string("printf") != call->children[0]->data.sval
         && call->inScope->getSymbol(symbolName.c_str())->category != Symbol::Category::Function) {
         // Error: cannot call variable as function
-        errors.emplace_back(Error::Category::CallVariable, call->lineNum, symbolName);
+        errors.emplace_back(Error::Category::ImproperUse, call->lineNum, symbolName);
     }
 
     if (call->children.size() > 1) {
@@ -287,14 +302,14 @@ void SemanticAnalyzer::analyzeCall(AST const *call, std::set<std::string> const 
             switch (arg->label) {
                 case AST::Label::id: {
                     std::string argName = arg->data.sval;
-                    if (!isDeclared(symbolName, parentDecls)) {
+                    if (!isDeclared(argName, parentDecls)) {
                         // Error: variable not declared
                         errors.emplace_back(Error::Category::UndeclaredVariable,
-                                            arg->lineNum, symbolName);
-                    } else if (!isInitialized(arg->inScope->getSymbol(symbolName.c_str()))) {
+                                            arg->lineNum, argName);
+                    } else if (!isInitialized(arg->inScope->getSymbol(argName.c_str()))) {
                         // Warning: variable not initialized
                         errors.emplace_back(Error::Category::UninitializedVariable,
-                                            arg->lineNum, symbolName);
+                                            arg->lineNum, argName);
                     }
                     break; }
                 case AST::Label::call:
@@ -321,22 +336,28 @@ void SemanticAnalyzer::analyzeCall(AST const *call, std::set<std::string> const 
  * @param parentDecls A mutable copy of the parent scope declarations
  *
  */
-void SemanticAnalyzer::analyzeIfElse(AST const *ifElse, std::set<std::string> parentDecls)
+void SemanticAnalyzer::analyzeIfElse(AST const *ifElse, std::set<std::string> const &parentDecls)
 {
+    std::set<std::string> localDecls;
+
     switch (ifElse->label) {
         case AST::Label::if_stmt:
         case AST::Label::else_if:
             analyzeTerm(ifElse->children[0], parentDecls);
             for (AST const *decl : ifElse->children[1]->children)
-                analyzeDeclaration(decl, parentDecls);
+                analyzeDeclaration(decl, localDecls, parentDecls);
+
+            localDecls.insert(parentDecls.begin(), parentDecls.end());
             for (AST const *stmt : ifElse->children[2]->children)
                 analyzeTerm(stmt, parentDecls);
             break;
         case AST::Label::else_stmt:
             for (AST const *decl : ifElse->children[0]->children)
-                analyzeDeclaration(decl, parentDecls);
+                analyzeDeclaration(decl, localDecls, parentDecls);
+
+            localDecls.insert(parentDecls.begin(), parentDecls.end());
             for (AST const *stmt : ifElse->children[1]->children)
-                analyzeTerm(stmt, parentDecls);
+                analyzeTerm(stmt, localDecls);
     }
 }
 
@@ -347,16 +368,23 @@ void SemanticAnalyzer::analyzeIfElse(AST const *ifElse, std::set<std::string> pa
  * @param parentDecls A mutable copy of the parent scope declarations
  *
  */
-void SemanticAnalyzer::analyzeFor(AST const *forLoop, std::set<std::string> parentDecls)
+void SemanticAnalyzer::analyzeFor(AST const *forLoop, std::set<std::string> const &parentDecls)
 {
-    analyzeDeclaration(forLoop->children[0], parentDecls);
-    analyzeTerm(forLoop->children[1], parentDecls);
-    analyzeTerm(forLoop->children[2], parentDecls);
+    std::set<std::string> localDecls;
+    std::set<std::string> liveDecls;
+
+    analyzeDeclaration(forLoop->children[0], localDecls, parentDecls);
+    liveDecls.insert(localDecls.begin(), localDecls.end());
+    liveDecls.insert(parentDecls.begin(), parentDecls.end());
+    analyzeTerm(forLoop->children[1], liveDecls);
+    analyzeTerm(forLoop->children[2], liveDecls);
 
     for (AST const *decl : forLoop->children[3]->children)
-        analyzeDeclaration(decl, parentDecls);
+        analyzeDeclaration(decl, localDecls, parentDecls);
+
+    localDecls.insert(parentDecls.begin(), parentDecls.end());
     for (AST const *stmt : forLoop->children[4]->children)
-        analyzeTerm(stmt, parentDecls);
+        analyzeTerm(stmt, localDecls);
 }
 
 /**
@@ -366,13 +394,17 @@ void SemanticAnalyzer::analyzeFor(AST const *forLoop, std::set<std::string> pare
  * @param parentDecls A mutable copy of the parent scope declarations
  *
  */
-void SemanticAnalyzer::analyzeWhile(AST const *whileLoop, std::set<std::string> parentDecls)
+void SemanticAnalyzer::analyzeWhile(AST const *whileLoop, std::set<std::string> const &parentDecls)
 {
+    std::set<std::string> localDecls;
+
     analyzeTerm(whileLoop->children[0], parentDecls);
     for (AST const *decl : whileLoop->children[1]->children)
-        analyzeDeclaration(decl, parentDecls);
+        analyzeDeclaration(decl, localDecls, parentDecls);
+
+    localDecls.insert(parentDecls.begin(), parentDecls.end());
     for (AST const *stmt : whileLoop->children[2]->children)
-        analyzeTerm(stmt, parentDecls);
+        analyzeTerm(stmt, localDecls);
 }
 
 /**
