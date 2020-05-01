@@ -155,6 +155,7 @@ void SemanticAnalyzer::analyzeFunction(AST const *func, std::set<std::string> &p
             std::string paramName = param->data.sval;
             localDecls.insert(paramName);
             initialized.insert(param->inScope->getSymbol(paramName.c_str()));
+            symbolLineNumber[param->inScope->getSymbol(paramName.c_str())] = param->lineNum;
         }
     }
 
