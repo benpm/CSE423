@@ -4,7 +4,7 @@ int foo() {
     int n;
     int d;
     int n = 10; // Error: variable redeclared
-    for (int n = 1; n < 10; n++) {
+    for (int n = 1; n < 10; n++) { // Warning; variable shadowed
         d = 5;
     }
 phoo: // Warning: unused label
@@ -18,5 +18,6 @@ int foo2() {
     int d = a + b; // Warning: uninitialized variable a
     goto bar;
 bar:
+    d(); // Error: improper use of symbol d
     return foo() * d + e; // Error: e not declared
 }
