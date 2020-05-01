@@ -52,15 +52,16 @@ ADD_FLEX_BISON_DEPENDENCY(scanner parser)
 ###########################################################
 add_executable(sc64
     "src/frontend.cpp"
+    "src/config.cpp"
     "src/parsetree.cpp"
     "src/ast.cpp"
-    "src/config.cpp"
     "src/symboltable.cpp"
-    "src/optimizer.cpp"
+    "src/analyzer.cpp"
     "src/ir/statement.cpp"
     "src/ir/basicblock.cpp"
     "src/ir/function.cpp"
     "src/ir/program.cpp"
+    "src/optimizer.cpp"
     ${FLEX_scanner_OUTPUTS}
     ${BISON_parser_OUTPUTS}
 )

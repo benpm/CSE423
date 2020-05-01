@@ -1,3 +1,4 @@
+[frontend][warning] line 15: unused variable ‘n3’
 <int, INT>
 <globA, ID>
 <=, EQUAL>

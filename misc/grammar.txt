@@ -15,8 +15,8 @@ paramList := paramList , typeSpecifier paramId | typeSpecifier paramId
 paramId := ID
 statement := expressionStmt | compoundStmt | selectionStmt | iterationStmt | returnStmt | breakStmt | labelStmt | gotoStmt
 expressionStmt := expression ; | ;
-expression := mutable assignop expression | unaryAssigExpr | simpleExpression
-unaryAssigExpr := unaryAssignop mutable | mutable unaryAssignop
+expression := mutable assignop expression | unaryAssignExpr | simpleExpression
+unaryAssignExpr := unaryAssignop mutable | mutable unaryAssignop
 mutable := ID
 assignop := = | += | -= | *= | /= | %=
 unaryAssignop := ++ | --

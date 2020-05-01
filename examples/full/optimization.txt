@@ -1,3 +1,4 @@
+[frontend][warning] line 15: unused variable ‘n3’
  BB4294967295 [globals]
   │(1) <[int][ASSIGN], (int)globA, 3>
   │(2) <[int][ASSIGN], (int)globB, 4>
@@ -5,8 +6,7 @@
 
 fun((float)V, (float)XKAD, )
   BB0 [combined]
-  │(6) <[float][ADD], (float)#0, (float)XKAD, (float)V>
-  │(6) <[float][ASSIGN], (float)n1, (float)#0>
+  │(6) <[float][ADD], (float)n1, (float)XKAD, (float)V>
   │(7) <[float][MUL], (float)#0, (float)n1, 80>
   │(7) <[float][RETURN], (float)#0>
   └────────────────────
@@ -70,12 +70,10 @@ main()
   └────────────────────
   BB23 [combined]
   │(36) <[float][CALL], (float)#1, fun, (float)DF, 0.202000>
-  │(36) <[float][CALL], (float)#2, fun, (float)#1, 0.900000>
-  │(36) <[float][ASSIGN], (float)DF, (float)#2>
+  │(36) <[float][CALL], (float)DF, fun, (float)#1, 0.900000>
   │(37) <[float][CALL], (float)#0, printf, "test: %f\n", (float)DF>
   │(39) <[float][MUL], (float)#0, (float)DF, (int)globA>
-  │(39) <[float][MUL], (float)#1, (float)#0, (int)globB>
-  │(39) <[float][ASSIGN], (float)DF, (float)#1>
+  │(39) <[float][MUL], (float)DF, (float)#0, (int)globB>
   │(41) <[float][MINUS], (float)#0, (float)DF>
   │(41) <[float][SUB], (float)#1, 0.800000, (float)#0>
   │(41) <[JUMP_LT], <27>, (float)DF, (float)#1>
