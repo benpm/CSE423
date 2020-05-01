@@ -25,10 +25,12 @@ Error::Error(Category cat, uint lineno, std::string name)
     const std::map<Category, const std::string> templateMap {
         {Category::UnusedVariable, "line {}: unused variable ‘{}’"},
         {Category::UnusedFunction, "line {}: unused function ‘{}’"},
+        {Category::UnusedParam, "line {}: unused function parameter ‘{}’"},
         {Category::UndeclaredVariable, "line {}: attempt to use undeclared variable ‘{}’"},
         {Category::UndefinedLabel, "line {}: attempt to use undefined label ‘{}’"},
         {Category::ShadowedVariable, "line {}: declaration shadows earlier declaration of ‘{}’"},
         {Category::ImproperUse, "line {}: improper use of symbol ‘{}’"},
+        {Category::WrongArgCount, "line {}: wrong number of parameters given to function ‘{}’"},
         {Category::Redeclaration, "line {}: redeclaration of symbol ‘{}’"},
         {Category::UninitializedVariable, "line {}: attempt to use uninitialized variable ‘{}’"}
     };
@@ -124,6 +126,7 @@ void SemanticAnalyzer::analyzeFunction(AST const *func, std::set<std::string> &p
     }
     parentDecls.insert(symbolName);
 
+    functionParamCount[symbolName] = func->children[2]->children.size() / 2;
     for (AST const *param : func->children[2]->children) {
         if (param->label == AST::Label::id) {
             std::string paramName = param->data.sval;
@@ -238,6 +241,9 @@ void SemanticAnalyzer::analyzeTerm(AST const *term, std::set<std::string> const 
                 errors.emplace_back(Error::Category::UninitializedVariable,
                                     term->lineNum, symbolName);
             }
+            // Mark symbol as used
+            if (isDeclared(symbolName, parentDecls))
+                used.insert(term->inScope->getSymbol(symbolName.c_str()));
             break; }
         case AST::Label::call:
             analyzeCall(term, parentDecls);
@@ -284,13 +290,24 @@ void SemanticAnalyzer::analyzeCall(AST const *call, std::set<std::string> const 
 {
     std::string symbolName = call->children[0]->data.sval;
 
-    if (std::string("printf") != call->children[0]->data.sval
-        && call->inScope->getSymbol(symbolName.c_str())->category != Symbol::Category::Function) {
+    if (isDeclared(symbolName, parentDecls)
+            && call->inScope->getSymbol(symbolName.c_str())->category
+            != Symbol::Category::Function) {
         // Error: cannot call variable as function
         errors.emplace_back(Error::Category::ImproperUse, call->lineNum, symbolName);
     }
 
+
+    // Mark symbol as used
+    if (isDeclared(symbolName, parentDecls))
+        used.insert(call->inScope->getSymbol(symbolName.c_str()));
+
     if (call->children.size() > 1) {
+        if (isDeclared(symbolName, parentDecls) && call->children[1]->children.size()
+                != functionParamCount[symbolName]) {
+            // Error: incorrect number of parameters
+            errors.emplace_back(Error::Category::WrongArgCount, call->lineNum, symbolName);
+        }
         for (AST *arg : call->children[1]->children) {
             switch (arg->label) {
                 case AST::Label::id: {

@@ -14,10 +14,15 @@ char bar() {
     return 'c';
 }
 
+int fun(int d) {
+    return d;
+}
+
 int main() {
     int a;
     int b = 10, c = 11; // Warning: unused variable c
     int d = a + b; // Warning: uninitialized variable a
+    fun(1, 2); // Error: incorrect number of parameters
     goto bar;
 bar:
     goto foo; // Error: undefined label

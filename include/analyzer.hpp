@@ -7,6 +7,7 @@
  */
 #pragma once
 
+#include <map>
 #include <set>
 #include <utility>
 #include <vector>
@@ -19,8 +20,8 @@
  */
 struct Error {
     enum Category {
-        UnusedVariable, UnusedFunction, UninitializedVariable, ShadowedVariable, // Warnings
-        UndeclaredVariable, UndefinedLabel, ImproperUse, Redeclaration // Errors
+        UnusedVariable, UnusedFunction, UnusedParam, UninitializedVariable, ShadowedVariable, // Warnings
+        UndeclaredVariable, UndefinedLabel, ImproperUse, WrongArgCount, Redeclaration // Errors
     };
 
     Category category;
@@ -43,6 +44,7 @@ class SemanticAnalyzer {
 private:
     std::set<Symbol*> initialized;
     std::set<Symbol*> used;
+    std::map<std::string, uint> functionParamCount;
     std::vector<Error> errors;
 
     void analyzeProgram(AST const &ast);
