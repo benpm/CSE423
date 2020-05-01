@@ -43,10 +43,10 @@ Config::Config(int argc, char **argv)
         case 'p':
             this->printParseTree = true;
             break;
-        // Suppress log messages (except errors)
+        // Suppress log messages (except warnings and errors)
         case 'l':
             this->suppressLogs = true;
-            spdlog::set_level(spdlog::level::err);
+            spdlog::set_level(spdlog::level::warn);
             break;
         // Print the SymbolTable representation
         case 's':
