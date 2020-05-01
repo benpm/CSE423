@@ -1,1 +1,0 @@
-[error] syntax error, unexpected UNKNOWN, expecting INT or FLOAT or CHAR on line 1

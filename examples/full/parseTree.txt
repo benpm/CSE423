@@ -1,4 +1,3 @@
-[frontend][warning] line 15: unused variable ‘n3’
 PROGRAM | Line num: 1
  └─DECLARATION_LIST | Line num: 10
    ├─DECLARATION_LIST | Line num: 5

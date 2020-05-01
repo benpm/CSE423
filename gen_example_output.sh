@@ -68,11 +68,11 @@ do
         printf "\tGenerating %s\n" $outName
 
         # Bash magic to get sterr indented on output
-        $compilerExecutable -l -$flag $cFile > $outName 2>&1
+        $compilerExecutable -l -$flag $cFile > $outName 2>/dev/null
     done
 
     printf "\tGenerating %s\n" $csvFlagName
-    $compilerExecutable -l $cFile -$csvFlag $csvFlagName 2> $csvFlagName
+    $compilerExecutable -l $cFile -$csvFlag $csvFlagName 2>/dev/null $csvFlagName
 
     cd ../
 done

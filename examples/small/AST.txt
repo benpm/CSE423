@@ -1,4 +1,3 @@
-[frontend][warning] line 6: unused variable ‘d’
 root
  └─[0] dec_list
    └─[1] function
