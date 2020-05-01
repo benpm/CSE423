@@ -66,5 +66,6 @@ public:
     void populateChildren(AST* ast);
     void print();
     size_t getDepth();
+    Symbol *getSymbol(const char *name);
     Symbol::Type getSymbolType(const char* name);
 };

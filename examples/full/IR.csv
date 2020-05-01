@@ -62,51 +62,52 @@ BB,23,combined
 stmt,36,float,MUL,float #0,0.101000,2
 stmt,36,float,CALL,float #1,fun,float DF,float #0
 stmt,36,float,CALL,float DF,fun,float #1,0.900000
+stmt,37,float,CALL,float #0,printf,"test: %f\n",float DF
 stmt,39,float,MUL,float #0,float DF,int globA
 stmt,39,float,MUL,float DF,float #0,int globB
 stmt,41,float,MINUS,float #0,float DF
 stmt,41,float,SUB,float #1,0.800000,float #0
-stmt,41,none,JUMP_LT,26,float DF,float #1
-stmt,41,none,JUMP,43
-BB,26,noteq
-stmt,42,none,JUMP_NEQ,27,int n2,10
-stmt,42,none,JUMP,31
-BB,27,combined
+stmt,41,none,JUMP_LT,27,float DF,float #1
+stmt,41,none,JUMP,44
+BB,27,noteq
+stmt,42,none,JUMP_NEQ,28,int n2,10
+stmt,42,none,JUMP,32
+BB,28,combined
 stmt,43,char,ASSIGN,char G,'H'
 stmt,44,int,MUL,int n1,int n1,1
 stmt,45,int,MOD,int n1,int n1,10
 stmt,46,int,ADD,int n1,int n1,1
-BB,31,le
-stmt,47,none,JUMP_GT,39,int n1,2
-BB,32,equal
-stmt,47,none,JUMP_EQ,36,char G,'H'
-BB,33,noteq
-stmt,47,none,JUMP_NEQ,36,int n2,100
-BB,34,fallthrough
-stmt,47,none,JUMP,39
+BB,32,le
+stmt,47,none,JUMP_GT,40,int n1,2
+BB,33,equal
+stmt,47,none,JUMP_EQ,37,char G,'H'
+BB,34,noteq
+stmt,47,none,JUMP_NEQ,37,int n2,100
 BB,35,fallthrough
-stmt,47,none,JUMP,36
-BB,36,combined
+stmt,47,none,JUMP,40
+BB,36,fallthrough
+stmt,47,none,JUMP,37
+BB,37,combined
 stmt,48,float,MINUS,float #0,0.600000
 stmt,48,float,ADD,float DF,float DF,float #0
-stmt,49,none,JUMP_EQ,38,float DF,0.000000
-stmt,49,none,JUMP,39
-BB,38,assignment
+stmt,49,none,JUMP_EQ,39,float DF,0.000000
+stmt,49,none,JUMP,40
+BB,39,assignment
 stmt,50,float,ASSIGN,float DF,1.010000
-BB,39,ge
-stmt,52,none,JUMP_GE,40,char G,'H'
-stmt,52,none,JUMP,42
-BB,40,combined
+BB,40,ge
+stmt,52,none,JUMP_GE,41,char G,'H'
+stmt,52,none,JUMP,43
+BB,41,combined
 stmt,53,int,MINUS,int n2,int n2,16
 stmt,54,int,MINUS,int n2,int n2,1
-BB,42,div_equal
+BB,43,div_equal
 stmt,56,int,DIV,int n1,int n1,2
-BB,43,goto_stmt
-stmt,59,none,JUMP,45
-BB,44,return_stmt
+BB,44,goto_stmt
+stmt,59,none,JUMP,46
+BB,45,return_stmt
 stmt,60,int,MINUS,int #0,1
 stmt,60,int,RETURN,int #0
-BB,45,combined
+BB,46,combined
 stmt,61,none,NO_OP
 stmt,62,int,MUL,int #0,int n1,2
 stmt,62,int,RETURN,int #0

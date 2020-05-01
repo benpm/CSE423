@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 BB,4294967295,globals
 func,main
 BB,0,combined
@@ -9,3 +10,10 @@ stmt,6,int,ADD,int j,int i,7
 stmt,7,int,ADD,int k,4,20
 stmt,8,int,RETURN,int i
 
+=======
+[frontend][warning] line 3: unused variable ‘a’
+[frontend][warning] line 5: unused variable ‘hek’
+[frontend][warning] line 6: unused variable ‘str’
+[frontend][warning] line 7: unused variable ‘str2’
+[frontend][error] line 13: redeclaration of symbol ‘a’
+>>>>>>> master

@@ -7,6 +7,7 @@
  */
 #include <iostream>
 #include <spdlog/spdlog.h>
+#include <analyzer.hpp>
 #include <ast.hpp>
 #include <config.hpp>
 #include <parsetree.hpp>
@@ -33,6 +34,16 @@ int main(int argc, char **argv)
         
         // Create symbol table
         SymbolTable symbolTable(&ast);
+
+        // Analyze the program's semantic validity
+        SemanticAnalyzer analyzer(ast);
+
+        if (analyzer.hasError) {
+            analyzer.printErrors();
+            return -1;
+        } else if (analyzer.hasWarning) {
+            analyzer.printErrors();
+        }
 
         // Create IR program
         Program program(ast);

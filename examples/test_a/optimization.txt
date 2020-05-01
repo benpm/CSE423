@@ -1,3 +1,4 @@
+<<<<<<< HEAD
  BB4294967295 [globals]
   └────────────────────
 
@@ -11,3 +12,10 @@ main()
   └────────────────────
 
 
+=======
+[frontend][warning] line 3: unused variable ‘a’
+[frontend][warning] line 5: unused variable ‘hek’
+[frontend][warning] line 6: unused variable ‘str’
+[frontend][warning] line 7: unused variable ‘str2’
+[frontend][error] line 13: redeclaration of symbol ‘a’
+>>>>>>> master

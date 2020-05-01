@@ -1,3 +1,4 @@
+[frontend][warning] line 6: unused variable ‘d’
 <int, INT>
 <main, ID>
 <(, LPAREN>

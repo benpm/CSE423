@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 PROGRAM | Line num: 1
  └─DECLARATION_LIST | Line num: 1
    └─DECLARATION | Line num: 1
@@ -143,3 +144,10 @@ PROGRAM | Line num: 1
                                └─UNARY_EXPRESSION | Line num: 8
                                  └─FACTOR | Line num: 8
                                    └─ID | Line num: 8 (i)
+=======
+[frontend][warning] line 3: unused variable ‘a’
+[frontend][warning] line 5: unused variable ‘hek’
+[frontend][warning] line 6: unused variable ‘str’
+[frontend][warning] line 7: unused variable ‘str2’
+[frontend][error] line 13: redeclaration of symbol ‘a’
+>>>>>>> master
