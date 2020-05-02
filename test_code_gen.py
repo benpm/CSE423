@@ -1,6 +1,7 @@
 import os
 import pathlib
 import subprocess
+import filecmp
 
 red = '\033[91m'
 stop = '\033[0m'
@@ -9,8 +10,7 @@ green = '\033[92m'
 def compile_sc64(path, silent=True):
     failed = 0
     failed += run_command(f"./build/sc64 -Sl {path} tmpSC64.s > tmpSC64.s", stdout=None)
-    failed += run_command("gcc -c tmpSC64.s -o tmpSC64.o")
-    failed += run_command("gcc tmpSC64.o -o tmpSC64")
+    failed += run_command("gcc tmpSC64.s -o tmpSC64")
     print(f"{red} FAILED!{stop}" if failed != 0 else f"{green} DONE!{stop}")
     return failed
 
@@ -25,30 +25,34 @@ def run_command(cmdstr, silent=True, stdout=subprocess.DEVNULL):
     return process.returncode
 
 def test_file(path):
-    print(f"~~~~~~~~~~~~~~~~~~~ {os.path.basename(path):^10} ~~~~~~~~~~~~~~~~~~~")
-    print(f"Compiling with GCC....", end="")
+    print("\n############################" + "#" * 20 + "############################")
+    print(f"# {os.path.basename(path):^72} #")
+    print("############################" + "#" * 20 + "############################")
+    print(f"# Compiling with GCC....", end="")
     gccres = run_command(f"gcc {path} -o tmpGCC", silent=False)
 
-    print(f"Compiling with SC64...", end="")
+    print(f"# Compiling with SC64...", end="")
     sc64res = compile_sc64(path)
 
     if gccres != 0 or sc64res != 0:
-        print(f"{red}Test failed during compilation!!{stop}")
+        print(f"# {red}Test failed during compilation!!{stop}")
         run_command("rm tmpGCC tmpSC64 tmpSC64.s tmpSC64.o")
         return
     
-    gccres  = run_command("./tmpGCC")
-    sc64res = run_command("./tmpSC64")
-
-    print(f"\tGCC  result: {gccres}")
-    print(f"\tSC64 result: {sc64res}")
-
-    if gccres == sc64res:
-        print(f"{green}Test passed!!{stop}")
+    gccres  = run_command("./tmpGCC > tmpgcc.txt")
+    sc64res = run_command("./tmpSC64 > tmpsc64.txt")
+    diffres = run_command("diff tmpgcc.txt tmpsc64.txt >/dev/null")
+    if (diffres != 0 or (gccres != sc64res)):
+        err = "RETURN VALUE" if (gccres != sc64res) else "PRINTF OUTPUT"
+        print(f"# {red}Test failed on {err}!!{stop}")
+        print(f"# ------------------------- Left: GCC | Right: Us --------------------------")
+        run_command("diff tmpgcc.txt tmpsc64.txt -y -W 80", stdout=None)
     else:
-        print(f"{red}Test failed!!{stop}")
+        print(f"# {green}Test passed!!{stop}")
 
-    run_command("rm tmpGCC tmpSC64 tmpSC64.s")
+    run_command("rm tmpGCC tmpSC64 tmpSC64.s tmpgcc.txt tmpsc64.txt")
+    print("############################" + "#" * 20 + "############################")
+
 
 
 def main():

@@ -12,5 +12,8 @@ int main()
             x += z % j;
         }
     }
+
+    printf("x: %d\n", x);
+
     return x;
 }

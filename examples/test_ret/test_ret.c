@@ -10,5 +10,6 @@ int funB()
 
 int main()
 {
+    printf("ret: %d\n", funA() + funB());
     return funA() + funB();
 }

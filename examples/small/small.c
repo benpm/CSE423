@@ -5,6 +5,7 @@ int main()
     int c = a + b * 12;
     float d = -8.011609;
 
+    printf("%d\n", c);
     if (c < 2) {
         return 35;
     } else {

@@ -8,5 +8,6 @@ int refun(int x) {
 
 int main()
 {
+    printf("refun(10): %d\n", refun(10));
     return refun(1);
 }

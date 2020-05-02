@@ -17,5 +17,6 @@ int main()
     for (int i = 0; i < 7; i++) {
         x += fun();
     }
+    printf("v: %d, x: %d, z: %d\n", v, x, z);
     return v + x + z;
 }
