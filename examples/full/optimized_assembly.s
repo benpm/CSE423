@@ -112,6 +112,7 @@ main:
 	mov -56(%rbp), %rax
 	mov -64(%rbp), %rbx
 	mov $2, %rcx
+	cqo 
 	idiv %rcx
 	mov %rax, %rbx # save quotient
 	mov %rbx, -64(%rbp)
@@ -136,6 +137,7 @@ main:
 	mov -8(%rbp), %rax
 	mov -56(%rbp), %rbx
 	mov $2, %rcx
+	cqo 
 	idiv %rcx
 	mov %rax, %rbx # save quotient
 	mov %rbx, -56(%rbp)
@@ -295,6 +297,7 @@ main:
 # (45) <[int][MOD], (int)n1, (int)n1, 10>
 	mov -8(%rbp), %rax
 	mov $10, %rbx
+	cqo 
 	idiv %rbx
 	mov %rdx, %rax # save remainder
 	mov %rax, -8(%rbp)
@@ -366,6 +369,7 @@ main:
 # (56) <[int][DIV], (int)n1, (int)n1, 2>
 	mov -8(%rbp), %rax
 	mov $2, %rbx
+	cqo 
 	idiv %rbx
 	mov %rax, %rax # save quotient
 	mov %rax, -8(%rbp)

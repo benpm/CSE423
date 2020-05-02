@@ -31,6 +31,7 @@ brute_force_fact:
 	mov 16(%rbp), %rax
 	mov -16(%rbp), %rbx
 	mov -8(%rbp), %rcx
+	cqo 
 	idiv %rcx
 	mov %rdx, %rbx # save remainder
 	mov %rbx, -16(%rbp)
@@ -135,6 +136,7 @@ optimization_congruence_class:
 	mov 16(%rbp), %rax
 	mov -16(%rbp), %rbx
 	mov $2, %rcx
+	cqo 
 	idiv %rcx
 	mov %rdx, %rbx # save remainder
 	mov %rbx, -16(%rbp)
@@ -148,6 +150,7 @@ optimization_congruence_class:
 	mov 16(%rbp), %rax
 	mov -16(%rbp), %rbx
 	mov $3, %rcx
+	cqo 
 	idiv %rcx
 	mov %rdx, %rbx # save remainder
 	mov %rbx, -16(%rbp)
@@ -186,6 +189,7 @@ optimization_congruence_class:
 	mov 16(%rbp), %rax
 	mov -16(%rbp), %rbx
 	mov $5, %rcx
+	cqo 
 	idiv %rcx
 	mov %rdx, %rbx # save remainder
 	mov %rbx, -16(%rbp)
@@ -199,6 +203,7 @@ optimization_congruence_class:
 	mov 16(%rbp), %rax
 	mov -24(%rbp), %rbx
 	mov $7, %rcx
+	cqo 
 	idiv %rcx
 	mov %rdx, %rbx # save remainder
 	mov %rbx, -24(%rbp)

@@ -90,6 +90,7 @@ funA:
 	mov 16(%rbp), %rax
 	mov -24(%rbp), %rbx
 	mov $-1, %rcx
+	cqo 
 	idiv %rcx
 	mov %rdx, %rbx # save remainder
 	mov %rbx, -24(%rbp)
@@ -238,6 +239,7 @@ funA:
 	mov -16(%rbp), %rax
 	mov -72(%rbp), %rbx
 	mov -64(%rbp), %rcx
+	cqo 
 	idiv %rcx
 	mov %rax, %rbx # save quotient
 	mov %rbx, -72(%rbp)
@@ -433,6 +435,7 @@ funB:
 	mov 16(%rbp), %rax
 	mov -8(%rbp), %rbx
 	mov $2, %rcx
+	cqo 
 	idiv %rcx
 	mov %rax, %rbx # save quotient
 	mov %rbx, -8(%rbp)
@@ -613,6 +616,7 @@ funB:
 	mov $420, %rax
 	mov -8(%rbp), %rbx
 	mov -64(%rbp), %rcx
+	cqo 
 	idiv %rcx
 	mov %rdx, %rbx # save remainder
 	mov %rbx, -8(%rbp)

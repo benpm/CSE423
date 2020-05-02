@@ -29,6 +29,7 @@ collatz:
 	mov 16(%rbp), %rax
 	mov -16(%rbp), %rbx
 	mov $2, %rcx
+	cqo 
 	idiv %rcx
 	mov %rdx, %rbx # save remainder
 	mov %rbx, -16(%rbp)
@@ -43,6 +44,7 @@ collatz:
 # (6) <[int][DIV], (int)i, (int)i, 2>
 	mov 16(%rbp), %rax
 	mov $2, %rbx
+	cqo 
 	idiv %rbx
 	mov %rax, %rax # save quotient
 	mov %rax, 16(%rbp)

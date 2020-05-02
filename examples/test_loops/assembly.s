@@ -98,6 +98,7 @@ main:
 	mov -40(%rbp), %rax
 	mov -24(%rbp), %rbx
 	mov -32(%rbp), %rcx
+	cqo 
 	idiv %rcx
 	mov %rdx, %rbx # save remainder
 	mov %rbx, -24(%rbp)
