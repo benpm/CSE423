@@ -38,7 +38,7 @@ funB:
 .globl main
 .type main, @function
 .data
-_string.0: .asciz "ret: %d\n"
+_string_main.0: .asciz "ret: %d\n"
 # FUNCTION main
 .text
 main:
@@ -65,10 +65,9 @@ main:
 	mov %rcx, %rax
 	mov %rax, -24(%rbp)
 # (13) <[int][CALL], (int)#3, printf, "ret: %d\n", (int)#2>
+	lea _string_main.0(%rip), %rdi
+	mov -24(%rbp), %rsi
 	mov $0, %rax
-	mov $1, %rsi
-	lea _string.0(%rip), %rdi
-	mov -24(%rbp), %rdx
 	call printf
 # (14) <[int][CALL], (int)#0, (int)funA>
 	mov -8(%rbp), %rax

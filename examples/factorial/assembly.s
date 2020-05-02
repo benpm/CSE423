@@ -2,8 +2,8 @@
 .globl main
 .type main, @function
 .data
-_string.0: .asciz "Error! Factorial of a negative number doesn't exist.\n"
-_string.1: .asciz "Factorial of %d = %d\n"
+_string_main.0: .asciz "Error! Factorial of a negative number doesn't exist.\n"
+_string_main.1: .asciz "Factorial of %d = %d\n"
 # FUNCTION main
 .text
 main:
@@ -34,9 +34,8 @@ main:
 	jmp .main.4
 .main.3:
 # (4) <[CALL], #0, printf, "Error! Factorial of a negative number doesn't exist.\n">
+	lea _string_main.0(%rip), %rdi
 	mov $0, %rax
-	mov $0, %rsi
-	lea _string.0(%rip), %rdi
 	call printf
 .main.4:
 # (6) <[int][ASSIGN], (int)i, 1>
@@ -69,11 +68,10 @@ main:
 	jmp .main.5
 .main.8:
 # (9) <[int][CALL], (int)#0, printf, "Factorial of %d = %d\n", (int)n, (int)fact>
+	lea _string_main.1(%rip), %rdi
+	mov -16(%rbp), %rsi
+	mov -8(%rbp), %rdx
 	mov $0, %rax
-	mov $2, %rsi
-	lea _string.1(%rip), %rdi
-	mov -16(%rbp), %rdx
-	mov -8(%rbp), %rcx
 	call printf
 # (11) <[int][RETURN], 0>
 	mov $0, %rax

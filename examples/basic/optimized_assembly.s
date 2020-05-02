@@ -2,7 +2,7 @@
 .globl main
 .type main, @function
 .data
-_string.0: .asciz "Foo val: %d\n"
+_string_main.0: .asciz "Foo val: %d\n"
 # FUNCTION main
 .text
 main:
@@ -20,10 +20,9 @@ main:
 .main.2:
 .main.3:
 # (6) <[int][CALL], (int)#0, printf, "Foo val: %d\n", 19>
+	lea _string_main.0(%rip), %rdi
+	mov $19, %rsi
 	mov $0, %rax
-	mov $1, %rsi
-	lea _string.0(%rip), %rdi
-	mov $19, %rdx
 	call printf
 # (7) <[int][RETURN], 0>
 	mov $0, %rax

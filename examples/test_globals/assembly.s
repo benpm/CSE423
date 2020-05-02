@@ -71,7 +71,7 @@ fun:
 .globl main
 .type main, @function
 .data
-_string.0: .asciz "v: %d, x: %d, z: %d\n"
+_string_main.0: .asciz "v: %d, x: %d, z: %d\n"
 # FUNCTION main
 .text
 main:
@@ -126,12 +126,11 @@ main:
 	jmp .main.3
 .main.6:
 # (20) <[int][CALL], (int)#0, printf, "v: %d, x: %d, z: %d\n", (int)v, (int)x, (int)z>
+	lea _string_main.0(%rip), %rdi
+	mov v(%rip), %rsi
+	mov x(%rip), %rdx
+	mov z(%rip), %rcx
 	mov $0, %rax
-	mov $3, %rsi
-	lea _string.0(%rip), %rdi
-	mov v(%rip), %rdx
-	mov x(%rip), %rcx
-	mov z(%rip), %r8
 	call printf
 # (21) <[int][ADD], (int)#0, (int)v, (int)x>
 	mov -16(%rbp), %rax

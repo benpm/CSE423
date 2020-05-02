@@ -50,7 +50,7 @@ fun:
 .globl main
 .type main, @function
 .data
-_string.0: .asciz "n1: %d, n2: %d, n3: %d\n"
+_string_main.0: .asciz "n1: %d, n2: %d, n3: %d\n"
 # FUNCTION main
 .text
 main:
@@ -371,12 +371,11 @@ main:
 	mov %rax, -8(%rbp)
 .main.43:
 # (59) <[int][CALL], (int)#0, printf, "n1: %d, n2: %d, n3: %d\n", (int)n1, (int)n2, (int)n3>
+	lea _string_main.0(%rip), %rdi
+	mov -8(%rbp), %rsi
+	mov -16(%rbp), %rdx
+	mov -24(%rbp), %rcx
 	mov $0, %rax
-	mov $3, %rsi
-	lea _string.0(%rip), %rdi
-	mov -8(%rbp), %rdx
-	mov -16(%rbp), %rcx
-	mov -24(%rbp), %r8
 	call printf
 # (61) <[JUMP], <46>>
 	jmp .main.46

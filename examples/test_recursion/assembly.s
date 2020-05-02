@@ -51,7 +51,7 @@ refun:
 .globl main
 .type main, @function
 .data
-_string.0: .asciz "refun(10): %d\n"
+_string_main.0: .asciz "refun(10): %d\n"
 # FUNCTION main
 .text
 main:
@@ -67,10 +67,9 @@ main:
 	add $8, %rsp
 	mov %rax, -8(%rbp)
 # (11) <[int][CALL], (int)#1, printf, "refun(10): %d\n", (int)#0>
+	lea _string_main.0(%rip), %rdi
+	mov -8(%rbp), %rsi
 	mov $0, %rax
-	mov $1, %rsi
-	lea _string.0(%rip), %rdi
-	mov -8(%rbp), %rdx
 	call printf
 # (12) <[int][CALL], (int)#0, refun, 1>
 	push $1

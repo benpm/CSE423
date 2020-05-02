@@ -1,0 +1,211 @@
+BB,4294967295,globals
+stmt,1,int,ASSIGN,int globalA,6874729
+stmt,2,int,ASSIGN,int globalB,222222
+func,funA,int x,int y,int z
+BB,0,combined
+stmt,6,int,ADD,int i,int x,int x
+stmt,7,int,MINUS,int #0,int z
+stmt,7,int,ADD,int #1,int x,int #0
+stmt,7,int,MUL,int j,int y,int #1
+stmt,8,int,MUL,int #0,int i,int j
+stmt,8,int,MUL,int k,int #0,int j
+stmt,9,none,JUMP_EQ,4,int z,0
+stmt,9,none,JUMP,5
+BB,4,assignment
+stmt,10,int,ASSIGN,int z,1
+BB,5,combined
+stmt,12,int,MINUS,int #0,int z
+stmt,12,int,MOD,int #1,int x,int #0
+stmt,12,int,MUL,int j,int y,int #1
+stmt,14,int,ASSIGN,int zzzz,0
+BB,7,noteq
+stmt,14,none,JUMP_NEQ,8,int zzzz,int globalB
+stmt,14,none,JUMP,28
+BB,8,lt
+stmt,15,none,JUMP_GE,15,int i,int j
+BB,9,equal
+stmt,15,none,JUMP_EQ,13,int j,int k
+BB,10,ge
+stmt,15,none,JUMP_GE,13,int i,int k
+BB,11,fallthrough
+stmt,15,none,JUMP,15
+BB,12,fallthrough
+stmt,15,none,JUMP,13
+BB,13,combined
+stmt,16,int,ADD,int i,int i,10
+stmt,17,int,MINUS,int globalA,int globalA,7
+BB,15,combined
+stmt,19,int,ADD,int i,int i,2
+stmt,20,int,MUL,int #0,10,int globalB
+stmt,20,int,ADD,int globalA,int globalA,int #0
+stmt,22,none,JUMP_GT,18,int i,100
+stmt,22,none,JUMP,21
+BB,18,noteq
+stmt,24,int,ADD,int #0,int k,int x
+stmt,24,int,SUB,int #1,int #0,int z
+stmt,24,int,ADD,int #2,int #1,int globalB
+stmt,24,none,JUMP_NEQ,19,int #2,0
+stmt,24,none,JUMP,20
+BB,19,return_stmt
+stmt,25,int,MUL,int #0,int i,int j
+stmt,25,int,ADD,int #1,int k,int x
+stmt,25,int,SUB,int #2,int #1,int z
+stmt,25,int,ADD,int #3,int #2,int globalB
+stmt,25,int,DIV,int #4,int #0,int #3
+stmt,25,int,RETURN,int #4
+BB,20,return_stmt
+stmt,27,int,MUL,int #0,int i,int j
+stmt,27,int,ADD,int #1,int k,int x
+stmt,27,int,SUB,int #2,int #1,int z
+stmt,27,int,ADD,int #3,int #2,int globalA
+stmt,27,int,ADD,int #4,int #0,int #3
+stmt,27,int,RETURN,int #4
+BB,21,lt
+stmt,30,int,MINUS,int #0,100
+stmt,30,none,JUMP_LT,22,int i,int #0
+stmt,30,none,JUMP,24
+BB,22,combined
+stmt,32,int,MINUS,int globalB,int globalB,2
+stmt,33,none,JUMP,28
+BB,24,equal
+stmt,35,none,JUMP_EQ,25,int i,0
+stmt,35,none,JUMP,27
+BB,25,combined
+stmt,37,int,ADD,int #0,int globalB,int i
+stmt,37,int,MUL,int globalA,int globalA,int #0
+stmt,38,none,JUMP,29
+BB,27,for_post
+stmt,14,int,ADD,int zzzz,int zzzz,2
+stmt,14,none,JUMP,7
+BB,28,return_stmt
+stmt,41,int,MINUS,int #0,int i
+stmt,41,int,MUL,int #1,int #0,int j
+stmt,41,int,MUL,int #2,int z,int #1
+stmt,41,int,RETURN,int #2
+BB,29,combined
+stmt,42,none,NO_OP
+stmt,43,int,ADD,int #0,int globalA,int globalB
+stmt,43,int,RETURN,int #0
+func,funB,int f
+BB,0,combined
+stmt,48,int,MINUS,int f,int f,1
+stmt,49,none,JUMP_LT,5,int f,10
+BB,2,lt
+stmt,49,none,JUMP_GE,5,int f,23
+BB,3,fallthrough
+stmt,49,none,JUMP,4
+BB,4,return_stmt
+stmt,51,int,DIV,int #0,int f,2
+stmt,51,int,CALL,int #1,funB,int #0
+stmt,51,int,MINUS,int #2,123
+stmt,51,int,MUL,int #3,int f,2
+stmt,51,int,MUL,int #4,int #3,int f
+stmt,51,int,SUB,int #5,int #4,int f
+stmt,51,int,CALL,int #6,funA,int #2,23,int #5
+stmt,51,int,ADD,int #7,int #1,int #6
+stmt,51,int,RETURN,int #7
+BB,5,lt
+stmt,52,none,JUMP_GE,9,int f,10
+BB,6,gt
+stmt,52,int,MINUS,int #0,10
+stmt,52,none,JUMP_LE,9,int f,int #0
+BB,7,fallthrough
+stmt,52,none,JUMP,8
+BB,8,return_stmt
+stmt,54,int,ADD,int #0,int globalA,69
+stmt,54,int,RETURN,int #0
+BB,9,lt
+stmt,55,none,JUMP_GE,24,int f,10
+BB,10,gt
+stmt,55,int,MINUS,int #0,100
+stmt,55,none,JUMP_LE,24,int f,int #0
+BB,11,fallthrough
+stmt,55,none,JUMP,13
+BB,12,assignment
+stmt,56,int,ASSIGN,int z,100
+BB,13,plus_equal
+stmt,57,int,MUL,int #0,int f,int f
+stmt,57,int,ADD,int f,int f,int #0
+BB,14,noteq
+stmt,59,int,MUL,int #0,int z,0
+stmt,59,none,JUMP_NEQ,15,int z,int #0
+stmt,59,none,JUMP,24
+BB,15,combined
+stmt,60,int,CALL,int #0,funA,10,20,int f
+stmt,60,int,MINUS,int z,int z,int #0
+stmt,61,none,JUMP_LT,17,int z,10
+stmt,61,none,JUMP,22
+BB,17,assignment
+stmt,62,int,ASSIGN,int g,int f
+BB,18,lt
+stmt,62,int,MUL,int #0,int f,2
+stmt,62,none,JUMP_LT,19,int g,int #0
+stmt,62,none,JUMP,21
+BB,19,combined
+stmt,63,int,MOD,int #0,420,int z
+stmt,63,int,CALL,int #1,funA,2,2,2
+stmt,63,int,ADD,int #2,int #0,int #1
+stmt,63,int,ADD,int z,int z,int #2
+stmt,62,int,ADD,int g,int g,1
+stmt,62,none,JUMP,18
+BB,21,return_stmt
+stmt,65,int,RETURN,0
+BB,22,combined
+stmt,67,int,MUL,int #0,int globalA,1
+stmt,67,int,MUL,int #1,int #0,123
+stmt,67,int,RETURN,int #1
+stmt,59,none,JUMP,14
+BB,24,noteq
+stmt,72,none,JUMP_NEQ,25,int f,0
+stmt,72,none,JUMP,26
+BB,25,return_stmt
+stmt,73,int,MUL,int #0,int f,int f
+stmt,73,int,MINUS,int #1,int globalB
+stmt,73,int,SUB,int #2,0,int #1
+stmt,73,int,ADD,int #3,int #0,int #2
+stmt,73,int,RETURN,int #3
+BB,26,return_stmt
+stmt,77,int,SUB,int #0,int f,1
+stmt,77,int,CALL,int #1,funB,int #0
+stmt,77,int,RETURN,int #1
+func,main
+BB,0,combined
+stmt,82,int,ASSIGN,int accum,0
+stmt,83,int,MINUS,int i,100
+BB,2,lt
+stmt,83,none,JUMP_LT,3,int i,100
+stmt,83,none,JUMP,12
+BB,3,assignment
+stmt,84,int,MINUS,int j,100
+BB,4,lt
+stmt,84,none,JUMP_LT,5,int j,100
+stmt,84,none,JUMP,11
+BB,5,assignment
+stmt,85,int,MINUS,int k,100
+BB,6,lt
+stmt,85,none,JUMP_LT,7,int k,100
+stmt,85,none,JUMP,10
+BB,7,combined
+stmt,86,int,CALL,int val,funA,int i,int j,int k
+stmt,88,int,ADD,int accum,int accum,int val
+stmt,85,int,ADD,int k,int k,1
+stmt,85,none,JUMP,6
+BB,10,for_post
+stmt,84,int,ADD,int j,int j,1
+stmt,84,none,JUMP,4
+BB,11,for_post
+stmt,83,int,ADD,int i,int i,1
+stmt,83,none,JUMP,2
+BB,12,assignment
+stmt,92,int,MINUS,int i,100
+BB,13,lt
+stmt,92,none,JUMP_LT,14,int i,100
+stmt,92,none,JUMP,17
+BB,14,combined
+stmt,93,int,CALL,int val,funB,int i
+stmt,95,int,ADD,int accum,int accum,int val
+stmt,92,int,ADD,int i,int i,1
+stmt,92,none,JUMP,13
+BB,17,return_stmt
+stmt,97,int,RETURN,int accum
+

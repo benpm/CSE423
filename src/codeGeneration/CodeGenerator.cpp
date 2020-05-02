@@ -53,7 +53,7 @@ void CodeGenerator::genFunction(const Program& program, const Function& func)
                     && arg.idType == Symbol::Type::None
                     && arg.val.sval[0] == '"') {
                     std::string string = arg.val.sval;
-                    std::string label = fmt::format("_string.{}", nthString);
+                    std::string label = fmt::format("_string_{}.{}", func.name, nthString);
                     this->insert({fmt::format("{}: .asciz {}", label, string)});
                     allocator.storageMap.emplace(arg, InstrArg{Register::rip, label});
                     nthString += 1;
@@ -336,25 +336,23 @@ void CodeGenerator::genPRINTF(MemoryAllocator& allocator, const Statement& stmt)
 {
     // Clear all registers (including %eax)
     allocator.clear();
-    // Variadic functions need the number of arguments stored in %al
-    this->insert({OpCode::MOV, {0, Register::rax}});
-    // Variadic functions need the number of arguments stored in %al
-    this->insert({OpCode::MOV, {(int)stmt.args.size() - 3, Register::rsi}});
     // Format string location goes in %rdi
     InstrArg stringLoc = allocator.getLoc(stmt.args.at(2));
     this->insert({OpCode::LEA, {stringLoc, Register::rdi}});
     // Other arguments, x86_64 calling convention
     int pushedArgs = 0;
-    const Register argOrder[] { Register::rdx, Register::rcx, Register::r8, Register::r9 };
+    const Register argOrder[] { Register::rsi, Register::rdx, Register::rcx, Register::r8, Register::r9 };
     for (int i = 3; i < stmt.args.size(); i++) {
         InstrArg arg = allocator.getLoc(stmt.args.at(i));
-        if (i <= 6) {
+        if (i <= 7) {
             this->insert({OpCode::MOV, {arg, argOrder[i - 3]}});
         } else {
             this->insert({OpCode::PUSH, {arg}});
             pushedArgs += 1;
         }
     }
+    // Clear %rax
+    this->insert({OpCode::MOV, {0, Register::rax}});
     // Function call
     const char* fname = "printf";
     this->insert({OpCode::CALL, {InstrArg{fname}}});

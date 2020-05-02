@@ -2,7 +2,7 @@
 .globl main
 .type main, @function
 .data
-_string.0: .asciz "%d\n"
+_string_main.0: .asciz "%d\n"
 # FUNCTION main
 .text
 main:
@@ -45,10 +45,9 @@ main:
 	mov %rbx, %rax
 	mov %rax, -40(%rbp)
 # (8) <[int][CALL], (int)#0, printf, "%d\n", (int)c>
+	lea _string_main.0(%rip), %rdi
+	mov -32(%rbp), %rsi
 	mov $0, %rax
-	mov $1, %rsi
-	lea _string.0(%rip), %rdi
-	mov -32(%rbp), %rdx
 	call printf
 # (9) <[JUMP_LT], <6>, (int)c, 2>
 	mov -32(%rbp), %rax
