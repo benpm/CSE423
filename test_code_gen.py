@@ -42,13 +42,21 @@ def test_file(path):
     gccres  = run_command("./tmpGCC > tmpgcc.txt")
     sc64res = run_command("./tmpSC64 > tmpsc64.txt")
     diffres = run_command("diff tmpgcc.txt tmpsc64.txt >/dev/null")
-    if (diffres != 0 or (gccres != sc64res)):
-        err = "RETURN VALUE" if (gccres != sc64res) else "PRINTF OUTPUT"
-        print(f"# {red}Test failed on {err}!!{stop}")
+    if (diffres != 0):
+        print(f"# {red}Test failed on PRINTF OUTPUT!!{stop}")
+    else:
+        print(f"# {green}Test passed on PRINTF OUTPUT!!{stop}") 
+
+    if (gccres != sc64res):
+        print(f"# {red}Test failed on RETURN VALUE!!{stop}")
+    else:
+        print(f"# {green}Test passed on RETURN VALUE!!{stop}") 
+
+    if (gccres != sc64res):
+        print(f"GCC: {gccres} | Us: {sc64res}")
+    if (diffres != 0):
         print(f"# ------------------------- Left: GCC | Right: Us --------------------------")
         run_command("diff tmpgcc.txt tmpsc64.txt -y -W 80", stdout=None)
-    else:
-        print(f"# {green}Test passed!!{stop}")
 
     run_command("rm tmpGCC tmpSC64 tmpSC64.s tmpgcc.txt tmpsc64.txt")
     print("############################" + "#" * 20 + "############################")
