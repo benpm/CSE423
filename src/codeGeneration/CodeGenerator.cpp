@@ -43,6 +43,17 @@ void CodeGenerator::genFunction(const Program& program, const Function& func)
         });
     }
 
+    // String constants
+    for (const BasicBlock& block : func.blocks) {
+        for (const Statement& stmt: block.statements) {
+            for (const Arg& arg : stmt.args) {
+                if (arg.type == Arg::NAME && arg.idType == Symbol::Type::None) {
+                    
+                }
+            }
+        }
+    }
+
     // Indicate function
     this->insert({fmt::format("# FUNCTION {}", func.name)});
 
