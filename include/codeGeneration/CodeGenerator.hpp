@@ -31,6 +31,7 @@ private:
     void genJUMP_IF_FALSE(MemoryAllocator& allocator, const Statement& stmt);
     void genRETURN(MemoryAllocator& allocator, const Statement& stmt);
     void genCALL(MemoryAllocator& allocator, const Statement& stmt);
+    void genPRINTF(MemoryAllocator& allocator, const Statement& stmt);
     void genNO_OP(MemoryAllocator& allocator, const Statement& stmt);
 public:
     std::vector<Instruction> instrs;

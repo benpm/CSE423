@@ -43,12 +43,20 @@ void CodeGenerator::genFunction(const Program& program, const Function& func)
         });
     }
 
-    // String constants
+    // Globals for string constants
+    this->insert({".data"});
+    int nthString = 0;
     for (const BasicBlock& block : func.blocks) {
         for (const Statement& stmt: block.statements) {
             for (const Arg& arg : stmt.args) {
-                if (arg.type == Arg::NAME && arg.idType == Symbol::Type::None) {
-                    
+                if (arg.type == Arg::NAME
+                    && arg.idType == Symbol::Type::None
+                    && arg.val.sval[0] == '"') {
+                    std::string string = arg.val.sval;
+                    std::string label = fmt::format("_string.{}", nthString);
+                    this->insert({fmt::format("{}: .asciz {}", label, string)});
+                    allocator.storageMap.emplace(arg, InstrArg{Register::rip, label});
+                    nthString += 1;
                 }
             }
         }
@@ -65,6 +73,7 @@ void CodeGenerator::genFunction(const Program& program, const Function& func)
     }
 
     // Function label, create frame
+    this->insert({".text"});
     this->insert({fmt::format("{}:", func.name)});
     this->insert({OpCode::PUSH, {Register::rbp}});
     this->insert({OpCode::MOV, {Register::rsp, Register::rbp}});
@@ -110,8 +119,13 @@ void CodeGenerator::genStatement(MemoryAllocator& allocator, const Statement& st
         case Statement::JUMP_IF_TRUE:  this->genJUMP_IF_TRUE(allocator, stmt);  break;
         case Statement::JUMP_IF_FALSE: this->genJUMP_IF_FALSE(allocator, stmt); break;
         case Statement::RETURN:        this->genRETURN(allocator, stmt);        break;
-        case Statement::CALL:          this->genCALL(allocator, stmt);          break;
         case Statement::NO_OP:         this->genNO_OP(allocator, stmt);         break;
+        case Statement::CALL:
+            if (std::string(stmt.args.at(1).val.sval) == "printf")
+                this->genPRINTF(allocator, stmt);
+            else
+                this->genCALL(allocator, stmt);
+            break;
         default: spdlog::error("Unhandled statement type"); exit(EXIT_FAILURE); break;
     }
 }
@@ -410,6 +424,39 @@ void CodeGenerator::genCALL(MemoryAllocator& allocator, const Statement& stmt)
     // Instruction movInstr{OpCode::MOV, {{Register::eax}, result}, "save result"};
     allocator.save(stmt.args.at(0));
     allocator.deregister(stmt.args.at(0));
+}
+
+void CodeGenerator::genPRINTF(MemoryAllocator& allocator, const Statement& stmt)
+{
+    // Clear all registers (including %eax)
+    allocator.clear();
+    // Variadic functions need the number of arguments stored in %al
+    this->insert({OpCode::MOV, {0, Register::rax}});
+    // Variadic functions need the number of arguments stored in %al
+    this->insert({OpCode::MOV, {(int)stmt.args.size() - 3, Register::rsi}});
+    // Format string location goes in %rdi
+    InstrArg stringLoc = allocator.getLoc(stmt.args.at(2));
+    this->insert({OpCode::LEA, {stringLoc, Register::rdi}});
+    // Other arguments, x86_64 calling convention
+    int pushedArgs = 0;
+    const Register argOrder[] { Register::rdx, Register::rcx, Register::r8, Register::r9 };
+    for (int i = 3; i < stmt.args.size(); i++) {
+        InstrArg arg = allocator.getLoc(stmt.args.at(i));
+        if (i <= 6) {
+            this->insert({OpCode::MOV, {arg, argOrder[i - 3]}});
+        } else {
+            this->insert({OpCode::PUSH, {arg}});
+            pushedArgs += 1;
+        }
+    }
+    // Function call
+    const char* fname = "printf";
+    this->insert({OpCode::CALL, {InstrArg{fname}}});
+    // Remove call arguments from frame, if there were any
+    if (pushedArgs > 0) {
+        Instruction addInstr{OpCode::ADD, {pushedArgs * WORD_SIZE, Register::rsp}};
+        this->insert(addInstr);
+    }
 }
 
 void CodeGenerator::genNO_OP(MemoryAllocator& allocator, const Statement& stmt)

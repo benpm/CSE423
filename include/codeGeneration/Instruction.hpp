@@ -12,9 +12,11 @@
 #define WORD_SIZE 8
 enum Register {
     // General registers
-    rax, rbx, rcx, rdx,
+    rax, rbx, rcx, rdx, r8, r9,
     // Special registers
     no_reg,
+    rsi = 123,
+    rdi = 124,
     rip = 125,
     rsp = 126,
     rbp = 127
@@ -76,7 +78,8 @@ enum OpCode {
     JNZ,   // jnz loc        | Jump if != 0, check if ZF == 0
     RET,   // ret [val]      | Loads next val on the stack into EIP, and then pops the specified number of bytes off the stack. If val not supplied, instruction will not pop any vals
     CALL,  // call loc       | Pushes the addr of the instr AFTER call instr to top of the stack, jumps to loc
-    CMP    // cmp arg0, arg1 | arg1 - arg0, sets flags
+    CMP,   // cmp arg0, arg1 | arg1 - arg0, sets flags
+    LEA    // lea addr, dest | Loads effective address of addr into dest
 };
 
 class Instruction
