@@ -1,0 +1,170 @@
+root
+ └─[0] dec_list
+   ├─[1] function
+   │ ├─[1] int_type
+   │ ├─[1] id (brute_force_fact)
+   │ ├─[1] params
+   │ │ ├─[1] int_type
+   │ │ └─[1] id (i)
+   │ ├─[1] dec_list
+   │ └─[2] list
+   │   ├─[3] for_stmt
+   │   │ ├─[3] declaration
+   │   │ │ ├─[3] int_type
+   │   │ │ └─[3] assignment
+   │   │ │   ├─[3] id (n)
+   │   │ │   └─[3] int_const (2)
+   │   │ ├─[3] lt
+   │   │ │ ├─[3] id (n)
+   │   │ │ └─[3] id (i)
+   │   │ ├─[3] incr
+   │   │ │ └─[3] id (n)
+   │   │ ├─[4] dec_list
+   │   │ └─[4] list
+   │   │   └─[5] if_stmt
+   │   │     ├─[5] equal
+   │   │     │ ├─[5] modulo
+   │   │     │ │ ├─[5] id (i)
+   │   │     │ │ └─[5] id (n)
+   │   │     │ └─[5] int_const (0)
+   │   │     ├─[5] dec_list
+   │   │     └─[6] list
+   │   │       ├─[6] call
+   │   │       │ ├─[6] id (printf)
+   │   │       │ └─[6] args
+   │   │       │   ├─[6] string_const ("%d is not prime! %d divides it!\n")
+   │   │       │   ├─[6] id (i)
+   │   │       │   └─[6] id (n)
+   │   │       └─[6] return_stmt
+   │   │         └─[6] int_const (0)
+   │   ├─[2] call
+   │   │ ├─[2] id (printf)
+   │   │ └─[2] args
+   │   │   ├─[2] string_const ("%d is prime!\n")
+   │   │   └─[2] id (i)
+   │   └─[2] return_stmt
+   │     └─[2] int_const (0)
+   ├─[7] function
+   │ ├─[7] int_type
+   │ ├─[7] id (optimization_congruence_class)
+   │ ├─[7] params
+   │ │ ├─[7] int_type
+   │ │ └─[7] id (i)
+   │ ├─[7] dec_list
+   │ │ └─[7] declaration
+   │ │   ├─[7] int_type
+   │ │   └─[7] assignment
+   │ │     ├─[7] id (j)
+   │ │     └─[7] int_const (5)
+   │ └─[8] list
+   │   ├─[9] if_stmt
+   │   │ ├─[9] log_or
+   │   │ │ ├─[9] equal
+   │   │ │ │ ├─[9] id (i)
+   │   │ │ │ └─[9] int_const (2)
+   │   │ │ └─[9] equal
+   │   │ │   ├─[9] id (i)
+   │   │ │   └─[9] int_const (3)
+   │   │ ├─[9] dec_list
+   │   │ └─[10] list
+   │   │   ├─[10] call
+   │   │   │ ├─[10] id (printf)
+   │   │   │ └─[10] args
+   │   │   │   ├─[10] string_const ("%d is prime!\n")
+   │   │   │   └─[10] id (i)
+   │   │   └─[10] return_stmt
+   │   │     └─[10] int_const (0)
+   │   ├─[11] if_stmt
+   │   │ ├─[11] log_or
+   │   │ │ ├─[11] equal
+   │   │ │ │ ├─[11] modulo
+   │   │ │ │ │ ├─[11] id (i)
+   │   │ │ │ │ └─[11] int_const (2)
+   │   │ │ │ └─[11] int_const (0)
+   │   │ │ └─[11] equal
+   │   │ │   ├─[11] modulo
+   │   │ │   │ ├─[11] id (i)
+   │   │ │   │ └─[11] int_const (3)
+   │   │ │   └─[11] int_const (0)
+   │   │ ├─[11] dec_list
+   │   │ └─[12] list
+   │   │   ├─[12] call
+   │   │   │ ├─[12] id (printf)
+   │   │   │ └─[12] args
+   │   │   │   ├─[12] string_const ("%d is not prime! 2 or 3 divides it\n")
+   │   │   │   └─[12] id (i)
+   │   │   └─[12] return_stmt
+   │   │     └─[12] int_const (0)
+   │   ├─[13] while_stmt
+   │   │ ├─[13] lt
+   │   │ │ ├─[13] mul
+   │   │ │ │ ├─[13] id (j)
+   │   │ │ │ └─[13] id (j)
+   │   │ │ └─[13] id (i)
+   │   │ ├─[14] dec_list
+   │   │ └─[14] list
+   │   │   ├─[15] if_stmt
+   │   │   │ ├─[15] log_or
+   │   │   │ │ ├─[15] equal
+   │   │   │ │ │ ├─[15] modulo
+   │   │   │ │ │ │ ├─[15] id (i)
+   │   │   │ │ │ │ └─[15] id (j)
+   │   │   │ │ │ └─[15] int_const (0)
+   │   │   │ │ └─[15] equal
+   │   │   │ │   ├─[15] modulo
+   │   │   │ │   │ ├─[15] id (i)
+   │   │   │ │   │ └─[15] sum
+   │   │   │ │   │   ├─[15] id (j)
+   │   │   │ │   │   └─[15] int_const (2)
+   │   │   │ │   └─[15] int_const (0)
+   │   │   │ ├─[15] dec_list
+   │   │   │ └─[16] list
+   │   │   │   ├─[16] call
+   │   │   │   │ ├─[16] id (printf)
+   │   │   │   │ └─[16] args
+   │   │   │   │   ├─[16] string_const ("%d is not prime! %d divides it!\n")
+   │   │   │   │   ├─[16] id (i)
+   │   │   │   │   └─[16] id (j)
+   │   │   │   └─[16] return_stmt
+   │   │   │     └─[16] int_const (0)
+   │   │   └─[14] assignment
+   │   │     ├─[14] id (j)
+   │   │     └─[14] sum
+   │   │       ├─[14] id (j)
+   │   │       └─[14] int_const (6)
+   │   ├─[8] call
+   │   │ ├─[8] id (printf)
+   │   │ └─[8] args
+   │   │   ├─[8] string_const ("%d is prime!\n")
+   │   │   └─[8] id (i)
+   │   └─[8] return_stmt
+   │     └─[8] int_const (0)
+   └─[17] function
+     ├─[17] int_type
+     ├─[17] id (main)
+     ├─[17] params
+     ├─[17] dec_list
+     └─[18] list
+       ├─[19] for_stmt
+       │ ├─[19] declaration
+       │ │ ├─[19] int_type
+       │ │ └─[19] assignment
+       │ │   ├─[19] id (i)
+       │ │   └─[19] int_const (1)
+       │ ├─[19] lt
+       │ │ ├─[19] id (i)
+       │ │ └─[19] int_const (100)
+       │ ├─[19] incr
+       │ │ └─[19] id (i)
+       │ ├─[20] dec_list
+       │ └─[20] list
+       │   ├─[20] call
+       │   │ ├─[20] id (brute_force_fact)
+       │   │ └─[20] args
+       │   │   └─[20] id (i)
+       │   └─[20] call
+       │     ├─[20] id (optimization_congruence_class)
+       │     └─[20] args
+       │       └─[20] id (i)
+       └─[18] return_stmt
+         └─[18] int_const (0)
