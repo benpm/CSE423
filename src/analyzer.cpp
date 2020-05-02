@@ -414,10 +414,10 @@ void SemanticAnalyzer::analyzeIfElse(AST const *ifElse, std::set<std::string> co
 
             localDecls.insert(parentDecls.begin(), parentDecls.end());
             for (AST const *stmt : ifElse->children[2]->children)
-                analyzeTerm(stmt, parentDecls);
+                analyzeTerm(stmt, localDecls);
             
-            for (auto it = ifElse->children.begin() + 3; it < ifElse->children.end(); it++)
-                analyzeIfElse(*it, parentDecls);
+            for (auto it = ifElse->children.begin() + 3; it != ifElse->children.end(); it++)
+                analyzeIfElse(*it, localDecls);
             break;
         case AST::Label::else_if:
             analyzeTerm(ifElse->children[0], parentDecls);
@@ -426,7 +426,7 @@ void SemanticAnalyzer::analyzeIfElse(AST const *ifElse, std::set<std::string> co
 
             localDecls.insert(parentDecls.begin(), parentDecls.end());
             for (AST const *stmt : ifElse->children[2]->children)
-                analyzeTerm(stmt, parentDecls);
+                analyzeTerm(stmt, localDecls);
             break;
         case AST::Label::else_stmt:
             for (AST const *decl : ifElse->children[0]->children)
