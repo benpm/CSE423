@@ -21,7 +21,7 @@
 <{, LBRACE>
 <printf, ID>
 <(, LPAREN>
-<"Error! Factorial of a negative number doesn't exist.", STRINGLIT>
+<"Error! Factorial of a negative number doesn't exist.\n", STRINGLIT>
 <), RPAREN>
 <;, SEMICOLON>
 <}, RBRACE>
@@ -49,7 +49,7 @@
 <}, RBRACE>
 <printf, ID>
 <(, LPAREN>
-<"Factorial of %d = %d", STRINGLIT>
+<"Factorial of %d = %d\n", STRINGLIT>
 <,, COMMA>
 <n, ID>
 <,, COMMA>

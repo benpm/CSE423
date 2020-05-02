@@ -1,8 +1,10 @@
 .text
 .globl refun
 .type refun, @function
+.data
 # FUNCTION refun
 # param (int)x at 16(%rbp)
+.text
 refun:
 	push %rbp
 	mov %rsp, %rbp
@@ -48,7 +50,9 @@ refun:
 .text
 .globl main
 .type main, @function
+.data
 # FUNCTION main
+.text
 main:
 	push %rbp
 	mov %rsp, %rbp

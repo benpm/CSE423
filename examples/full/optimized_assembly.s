@@ -13,9 +13,11 @@ globB: .quad 4
 .text
 .globl fun
 .type fun, @function
+.data
 # FUNCTION fun
 # param (float)V at 16(%rbp)
 # param (float)XKAD at 24(%rbp)
+.text
 fun:
 	push %rbp
 	mov %rsp, %rbp
@@ -47,7 +49,9 @@ fun:
 .text
 .globl main
 .type main, @function
+.data
 # FUNCTION main
+.text
 main:
 	push %rbp
 	mov %rsp, %rbp

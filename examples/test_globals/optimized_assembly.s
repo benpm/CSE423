@@ -19,7 +19,9 @@ z: .quad 13
 .text
 .globl fun
 .type fun, @function
+.data
 # FUNCTION fun
+.text
 fun:
 	push %rbp
 	mov %rsp, %rbp
@@ -68,7 +70,9 @@ fun:
 .text
 .globl main
 .type main, @function
+.data
 # FUNCTION main
+.text
 main:
 	push %rbp
 	mov %rsp, %rbp

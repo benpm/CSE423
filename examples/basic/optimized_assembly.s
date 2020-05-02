@@ -1,7 +1,9 @@
 .text
 .globl main
 .type main, @function
+.data
 # FUNCTION main
+.text
 main:
 	push %rbp
 	mov %rsp, %rbp

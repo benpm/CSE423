@@ -1,7 +1,9 @@
 .text
 .globl funA
 .type funA, @function
+.data
 # FUNCTION funA
+.text
 funA:
 	push %rbp
 	mov %rsp, %rbp
@@ -17,7 +19,9 @@ funA:
 .text
 .globl funB
 .type funB, @function
+.data
 # FUNCTION funB
+.text
 funB:
 	push %rbp
 	mov %rsp, %rbp
@@ -33,7 +37,9 @@ funB:
 .text
 .globl main
 .type main, @function
+.data
 # FUNCTION main
+.text
 main:
 	push %rbp
 	mov %rsp, %rbp

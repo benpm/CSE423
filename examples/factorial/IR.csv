@@ -6,7 +6,7 @@ stmt,2,int,ASSIGN,int n,10
 stmt,3,none,JUMP_LT,3,int n,0
 stmt,3,none,JUMP,4
 BB,3,call
-stmt,4,none,CALL,#0,printf,"Error! Factorial of a negative number doesn't exist."
+stmt,4,none,CALL,#0,printf,"Error! Factorial of a negative number doesn't exist.\n"
 BB,4,assignment
 stmt,6,int,ASSIGN,int i,1
 BB,5,le
@@ -17,6 +17,6 @@ stmt,7,int,MUL,int fact,int fact,int i
 stmt,6,int,ADD,int i,int i,1
 stmt,6,none,JUMP,5
 BB,8,combined
-stmt,9,int,CALL,int #0,printf,"Factorial of %d = %d",int n,int fact
+stmt,9,int,CALL,int #0,printf,"Factorial of %d = %d\n",int n,int fact
 stmt,11,int,RETURN,0
 
