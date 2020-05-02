@@ -1,0 +1,81 @@
+root
+ └─[0] dec_list
+   ├─[1] function
+   │ ├─[1] int_type
+   │ ├─[1] id (collatz)
+   │ ├─[1] params
+   │ │ ├─[1] int_type
+   │ │ └─[1] id (i)
+   │ ├─[1] dec_list
+   │ │ └─[1] declaration
+   │ │   ├─[1] int_type
+   │ │   └─[1] assignment
+   │ │     ├─[1] id (iters)
+   │ │     └─[1] int_const (0)
+   │ └─[2] list
+   │   ├─[3] while_stmt
+   │   │ ├─[3] noteq
+   │   │ │ ├─[3] id (i)
+   │   │ │ └─[3] int_const (1)
+   │   │ ├─[4] dec_list
+   │   │ └─[4] list
+   │   │   ├─[5] if_stmt
+   │   │   │ ├─[5] equal
+   │   │   │ │ ├─[5] modulo
+   │   │   │ │ │ ├─[5] id (i)
+   │   │   │ │ │ └─[5] int_const (2)
+   │   │   │ │ └─[5] int_const (0)
+   │   │   │ ├─[5] dec_list
+   │   │   │ ├─[6] list
+   │   │   │ │ └─[6] assignment
+   │   │   │ │   ├─[6] id (i)
+   │   │   │ │   └─[6] divide
+   │   │   │ │     ├─[6] id (i)
+   │   │   │ │     └─[6] int_const (2)
+   │   │   │ └─[7] else_stmt
+   │   │   │   ├─[7] dec_list
+   │   │   │   └─[8] list
+   │   │   │     └─[8] assignment
+   │   │   │       ├─[8] id (i)
+   │   │   │       └─[8] sum
+   │   │   │         ├─[8] mul
+   │   │   │         │ ├─[8] int_const (3)
+   │   │   │         │ └─[8] id (i)
+   │   │   │         └─[8] int_const (1)
+   │   │   └─[4] incr
+   │   │     └─[4] id (iters)
+   │   └─[2] return_stmt
+   │     └─[2] id (iters)
+   └─[9] function
+     ├─[9] int_type
+     ├─[9] id (main)
+     ├─[9] params
+     ├─[9] dec_list
+     └─[10] list
+       ├─[11] for_stmt
+       │ ├─[11] declaration
+       │ │ ├─[11] int_type
+       │ │ └─[11] assignment
+       │ │   ├─[11] id (i)
+       │ │   └─[11] int_const (1)
+       │ ├─[11] lt
+       │ │ ├─[11] id (i)
+       │ │ └─[11] int_const (100)
+       │ ├─[11] incr
+       │ │ └─[11] id (i)
+       │ ├─[12] dec_list
+       │ └─[12] list
+       │   └─[12] call
+       │     ├─[12] id (printf)
+       │     └─[12] args
+       │       ├─[12] string_const ("%d: %d\n")
+       │       ├─[12] id (i)
+       │       └─[12] call
+       │         ├─[12] id (collatz)
+       │         └─[12] args
+       │           └─[12] id (i)
+       └─[10] return_stmt
+         └─[10] call
+           ├─[10] id (collatz)
+           └─[10] args
+             └─[10] int_const (100)

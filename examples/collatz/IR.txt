@@ -1,0 +1,49 @@
+ BB4294967295 [globals]
+  └────────────────────
+
+collatz((int)i, )
+  BB0 [assignment]
+  │(3) <[int][ASSIGN], (int)iters, 0>
+  └────────────────────
+  BB1 [noteq]
+  │(4) <[JUMP_NEQ], <2>, (int)i, 1>
+  │(4) <[JUMP], <7>>
+  └────────────────────
+  BB2 [equal]
+  │(5) <[int][MOD], (int)#0, (int)i, 2>
+  │(5) <[JUMP_EQ], <3>, (int)#0, 0>
+  │(5) <[JUMP], <4>>
+  └────────────────────
+  BB3 [assignment]
+  │(6) <[int][DIV], (int)i, (int)i, 2>
+  └────────────────────
+  BB4 [combined]
+  │(8) <[int][MUL], (int)#0, 3, (int)i>
+  │(8) <[int][ADD], (int)i, (int)#0, 1>
+  │(10) <[int][ADD], (int)iters, (int)iters, 1>
+  │(4) <[JUMP], <1>>
+  └────────────────────
+  BB7 [return_stmt]
+  │(13) <[int][RETURN], (int)iters>
+  └────────────────────
+
+main()
+  BB0 [assignment]
+  │(18) <[int][ASSIGN], (int)i, 1>
+  └────────────────────
+  BB1 [lt]
+  │(18) <[JUMP_LT], <2>, (int)i, 100>
+  │(18) <[JUMP], <4>>
+  └────────────────────
+  BB2 [combined]
+  │(19) <[int][CALL], (int)#0, collatz, (int)i>
+  │(19) <[int][CALL], (int)#1, printf, "%d: %d\n", (int)i, (int)#0>
+  │(18) <[int][ADD], (int)i, (int)i, 1>
+  │(18) <[JUMP], <1>>
+  └────────────────────
+  BB4 [return_stmt]
+  │(22) <[int][CALL], (int)#0, collatz, 100>
+  │(22) <[int][RETURN], (int)#0>
+  └────────────────────
+
+
