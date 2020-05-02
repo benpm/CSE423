@@ -26,14 +26,17 @@ public:
 
     InstrArg getLoc(const Arg& arg);
     InstrArg allocateReg(const Arg& arg);
+    void allocateArg(const Arg& arg);
+
     void save(const Arg& arg);
     void deregister(const Arg& arg);
     void deregister(const std::unordered_set<Arg, ArgHash> args);
+
     void evict(Register reg);
     void clear();
     void insertAt(const Arg& arg, Register reg);
+
     void parameter(const Arg& arg, int n);
-    void allocateArg(const Arg& arg);
 private:
     Register getNextAvailReg(const Arg& arg);
 };
