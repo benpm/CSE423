@@ -51,22 +51,36 @@ refun:
 .globl main
 .type main, @function
 .data
+_string.0: .asciz "refun(10): %d\n"
 # FUNCTION main
 .text
 main:
 	push %rbp
 	mov %rsp, %rbp
 	push $0 # (int)#0
+	push $0 # (int)#1
 .main.0:
-# (11) <[int][CALL], (int)#0, refun, 1>
+# (11) <[int][CALL], (int)#0, refun, 10>
+	push $10
+	mov -8(%rbp), %rax
+	call refun
+	add $8, %rsp
+	mov %rax, -8(%rbp)
+# (11) <[int][CALL], (int)#1, printf, "refun(10): %d\n", (int)#0>
+	mov $0, %rax
+	mov $1, %rsi
+	lea _string.0(%rip), %rdi
+	mov -8(%rbp), %rdx
+	call printf
+# (12) <[int][CALL], (int)#0, refun, 1>
 	push $1
 	mov -8(%rbp), %rax
 	call refun
 	add $8, %rsp
 	mov %rax, -8(%rbp)
-# (11) <[int][RETURN], (int)#0>
+# (12) <[int][RETURN], (int)#0>
 	mov -8(%rbp), %rax
-# stack size is 16
+# stack size is 24
 	mov %rbp, %rdx
 	sub %rsp, %rdx
 	add %rdx, %rsp

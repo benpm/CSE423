@@ -33,6 +33,16 @@
 <(, LPAREN>
 <), RPAREN>
 <{, LBRACE>
+<printf, ID>
+<(, LPAREN>
+<"refun(10): %d\n", STRINGLIT>
+<,, COMMA>
+<refun, ID>
+<(, LPAREN>
+<10, INTCONST>
+<), RPAREN>
+<), RPAREN>
+<;, SEMICOLON>
 <return, RETURN>
 <refun, ID>
 <(, LPAREN>

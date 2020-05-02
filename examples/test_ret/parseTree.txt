@@ -54,26 +54,65 @@ PROGRAM | Line num: 1
        └─STATEMENT | Line num: 12
          └─COMPOUND_STMT | Line num: 12
            ├─LOCAL_DECLARATIONS | Line num: 12
-           └─STATEMENT_LIST | Line num: 13
-             └─STATEMENT | Line num: 13
-               └─RETURN_STMT | Line num: 13
-                 └─EXPRESSION | Line num: 13
-                   └─SIMPLE_EXPRESSION | Line num: 13
-                     └─AND_EXPRESSION | Line num: 13
-                       └─UNARY_REL_EXPRESSION | Line num: 13
-                         └─REL_EXPRESSION | Line num: 13
-                           └─SUM_EXPRESSION | Line num: 13
-                             ├─SUM_EXPRESSION | Line num: 13
-                             │ └─MUL_EXPRESSION | Line num: 13
-                             │   └─UNARY_EXPRESSION | Line num: 13
-                             │     └─FACTOR | Line num: 13
-                             │       └─IMMUTABLE | Line num: 13
-                             │         └─CALL | Line num: 13
-                             │           ├─ID | Line num: 13 (funA)
-                             ├─PLUS | Line num: 13
-                             └─MUL_EXPRESSION | Line num: 13
-                               └─UNARY_EXPRESSION | Line num: 13
-                                 └─FACTOR | Line num: 13
-                                   └─IMMUTABLE | Line num: 13
-                                     └─CALL | Line num: 13
-                                       ├─ID | Line num: 13 (funB)
+           └─STATEMENT_LIST | Line num: 14
+             ├─STATEMENT_LIST | Line num: 13
+             │ └─STATEMENT | Line num: 13
+             │   └─EXPRESSION_STMT | Line num: 13
+             │     └─EXPRESSION | Line num: 13
+             │       └─SIMPLE_EXPRESSION | Line num: 13
+             │         └─AND_EXPRESSION | Line num: 13
+             │           └─UNARY_REL_EXPRESSION | Line num: 13
+             │             └─REL_EXPRESSION | Line num: 13
+             │               └─SUM_EXPRESSION | Line num: 13
+             │                 └─MUL_EXPRESSION | Line num: 13
+             │                   └─UNARY_EXPRESSION | Line num: 13
+             │                     └─FACTOR | Line num: 13
+             │                       └─IMMUTABLE | Line num: 13
+             │                         └─CALL | Line num: 13
+             │                           ├─ID | Line num: 13 (printf)
+             │                           └─ARGS | Line num: 13
+             │                             └─ARG_LIST | Line num: 13
+             │                               ├─ARG_LIST | Line num: 13
+             │                               │ └─STRINGLIT | Line num: 13 ("ret: %d\n")
+             │                               └─EXPRESSION | Line num: 13
+             │                                 └─SIMPLE_EXPRESSION | Line num: 13
+             │                                   └─AND_EXPRESSION | Line num: 13
+             │                                     └─UNARY_REL_EXPRESSION | Line num: 13
+             │                                       └─REL_EXPRESSION | Line num: 13
+             │                                         └─SUM_EXPRESSION | Line num: 13
+             │                                           ├─SUM_EXPRESSION | Line num: 13
+             │                                           │ └─MUL_EXPRESSION | Line num: 13
+             │                                           │   └─UNARY_EXPRESSION | Line num: 13
+             │                                           │     └─FACTOR | Line num: 13
+             │                                           │       └─IMMUTABLE | Line num: 13
+             │                                           │         └─CALL | Line num: 13
+     │       │                                           │           └─ID | Line num: 13 (funA)
+             │                                           ├─PLUS | Line num: 13
+             │                                           └─MUL_EXPRESSION | Line num: 13
+             │                                             └─UNARY_EXPRESSION | Line num: 13
+             │                                               └─FACTOR | Line num: 13
+             │                                                 └─IMMUTABLE | Line num: 13
+             │                                                   └─CALL | Line num: 13
+   │         │                                                     └─ID | Line num: 13 (funB)
+             └─STATEMENT | Line num: 14
+               └─RETURN_STMT | Line num: 14
+                 └─EXPRESSION | Line num: 14
+                   └─SIMPLE_EXPRESSION | Line num: 14
+                     └─AND_EXPRESSION | Line num: 14
+                       └─UNARY_REL_EXPRESSION | Line num: 14
+                         └─REL_EXPRESSION | Line num: 14
+                           └─SUM_EXPRESSION | Line num: 14
+                             ├─SUM_EXPRESSION | Line num: 14
+                             │ └─MUL_EXPRESSION | Line num: 14
+                             │   └─UNARY_EXPRESSION | Line num: 14
+                             │     └─FACTOR | Line num: 14
+                             │       └─IMMUTABLE | Line num: 14
+                             │         └─CALL | Line num: 14
+                             │           ├─ID | Line num: 14 (funA)
+                             ├─PLUS | Line num: 14
+                             └─MUL_EXPRESSION | Line num: 14
+                               └─UNARY_EXPRESSION | Line num: 14
+                                 └─FACTOR | Line num: 14
+                                   └─IMMUTABLE | Line num: 14
+                                     └─CALL | Line num: 14
+                                       ├─ID | Line num: 14 (funB)

@@ -3,14 +3,15 @@
 
 main()
   BB0 [combined]
-  │(8) <[JUMP_LT], <5>, 1110, 2>
-  │(8) <[JUMP], <6>>
-  └────────────────────
-  BB5 [return_stmt]
-  │(9) <[int][RETURN], 35>
+  │(8) <[int][CALL], (int)#0, printf, "%d\n", 1110>
+  │(9) <[JUMP_LT], <6>, 1110, 2>
+  │(9) <[JUMP], <7>>
   └────────────────────
   BB6 [return_stmt]
-  │(11) <[int][RETURN], 124>
+  │(10) <[int][RETURN], 35>
+  └────────────────────
+  BB7 [return_stmt]
+  │(12) <[int][RETURN], 124>
   └────────────────────
 
 

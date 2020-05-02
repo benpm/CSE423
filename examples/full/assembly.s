@@ -50,6 +50,7 @@ fun:
 .globl main
 .type main, @function
 .data
+_string.0: .asciz "n1: %d, n2: %d, n3: %d\n"
 # FUNCTION main
 .text
 main:
@@ -440,16 +441,24 @@ main:
 	mov %rax, %rax # save quotient
 	mov %rax, -32(%rbp)
 .main.43:
-# (59) <[JUMP], <45>>
-	jmp .main.45
-.main.44:
-# (60) <[int][MINUS], (int)#0, 1>
+# (59) <[int][CALL], (int)#0, printf, "n1: %d, n2: %d, n3: %d\n", (int)n1, (int)n2, (int)n3>
+	mov $0, %rax
+	mov $3, %rsi
+	lea _string.0(%rip), %rdi
+	mov -32(%rbp), %rdx
+	mov -40(%rbp), %rcx
+	mov -48(%rbp), %r8
+	call printf
+# (61) <[JUMP], <46>>
+	jmp .main.46
+.main.45:
+# (62) <[int][MINUS], (int)#0, 1>
 	mov -8(%rbp), %rax
 	mov $1, %rbx
 	neg %rbx
 	mov %rbx, %rax
 	mov %rax, -8(%rbp)
-# (60) <[int][RETURN], (int)#0>
+# (62) <[int][RETURN], (int)#0>
 	mov -8(%rbp), %rax
 # stack size is 136
 	mov %rbp, %rdx
@@ -457,16 +466,16 @@ main:
 	add %rdx, %rsp
 	pop %rbp
 	ret 
-.main.45:
-# (61) <[NO_OP]>
-# (62) <[int][MUL], (int)#0, (int)n1, 2>
+.main.46:
+# (63) <[NO_OP]>
+# (64) <[int][MUL], (int)#0, (int)n1, 2>
 	mov -8(%rbp), %rax
 	mov -32(%rbp), %rbx
 	mov $2, %rcx
 	imul %rbx, %rcx
 	mov %rcx, %rax
 	mov %rax, -8(%rbp)
-# (62) <[int][RETURN], (int)#0>
+# (64) <[int][RETURN], (int)#0>
 	mov -8(%rbp), %rax
 # stack size is 136
 	mov %rbp, %rdx

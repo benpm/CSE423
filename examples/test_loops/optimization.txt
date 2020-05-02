@@ -42,8 +42,9 @@ main()
   │(4) <[int][ADD], (int)i, (int)i, 1>
   │(4) <[JUMP], <2>>
   └────────────────────
-  BB14 [return_stmt]
-  │(15) <[int][RETURN], (int)x>
+  BB14 [combined]
+  │(16) <[int][CALL], (int)#0, printf, "x: %d\n", (int)x>
+  │(18) <[int][RETURN], (int)x>
   └────────────────────
 
 

@@ -31,6 +31,7 @@ stmt,6,none,JUMP,5
 BB,13,for_post
 stmt,4,int,ADD,int i,int i,1
 stmt,4,none,JUMP,2
-BB,14,return_stmt
-stmt,15,int,RETURN,int x
+BB,14,combined
+stmt,16,int,CALL,int #0,printf,"x: %d\n",int x
+stmt,18,int,RETURN,int x
 

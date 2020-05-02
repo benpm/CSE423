@@ -10,7 +10,9 @@ stmt,4,int,CALL,int #1,refun,int #0
 BB,3,return_stmt
 stmt,6,int,RETURN,int x
 func,main
-BB,0,return_stmt
-stmt,11,int,CALL,int #0,refun,1
-stmt,11,int,RETURN,int #0
+BB,0,combined
+stmt,11,int,CALL,int #0,refun,10
+stmt,11,int,CALL,int #1,printf,"refun(10): %d\n",int #0
+stmt,12,int,CALL,int #0,refun,1
+stmt,12,int,RETURN,int #0
 

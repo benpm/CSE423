@@ -22,6 +22,15 @@ root
      ├─[5] params
      ├─[5] dec_list
      └─[6] list
+       ├─[6] call
+       │ ├─[6] id (printf)
+       │ └─[6] args
+       │   ├─[6] string_const ("ret: %d\n")
+       │   └─[6] sum
+       │     ├─[6] call
+       │     │ └─[6] id (funA)
+       │     └─[6] call
+       │       └─[6] id (funB)
        └─[6] return_stmt
          └─[6] sum
            ├─[6] call

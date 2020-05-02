@@ -48,6 +48,7 @@ stmt,29,none,JUMP_GT,20,int x,3
 stmt,29,none,JUMP,21
 BB,20,assignment
 stmt,30,int,ADD,int x,int x,1234
-BB,21,return_stmt
-stmt,34,int,RETURN,int x
+BB,21,combined
+stmt,34,int,CALL,int #0,printf,"x: %d\n",int x
+stmt,36,int,RETURN,int x
 

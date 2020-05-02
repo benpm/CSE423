@@ -6,10 +6,11 @@ stmt,4,int,ASSIGN,int b,89
 stmt,5,int,MUL,int #0,int b,12
 stmt,5,int,ADD,int c,int a,int #0
 stmt,6,float,MINUS,float d,8.011609
-stmt,8,none,JUMP_LT,5,int c,2
-stmt,8,none,JUMP,6
-BB,5,return_stmt
-stmt,9,int,RETURN,35
+stmt,8,int,CALL,int #0,printf,"%d\n",int c
+stmt,9,none,JUMP_LT,6,int c,2
+stmt,9,none,JUMP,7
 BB,6,return_stmt
-stmt,11,int,RETURN,124
+stmt,10,int,RETURN,35
+BB,7,return_stmt
+stmt,12,int,RETURN,124
 

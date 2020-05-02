@@ -67,5 +67,10 @@ root
        │         └─[6] modulo
        │           ├─[6] id (z)
        │           └─[6] id (j)
+       ├─[2] call
+       │ ├─[2] id (printf)
+       │ └─[2] args
+       │   ├─[2] string_const ("x: %d\n")
+       │   └─[2] id (x)
        └─[2] return_stmt
          └─[2] id (x)

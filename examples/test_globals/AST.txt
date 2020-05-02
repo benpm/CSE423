@@ -73,6 +73,13 @@ root
        │     ├─[6] id (x)
        │     └─[6] call
        │       └─[6] id (fun)
+       ├─[4] call
+       │ ├─[4] id (printf)
+       │ └─[4] args
+       │   ├─[4] string_const ("v: %d, x: %d, z: %d\n")
+       │   ├─[4] id (v)
+       │   ├─[4] id (x)
+       │   └─[4] id (z)
        └─[4] return_stmt
          └─[4] sum
            ├─[4] sum

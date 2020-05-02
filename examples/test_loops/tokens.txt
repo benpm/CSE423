@@ -76,6 +76,13 @@
 <;, SEMICOLON>
 <}, RBRACE>
 <}, RBRACE>
+<printf, ID>
+<(, LPAREN>
+<"x: %d\n", STRINGLIT>
+<,, COMMA>
+<x, ID>
+<), RPAREN>
+<;, SEMICOLON>
 <return, RETURN>
 <x, ID>
 <;, SEMICOLON>

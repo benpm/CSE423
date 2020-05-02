@@ -28,6 +28,13 @@
 <-, MINUS>
 <8.011609, FLOATCONST>
 <;, SEMICOLON>
+<printf, ID>
+<(, LPAREN>
+<"%d\n", STRINGLIT>
+<,, COMMA>
+<c, ID>
+<), RPAREN>
+<;, SEMICOLON>
 <if, IF>
 <(, LPAREN>
 <c, ID>

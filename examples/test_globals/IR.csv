@@ -23,8 +23,9 @@ stmt,18,int,CALL,int #0,int fun
 stmt,18,int,ADD,int x,int x,int #0
 stmt,17,int,ADD,int i,int i,1
 stmt,17,none,JUMP,3
-BB,6,return_stmt
-stmt,20,int,ADD,int #0,int v,int x
-stmt,20,int,ADD,int #1,int #0,int z
-stmt,20,int,RETURN,int #1
+BB,6,combined
+stmt,20,int,CALL,int #0,printf,"v: %d, x: %d, z: %d\n",int v,int x,int z
+stmt,21,int,ADD,int #0,int v,int x
+stmt,21,int,ADD,int #1,int #0,int z
+stmt,21,int,RETURN,int #1
 

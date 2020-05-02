@@ -36,6 +36,17 @@
 <+, PLUS>
 <20, INTCONST>
 <;, SEMICOLON>
+<printf, ID>
+<(, LPAREN>
+<"i: %d, j: %d, k: %d\n", STRINGLIT>
+<,, COMMA>
+<i, ID>
+<,, COMMA>
+<j, ID>
+<,, COMMA>
+<k, ID>
+<), RPAREN>
+<;, SEMICOLON>
 <return, RETURN>
 <i, ID>
 <;, SEMICOLON>

@@ -16,9 +16,11 @@ refun((int)x, )
   └────────────────────
 
 main()
-  BB0 [return_stmt]
-  │(11) <[int][CALL], (int)#0, refun, 1>
-  │(11) <[int][RETURN], (int)#0>
+  BB0 [combined]
+  │(11) <[int][CALL], (int)#0, refun, 10>
+  │(11) <[int][CALL], (int)#1, printf, "refun(10): %d\n", (int)#0>
+  │(12) <[int][CALL], (int)#0, refun, 1>
+  │(12) <[int][RETURN], (int)#0>
   └────────────────────
 
 

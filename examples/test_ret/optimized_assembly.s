@@ -38,6 +38,7 @@ funB:
 .globl main
 .type main, @function
 .data
+_string.0: .asciz "ret: %d\n"
 # FUNCTION main
 .text
 main:
@@ -46,6 +47,7 @@ main:
 	push $0 # (int)#0
 	push $0 # (int)#1
 	push $0 # (int)#2
+	push $0 # (int)#3
 .main.0:
 # (13) <[int][CALL], (int)#0, (int)funA>
 	mov -8(%rbp), %rax
@@ -62,9 +64,30 @@ main:
 	add %rbx, %rcx
 	mov %rcx, %rax
 	mov %rax, -24(%rbp)
-# (13) <[int][RETURN], (int)#2>
+# (13) <[int][CALL], (int)#3, printf, "ret: %d\n", (int)#2>
+	mov $0, %rax
+	mov $1, %rsi
+	lea _string.0(%rip), %rdi
+	mov -24(%rbp), %rdx
+	call printf
+# (14) <[int][CALL], (int)#0, (int)funA>
+	mov -8(%rbp), %rax
+	call funA
+	mov %rax, -8(%rbp)
+# (14) <[int][CALL], (int)#1, (int)funB>
+	mov -16(%rbp), %rax
+	call funB
+	mov %rax, -16(%rbp)
+# (14) <[int][ADD], (int)#2, (int)#0, (int)#1>
 	mov -24(%rbp), %rax
-# stack size is 32
+	mov -8(%rbp), %rbx
+	mov -16(%rbp), %rcx
+	add %rbx, %rcx
+	mov %rcx, %rax
+	mov %rax, -24(%rbp)
+# (14) <[int][RETURN], (int)#2>
+	mov -24(%rbp), %rax
+# stack size is 40
 	mov %rbp, %rdx
 	sub %rsp, %rdx
 	add %rdx, %rsp

@@ -65,8 +65,9 @@ main()
   BB20 [assignment]
   │(30) <[int][ADD], (int)x, (int)x, 1234>
   └────────────────────
-  BB21 [return_stmt]
-  │(34) <[int][RETURN], (int)x>
+  BB21 [combined]
+  │(34) <[int][CALL], (int)#0, printf, "x: %d\n", (int)x>
+  │(36) <[int][RETURN], (int)x>
   └────────────────────
 
 

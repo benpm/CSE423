@@ -30,10 +30,11 @@ main()
   │(17) <[int][ADD], (int)i, (int)i, 1>
   │(17) <[JUMP], <3>>
   └────────────────────
-  BB6 [return_stmt]
-  │(20) <[int][ADD], (int)#0, (int)v, (int)x>
-  │(20) <[int][ADD], (int)#1, (int)#0, (int)z>
-  │(20) <[int][RETURN], (int)#1>
+  BB6 [combined]
+  │(20) <[int][CALL], (int)#0, printf, "v: %d, x: %d, z: %d\n", (int)v, (int)x, (int)z>
+  │(21) <[int][ADD], (int)#0, (int)v, (int)x>
+  │(21) <[int][ADD], (int)#1, (int)#0, (int)z>
+  │(21) <[int][RETURN], (int)#1>
   └────────────────────
 
 

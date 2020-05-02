@@ -21,6 +21,19 @@
 <(, LPAREN>
 <), RPAREN>
 <{, LBRACE>
+<printf, ID>
+<(, LPAREN>
+<"ret: %d\n", STRINGLIT>
+<,, COMMA>
+<funA, ID>
+<(, LPAREN>
+<), RPAREN>
+<+, PLUS>
+<funB, ID>
+<(, LPAREN>
+<), RPAREN>
+<), RPAREN>
+<;, SEMICOLON>
 <return, RETURN>
 <funA, ID>
 <(, LPAREN>

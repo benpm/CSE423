@@ -2,6 +2,7 @@
 .globl main
 .type main, @function
 .data
+_string.0: .asciz "x: %d\n"
 # FUNCTION main
 .text
 main:
@@ -124,7 +125,13 @@ main:
 # (4) <[JUMP], <2>>
 	jmp .main.2
 .main.14:
-# (15) <[int][RETURN], (int)x>
+# (16) <[int][CALL], (int)#0, printf, "x: %d\n", (int)x>
+	mov $0, %rax
+	mov $1, %rsi
+	lea _string.0(%rip), %rdi
+	mov -8(%rbp), %rdx
+	call printf
+# (18) <[int][RETURN], (int)x>
 	mov -8(%rbp), %rax
 # stack size is 48
 	mov %rbp, %rdx

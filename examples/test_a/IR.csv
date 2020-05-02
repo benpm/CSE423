@@ -7,5 +7,6 @@ stmt,4,int,ASSIGN,int k,10
 stmt,5,int,ADD,int i,int i,int k
 stmt,6,int,ADD,int j,int i,7
 stmt,7,int,ADD,int k,4,20
-stmt,8,int,RETURN,int i
+stmt,9,int,CALL,int #0,printf,"i: %d, j: %d, k: %d\n",int i,int j,int k
+stmt,11,int,RETURN,int i
 

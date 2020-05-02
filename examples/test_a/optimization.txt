@@ -7,7 +7,8 @@ main()
   │(3) <[int][ASSIGN], (int)j, 0>
   │(5) <[int][ADD], (int)i, (int)i, 10>
   │(6) <[int][ADD], (int)j, (int)i, 7>
-  │(8) <[int][RETURN], (int)i>
+  │(9) <[int][CALL], (int)#0, printf, "i: %d, j: %d, k: %d\n", (int)i, (int)j, 24>
+  │(11) <[int][RETURN], (int)i>
   └────────────────────
 
 

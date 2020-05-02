@@ -2,12 +2,14 @@
 .globl main
 .type main, @function
 .data
+_string.0: .asciz "Foo val: %d\n"
 # FUNCTION main
 .text
 main:
 	push %rbp
 	mov %rsp, %rbp
 	push $0 # (int)foo
+	push $0 # (int)#0
 .main.0:
 # (2) <[int][ASSIGN], (int)foo, 420>
 	mov -8(%rbp), %rax
@@ -28,9 +30,15 @@ main:
 	mov %rbx, %rax
 	mov %rax, -8(%rbp)
 .main.3:
-# (6) <[int][RETURN], 0>
+# (6) <[int][CALL], (int)#0, printf, "Foo val: %d\n", (int)foo>
 	mov $0, %rax
-# stack size is 16
+	mov $1, %rsi
+	lea _string.0(%rip), %rdi
+	mov -8(%rbp), %rdx
+	call printf
+# (7) <[int][RETURN], 0>
+	mov $0, %rax
+# stack size is 24
 	mov %rbp, %rdx
 	sub %rsp, %rdx
 	add %rdx, %rsp

@@ -2,6 +2,7 @@
 .globl main
 .type main, @function
 .data
+_string.0: .asciz "i: %d, j: %d, k: %d\n"
 # FUNCTION main
 .text
 main:
@@ -9,6 +10,7 @@ main:
 	mov %rsp, %rbp
 	push $0 # (int)i
 	push $0 # (int)j
+	push $0 # (int)#0
 .main.0:
 # (2) <[int][ASSIGN], (int)i, 0>
 	mov -8(%rbp), %rax
@@ -33,9 +35,17 @@ main:
 	add %rbx, %rcx
 	mov %rcx, %rax
 	mov %rax, -16(%rbp)
-# (8) <[int][RETURN], (int)i>
+# (9) <[int][CALL], (int)#0, printf, "i: %d, j: %d, k: %d\n", (int)i, (int)j, 24>
+	mov $0, %rax
+	mov $3, %rsi
+	lea _string.0(%rip), %rdi
+	mov -8(%rbp), %rdx
+	mov -16(%rbp), %rcx
+	mov $24, %r8
+	call printf
+# (11) <[int][RETURN], (int)i>
 	mov -8(%rbp), %rax
-# stack size is 24
+# stack size is 32
 	mov %rbp, %rdx
 	sub %rsp, %rdx
 	add %rdx, %rsp

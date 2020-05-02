@@ -20,5 +20,10 @@ root
        │   └─[4] assignment
        │     ├─[4] id (foo)
        │     └─[4] int_const (19)
+       ├─[2] call
+       │ ├─[2] id (printf)
+       │ └─[2] args
+       │   ├─[2] string_const ("Foo val: %d\n")
+       │   └─[2] id (foo)
        └─[2] return_stmt
          └─[2] int_const (0)

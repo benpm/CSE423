@@ -83,6 +83,17 @@
 <), RPAREN>
 <;, SEMICOLON>
 <}, RBRACE>
+<printf, ID>
+<(, LPAREN>
+<"v: %d, x: %d, z: %d\n", STRINGLIT>
+<,, COMMA>
+<v, ID>
+<,, COMMA>
+<x, ID>
+<,, COMMA>
+<z, ID>
+<), RPAREN>
+<;, SEMICOLON>
 <return, RETURN>
 <v, ID>
 <+, PLUS>

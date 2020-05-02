@@ -71,6 +71,7 @@ fun:
 .globl main
 .type main, @function
 .data
+_string.0: .asciz "v: %d, x: %d, z: %d\n"
 # FUNCTION main
 .text
 main:
@@ -124,21 +125,29 @@ main:
 # (17) <[JUMP], <3>>
 	jmp .main.3
 .main.6:
-# (20) <[int][ADD], (int)#0, (int)v, (int)x>
+# (20) <[int][CALL], (int)#0, printf, "v: %d, x: %d, z: %d\n", (int)v, (int)x, (int)z>
+	mov $0, %rax
+	mov $3, %rsi
+	lea _string.0(%rip), %rdi
+	mov v(%rip), %rdx
+	mov x(%rip), %rcx
+	mov z(%rip), %r8
+	call printf
+# (21) <[int][ADD], (int)#0, (int)v, (int)x>
 	mov -16(%rbp), %rax
 	mov v(%rip), %rbx
 	mov x(%rip), %rcx
 	add %rbx, %rcx
 	mov %rcx, %rax
 	mov %rax, -16(%rbp)
-# (20) <[int][ADD], (int)#1, (int)#0, (int)z>
+# (21) <[int][ADD], (int)#1, (int)#0, (int)z>
 	mov -24(%rbp), %rax
 	mov -16(%rbp), %rbx
 	mov z(%rip), %rcx
 	add %rbx, %rcx
 	mov %rcx, %rax
 	mov %rax, -24(%rbp)
-# (20) <[int][RETURN], (int)#1>
+# (21) <[int][RETURN], (int)#1>
 	mov -24(%rbp), %rax
 # stack size is 32
 	mov %rbp, %rdx
