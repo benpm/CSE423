@@ -142,18 +142,10 @@ void MemoryAllocator::insertAt(const Arg& arg, Register reg)
     this->evict(reg);
 
     InstrArg dest{reg};
-    InstrArg src;
-    if (this->regMap.count(arg)) { // In a register
-        src = this->regMap.at(arg);
+    InstrArg src = this->getLoc(arg);
+    if (std::holds_alternative<Register>(src.arg)) { // In a register
         this->save(arg);
         this->deregister(arg);
-    } else if (arg.type != Arg::NAME) { // Arg is an immediate, mov straight into the register
-        src = arg;
-    } else if (this->storageMap.count(arg)) { // Not reg/imm, on stack?
-        src = this->storageMap.at(arg); // offset(%ebp)
-    } else {
-        spdlog::error("Inserting an argument {} at {} that doesnt exist!", arg.toString(), magic_enum::enum_name(reg));
-        exit(EXIT_FAILURE);
     }
 
     spdlog::debug("----> {} In {}, moving to {}", arg.toString(), src.toString(), magic_enum::enum_name(reg));

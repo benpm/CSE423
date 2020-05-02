@@ -110,16 +110,16 @@ void CodeGenerator::genStatement(MemoryAllocator& allocator, const Statement& st
         case Statement::MINUS:         this->genMINUS(allocator, stmt);         break;
         case Statement::ASSIGN:        this->genASSIGN(allocator, stmt);        break;
         case Statement::JUMP:          this->genJUMP(allocator, stmt);          break;
-        case Statement::JUMP_LT:       this->genJUMP_LT(allocator, stmt);       break;
-        case Statement::JUMP_GT:       this->genJUMP_GT(allocator, stmt);       break;
-        case Statement::JUMP_LE:       this->genJUMP_LE(allocator, stmt);       break;
-        case Statement::JUMP_GE:       this->genJUMP_GE(allocator, stmt);       break;
-        case Statement::JUMP_EQ:       this->genJUMP_EQ(allocator, stmt);       break;
-        case Statement::JUMP_NEQ:      this->genJUMP_NEQ(allocator, stmt);      break;
-        case Statement::JUMP_IF_TRUE:  this->genJUMP_IF_TRUE(allocator, stmt);  break;
-        case Statement::JUMP_IF_FALSE: this->genJUMP_IF_FALSE(allocator, stmt); break;
+        case Statement::JUMP_LT:
+        case Statement::JUMP_GT:
+        case Statement::JUMP_LE:
+        case Statement::JUMP_GE:
+        case Statement::JUMP_EQ:
+        case Statement::JUMP_NEQ:
+        case Statement::JUMP_IF_TRUE:
+        case Statement::JUMP_IF_FALSE: this->genConditionalJump(allocator, stmt); break;
         case Statement::RETURN:        this->genRETURN(allocator, stmt);        break;
-        case Statement::NO_OP:         this->genNO_OP(allocator, stmt);         break;
+        case Statement::NO_OP:         break;
         case Statement::CALL:
             if (std::string(stmt.args.at(1).val.sval) == "printf")
                 this->genPRINTF(allocator, stmt);
@@ -263,122 +263,28 @@ void CodeGenerator::genJUMP(MemoryAllocator& allocator, const Statement& stmt)
     this->insert(jmp);
 }
 
-void CodeGenerator::genJUMP_LT(MemoryAllocator& allocator, const Statement& stmt)
+void CodeGenerator::genConditionalJump(MemoryAllocator& allocator, const Statement& stmt)
 {
+    const std::map<Statement::Type, OpCode> jumpMapping {
+        {Statement::JUMP_LT, OpCode::JL},
+        {Statement::JUMP_GT, OpCode::JG},
+        {Statement::JUMP_LE, OpCode::JLE},
+        {Statement::JUMP_GE, OpCode::JGE},
+        {Statement::JUMP_EQ, OpCode::JE},
+        {Statement::JUMP_NEQ, OpCode::JNE},
+        {Statement::JUMP_IF_TRUE, OpCode::JNZ},
+        {Statement::JUMP_IF_FALSE, OpCode::JZ}
+    };
+
     std::string label = fmt::format(".{}.{}", this->curFuncName, stmt.args.at(0).val.label);
     InstrArg opA = allocator.allocateReg(stmt.args.at(1));
     InstrArg opB = allocator.allocateReg(stmt.args.at(2));
     
     Instruction cmp{OpCode::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
-    Instruction jmplt{OpCode::JL, {label}};   // jl label       | if opA - opB < 0
+    Instruction jmplt{jumpMapping.at(stmt.type), {label}};   // jl label       | if opA - opB < 0
     
     this->insert(cmp);
     this->insert(jmplt);
-
-    allocator.deregister({stmt.args.at(1), stmt.args.at(2)});
-}
-
-void CodeGenerator::genJUMP_GT(MemoryAllocator& allocator, const Statement& stmt)
-{
-    std::string label = fmt::format(".{}.{}", this->curFuncName, stmt.args.at(0).val.label);
-    InstrArg opA = allocator.allocateReg(stmt.args.at(1));
-    InstrArg opB = allocator.allocateReg(stmt.args.at(2));
-    
-    Instruction cmp{OpCode::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
-    Instruction jmpge{OpCode::JG, {label}};   // jg label       | if opA - opB > 0
-    
-    this->insert(cmp);
-    this->insert(jmpge);
-
-    allocator.deregister({stmt.args.at(1), stmt.args.at(2)});
-}
-
-void CodeGenerator::genJUMP_LE(MemoryAllocator& allocator, const Statement& stmt)
-{
-    std::string label = fmt::format(".{}.{}", this->curFuncName, stmt.args.at(0).val.label);
-    InstrArg opA = allocator.allocateReg(stmt.args.at(1));
-    InstrArg opB = allocator.allocateReg(stmt.args.at(2));
-    
-    Instruction cmp{OpCode::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
-    Instruction jmple{OpCode::JLE, {label}};  // jle label      | if opA - opB <= 0
-    
-    this->insert(cmp);
-    this->insert(jmple);
-
-    allocator.deregister({stmt.args.at(1), stmt.args.at(2)});
-}
-
-void CodeGenerator::genJUMP_GE(MemoryAllocator& allocator, const Statement& stmt)
-{
-    std::string label = fmt::format(".{}.{}", this->curFuncName, stmt.args.at(0).val.label);
-    InstrArg opA = allocator.allocateReg(stmt.args.at(1));
-    InstrArg opB = allocator.allocateReg(stmt.args.at(2));
-    
-    Instruction cmp{OpCode::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
-    Instruction jmpge{OpCode::JGE, {label}};  // jge label      | if opA - opB >= 0
-    
-    this->insert(cmp);
-    this->insert(jmpge);
-
-    allocator.deregister({stmt.args.at(1), stmt.args.at(2)});
-}
-
-void CodeGenerator::genJUMP_EQ(MemoryAllocator& allocator, const Statement& stmt)
-{
-    std::string label = fmt::format(".{}.{}", this->curFuncName, stmt.args.at(0).val.label);
-    InstrArg opA = allocator.allocateReg(stmt.args.at(1));
-    InstrArg opB = allocator.allocateReg(stmt.args.at(2));
-    
-    Instruction cmp{OpCode::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
-    Instruction jmpneq{OpCode::JE, {label}};  // jle label      | if opA - opB == 0
-    
-    this->insert(cmp);
-    this->insert(jmpneq);
-
-    allocator.deregister({stmt.args.at(1), stmt.args.at(2)});
-}
-
-void CodeGenerator::genJUMP_NEQ(MemoryAllocator& allocator, const Statement& stmt)
-{
-    std::string label = fmt::format(".{}.{}", this->curFuncName, stmt.args.at(0).val.label);
-    InstrArg opA = allocator.allocateReg(stmt.args.at(1));
-    InstrArg opB = allocator.allocateReg(stmt.args.at(2));
-    
-    Instruction cmp{OpCode::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
-    Instruction jmpneq{OpCode::JNE, {label}}; // jle label      | if opA - opB != 0
-    
-    this->insert(cmp);
-    this->insert(jmpneq);
-
-    allocator.deregister({stmt.args.at(1), stmt.args.at(2)});
-}
-
-void CodeGenerator::genJUMP_IF_TRUE(MemoryAllocator& allocator, const Statement& stmt)
-{
-    std::string label = fmt::format(".{}.{}", this->curFuncName, stmt.args.at(0).val.label);
-    InstrArg opA = allocator.allocateReg(stmt.args.at(1));
-    InstrArg opB = allocator.allocateReg(stmt.args.at(2));
-    
-    Instruction cmp{OpCode::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
-    Instruction jmpnz{OpCode::JNZ, {label}};  // jnz label      | if opA - opB != 0
-    
-    this->insert(cmp);
-    this->insert(jmpnz);
-
-    allocator.deregister({stmt.args.at(1), stmt.args.at(2)});
-}
-
-void CodeGenerator::genJUMP_IF_FALSE(MemoryAllocator& allocator, const Statement& stmt)
-{
-    std::string label = fmt::format(".{}.{}", this->curFuncName, stmt.args.at(0).val.label);
-    InstrArg opA = allocator.allocateReg(stmt.args.at(1));
-    InstrArg opB = allocator.allocateReg(stmt.args.at(2));
-    
-    Instruction cmp{OpCode::CMP, {opB, opA}}; // cmp %opB, $opA | opA - opB
-    Instruction jmpnz{OpCode::JZ, {label}};   // jz label       | if opA - opB == 0
-    
-    this->insert(cmp);
-    this->insert(jmpnz);
 
     allocator.deregister({stmt.args.at(1), stmt.args.at(2)});
 }
@@ -457,11 +363,6 @@ void CodeGenerator::genPRINTF(MemoryAllocator& allocator, const Statement& stmt)
         Instruction addInstr{OpCode::ADD, {pushedArgs * WORD_SIZE, Register::rsp}};
         this->insert(addInstr);
     }
-}
-
-void CodeGenerator::genNO_OP(MemoryAllocator& allocator, const Statement& stmt)
-{
-
 }
 
 void CodeGenerator::insert(const Instruction& instr)
