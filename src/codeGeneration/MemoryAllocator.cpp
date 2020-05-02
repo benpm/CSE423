@@ -55,19 +55,11 @@ InstrArg MemoryAllocator::allocateReg(const Arg& arg)
     // If it is, move it in to register openReg and return
     // If its not on the stack, just return a register for it
     InstrArg dest{this->getNextAvailReg(arg)};
-    InstrArg src;
-    this->regMap.emplace(arg, dest);
-
-    if (arg.type != Arg::NAME) { // Its an immediate value
-        src = arg;
-    } else if (this->storageMap.count(arg)) { // Its on the stack
-        src = this->storageMap.at(arg); // offset(%ebp)
-    } else {
-        return dest;
-    }
-
+    InstrArg src = this->getLoc(arg);
     Instruction loadInstr{OpCode::MOV, {src, dest}};
+
     this->codeGen.insert(loadInstr);
+    this->regMap.emplace(arg, dest);
 
     return dest;
 }

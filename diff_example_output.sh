@@ -62,7 +62,7 @@ do
         printf "\tDiffing %s... " $flagName
 
         # Bash magic to get sterr indented on output
-        $compilerExecutable -l -$flag $cFile > "diff_tmp.txt" 2>&1
+        $compilerExecutable -l -$flag $cFile > "diff_tmp.txt" 2>/dev/null
         diff "diff_tmp.txt" $outName > /dev/null
         if [ "$?" != "0" ]
         then
@@ -82,7 +82,7 @@ do
     # Diff IR CSV
     # Bash magic to get sterr indented on output
     outName=$dir/$csvFlagName
-    $compilerExecutable -l $cFile -$csvFlag "diff_tmp.txt" 2> "diff_tmp.txt"
+    $compilerExecutable -l $cFile -$csvFlag "diff_tmp.txt" 2>/dev/null
     diff "diff_tmp.txt" $outName > /dev/null
     if [ "$?" != "0" ]
     then
