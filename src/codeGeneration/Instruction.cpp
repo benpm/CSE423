@@ -59,7 +59,8 @@ std::map<OpCode, std::string> opToStr {
     {OpCode::RET,  "ret"},
     {OpCode::CALL, "call"},
     {OpCode::CMP,  "cmp"},
-    {OpCode::LEA,  "lea"}
+    {OpCode::LEA,  "lea"},
+    {OpCode::CQO,  "cqo"}
 };
 
 std::string Instruction::toString() const

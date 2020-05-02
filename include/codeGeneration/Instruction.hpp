@@ -79,7 +79,8 @@ enum OpCode {
     RET,   // ret [val]      | Loads next val on the stack into EIP, and then pops the specified number of bytes off the stack. If val not supplied, instruction will not pop any vals
     CALL,  // call loc       | Pushes the addr of the instr AFTER call instr to top of the stack, jumps to loc
     CMP,   // cmp arg0, arg1 | arg1 - arg0, sets flags
-    LEA    // lea addr, dest | Loads effective address of addr into dest
+    LEA,   // lea addr, dest | Loads effective address of addr into dest
+    CQO    // cqo            | Sign-extends rax into rdx:rax
 };
 
 class Instruction

@@ -180,6 +180,8 @@ void CodeGenerator::genDIV(MemoryAllocator& allocator, const Statement& stmt)
     // Move instruction
     Instruction movInstr{OpCode::MOV, {{Register::rax}, result}, "save quotient"};
 
+    // Sign extends %rax into %rdx:%rax
+    this->insert({OpCode::CQO, {}});
     this->insert(idivInstr);
     this->insert(movInstr);
     // This will save the quotient, stored in %eax, to result loc
@@ -221,6 +223,8 @@ void CodeGenerator::genMOD(MemoryAllocator& allocator, const Statement& stmt)
     // Move instruction
     Instruction movInstr{OpCode::MOV, {{Register::rdx}, result}, "save remainder"};
 
+    // Sign extends %rax into %rdx:%rax
+    this->insert({OpCode::CQO, {}});
     this->insert(idivInstr);
     this->insert(movInstr);
     // This will save the remainder, stored in %edx, to result loc
