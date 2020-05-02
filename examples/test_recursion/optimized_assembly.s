@@ -8,8 +8,8 @@
 refun:
 	push %rbp
 	mov %rsp, %rbp
-	push $0 # (int)#0
-	push $0 # (int)#1
+	push $0 # (int)#0 at -8(%rbp)
+	push $0 # (int)#1 at -16(%rbp)
 .refun.0:
 # (2) <[int][ADD], (int)x, (int)x, 3>
 	mov 16(%rbp), %rax
@@ -57,8 +57,8 @@ _string_main.0: .asciz "refun(10): %d\n"
 main:
 	push %rbp
 	mov %rsp, %rbp
-	push $0 # (int)#0
-	push $0 # (int)#1
+	push $0 # (int)#0 at -8(%rbp)
+	push $0 # (int)#1 at -16(%rbp)
 .main.0:
 # (11) <[int][CALL], (int)#0, refun, 10>
 	push $10

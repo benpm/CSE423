@@ -9,11 +9,11 @@ _string_main.1: .asciz "Factorial of %d = %d\n"
 main:
 	push %rbp
 	mov %rsp, %rbp
-	push $0 # (int)fact
-	push $0 # (int)n
-	push $0 # #0
-	push $0 # (int)i
-	push $0 # (int)#0
+	push $0 # (int)fact at -8(%rbp)
+	push $0 # (int)n at -16(%rbp)
+	push $0 # #0 at -24(%rbp)
+	push $0 # (int)i at -32(%rbp)
+	push $0 # (int)#0 at -40(%rbp)
 .main.0:
 # (2) <[int][ASSIGN], (int)fact, 1>
 	mov -8(%rbp), %rax

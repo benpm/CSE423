@@ -10,8 +10,8 @@ _string_brute_force_fact.1: .asciz "%d is prime!\n"
 brute_force_fact:
 	push %rbp
 	mov %rsp, %rbp
-	push $0 # (int)n
-	push $0 # (int)#0
+	push $0 # (int)n at -8(%rbp)
+	push $0 # (int)#0 at -16(%rbp)
 .brute_force_fact.0:
 # (3) <[int][ASSIGN], (int)n, 2>
 	mov -8(%rbp), %rax
@@ -94,9 +94,9 @@ _string_optimization_congruence_class.3: .asciz "%d is prime!\n"
 optimization_congruence_class:
 	push %rbp
 	mov %rsp, %rbp
-	push $0 # (int)j
-	push $0 # (int)#0
-	push $0 # (int)#1
+	push $0 # (int)j at -8(%rbp)
+	push $0 # (int)#0 at -16(%rbp)
+	push $0 # (int)#1 at -24(%rbp)
 .optimization_congruence_class.0:
 # (16) <[int][ASSIGN], (int)j, 5>
 	mov -8(%rbp), %rax
@@ -262,8 +262,8 @@ optimization_congruence_class:
 main:
 	push %rbp
 	mov %rsp, %rbp
-	push $0 # (int)i
-	push $0 # (int)#0
+	push $0 # (int)i at -8(%rbp)
+	push $0 # (int)#0 at -16(%rbp)
 .main.0:
 # (42) <[int][ASSIGN], (int)i, 1>
 	mov -8(%rbp), %rax

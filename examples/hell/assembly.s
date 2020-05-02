@@ -22,15 +22,15 @@ globalB: .quad 222222
 funA:
 	push %rbp
 	mov %rsp, %rbp
-	push $0 # (int)i
-	push $0 # (int)#0
-	push $0 # (int)#1
-	push $0 # (int)j
-	push $0 # (int)k
-	push $0 # (int)zzzz
-	push $0 # (int)#2
-	push $0 # (int)#3
-	push $0 # (int)#4
+	push $0 # (int)i at -8(%rbp)
+	push $0 # (int)#0 at -16(%rbp)
+	push $0 # (int)#1 at -24(%rbp)
+	push $0 # (int)j at -32(%rbp)
+	push $0 # (int)k at -40(%rbp)
+	push $0 # (int)zzzz at -48(%rbp)
+	push $0 # (int)#2 at -56(%rbp)
+	push $0 # (int)#3 at -64(%rbp)
+	push $0 # (int)#4 at -72(%rbp)
 .funA.0:
 # (6) <[int][ADD], (int)i, (int)x, (int)x>
 	mov -8(%rbp), %rax
@@ -412,16 +412,16 @@ funA:
 funB:
 	push %rbp
 	mov %rsp, %rbp
-	push $0 # (int)#0
-	push $0 # (int)#1
-	push $0 # (int)#2
-	push $0 # (int)#3
-	push $0 # (int)#4
-	push $0 # (int)#5
-	push $0 # (int)#6
-	push $0 # (int)#7
-	push $0 # (int)z
-	push $0 # (int)g
+	push $0 # (int)#0 at -8(%rbp)
+	push $0 # (int)#1 at -16(%rbp)
+	push $0 # (int)#2 at -24(%rbp)
+	push $0 # (int)#3 at -32(%rbp)
+	push $0 # (int)#4 at -40(%rbp)
+	push $0 # (int)#5 at -48(%rbp)
+	push $0 # (int)#6 at -56(%rbp)
+	push $0 # (int)#7 at -64(%rbp)
+	push $0 # (int)z at -72(%rbp)
+	push $0 # (int)g at -80(%rbp)
 .funB.0:
 # (48) <[int][MINUS], (int)f, (int)f, 1>
 	mov 16(%rbp), %rax
@@ -787,11 +787,11 @@ funB:
 main:
 	push %rbp
 	mov %rsp, %rbp
-	push $0 # (int)accum
-	push $0 # (int)i
-	push $0 # (int)j
-	push $0 # (int)k
-	push $0 # (int)val
+	push $0 # (int)accum at -8(%rbp)
+	push $0 # (int)i at -16(%rbp)
+	push $0 # (int)j at -24(%rbp)
+	push $0 # (int)k at -32(%rbp)
+	push $0 # (int)val at -40(%rbp)
 .main.0:
 # (82) <[int][ASSIGN], (int)accum, 0>
 	mov -8(%rbp), %rax

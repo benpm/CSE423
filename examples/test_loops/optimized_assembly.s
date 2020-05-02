@@ -8,11 +8,11 @@ _string_main.0: .asciz "x: %d\n"
 main:
 	push %rbp
 	mov %rsp, %rbp
-	push $0 # (int)x
-	push $0 # (int)i
-	push $0 # (int)#0
-	push $0 # (int)j
-	push $0 # (int)z
+	push $0 # (int)x at -8(%rbp)
+	push $0 # (int)i at -16(%rbp)
+	push $0 # (int)#0 at -24(%rbp)
+	push $0 # (int)j at -32(%rbp)
+	push $0 # (int)z at -40(%rbp)
 .main.0:
 # (3) <[int][ASSIGN], (int)x, 3>
 	mov -8(%rbp), %rax

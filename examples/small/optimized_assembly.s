@@ -8,7 +8,7 @@ _string_main.0: .asciz "%d\n"
 main:
 	push %rbp
 	mov %rsp, %rbp
-	push $0 # (int)#0
+	push $0 # (int)#0 at -8(%rbp)
 .main.0:
 # (8) <[int][CALL], (int)#0, printf, "%d\n", 1110>
 	lea _string_main.0(%rip), %rdi

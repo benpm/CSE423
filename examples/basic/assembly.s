@@ -8,8 +8,8 @@ _string_main.0: .asciz "Foo val: %d\n"
 main:
 	push %rbp
 	mov %rsp, %rbp
-	push $0 # (int)foo
-	push $0 # (int)#0
+	push $0 # (int)foo at -8(%rbp)
+	push $0 # (int)#0 at -16(%rbp)
 .main.0:
 # (2) <[int][ASSIGN], (int)foo, 420>
 	mov -8(%rbp), %rax

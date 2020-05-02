@@ -21,8 +21,8 @@ globB: .quad 4
 fun:
 	push %rbp
 	mov %rsp, %rbp
-	push $0 # (float)n1
-	push $0 # (float)#0
+	push $0 # (float)n1 at -8(%rbp)
+	push $0 # (float)#0 at -16(%rbp)
 .fun.0:
 # (6) <[float][ADD], (float)n1, (float)XKAD, (float)V>
 	mov -8(%rbp), %rax
@@ -56,19 +56,19 @@ _string_main.0: .asciz "n1: %d, n2: %d, n3: %d\n"
 main:
 	push %rbp
 	mov %rsp, %rbp
-	push $0 # (int)n1
-	push $0 # (int)n2
-	push $0 # (int)n3
-	push $0 # (float)DF
-	push $0 # (char)G
-	push $0 # (int)i
-	push $0 # (int)#0
-	push $0 # (int)#1
-	push $0 # (int)j
-	push $0 # (int)x
-	push $0 # (int)x2
-	push $0 # (float)#1
-	push $0 # (float)#0
+	push $0 # (int)n1 at -8(%rbp)
+	push $0 # (int)n2 at -16(%rbp)
+	push $0 # (int)n3 at -24(%rbp)
+	push $0 # (float)DF at -32(%rbp)
+	push $0 # (char)G at -40(%rbp)
+	push $0 # (int)i at -48(%rbp)
+	push $0 # (int)#0 at -56(%rbp)
+	push $0 # (int)#1 at -64(%rbp)
+	push $0 # (int)j at -72(%rbp)
+	push $0 # (int)x at -80(%rbp)
+	push $0 # (int)x2 at -88(%rbp)
+	push $0 # (float)#1 at -96(%rbp)
+	push $0 # (float)#0 at -104(%rbp)
 .main.0:
 # (13) <[int][ASSIGN], (int)n1, -9>
 	mov -8(%rbp), %rax

@@ -44,10 +44,10 @@ _string_main.0: .asciz "ret: %d\n"
 main:
 	push %rbp
 	mov %rsp, %rbp
-	push $0 # (int)#0
-	push $0 # (int)#1
-	push $0 # (int)#2
-	push $0 # (int)#3
+	push $0 # (int)#0 at -8(%rbp)
+	push $0 # (int)#1 at -16(%rbp)
+	push $0 # (int)#2 at -24(%rbp)
+	push $0 # (int)#3 at -32(%rbp)
 .main.0:
 # (13) <[int][CALL], (int)#0, (int)funA>
 	mov -8(%rbp), %rax

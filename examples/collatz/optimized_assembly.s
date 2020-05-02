@@ -8,8 +8,8 @@
 collatz:
 	push %rbp
 	mov %rsp, %rbp
-	push $0 # (int)iters
-	push $0 # (int)#0
+	push $0 # (int)iters at -8(%rbp)
+	push $0 # (int)#0 at -16(%rbp)
 .collatz.0:
 # (3) <[int][ASSIGN], (int)iters, 0>
 	mov -8(%rbp), %rax
@@ -90,9 +90,9 @@ _string_main.0: .asciz "%d: %d\n"
 main:
 	push %rbp
 	mov %rsp, %rbp
-	push $0 # (int)i
-	push $0 # (int)#0
-	push $0 # (int)#1
+	push $0 # (int)i at -8(%rbp)
+	push $0 # (int)#0 at -16(%rbp)
+	push $0 # (int)#1 at -24(%rbp)
 .main.0:
 # (18) <[int][ASSIGN], (int)i, 1>
 	mov -8(%rbp), %rax

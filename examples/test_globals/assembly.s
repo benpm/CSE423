@@ -25,7 +25,7 @@ z: .quad 13
 fun:
 	push %rbp
 	mov %rsp, %rbp
-	push $0 # (int)#0
+	push $0 # (int)#0 at -8(%rbp)
 .fun.0:
 # (7) <[int][ADD], (int)v, (int)v, 9>
 	mov v(%rip), %rax
@@ -77,9 +77,9 @@ _string_main.0: .asciz "v: %d, x: %d, z: %d\n"
 main:
 	push %rbp
 	mov %rsp, %rbp
-	push $0 # (int)i
-	push $0 # (int)#0
-	push $0 # (int)#1
+	push $0 # (int)i at -8(%rbp)
+	push $0 # (int)#0 at -16(%rbp)
+	push $0 # (int)#1 at -24(%rbp)
 .main.0:
 # (15) <[int][ADD], (int)v, (int)v, 2>
 	mov v(%rip), %rax

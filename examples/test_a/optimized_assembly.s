@@ -8,9 +8,9 @@ _string_main.0: .asciz "i: %d, j: %d, k: %d\n"
 main:
 	push %rbp
 	mov %rsp, %rbp
-	push $0 # (int)i
-	push $0 # (int)j
-	push $0 # (int)#0
+	push $0 # (int)i at -8(%rbp)
+	push $0 # (int)j at -16(%rbp)
+	push $0 # (int)#0 at -24(%rbp)
 .main.0:
 # (2) <[int][ASSIGN], (int)i, 0>
 	mov -8(%rbp), %rax
