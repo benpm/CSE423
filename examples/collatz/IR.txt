@@ -16,10 +16,13 @@ collatz((int)i, )
   └────────────────────
   BB3 [assignment]
   │(6) <[int][DIV], (int)i, (int)i, 2>
+  │(6) <[JUMP], <5>>
   └────────────────────
-  BB4 [combined]
+  BB4 [assignment]
   │(8) <[int][MUL], (int)#0, 3, (int)i>
   │(8) <[int][ADD], (int)i, (int)#0, 1>
+  └────────────────────
+  BB5 [combined]
   │(10) <[int][ADD], (int)iters, (int)iters, 1>
   │(4) <[JUMP], <1>>
   └────────────────────

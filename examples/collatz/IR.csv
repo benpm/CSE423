@@ -11,9 +11,11 @@ stmt,5,none,JUMP_EQ,3,int #0,0
 stmt,5,none,JUMP,4
 BB,3,assignment
 stmt,6,int,DIV,int i,int i,2
-BB,4,combined
+stmt,6,none,JUMP,5
+BB,4,assignment
 stmt,8,int,MUL,int #0,3,int i
 stmt,8,int,ADD,int i,int #0,1
+BB,5,combined
 stmt,10,int,ADD,int iters,int iters,1
 stmt,4,none,JUMP,1
 BB,7,return_stmt

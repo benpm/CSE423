@@ -44,63 +44,67 @@ optimization_congruence_class((int)i, )
   └────────────────────
   BB6 [equal]
   │(23) <[int][MOD], (int)#0, (int)i, 2>
-  │(23) <[JUMP_EQ], <9>, (int)#0, 0>
+  │(23) <[JUMP_EQ], <7>, (int)#0, 0>
+  │(23) <[JUMP], <9>>
   └────────────────────
-  BB7 [equal]
-  │(23) <[int][MOD], (int)#0, (int)i, 3>
-  │(23) <[JUMP_EQ], <9>, (int)#0, 0>
-  └────────────────────
-  BB8 [fallthrough]
-  │(23) <[JUMP], <11>>
-  └────────────────────
-  BB9 [combined]
-  │(24) <[int][CALL], (int)#0, printf, "%d is not prime! 2 or 3 divides it\n", (int)i>
+  BB7 [combined]
+  │(24) <[int][CALL], (int)#0, printf, "%d is not prime! 2 divides it\n", (int)i>
   │(25) <[int][RETURN], 0>
   └────────────────────
-  BB11 [lt]
-  │(28) <[JUMP_LT], <12>, 25, (int)i>
-  │(28) <[JUMP], <19>>
+  BB9 [equal]
+  │(26) <[int][MOD], (int)#0, (int)i, 3>
+  │(26) <[JUMP_EQ], <10>, (int)#0, 0>
+  │(26) <[JUMP], <12>>
   └────────────────────
-  BB12 [equal]
-  │(29) <[int][MOD], (int)#0, (int)i, 5>
-  │(29) <[JUMP_EQ], <15>, (int)#0, 0>
+  BB10 [combined]
+  │(27) <[int][CALL], (int)#0, printf, "%d is not prime! 3 divides it\n", (int)i>
+  │(28) <[int][RETURN], 0>
+  │(28) <[JUMP], <20>>
+  └────────────────────
+  BB12 [lt]
+  │(30) <[JUMP_LT], <13>, 25, (int)i>
+  │(30) <[JUMP], <20>>
   └────────────────────
   BB13 [equal]
-  │(29) <[int][MOD], (int)#1, (int)i, 7>
-  │(29) <[JUMP_EQ], <15>, (int)#1, 0>
+  │(31) <[int][MOD], (int)#0, (int)i, 5>
+  │(31) <[JUMP_EQ], <16>, (int)#0, 0>
   └────────────────────
-  BB14 [fallthrough]
-  │(29) <[JUMP], <17>>
+  BB14 [equal]
+  │(31) <[int][MOD], (int)#1, (int)i, 7>
+  │(31) <[JUMP_EQ], <16>, (int)#1, 0>
   └────────────────────
-  BB15 [combined]
-  │(30) <[int][CALL], (int)#0, printf, "%d is not prime! %d divides it!\n", (int)i, 5>
-  │(31) <[int][RETURN], 0>
+  BB15 [fallthrough]
+  │(31) <[JUMP], <18>>
   └────────────────────
-  BB17 [combined]
-  │(33) <[int][ADD], (int)j, (int)j, 6>
-  │(28) <[JUMP], <11>>
+  BB16 [combined]
+  │(32) <[int][CALL], (int)#0, printf, "%d is not prime! %d divides it!\n", (int)i, 5>
+  │(33) <[int][RETURN], 0>
   └────────────────────
-  BB19 [combined]
-  │(36) <[int][CALL], (int)#0, printf, "%d is prime!\n", (int)i>
-  │(37) <[int][RETURN], 0>
+  BB18 [combined]
+  │(35) <[int][ADD], (int)j, (int)j, 6>
+  │(30) <[JUMP], <12>>
+  └────────────────────
+  BB20 [combined]
+  │(39) <[int][CALL], (int)#0, printf, "%d is prime!\n", (int)i>
+  │(40) <[int][RETURN], 0>
   └────────────────────
 
 main()
   BB0 [assignment]
-  │(42) <[int][ASSIGN], (int)i, 1>
+  │(45) <[int][ASSIGN], (int)i, 1>
   └────────────────────
   BB1 [lt]
-  │(42) <[JUMP_LT], <2>, (int)i, 100>
-  │(42) <[JUMP], <5>>
+  │(45) <[JUMP_LT], <2>, (int)i, 100>
+  │(45) <[JUMP], <5>>
   └────────────────────
   BB2 [combined]
-  │(43) <[int][CALL], (int)#0, brute_force_fact, (int)i>
-  │(44) <[int][CALL], (int)#0, optimization_congruence_class, (int)i>
-  │(42) <[int][ADD], (int)i, (int)i, 1>
-  │(42) <[JUMP], <1>>
+  │(46) <[int][CALL], (int)#0, brute_force_fact, (int)i>
+  │(47) <[int][CALL], (int)#0, optimization_congruence_class, (int)i>
+  │(45) <[int][ADD], (int)i, (int)i, 1>
+  │(45) <[JUMP], <1>>
   └────────────────────
   BB5 [return_stmt]
-  │(47) <[int][RETURN], 0>
+  │(50) <[int][RETURN], 0>
   └────────────────────
 
 

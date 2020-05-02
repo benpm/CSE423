@@ -14,6 +14,7 @@ main()
   └────────────────────
   BB6 [return_stmt]
   │(10) <[int][RETURN], 35>
+  │(10) <[JUMP], <8>>
   └────────────────────
   BB7 [return_stmt]
   │(12) <[int][RETURN], 124>

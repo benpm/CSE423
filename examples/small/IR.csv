@@ -11,6 +11,7 @@ stmt,9,none,JUMP_LT,6,int c,2
 stmt,9,none,JUMP,7
 BB,6,return_stmt
 stmt,10,int,RETURN,35
+stmt,10,none,JUMP,8
 BB,7,return_stmt
 stmt,12,int,RETURN,124
 

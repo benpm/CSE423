@@ -99,6 +99,7 @@ stmt,52,none,JUMP,42
 BB,40,combined
 stmt,53,int,MINUS,int n2,int n2,16
 stmt,54,int,MINUS,int n2,int n2,1
+stmt,54,none,JUMP,43
 BB,42,div_equal
 stmt,56,int,DIV,int n1,int n1,2
 BB,43,combined

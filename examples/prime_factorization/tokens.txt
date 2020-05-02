@@ -95,7 +95,22 @@
 <2, INTCONST>
 <==, ISEQ>
 <0, INTCONST>
-<||, LOGOR>
+<), RPAREN>
+<{, LBRACE>
+<printf, ID>
+<(, LPAREN>
+<"%d is not prime! 2 divides it\n", STRINGLIT>
+<,, COMMA>
+<i, ID>
+<), RPAREN>
+<;, SEMICOLON>
+<return, RETURN>
+<0, INTCONST>
+<;, SEMICOLON>
+<}, RBRACE>
+<else, ELSE>
+<if, IF>
+<(, LPAREN>
 <i, ID>
 <%, MODULO>
 <3, INTCONST>
@@ -105,7 +120,7 @@
 <{, LBRACE>
 <printf, ID>
 <(, LPAREN>
-<"%d is not prime! 2 or 3 divides it\n", STRINGLIT>
+<"%d is not prime! 3 divides it\n", STRINGLIT>
 <,, COMMA>
 <i, ID>
 <), RPAREN>
@@ -114,6 +129,8 @@
 <0, INTCONST>
 <;, SEMICOLON>
 <}, RBRACE>
+<else, ELSE>
+<{, LBRACE>
 <while, WHILE>
 <(, LPAREN>
 <j, ID>
@@ -161,6 +178,7 @@
 <+, PLUS>
 <6, INTCONST>
 <;, SEMICOLON>
+<}, RBRACE>
 <}, RBRACE>
 <printf, ID>
 <(, LPAREN>

@@ -127,6 +127,7 @@ main()
   BB40 [combined]
   │(53) <[int][MINUS], (int)n2, (int)n2, 16>
   │(54) <[int][MINUS], (int)n2, (int)n2, 1>
+  │(54) <[JUMP], <43>>
   └────────────────────
   BB42 [div_equal]
   │(56) <[int][DIV], (int)n1, (int)n1, 2>

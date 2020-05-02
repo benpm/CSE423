@@ -167,27 +167,40 @@ void SymbolTable::printTable(SymbolTable* st, uint depth)
 
     // Get longest identifier name
     size_t maxLen = 0;
-    for (auto item : st->table)
-        maxLen = std::max(item.first.size(), maxLen);
+    size_t maxIDLen = 0;
+    for (auto item : st->table){ 
+        maxIDLen = std::max(item.first.size(), maxIDLen);
+        maxLen = std::max(item.first.size() + 8, maxLen);
+    }
+    maxLen = std::max(st->name.size() + 2, maxLen);
+    maxLen += 14;
     
     // Create table layout
-    fmt::print("{}+----------------------------+\n", padding);
-    fmt::print("{}| Table ID: {:<4} {:>11} |\n", padding, st->tableID, st->name);
-    fmt::print("{}+----------------------------+\n", padding);
-    std::string fmtstr = "{}| {:" + std::to_string(maxLen) + "} | {:6} | {:" +
-        std::to_string(14 - maxLen) + "} |\n";
+    fmt::print(
+        "{0}+{1:-^{3}}+\n"
+        "{0}|{2: <{3}}|\n"
+        "{0}+{1:-^{3}}+\n",
+        padding, "",
+        fmt::format(" Table ID: {0} {1:>{2}} ", st->tableID, st->name, maxLen - 15),
+        maxLen
+    );
 
     // Print table entries
     for (auto item : st->table) {
-        fmt::print(fmtstr, padding, item.first, 
+        std::string string = fmt::format(" {0: <{1}} | {2: <6} | {3: <9}", 
+            item.first, maxIDLen,
             std::string(magic_enum::enum_name(item.second.symType)),
             std::string(magic_enum::enum_name(item.second.category))
         );
+        fmt::print(
+            "{0}|{2: <{3}}|\n",
+            padding, "",
+            string,
+            maxLen
+        );
     }
-    if (st->table.empty())
-        fmt::print("{}|                            |\n", padding);
-
-    fmt::print("{}+----------------------------+\n", padding);
+    if (st->table.size() > 0)
+        fmt::print("{0}+{1:-^{2}}+\n", padding, "", maxLen);
 
     // Recurse on the table's children
     for (SymbolTable* child : st->children) {

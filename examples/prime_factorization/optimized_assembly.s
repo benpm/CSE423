@@ -85,9 +85,10 @@ brute_force_fact:
 .type optimization_congruence_class, @function
 .data
 _string_optimization_congruence_class.0: .asciz "%d is prime!\n"
-_string_optimization_congruence_class.1: .asciz "%d is not prime! 2 or 3 divides it\n"
-_string_optimization_congruence_class.2: .asciz "%d is not prime! %d divides it!\n"
-_string_optimization_congruence_class.3: .asciz "%d is prime!\n"
+_string_optimization_congruence_class.1: .asciz "%d is not prime! 2 divides it\n"
+_string_optimization_congruence_class.2: .asciz "%d is not prime! 3 divides it\n"
+_string_optimization_congruence_class.3: .asciz "%d is not prime! %d divides it!\n"
+_string_optimization_congruence_class.4: .asciz "%d is prime!\n"
 # FUNCTION optimization_congruence_class
 # param (int)i at 16(%rbp)
 .text
@@ -140,30 +141,15 @@ optimization_congruence_class:
 	idiv %rcx
 	mov %rdx, %rbx # save remainder
 	mov %rbx, -16(%rbp)
-# (23) <[JUMP_EQ], <9>, (int)#0, 0>
+# (23) <[JUMP_EQ], <7>, (int)#0, 0>
 	mov -16(%rbp), %rax
 	mov $0, %rbx
 	cmp %rbx, %rax
-	je .optimization_congruence_class.9
+	je .optimization_congruence_class.7
+# (23) <[JUMP], <9>>
+	jmp .optimization_congruence_class.9
 .optimization_congruence_class.7:
-# (23) <[int][MOD], (int)#0, (int)i, 3>
-	mov 16(%rbp), %rax
-	mov -16(%rbp), %rbx
-	mov $3, %rcx
-	cqo 
-	idiv %rcx
-	mov %rdx, %rbx # save remainder
-	mov %rbx, -16(%rbp)
-# (23) <[JUMP_EQ], <9>, (int)#0, 0>
-	mov -16(%rbp), %rax
-	mov $0, %rbx
-	cmp %rbx, %rax
-	je .optimization_congruence_class.9
-.optimization_congruence_class.8:
-# (23) <[JUMP], <11>>
-	jmp .optimization_congruence_class.11
-.optimization_congruence_class.9:
-# (24) <[int][CALL], (int)#0, printf, "%d is not prime! 2 or 3 divides it\n", (int)i>
+# (24) <[int][CALL], (int)#0, printf, "%d is not prime! 2 divides it\n", (int)i>
 	lea _string_optimization_congruence_class.1(%rip), %rdi
 	mov 16(%rbp), %rsi
 	mov $0, %rax
@@ -176,53 +162,29 @@ optimization_congruence_class:
 	add %rdx, %rsp
 	pop %rbp
 	ret 
-.optimization_congruence_class.11:
-# (28) <[JUMP_LT], <12>, 25, (int)i>
-	mov $25, %rax
-	mov 16(%rbp), %rbx
-	cmp %rbx, %rax
-	jl .optimization_congruence_class.12
-# (28) <[JUMP], <19>>
-	jmp .optimization_congruence_class.19
-.optimization_congruence_class.12:
-# (29) <[int][MOD], (int)#0, (int)i, 5>
+.optimization_congruence_class.9:
+# (26) <[int][MOD], (int)#0, (int)i, 3>
 	mov 16(%rbp), %rax
 	mov -16(%rbp), %rbx
-	mov $5, %rcx
+	mov $3, %rcx
 	cqo 
 	idiv %rcx
 	mov %rdx, %rbx # save remainder
 	mov %rbx, -16(%rbp)
-# (29) <[JUMP_EQ], <15>, (int)#0, 0>
+# (26) <[JUMP_EQ], <10>, (int)#0, 0>
 	mov -16(%rbp), %rax
 	mov $0, %rbx
 	cmp %rbx, %rax
-	je .optimization_congruence_class.15
-.optimization_congruence_class.13:
-# (29) <[int][MOD], (int)#1, (int)i, 7>
-	mov 16(%rbp), %rax
-	mov -24(%rbp), %rbx
-	mov $7, %rcx
-	cqo 
-	idiv %rcx
-	mov %rdx, %rbx # save remainder
-	mov %rbx, -24(%rbp)
-# (29) <[JUMP_EQ], <15>, (int)#1, 0>
-	mov -24(%rbp), %rax
-	mov $0, %rbx
-	cmp %rbx, %rax
-	je .optimization_congruence_class.15
-.optimization_congruence_class.14:
-# (29) <[JUMP], <17>>
-	jmp .optimization_congruence_class.17
-.optimization_congruence_class.15:
-# (30) <[int][CALL], (int)#0, printf, "%d is not prime! %d divides it!\n", (int)i, 5>
+	je .optimization_congruence_class.10
+# (26) <[JUMP], <12>>
+	jmp .optimization_congruence_class.12
+.optimization_congruence_class.10:
+# (27) <[int][CALL], (int)#0, printf, "%d is not prime! 3 divides it\n", (int)i>
 	lea _string_optimization_congruence_class.2(%rip), %rdi
 	mov 16(%rbp), %rsi
-	mov $5, %rdx
 	mov $0, %rax
 	call printf
-# (31) <[int][RETURN], 0>
+# (28) <[int][RETURN], 0>
 	mov $0, %rax
 # stack size is 32
 	mov %rbp, %rdx
@@ -230,22 +192,78 @@ optimization_congruence_class:
 	add %rdx, %rsp
 	pop %rbp
 	ret 
-.optimization_congruence_class.17:
-# (33) <[int][ADD], (int)j, (int)j, 6>
+# (28) <[JUMP], <20>>
+	jmp .optimization_congruence_class.20
+.optimization_congruence_class.12:
+# (30) <[JUMP_LT], <13>, 25, (int)i>
+	mov $25, %rax
+	mov 16(%rbp), %rbx
+	cmp %rbx, %rax
+	jl .optimization_congruence_class.13
+# (30) <[JUMP], <20>>
+	jmp .optimization_congruence_class.20
+.optimization_congruence_class.13:
+# (31) <[int][MOD], (int)#0, (int)i, 5>
+	mov 16(%rbp), %rax
+	mov -16(%rbp), %rbx
+	mov $5, %rcx
+	cqo 
+	idiv %rcx
+	mov %rdx, %rbx # save remainder
+	mov %rbx, -16(%rbp)
+# (31) <[JUMP_EQ], <16>, (int)#0, 0>
+	mov -16(%rbp), %rax
+	mov $0, %rbx
+	cmp %rbx, %rax
+	je .optimization_congruence_class.16
+.optimization_congruence_class.14:
+# (31) <[int][MOD], (int)#1, (int)i, 7>
+	mov 16(%rbp), %rax
+	mov -24(%rbp), %rbx
+	mov $7, %rcx
+	cqo 
+	idiv %rcx
+	mov %rdx, %rbx # save remainder
+	mov %rbx, -24(%rbp)
+# (31) <[JUMP_EQ], <16>, (int)#1, 0>
+	mov -24(%rbp), %rax
+	mov $0, %rbx
+	cmp %rbx, %rax
+	je .optimization_congruence_class.16
+.optimization_congruence_class.15:
+# (31) <[JUMP], <18>>
+	jmp .optimization_congruence_class.18
+.optimization_congruence_class.16:
+# (32) <[int][CALL], (int)#0, printf, "%d is not prime! %d divides it!\n", (int)i, 5>
+	lea _string_optimization_congruence_class.3(%rip), %rdi
+	mov 16(%rbp), %rsi
+	mov $5, %rdx
+	mov $0, %rax
+	call printf
+# (33) <[int][RETURN], 0>
+	mov $0, %rax
+# stack size is 32
+	mov %rbp, %rdx
+	sub %rsp, %rdx
+	add %rdx, %rsp
+	pop %rbp
+	ret 
+.optimization_congruence_class.18:
+# (35) <[int][ADD], (int)j, (int)j, 6>
 	mov -8(%rbp), %rax
 	mov $6, %rbx
 	add %rax, %rbx
 	mov %rbx, %rax
 	mov %rax, -8(%rbp)
-# (28) <[JUMP], <11>>
-	jmp .optimization_congruence_class.11
-.optimization_congruence_class.19:
-# (36) <[int][CALL], (int)#0, printf, "%d is prime!\n", (int)i>
+# (30) <[JUMP], <12>>
+	jmp .optimization_congruence_class.12
+.optimization_congruence_class.20:
+# (39) <[int][CALL], (int)#0, printf, "%d is prime!\n", (int)i>
 	lea _string_optimization_congruence_class.0(%rip), %rdi
 	mov 16(%rbp), %rsi
 	mov $0, %rax
 	call printf
-# (37) <[int][RETURN], 0>
+# (40) <[int][RETURN], 0>
 	mov $0, %rax
 # stack size is 32
 	mov %rbp, %rdx
@@ -265,42 +283,42 @@ main:
 	push $0 # (int)i at -8(%rbp)
 	push $0 # (int)#0 at -16(%rbp)
 .main.0:
-# (42) <[int][ASSIGN], (int)i, 1>
+# (45) <[int][ASSIGN], (int)i, 1>
 	mov -8(%rbp), %rax
 	mov $1, %rbx
 	mov %rbx, %rax
 	mov %rax, -8(%rbp)
 .main.1:
-# (42) <[JUMP_LT], <2>, (int)i, 100>
+# (45) <[JUMP_LT], <2>, (int)i, 100>
 	mov -8(%rbp), %rax
 	mov $100, %rbx
 	cmp %rbx, %rax
 	jl .main.2
-# (42) <[JUMP], <5>>
+# (45) <[JUMP], <5>>
 	jmp .main.5
 .main.2:
-# (43) <[int][CALL], (int)#0, brute_force_fact, (int)i>
+# (46) <[int][CALL], (int)#0, brute_force_fact, (int)i>
 	push -8(%rbp)
 	mov -16(%rbp), %rax
 	call brute_force_fact
 	add $8, %rsp
 	mov %rax, -16(%rbp)
-# (44) <[int][CALL], (int)#0, optimization_congruence_class, (int)i>
+# (47) <[int][CALL], (int)#0, optimization_congruence_class, (int)i>
 	push -8(%rbp)
 	mov -16(%rbp), %rax
 	call optimization_congruence_class
 	add $8, %rsp
 	mov %rax, -16(%rbp)
-# (42) <[int][ADD], (int)i, (int)i, 1>
+# (45) <[int][ADD], (int)i, (int)i, 1>
 	mov -8(%rbp), %rax
 	mov $1, %rbx
 	add %rax, %rbx
 	mov %rbx, %rax
 	mov %rax, -8(%rbp)
-# (42) <[JUMP], <1>>
+# (45) <[JUMP], <1>>
 	jmp .main.1
 .main.5:
-# (47) <[int][RETURN], 0>
+# (50) <[int][RETURN], 0>
 	mov $0, %rax
 # stack size is 24
 	mov %rbp, %rdx

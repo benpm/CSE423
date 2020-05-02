@@ -31,6 +31,8 @@ main:
 	add %rdx, %rsp
 	pop %rbp
 	ret 
+# (10) <[JUMP], <8>>
+	jmp .main.8
 .main.7:
 # (12) <[int][RETURN], 124>
 	mov $124, %rax

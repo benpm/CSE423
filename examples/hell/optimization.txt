@@ -44,11 +44,14 @@ funA((int)x, (int)y, (int)z, )
   BB13 [combined]
   │(16) <[int][ADD], (int)i, (int)i, 10>
   │(17) <[int][MINUS], (int)globalA, (int)globalA, 7>
+  │(17) <[JUMP], <17>>
   └────────────────────
   BB15 [combined]
   │(19) <[int][ADD], (int)i, (int)i, 2>
   │(20) <[int][MUL], (int)#0, 10, (int)globalB>
   │(20) <[int][ADD], (int)globalA, (int)globalA, (int)#0>
+  └────────────────────
+  BB17 [gt]
   │(22) <[JUMP_GT], <18>, (int)i, 100>
   │(22) <[JUMP], <21>>
   └────────────────────
@@ -66,6 +69,7 @@ funA((int)x, (int)y, (int)z, )
   │(25) <[int][ADD], (int)#3, (int)#2, (int)globalB>
   │(25) <[int][DIV], (int)#4, (int)#0, (int)#3>
   │(25) <[int][RETURN], (int)#4>
+  │(25) <[JUMP], <21>>
   └────────────────────
   BB20 [return_stmt]
   │(27) <[int][MUL], (int)#0, (int)i, (int)j>
@@ -187,12 +191,16 @@ funB((int)f, )
   └────────────────────
   BB21 [return_stmt]
   │(65) <[int][RETURN], 0>
+  │(65) <[JUMP], <23>>
   └────────────────────
-  BB22 [combined]
+  BB22 [return_stmt]
   │(67) <[int][MUL], (int)#0, (int)globalA, 1>
   │(67) <[int][MUL], (int)#1, (int)#0, 123>
   │(67) <[int][RETURN], (int)#1>
+  └────────────────────
+  BB23 [while_post]
   │(59) <[JUMP], <14>>
+  │(59) <[JUMP], <26>>
   └────────────────────
   BB24 [noteq]
   │(72) <[JUMP_NEQ], <25>, (int)f, 0>

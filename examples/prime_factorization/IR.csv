@@ -31,48 +31,52 @@ stmt,19,int,CALL,int #0,printf,"%d is prime!\n",int i
 stmt,20,int,RETURN,0
 BB,6,equal
 stmt,23,int,MOD,int #0,int i,2
-stmt,23,none,JUMP_EQ,9,int #0,0
-BB,7,equal
-stmt,23,int,MOD,int #0,int i,3
-stmt,23,none,JUMP_EQ,9,int #0,0
-BB,8,fallthrough
-stmt,23,none,JUMP,11
-BB,9,combined
-stmt,24,int,CALL,int #0,printf,"%d is not prime! 2 or 3 divides it\n",int i
+stmt,23,none,JUMP_EQ,7,int #0,0
+stmt,23,none,JUMP,9
+BB,7,combined
+stmt,24,int,CALL,int #0,printf,"%d is not prime! 2 divides it\n",int i
 stmt,25,int,RETURN,0
-BB,11,lt
-stmt,28,int,MUL,int #0,int j,int j
-stmt,28,none,JUMP_LT,12,int #0,int i
-stmt,28,none,JUMP,19
-BB,12,equal
-stmt,29,int,MOD,int #0,int i,int j
-stmt,29,none,JUMP_EQ,15,int #0,0
+BB,9,equal
+stmt,26,int,MOD,int #0,int i,3
+stmt,26,none,JUMP_EQ,10,int #0,0
+stmt,26,none,JUMP,12
+BB,10,combined
+stmt,27,int,CALL,int #0,printf,"%d is not prime! 3 divides it\n",int i
+stmt,28,int,RETURN,0
+stmt,28,none,JUMP,20
+BB,12,lt
+stmt,30,int,MUL,int #0,int j,int j
+stmt,30,none,JUMP_LT,13,int #0,int i
+stmt,30,none,JUMP,20
 BB,13,equal
-stmt,29,int,ADD,int #0,int j,2
-stmt,29,int,MOD,int #1,int i,int #0
-stmt,29,none,JUMP_EQ,15,int #1,0
-BB,14,fallthrough
-stmt,29,none,JUMP,17
-BB,15,combined
-stmt,30,int,CALL,int #0,printf,"%d is not prime! %d divides it!\n",int i,int j
-stmt,31,int,RETURN,0
-BB,17,combined
-stmt,33,int,ADD,int j,int j,6
-stmt,28,none,JUMP,11
-BB,19,combined
-stmt,36,int,CALL,int #0,printf,"%d is prime!\n",int i
-stmt,37,int,RETURN,0
+stmt,31,int,MOD,int #0,int i,int j
+stmt,31,none,JUMP_EQ,16,int #0,0
+BB,14,equal
+stmt,31,int,ADD,int #0,int j,2
+stmt,31,int,MOD,int #1,int i,int #0
+stmt,31,none,JUMP_EQ,16,int #1,0
+BB,15,fallthrough
+stmt,31,none,JUMP,18
+BB,16,combined
+stmt,32,int,CALL,int #0,printf,"%d is not prime! %d divides it!\n",int i,int j
+stmt,33,int,RETURN,0
+BB,18,combined
+stmt,35,int,ADD,int j,int j,6
+stmt,30,none,JUMP,12
+BB,20,combined
+stmt,39,int,CALL,int #0,printf,"%d is prime!\n",int i
+stmt,40,int,RETURN,0
 func,main
 BB,0,assignment
-stmt,42,int,ASSIGN,int i,1
+stmt,45,int,ASSIGN,int i,1
 BB,1,lt
-stmt,42,none,JUMP_LT,2,int i,100
-stmt,42,none,JUMP,5
+stmt,45,none,JUMP_LT,2,int i,100
+stmt,45,none,JUMP,5
 BB,2,combined
-stmt,43,int,CALL,int #0,brute_force_fact,int i
-stmt,44,int,CALL,int #0,optimization_congruence_class,int i
-stmt,42,int,ADD,int i,int i,1
-stmt,42,none,JUMP,1
+stmt,46,int,CALL,int #0,brute_force_fact,int i
+stmt,47,int,CALL,int #0,optimization_congruence_class,int i
+stmt,45,int,ADD,int i,int i,1
+stmt,45,none,JUMP,1
 BB,5,return_stmt
-stmt,47,int,RETURN,0
+stmt,50,int,RETURN,0
 

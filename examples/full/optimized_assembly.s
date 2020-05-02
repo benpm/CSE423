@@ -365,6 +365,8 @@ main:
 	neg %rax
 	mov %rax, %rax
 	mov %rax, -16(%rbp)
+# (54) <[JUMP], <43>>
+	jmp .main.43
 .main.42:
 # (56) <[int][DIV], (int)n1, (int)n1, 2>
 	mov -8(%rbp), %rax

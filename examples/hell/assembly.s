@@ -156,6 +156,8 @@ funA:
 	neg %rax
 	mov %rax, %rax
 	mov %rax, globalA(%rip)
+# (17) <[JUMP], <17>>
+	jmp .funA.17
 .funA.15:
 # (19) <[int][ADD], (int)i, (int)i, 2>
 	mov -8(%rbp), %rax
@@ -176,6 +178,7 @@ funA:
 	add %rax, %rbx
 	mov %rbx, %rax
 	mov %rax, globalA(%rip)
+.funA.17:
 # (22) <[JUMP_GT], <18>, (int)i, 100>
 	mov -8(%rbp), %rax
 	mov $100, %rbx
@@ -257,6 +260,8 @@ funA:
 	add %rdx, %rsp
 	pop %rbp
 	ret 
+# (25) <[JUMP], <21>>
+	jmp .funA.21
 .funA.20:
 # (27) <[int][MUL], (int)#0, (int)i, (int)j>
 	mov -16(%rbp), %rax
@@ -688,6 +693,8 @@ funB:
 	add %rdx, %rsp
 	pop %rbp
 	ret 
+# (65) <[JUMP], <23>>
+	jmp .funB.23
 .funB.22:
 # (67) <[int][MUL], (int)#0, (int)globalA, 1>
 	mov -8(%rbp), %rax
@@ -711,8 +718,11 @@ funB:
 	add %rdx, %rsp
 	pop %rbp
 	ret 
+.funB.23:
 # (59) <[JUMP], <14>>
 	jmp .funB.14
+# (59) <[JUMP], <26>>
+	jmp .funB.26
 .funB.24:
 # (72) <[JUMP_NEQ], <25>, (int)f, 0>
 	mov 16(%rbp), %rax

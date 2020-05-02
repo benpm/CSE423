@@ -9,6 +9,7 @@ main()
   └────────────────────
   BB3 [call]
   │(4) <[CALL], #0, printf, "Error! Factorial of a negative number doesn't exist.\n">
+  │(4) <[JUMP], <9>>
   └────────────────────
   BB4 [assignment]
   │(6) <[int][ASSIGN], (int)i, 1>
@@ -22,8 +23,10 @@ main()
   │(6) <[int][ADD], (int)i, (int)i, 1>
   │(6) <[JUMP], <5>>
   └────────────────────
-  BB8 [combined]
+  BB8 [call]
   │(9) <[int][CALL], (int)#0, printf, "Factorial of %d = %d\n", 10, (int)fact>
+  └────────────────────
+  BB9 [return_stmt]
   │(11) <[int][RETURN], 0>
   └────────────────────
 

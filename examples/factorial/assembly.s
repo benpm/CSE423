@@ -37,6 +37,8 @@ main:
 	lea _string_main.0(%rip), %rdi
 	mov $0, %rax
 	call printf
+# (4) <[JUMP], <9>>
+	jmp .main.9
 .main.4:
 # (6) <[int][ASSIGN], (int)i, 1>
 	mov -32(%rbp), %rax
@@ -73,6 +75,7 @@ main:
 	mov -8(%rbp), %rdx
 	mov $0, %rax
 	call printf
+.main.9:
 # (11) <[int][RETURN], 0>
 	mov $0, %rax
 # stack size is 48

@@ -34,10 +34,12 @@ stmt,15,none,JUMP,13
 BB,13,combined
 stmt,16,int,ADD,int i,int i,10
 stmt,17,int,MINUS,int globalA,int globalA,7
+stmt,17,none,JUMP,17
 BB,15,combined
 stmt,19,int,ADD,int i,int i,2
 stmt,20,int,MUL,int #0,10,int globalB
 stmt,20,int,ADD,int globalA,int globalA,int #0
+BB,17,gt
 stmt,22,none,JUMP_GT,18,int i,100
 stmt,22,none,JUMP,21
 BB,18,noteq
@@ -53,6 +55,7 @@ stmt,25,int,SUB,int #2,int #1,int z
 stmt,25,int,ADD,int #3,int #2,int globalB
 stmt,25,int,DIV,int #4,int #0,int #3
 stmt,25,int,RETURN,int #4
+stmt,25,none,JUMP,21
 BB,20,return_stmt
 stmt,27,int,MUL,int #0,int i,int j
 stmt,27,int,ADD,int #1,int k,int x
@@ -150,11 +153,14 @@ stmt,62,int,ADD,int g,int g,1
 stmt,62,none,JUMP,18
 BB,21,return_stmt
 stmt,65,int,RETURN,0
-BB,22,combined
+stmt,65,none,JUMP,23
+BB,22,return_stmt
 stmt,67,int,MUL,int #0,int globalA,1
 stmt,67,int,MUL,int #1,int #0,123
 stmt,67,int,RETURN,int #1
+BB,23,while_post
 stmt,59,none,JUMP,14
+stmt,59,none,JUMP,26
 BB,24,noteq
 stmt,72,none,JUMP_NEQ,25,int f,0
 stmt,72,none,JUMP,26

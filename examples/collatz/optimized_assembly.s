@@ -48,6 +48,8 @@ collatz:
 	idiv %rbx
 	mov %rax, %rax # save quotient
 	mov %rax, 16(%rbp)
+# (6) <[JUMP], <5>>
+	jmp .collatz.5
 .collatz.4:
 # (8) <[int][MUL], (int)#0, 3, (int)i>
 	mov -16(%rbp), %rax
@@ -63,6 +65,7 @@ collatz:
 	add %rbx, %rcx
 	mov %rcx, %rax
 	mov %rax, 16(%rbp)
+.collatz.5:
 # (10) <[int][ADD], (int)iters, (int)iters, 1>
 	mov -8(%rbp), %rax
 	mov $1, %rbx

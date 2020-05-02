@@ -20,17 +20,20 @@ int optimization_congruence_class(int i)
         return 0;
     }
 
-    if (i % 2 == 0 || i % 3 == 0) {
-        printf("%d is not prime! 2 or 3 divides it\n", i);
+    if (i % 2 == 0) {
+        printf("%d is not prime! 2 divides it\n", i);
         return 0;
-    }
-
-    while (j * j < i) {
-        if (i % j == 0 || i % (j + 2) == 0) {
-            printf("%d is not prime! %d divides it!\n", i, j);
-            return 0;
+    } else if (i % 3 == 0) {
+        printf("%d is not prime! 3 divides it\n", i);
+        return 0;
+    } else {
+        while (j * j < i) {
+            if (i % j == 0 || i % (j + 2) == 0) {
+                printf("%d is not prime! %d divides it!\n", i, j);
+                return 0;
+            }
+            j = j + 6;
         }
-        j = j + 6;
     }
 
     printf("%d is prime!\n", i);
