@@ -85,8 +85,6 @@
 
 //Terminal symbols
 %token <sval> INT
-%token <sval> FLOAT
-%token <sval> CHAR
 
 %token <sval> FOR
 %token <sval> WHILE
@@ -127,9 +125,7 @@
 %token <cval> NOT
 
 %token <sval> STRINGLIT
-%token <cval> CHARLIT
 %token <ival> INTCONST
-%token <fval> FLOATCONST
 %token <sval> ID
 
 %token <sval> UNKNOWN
@@ -225,14 +221,6 @@ typeSpecifier:
     INT
         {
             $$ = new PT(PT::INT, @1.first_line);
-        }
-    | FLOAT
-        {
-            $$ = new PT(PT::FLOAT, @1.first_line);
-        }
-    | CHAR
-        {
-            $$ = new PT(PT::CHAR, @1.first_line);
         }
 ;
 funDeclaration:
@@ -619,17 +607,7 @@ argList:
         }
 ;
 constant:
-    CHARLIT
-        {
-            $$ = new PT(PT::CHARLIT, @1.first_line);
-            $$->data.cval = $1;
-        }
-    | FLOATCONST
-        {
-            $$ = new PT(PT::FLOATCONST, @1.first_line);
-            $$->data.fval = $1;
-        }
-    | INTCONST
+    INTCONST
         {
             $$ = new PT(PT::INTCONST, @1.first_line);
             $$->data.ival = $1;
