@@ -7,7 +7,7 @@ NOTE: *To compile without flex and bison, [use the release](https://github.com/b
 
 ## Notes on Release Branch
 This is the release branch, which does not require flex and bison. Compile and run like you
-would normally, but *do not delete* the lex.yy.cpp, parser.tab.cpp, or parser.tab.hpp from /build.
+would normally, but *do not delete* the `lex.yy.cpp`, `parser.tab.cpp`, or `parser.tab.hpp` from `/build`.
 This branch also does not include the test scripts.
 
 ## Progress
