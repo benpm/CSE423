@@ -31,29 +31,34 @@ fun:
 	movq v(%rip), %rax
 	movq $9, %rbx
 	addq %rax, %rbx
-	movq %rbx, v(%rip)
+	movq %rbx, %rax
+	movq %rax, v(%rip)
 # (8) <[int][ADD], (int)#0, 1, (int)v>
 	movq -8(%rbp), %rax
 	movq $1, %rbx
 	movq v(%rip), %rcx
 	addq %rbx, %rcx
-	movq %rcx, -8(%rbp)
+	movq %rcx, %rax
+	movq %rax, -8(%rbp)
 # (8) <[int][ADD], (int)x, (int)x, (int)#0>
 	movq x(%rip), %rax
 	movq -8(%rbp), %rbx
 	addq %rax, %rbx
-	movq %rbx, x(%rip)
+	movq %rbx, %rax
+	movq %rax, x(%rip)
 # (9) <[int][ADD], (int)#0, 3, (int)x>
 	movq -8(%rbp), %rax
 	movq $3, %rbx
 	movq x(%rip), %rcx
 	addq %rbx, %rcx
-	movq %rcx, -8(%rbp)
+	movq %rcx, %rax
+	movq %rax, -8(%rbp)
 # (9) <[int][ADD], (int)z, (int)z, (int)#0>
 	movq z(%rip), %rax
 	movq -8(%rbp), %rbx
 	addq %rax, %rbx
-	movq %rbx, z(%rip)
+	movq %rbx, %rax
+	movq %rax, z(%rip)
 # (10) <[int][RETURN], (int)v>
 	movq v(%rip), %rax
 # stack size is 16
@@ -80,11 +85,18 @@ main:
 	movq v(%rip), %rax
 	movq $2, %rbx
 	addq %rax, %rbx
-	movq %rbx, v(%rip)
+	movq %rbx, %rax
+	movq %rax, v(%rip)
 # (16) <[int][ASSIGN], (int)x, 3>
-	movq $3, x(%rip)
+	movq x(%rip), %rax
+	movq $3, %rbx
+	movq %rbx, %rax
+	movq %rax, x(%rip)
 # (17) <[int][ASSIGN], (int)i, 0>
-	movq $0, -8(%rbp)
+	movq -8(%rbp), %rax
+	movq $0, %rbx
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 .main.3:
 # (17) <[JUMP_LT], <4>, (int)i, 7>
 	movq -8(%rbp), %rax
@@ -102,12 +114,14 @@ main:
 	movq x(%rip), %rax
 	movq -16(%rbp), %rbx
 	addq %rax, %rbx
-	movq %rbx, x(%rip)
+	movq %rbx, %rax
+	movq %rax, x(%rip)
 # (17) <[int][ADD], (int)i, (int)i, 1>
 	movq -8(%rbp), %rax
 	movq $1, %rbx
 	addq %rax, %rbx
-	movq %rbx, -8(%rbp)
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 # (17) <[JUMP], <3>>
 	jmp .main.3
 .main.6:
@@ -123,13 +137,15 @@ main:
 	movq v(%rip), %rbx
 	movq x(%rip), %rcx
 	addq %rbx, %rcx
-	movq %rcx, -16(%rbp)
+	movq %rcx, %rax
+	movq %rax, -16(%rbp)
 # (21) <[int][ADD], (int)#1, (int)#0, (int)z>
 	movq -24(%rbp), %rax
 	movq -16(%rbp), %rbx
 	movq z(%rip), %rcx
 	addq %rbx, %rcx
-	movq %rcx, -24(%rbp)
+	movq %rcx, %rax
+	movq %rax, -24(%rbp)
 # (21) <[int][RETURN], (int)#1>
 	movq -24(%rbp), %rax
 # stack size is 32

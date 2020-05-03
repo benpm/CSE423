@@ -15,9 +15,15 @@ main:
 	pushq $0 # (int)z at -40(%rbp)
 .main.0:
 # (3) <[int][ASSIGN], (int)x, 3>
-	movq $3, -8(%rbp)
+	movq -8(%rbp), %rax
+	movq $3, %rbx
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 # (4) <[int][ASSIGN], (int)i, 0>
-	movq $0, -16(%rbp)
+	movq -16(%rbp), %rax
+	movq $0, %rbx
+	movq %rbx, %rax
+	movq %rax, -16(%rbp)
 .main.2:
 # (4) <[JUMP_LT], <3>, (int)i, 13>
 	movq -16(%rbp), %rax
@@ -32,14 +38,19 @@ main:
 	movq $3, %rbx
 	movq -16(%rbp), %rcx
 	imulq %rbx, %rcx
-	movq %rcx, -24(%rbp)
+	movq %rcx, %rax
+	movq %rax, -24(%rbp)
 # (5) <[int][ADD], (int)x, (int)x, (int)#0>
 	movq -8(%rbp), %rax
 	movq -24(%rbp), %rbx
 	addq %rax, %rbx
-	movq %rbx, -8(%rbp)
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 # (6) <[int][ASSIGN], (int)j, 0>
-	movq $0, -32(%rbp)
+	movq -32(%rbp), %rax
+	movq $0, %rbx
+	movq %rbx, %rax
+	movq %rax, -32(%rbp)
 .main.5:
 # (6) <[JUMP_LT], <6>, (int)j, 56>
 	movq -32(%rbp), %rax
@@ -50,10 +61,14 @@ main:
 	jmp .main.13
 .main.6:
 # (7) <[int][ASSIGN], (int)z, 2>
-	movq $2, -40(%rbp)
+	movq -40(%rbp), %rax
+	movq $2, %rbx
+	movq %rbx, %rax
+	movq %rax, -40(%rbp)
 # (8) <[int][MINUS], (int)x, (int)x, (int)j>
 	movq -8(%rbp), %rax
 	negq %rax
+	movq %rax, %rax
 	movq %rax, -8(%rbp)
 .main.8:
 # (9) <[JUMP_LT], <9>, (int)z, 100>
@@ -68,12 +83,14 @@ main:
 	movq -24(%rbp), %rax
 	movq -8(%rbp), %rbx
 	imulq %rbx, %rbx
-	movq %rbx, -24(%rbp)
+	movq %rbx, %rax
+	movq %rax, -24(%rbp)
 # (10) <[int][ADD], (int)z, (int)z, (int)#0>
 	movq -40(%rbp), %rax
 	movq -24(%rbp), %rbx
 	addq %rax, %rbx
-	movq %rbx, -40(%rbp)
+	movq %rbx, %rax
+	movq %rax, -40(%rbp)
 # (9) <[JUMP], <8>>
 	jmp .main.8
 .main.11:
@@ -83,17 +100,20 @@ main:
 	movq -32(%rbp), %rcx
 	cqo 
 	idivq %rcx
-	movq %rdx, -24(%rbp) # save remainder
+	movq %rdx, %rbx # save remainder
+	movq %rbx, -24(%rbp)
 # (12) <[int][ADD], (int)x, (int)x, (int)#0>
 	movq -8(%rbp), %rax
 	movq -24(%rbp), %rbx
 	addq %rax, %rbx
-	movq %rbx, -8(%rbp)
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 # (6) <[int][ADD], (int)j, (int)j, 2>
 	movq -32(%rbp), %rax
 	movq $2, %rbx
 	addq %rax, %rbx
-	movq %rbx, -32(%rbp)
+	movq %rbx, %rax
+	movq %rax, -32(%rbp)
 # (6) <[JUMP], <5>>
 	jmp .main.5
 .main.13:
@@ -101,7 +121,8 @@ main:
 	movq -16(%rbp), %rax
 	movq $1, %rbx
 	addq %rax, %rbx
-	movq %rbx, -16(%rbp)
+	movq %rbx, %rax
+	movq %rax, -16(%rbp)
 # (4) <[JUMP], <2>>
 	jmp .main.2
 .main.14:

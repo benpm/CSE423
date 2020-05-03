@@ -12,7 +12,10 @@ main:
 	pushq $0 # (int)#0 at -16(%rbp)
 .main.0:
 # (3) <[int][ASSIGN], (int)x, 3>
-	movq $3, -8(%rbp)
+	movq -8(%rbp), %rax
+	movq $3, %rbx
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 # (4) <[JUMP_LT], <2>, (int)x, 3>
 	movq -8(%rbp), %rax
 	movq $3, %rbx
@@ -25,18 +28,21 @@ main:
 	movq -8(%rbp), %rax
 	movq $1, %rbx
 	addq %rax, %rbx
-	movq %rbx, -8(%rbp)
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 # (6) <[int][ADD], (int)#0, (int)x, (int)x>
 	movq -16(%rbp), %rax
 	movq -8(%rbp), %rbx
 	addq %rbx, %rbx
-	movq %rbx, -16(%rbp)
+	movq %rbx, %rax
+	movq %rax, -16(%rbp)
 # (6) <[int][ADD], (int)x, (int)#0, 4>
 	movq -8(%rbp), %rax
 	movq -16(%rbp), %rbx
 	movq $4, %rcx
 	addq %rbx, %rcx
-	movq %rcx, -8(%rbp)
+	movq %rcx, %rax
+	movq %rax, -8(%rbp)
 # (7) <[JUMP_LT], <5>, (int)x, 3>
 	movq -8(%rbp), %rax
 	movq $3, %rbx
@@ -49,6 +55,7 @@ main:
 	movq -8(%rbp), %rax
 	movq $100, %rbx
 	subq %rbx, %rax
+	movq %rax, %rax
 	movq %rax, -8(%rbp)
 .main.6:
 # (10) <[JUMP_GT], <7>, (int)x, 3>
@@ -63,7 +70,8 @@ main:
 	movq -8(%rbp), %rax
 	movq $1234, %rbx
 	addq %rax, %rbx
-	movq %rbx, -8(%rbp)
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 .main.8:
 # (14) <[JUMP_GT], <9>, (int)x, 3>
 	movq -8(%rbp), %rax
@@ -77,18 +85,21 @@ main:
 	movq -8(%rbp), %rax
 	movq $7, %rbx
 	addq %rax, %rbx
-	movq %rbx, -8(%rbp)
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 # (16) <[int][ADD], (int)#0, (int)x, (int)x>
 	movq -16(%rbp), %rax
 	movq -8(%rbp), %rbx
 	addq %rbx, %rbx
-	movq %rbx, -16(%rbp)
+	movq %rbx, %rax
+	movq %rax, -16(%rbp)
 # (16) <[int][ADD], (int)x, (int)#0, 4>
 	movq -8(%rbp), %rax
 	movq -16(%rbp), %rbx
 	movq $4, %rcx
 	addq %rbx, %rcx
-	movq %rcx, -8(%rbp)
+	movq %rcx, %rax
+	movq %rax, -8(%rbp)
 # (17) <[JUMP_LT], <12>, (int)x, 3>
 	movq -8(%rbp), %rax
 	movq $3, %rbx
@@ -101,6 +112,7 @@ main:
 	movq -8(%rbp), %rax
 	movq $100, %rbx
 	subq %rbx, %rax
+	movq %rax, %rax
 	movq %rax, -8(%rbp)
 .main.13:
 # (20) <[JUMP_GT], <14>, (int)x, 3>
@@ -115,7 +127,8 @@ main:
 	movq -8(%rbp), %rax
 	movq $1234, %rbx
 	addq %rax, %rbx
-	movq %rbx, -8(%rbp)
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 .main.15:
 # (24) <[JUMP_EQ], <16>, (int)x, 3>
 	movq -8(%rbp), %rax
@@ -129,13 +142,15 @@ main:
 	movq -16(%rbp), %rax
 	movq -8(%rbp), %rbx
 	addq %rbx, %rbx
-	movq %rbx, -16(%rbp)
+	movq %rbx, %rax
+	movq %rax, -16(%rbp)
 # (25) <[int][ADD], (int)x, (int)#0, 4>
 	movq -8(%rbp), %rax
 	movq -16(%rbp), %rbx
 	movq $4, %rcx
 	addq %rbx, %rcx
-	movq %rcx, -8(%rbp)
+	movq %rcx, %rax
+	movq %rax, -8(%rbp)
 # (26) <[JUMP_LT], <18>, (int)x, 3>
 	movq -8(%rbp), %rax
 	movq $3, %rbx
@@ -148,6 +163,7 @@ main:
 	movq -8(%rbp), %rax
 	movq $100, %rbx
 	subq %rbx, %rax
+	movq %rax, %rax
 	movq %rax, -8(%rbp)
 .main.19:
 # (29) <[JUMP_GT], <20>, (int)x, 3>
@@ -162,7 +178,8 @@ main:
 	movq -8(%rbp), %rax
 	movq $1234, %rbx
 	addq %rax, %rbx
-	movq %rbx, -8(%rbp)
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 .main.21:
 # (34) <[int][CALL], (int)#0, printf, "x: %d\n", (int)x>
 	leaq _string_main.0(%rip), %rdi

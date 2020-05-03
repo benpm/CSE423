@@ -12,7 +12,10 @@ collatz:
 	pushq $0 # (int)#0 at -16(%rbp)
 .collatz.0:
 # (3) <[int][ASSIGN], (int)iters, 0>
-	movq $0, -8(%rbp)
+	movq -8(%rbp), %rax
+	movq $0, %rbx
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 .collatz.1:
 # (4) <[JUMP_NEQ], <2>, (int)i, 1>
 	movq 16(%rbp), %rax
@@ -28,7 +31,8 @@ collatz:
 	movq $2, %rcx
 	cqo 
 	idivq %rcx
-	movq %rdx, -16(%rbp) # save remainder
+	movq %rdx, %rbx # save remainder
+	movq %rbx, -16(%rbp)
 # (5) <[JUMP_EQ], <3>, (int)#0, 0>
 	movq -16(%rbp), %rax
 	movq $0, %rbx
@@ -42,7 +46,8 @@ collatz:
 	movq $2, %rbx
 	cqo 
 	idivq %rbx
-	movq %rax, 16(%rbp) # save quotient
+	movq %rax, %rax # save quotient
+	movq %rax, 16(%rbp)
 # (6) <[JUMP], <5>>
 	jmp .collatz.5
 .collatz.4:
@@ -51,19 +56,22 @@ collatz:
 	movq $3, %rbx
 	movq 16(%rbp), %rcx
 	imulq %rbx, %rcx
-	movq %rcx, -16(%rbp)
+	movq %rcx, %rax
+	movq %rax, -16(%rbp)
 # (8) <[int][ADD], (int)i, (int)#0, 1>
 	movq 16(%rbp), %rax
 	movq -16(%rbp), %rbx
 	movq $1, %rcx
 	addq %rbx, %rcx
-	movq %rcx, 16(%rbp)
+	movq %rcx, %rax
+	movq %rax, 16(%rbp)
 .collatz.5:
 # (10) <[int][ADD], (int)iters, (int)iters, 1>
 	movq -8(%rbp), %rax
 	movq $1, %rbx
 	addq %rax, %rbx
-	movq %rbx, -8(%rbp)
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 # (4) <[JUMP], <1>>
 	jmp .collatz.1
 .collatz.7:
@@ -90,7 +98,10 @@ main:
 	pushq $0 # (int)#1 at -24(%rbp)
 .main.0:
 # (18) <[int][ASSIGN], (int)i, 1>
-	movq $1, -8(%rbp)
+	movq -8(%rbp), %rax
+	movq $1, %rbx
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 .main.1:
 # (18) <[JUMP_LT], <2>, (int)i, 100>
 	movq -8(%rbp), %rax
@@ -116,7 +127,8 @@ main:
 	movq -8(%rbp), %rax
 	movq $1, %rbx
 	addq %rax, %rbx
-	movq %rbx, -8(%rbp)
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 # (18) <[JUMP], <1>>
 	jmp .main.1
 .main.4:

@@ -62,7 +62,8 @@ main:
 	movq -8(%rbp), %rbx
 	movq -16(%rbp), %rcx
 	addq %rbx, %rcx
-	movq %rcx, -24(%rbp)
+	movq %rcx, %rax
+	movq %rax, -24(%rbp)
 # (13) <[int][CALL], (int)#3, printf, "ret: %d\n", (int)#2>
 	leaq _string_main.0(%rip), %rdi
 	movq -24(%rbp), %rsi
@@ -81,7 +82,8 @@ main:
 	movq -8(%rbp), %rbx
 	movq -16(%rbp), %rcx
 	addq %rbx, %rcx
-	movq %rcx, -24(%rbp)
+	movq %rcx, %rax
+	movq %rax, -24(%rbp)
 # (14) <[int][RETURN], (int)#2>
 	movq -24(%rbp), %rax
 # stack size is 40

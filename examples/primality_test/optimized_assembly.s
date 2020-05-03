@@ -14,7 +14,10 @@ brute_force_fact:
 	pushq $0 # (int)#0 at -16(%rbp)
 .brute_force_fact.0:
 # (3) <[int][ASSIGN], (int)n, 2>
-	movq $2, -8(%rbp)
+	movq -8(%rbp), %rax
+	movq $2, %rbx
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 .brute_force_fact.1:
 # (3) <[JUMP_LT], <2>, (int)n, (int)i>
 	movq -8(%rbp), %rax
@@ -30,7 +33,8 @@ brute_force_fact:
 	movq -8(%rbp), %rcx
 	cqo 
 	idivq %rcx
-	movq %rdx, -16(%rbp) # save remainder
+	movq %rdx, %rbx # save remainder
+	movq %rbx, -16(%rbp)
 # (4) <[JUMP_EQ], <3>, (int)#0, 0>
 	movq -16(%rbp), %rax
 	movq $0, %rbx
@@ -58,7 +62,8 @@ brute_force_fact:
 	movq -8(%rbp), %rax
 	movq $1, %rbx
 	addq %rax, %rbx
-	movq %rbx, -8(%rbp)
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 # (3) <[JUMP], <1>>
 	jmp .brute_force_fact.1
 .brute_force_fact.6:
@@ -95,7 +100,10 @@ optimization_congruence_class:
 	pushq $0 # (int)#1 at -24(%rbp)
 .optimization_congruence_class.0:
 # (16) <[int][ASSIGN], (int)j, 5>
-	movq $5, -8(%rbp)
+	movq -8(%rbp), %rax
+	movq $5, %rbx
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 # (18) <[JUMP_EQ], <4>, (int)i, 2>
 	movq 16(%rbp), %rax
 	movq $2, %rbx
@@ -131,7 +139,8 @@ optimization_congruence_class:
 	movq $2, %rcx
 	cqo 
 	idivq %rcx
-	movq %rdx, -16(%rbp) # save remainder
+	movq %rdx, %rbx # save remainder
+	movq %rbx, -16(%rbp)
 # (23) <[JUMP_EQ], <7>, (int)#0, 0>
 	movq -16(%rbp), %rax
 	movq $0, %rbx
@@ -160,7 +169,8 @@ optimization_congruence_class:
 	movq $3, %rcx
 	cqo 
 	idivq %rcx
-	movq %rdx, -16(%rbp) # save remainder
+	movq %rdx, %rbx # save remainder
+	movq %rbx, -16(%rbp)
 # (26) <[JUMP_EQ], <10>, (int)#0, 0>
 	movq -16(%rbp), %rax
 	movq $0, %rbx
@@ -199,7 +209,8 @@ optimization_congruence_class:
 	movq $5, %rcx
 	cqo 
 	idivq %rcx
-	movq %rdx, -16(%rbp) # save remainder
+	movq %rdx, %rbx # save remainder
+	movq %rbx, -16(%rbp)
 # (31) <[JUMP_EQ], <16>, (int)#0, 0>
 	movq -16(%rbp), %rax
 	movq $0, %rbx
@@ -212,7 +223,8 @@ optimization_congruence_class:
 	movq $7, %rcx
 	cqo 
 	idivq %rcx
-	movq %rdx, -24(%rbp) # save remainder
+	movq %rdx, %rbx # save remainder
+	movq %rbx, -24(%rbp)
 # (31) <[JUMP_EQ], <16>, (int)#1, 0>
 	movq -24(%rbp), %rax
 	movq $0, %rbx
@@ -241,7 +253,8 @@ optimization_congruence_class:
 	movq -8(%rbp), %rax
 	movq $6, %rbx
 	addq %rax, %rbx
-	movq %rbx, -8(%rbp)
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 # (30) <[JUMP], <12>>
 	jmp .optimization_congruence_class.12
 .optimization_congruence_class.20:
@@ -271,7 +284,10 @@ main:
 	pushq $0 # (int)#0 at -16(%rbp)
 .main.0:
 # (45) <[int][ASSIGN], (int)i, 1>
-	movq $1, -8(%rbp)
+	movq -8(%rbp), %rax
+	movq $1, %rbx
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 .main.1:
 # (45) <[JUMP_LT], <2>, (int)i, 100>
 	movq -8(%rbp), %rax
@@ -297,7 +313,8 @@ main:
 	movq -8(%rbp), %rax
 	movq $1, %rbx
 	addq %rax, %rbx
-	movq %rbx, -8(%rbp)
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 # (45) <[JUMP], <1>>
 	jmp .main.1
 .main.5:

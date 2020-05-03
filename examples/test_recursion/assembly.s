@@ -15,7 +15,8 @@ refun:
 	movq 16(%rbp), %rax
 	movq $3, %rbx
 	addq %rax, %rbx
-	movq %rbx, 16(%rbp)
+	movq %rbx, %rax
+	movq %rax, 16(%rbp)
 # (3) <[JUMP_LT], <2>, (int)x, 1239>
 	movq 16(%rbp), %rax
 	movq $1239, %rbx
@@ -29,7 +30,8 @@ refun:
 	movq 16(%rbp), %rbx
 	movq $2, %rcx
 	imulq %rbx, %rcx
-	movq %rcx, -8(%rbp)
+	movq %rcx, %rax
+	movq %rax, -8(%rbp)
 # (4) <[int][CALL], (int)#1, refun, (int)#0>
 	pushq -8(%rbp)
 	movq -16(%rbp), %rax

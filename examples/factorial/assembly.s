@@ -16,9 +16,15 @@ main:
 	pushq $0 # (int)#0 at -40(%rbp)
 .main.0:
 # (2) <[int][ASSIGN], (int)fact, 1>
-	movq $1, -8(%rbp)
+	movq -8(%rbp), %rax
+	movq $1, %rbx
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 # (2) <[int][ASSIGN], (int)n, 10>
-	movq $10, -16(%rbp)
+	movq -16(%rbp), %rax
+	movq $10, %rbx
+	movq %rbx, %rax
+	movq %rax, -16(%rbp)
 # (3) <[JUMP_LT], <3>, (int)n, 0>
 	movq -16(%rbp), %rax
 	movq $0, %rbx
@@ -35,7 +41,10 @@ main:
 	jmp .main.9
 .main.4:
 # (6) <[int][ASSIGN], (int)i, 1>
-	movq $1, -32(%rbp)
+	movq -32(%rbp), %rax
+	movq $1, %rbx
+	movq %rbx, %rax
+	movq %rax, -32(%rbp)
 .main.5:
 # (6) <[JUMP_LE], <6>, (int)i, (int)n>
 	movq -32(%rbp), %rax
@@ -49,12 +58,14 @@ main:
 	movq -8(%rbp), %rax
 	movq -32(%rbp), %rbx
 	imulq %rax, %rbx
-	movq %rbx, -8(%rbp)
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 # (6) <[int][ADD], (int)i, (int)i, 1>
 	movq -32(%rbp), %rax
 	movq $1, %rbx
 	addq %rax, %rbx
-	movq %rbx, -32(%rbp)
+	movq %rbx, %rax
+	movq %rax, -32(%rbp)
 # (6) <[JUMP], <5>>
 	jmp .main.5
 .main.8:

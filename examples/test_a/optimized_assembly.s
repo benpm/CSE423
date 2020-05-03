@@ -13,20 +13,28 @@ main:
 	pushq $0 # (int)#0 at -24(%rbp)
 .main.0:
 # (2) <[int][ASSIGN], (int)i, 0>
-	movq $0, -8(%rbp)
+	movq -8(%rbp), %rax
+	movq $0, %rbx
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 # (3) <[int][ASSIGN], (int)j, 0>
-	movq $0, -16(%rbp)
+	movq -16(%rbp), %rax
+	movq $0, %rbx
+	movq %rbx, %rax
+	movq %rax, -16(%rbp)
 # (5) <[int][ADD], (int)i, (int)i, 10>
 	movq -8(%rbp), %rax
 	movq $10, %rbx
 	addq %rax, %rbx
-	movq %rbx, -8(%rbp)
+	movq %rbx, %rax
+	movq %rax, -8(%rbp)
 # (6) <[int][ADD], (int)j, (int)i, 7>
 	movq -16(%rbp), %rax
 	movq -8(%rbp), %rbx
 	movq $7, %rcx
 	addq %rbx, %rcx
-	movq %rcx, -16(%rbp)
+	movq %rcx, %rax
+	movq %rax, -16(%rbp)
 # (9) <[int][CALL], (int)#0, printf, "i: %d, j: %d, k: %d\n", (int)i, (int)j, 24>
 	leaq _string_main.0(%rip), %rdi
 	movq -8(%rbp), %rsi
