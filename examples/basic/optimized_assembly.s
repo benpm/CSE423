@@ -6,29 +6,29 @@ _string_main.0: .asciz "Foo val: %d\n"
 # FUNCTION main
 .text
 main:
-	push %rbp
-	mov %rsp, %rbp
-	push $0 # (int)#0 at -8(%rbp)
+	pushq %rbp
+	movq %rsp, %rbp
+	pushq $0 # (int)#0 at -8(%rbp)
 .main.0:
 # (3) <[JUMP_GT], <2>, 420, 10>
-	mov $420, %rax
-	mov $10, %rbx
-	cmp %rbx, %rax
+	movq $420, %rax
+	movq $10, %rbx
+	cmpq %rbx, %rax
 	jg .main.2
 # (3) <[JUMP], <3>>
 	jmp .main.3
 .main.2:
 .main.3:
 # (6) <[int][CALL], (int)#0, printf, "Foo val: %d\n", 19>
-	lea _string_main.0(%rip), %rdi
-	mov $19, %rsi
-	mov $0, %rax
+	leaq _string_main.0(%rip), %rdi
+	movq $19, %rsi
+	movq $0, %rax
 	call printf
 # (7) <[int][RETURN], 0>
-	mov $0, %rax
+	movq $0, %rax
 # stack size is 16
-	mov %rbp, %rdx
-	sub %rsp, %rdx
-	add %rdx, %rsp
-	pop %rbp
+	movq %rbp, %rdx
+	subq %rsp, %rdx
+	addq %rdx, %rsp
+	popq %rbp
 	ret 

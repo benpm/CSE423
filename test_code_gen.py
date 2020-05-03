@@ -36,7 +36,7 @@ def test_file(path):
 
     if gccres != 0 or sc64res != 0:
         print(f"# {red}Test failed during compilation!!{stop}")
-        run_command("rm tmpGCC tmpSC64 tmpSC64.s tmpSC64.o")
+        run_command("rm tmpGCC tmpSC64 tmpSC64.s tmpgcc.txt tmpsc64.txt")
         return
     
     gccres  = run_command("./tmpGCC > tmpgcc.txt")

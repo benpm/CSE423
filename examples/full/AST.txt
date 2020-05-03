@@ -11,16 +11,16 @@ root
    │   ├─[0] id (globB)
    │   └─[0] int_const (4)
    ├─[1] function
-   │ ├─[1] float_type
+   │ ├─[1] int_type
    │ ├─[1] id (fun)
    │ ├─[1] params
-   │ │ ├─[1] float_type
+   │ │ ├─[1] int_type
    │ │ ├─[1] id (XKAD)
-   │ │ ├─[1] float_type
+   │ │ ├─[1] int_type
    │ │ └─[1] id (V)
    │ ├─[1] dec_list
    │ │ └─[1] declaration
-   │ │   ├─[1] float_type
+   │ │   ├─[1] int_type
    │ │   └─[1] assignment
    │ │     ├─[1] id (n1)
    │ │     └─[1] sum
@@ -66,18 +66,13 @@ root
      │ │     │ │ └─[3] id (n1)
      │ │     │ └─[3] id (n2)
      │ │     └─[3] id (n2)
-     │ ├─[3] declaration
-     │ │ ├─[3] float_type
-     │ │ └─[3] assignment
-     │ │   ├─[3] id (DF)
-     │ │   └─[3] mul
-     │ │     ├─[3] float_const (0.800000)
-     │ │     └─[3] id (n2)
      │ └─[3] declaration
-     │   ├─[3] char_type
+     │   ├─[3] int_type
      │   └─[3] assignment
-     │     ├─[3] id (G)
-     │     └─[3] char_const (G)
+     │     ├─[3] id (DF)
+     │     └─[3] mul
+     │       ├─[3] int_const (8)
+     │       └─[3] id (n2)
      └─[4] list
        ├─[5] for_stmt
        │ ├─[5] declaration
@@ -166,9 +161,14 @@ root
        │     │ └─[4] args
        │     │   ├─[4] id (DF)
        │     │   └─[4] mul
-       │     │     ├─[4] float_const (0.101000)
+       │     │     ├─[4] int_const (101)
        │     │     └─[4] int_const (2)
-       │     └─[4] float_const (0.900000)
+       │     └─[4] int_const (9)
+       ├─[4] call
+       │ ├─[4] id (printf)
+       │ └─[4] args
+       │   ├─[4] string_const ("test: %f\n")
+       │   └─[4] id (DF)
        ├─[4] assignment
        │ ├─[4] id (DF)
        │ └─[4] mul
@@ -180,7 +180,7 @@ root
        │ ├─[11] lt
        │ │ ├─[11] id (DF)
        │ │ └─[11] sub
-       │ │   ├─[11] float_const (0.800000)
+       │ │   ├─[11] int_const (8)
        │ │   └─[11] unary_minus
        │ │     └─[11] id (DF)
        │ ├─[11] dec_list
@@ -191,9 +191,6 @@ root
        │     │ └─[13] int_const (10)
        │     ├─[13] dec_list
        │     ├─[14] list
-       │     │ ├─[14] assignment
-       │     │ │ ├─[14] id (G)
-       │     │ │ └─[14] char_const (H)
        │     │ ├─[14] times_equal
        │     │ │ ├─[14] id (n1)
        │     │ │ └─[14] int_const (1)
@@ -207,45 +204,30 @@ root
        │     │ │ ├─[15] le
        │     │ │ │ ├─[15] id (n1)
        │     │ │ │ └─[15] int_const (2)
-       │     │ │ └─[15] log_or
-       │     │ │   ├─[15] equal
-       │     │ │   │ ├─[15] id (G)
-       │     │ │   │ └─[15] char_const (H)
-       │     │ │   └─[15] noteq
-       │     │ │     ├─[15] id (n2)
-       │     │ │     └─[15] int_const (100)
+       │     │ │ └─[15] noteq
+       │     │ │   ├─[15] id (n2)
+       │     │ │   └─[15] int_const (100)
        │     │ ├─[15] dec_list
        │     │ └─[16] list
        │     │   ├─[16] plus_equal
        │     │   │ ├─[16] id (DF)
        │     │   │ └─[16] unary_minus
-       │     │   │   └─[16] float_const (0.600000)
+       │     │   │   └─[16] int_const (6)
        │     │   └─[17] if_stmt
        │     │     ├─[17] equal
        │     │     │ ├─[17] id (DF)
-       │     │     │ └─[17] float_const (0.000000)
+       │     │     │ └─[17] int_const (0)
        │     │     ├─[17] dec_list
        │     │     └─[18] list
        │     │       └─[18] assignment
        │     │         ├─[18] id (DF)
-       │     │         └─[18] float_const (1.010000)
-       │     ├─[19] else_if
-       │     │ ├─[19] ge
-       │     │ │ ├─[19] id (G)
-       │     │ │ └─[19] char_const (H)
-       │     │ ├─[19] dec_list
-       │     │ └─[20] list
-       │     │   ├─[20] minus_equal
-       │     │   │ ├─[20] id (n2)
-       │     │   │ └─[20] int_const (16)
-       │     │   └─[20] decr
-       │     │     └─[20] id (n2)
-       │     └─[21] else_stmt
-       │       ├─[21] dec_list
-       │       └─[22] list
-       │         └─[22] div_equal
-       │           ├─[22] id (n1)
-       │           └─[22] int_const (2)
+       │     │         └─[18] int_const (101)
+       │     └─[19] else_stmt
+       │       ├─[19] dec_list
+       │       └─[20] list
+       │         └─[20] div_equal
+       │           ├─[20] id (n1)
+       │           └─[20] int_const (2)
        ├─[4] call
        │ ├─[4] id (printf)
        │ └─[4] args

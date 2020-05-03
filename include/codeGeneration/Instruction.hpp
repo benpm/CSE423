@@ -80,13 +80,14 @@ enum OpCode {
     CALL,  // call loc       | Pushes the addr of the instr AFTER call instr to top of the stack, jumps to loc
     CMP,   // cmp arg0, arg1 | arg1 - arg0, sets flags
     LEA,   // lea addr, dest | Loads effective address of addr into dest
-    CQO    // cqo            | Sign-extends rax into rdx:rax
+    CQO,   // cqo            | Sign-extends rax into rdx:rax
+    NOP,   //                | Default op code
 };
 
 class Instruction
 {
 public:
-    OpCode opCode;
+    OpCode opCode = OpCode::NOP;
     std::string asmDirective; // Holds arbitrary string needed in creating assembly (i.e. )
     std::string comment;
 

@@ -2,8 +2,8 @@ int globA = 3;
 int globB = 4;
 
 // Testing callable function
-float fun(float XKAD, float V) {
-    float n1 = XKAD + V;
+int fun(int XKAD, int V) {
+    int n1 = XKAD + V;
     return n1 * 80;
 }
 
@@ -13,8 +13,7 @@ int main()
     int n1 = 15 * (18 / -2) % 18;
     int n2 = n1 * n1;
     int n3 = n1 + n1 + n2 + n2;
-    float DF = 0.8 * n2;
-    char G = 'G';
+    int DF = 8 * n2;
 
     // Testing nested loops of various types
     for (int i = 0; i < n2 * n1 / 2; i += 1) {
@@ -33,25 +32,21 @@ int main()
     }
 
     // Testing function calls
-    DF = fun(fun(DF, 0.101 * 2), 0.9);
-	// printf("test: %f\n", DF);
+    DF = fun(fun(DF, 101 * 2), 9);
+	printf("test: %f\n", DF);
 
     DF = DF * globA * globB;
     // Testing conditional statements
-    if (DF < (0.8 - (-DF))) {
+    if (DF < (8 - (-DF))) {
         if (n2 != 10) {
-            G = 'H';
             n1 *= 1;
 			n1 %= 10;
             n1++;
-        } else if (n1 <= 2 && (G == 'H' || n2 != 100)) {
-            DF += -.6;
-            if (DF == 0.00000) {
-                DF = 1.01;
+        } else if (n1 <= 2 && n2 != 100) {
+            DF += -6;
+            if (DF == 0) {
+                DF = 101;
             }
-        } else if (G >= 'H') {
-            n2 -= 16;
-            n2--;
         } else {
             n1 /= 2;
         }

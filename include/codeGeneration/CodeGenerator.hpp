@@ -25,6 +25,8 @@ private:
     void genRETURN(MemoryAllocator& allocator, const Statement& stmt);
     void genCALL(MemoryAllocator& allocator, const Statement& stmt);
     void genPRINTF(MemoryAllocator& allocator, const Statement& stmt);
+    void optimizeAssembly();
+    
 public:
     std::vector<Instruction> instrs;
     CodeGenerator(const Program& program, bool printDebug);

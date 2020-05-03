@@ -15,478 +15,389 @@ globB: .quad 4
 .type fun, @function
 .data
 # FUNCTION fun
-# param (float)V at 16(%rbp)
-# param (float)XKAD at 24(%rbp)
+# param (int)V at 16(%rbp)
+# param (int)XKAD at 24(%rbp)
 .text
 fun:
-	push %rbp
-	mov %rsp, %rbp
-	push $0 # (float)n1 at -8(%rbp)
-	push $0 # (float)#0 at -16(%rbp)
+	pushq %rbp
+	movq %rsp, %rbp
+	pushq $0 # (int)n1 at -8(%rbp)
+	pushq $0 # (int)#0 at -16(%rbp)
 .fun.0:
-# (6) <[float][ADD], (float)n1, (float)XKAD, (float)V>
-	mov -8(%rbp), %rax
-	mov 24(%rbp), %rbx
-	mov 16(%rbp), %rcx
-	add %rbx, %rcx
-	mov %rcx, %rax
-	mov %rax, -8(%rbp)
-# (7) <[float][MUL], (float)#0, (float)n1, 80>
-	mov -16(%rbp), %rax
-	mov -8(%rbp), %rbx
-	mov $80, %rcx
-	imul %rbx, %rcx
-	mov %rcx, %rax
-	mov %rax, -16(%rbp)
-# (7) <[float][RETURN], (float)#0>
-	mov -16(%rbp), %rax
+# (6) <[int][ADD], (int)n1, (int)XKAD, (int)V>
+	movq -8(%rbp), %rax
+	movq 24(%rbp), %rbx
+	movq 16(%rbp), %rcx
+	addq %rbx, %rcx
+	movq %rcx, -8(%rbp)
+# (7) <[int][MUL], (int)#0, (int)n1, 80>
+	movq -16(%rbp), %rax
+	movq -8(%rbp), %rbx
+	movq $80, %rcx
+	imulq %rbx, %rcx
+	movq %rcx, -16(%rbp)
+# (7) <[int][RETURN], (int)#0>
+	movq -16(%rbp), %rax
 # stack size is 24
-	mov %rbp, %rdx
-	sub %rsp, %rdx
-	add %rdx, %rsp
-	pop %rbp
+	movq %rbp, %rdx
+	subq %rsp, %rdx
+	addq %rdx, %rsp
+	popq %rbp
 	ret 
 .text
 .globl main
 .type main, @function
 .data
-_string_main.0: .asciz "n1: %d, n2: %d, n3: %d\n"
+_string_main.0: .asciz "test: %f\n"
+_string_main.1: .asciz "n1: %d, n2: %d, n3: %d\n"
 # FUNCTION main
 .text
 main:
-	push %rbp
-	mov %rsp, %rbp
-	push $0 # (int)#0 at -8(%rbp)
-	push $0 # (int)#1 at -16(%rbp)
-	push $0 # (int)#2 at -24(%rbp)
-	push $0 # (int)n1 at -32(%rbp)
-	push $0 # (int)n2 at -40(%rbp)
-	push $0 # (int)n3 at -48(%rbp)
-	push $0 # (float)DF at -56(%rbp)
-	push $0 # (char)G at -64(%rbp)
-	push $0 # (int)i at -72(%rbp)
-	push $0 # (int)f at -80(%rbp)
-	push $0 # (int)j at -88(%rbp)
-	push $0 # (int)x at -96(%rbp)
-	push $0 # (int)z at -104(%rbp)
-	push $0 # (int)x2 at -112(%rbp)
-	push $0 # (float)#0 at -120(%rbp)
-	push $0 # (float)#1 at -128(%rbp)
+	pushq %rbp
+	movq %rsp, %rbp
+	pushq $0 # (int)#0 at -8(%rbp)
+	pushq $0 # (int)#1 at -16(%rbp)
+	pushq $0 # (int)#2 at -24(%rbp)
+	pushq $0 # (int)n1 at -32(%rbp)
+	pushq $0 # (int)n2 at -40(%rbp)
+	pushq $0 # (int)n3 at -48(%rbp)
+	pushq $0 # (int)DF at -56(%rbp)
+	pushq $0 # (int)i at -64(%rbp)
+	pushq $0 # (int)f at -72(%rbp)
+	pushq $0 # (int)j at -80(%rbp)
+	pushq $0 # (int)x at -88(%rbp)
+	pushq $0 # (int)z at -96(%rbp)
+	pushq $0 # (int)x2 at -104(%rbp)
 .main.0:
 # (13) <[int][MINUS], (int)#0, 2>
-	mov -8(%rbp), %rax
-	mov $2, %rbx
-	neg %rbx
-	mov %rbx, %rax
-	mov %rax, -8(%rbp)
+	movq -8(%rbp), %rax
+	movq $2, %rbx
+	negq %rbx
+	movq %rbx, -8(%rbp)
 # (13) <[int][DIV], (int)#1, 18, (int)#0>
-	mov $18, %rax
-	mov -16(%rbp), %rbx
-	mov -8(%rbp), %rcx
+	movq $18, %rax
+	movq -16(%rbp), %rbx
+	movq -8(%rbp), %rcx
 	cqo 
-	idiv %rcx
-	mov %rax, %rbx # save quotient
-	mov %rbx, -16(%rbp)
+	idivq %rcx
+	movq %rax, -16(%rbp) # save quotient
 # (13) <[int][MUL], (int)#2, 15, (int)#1>
-	mov -24(%rbp), %rax
-	mov $15, %rbx
-	mov -16(%rbp), %rcx
-	imul %rbx, %rcx
-	mov %rcx, %rax
-	mov %rax, -24(%rbp)
+	movq -24(%rbp), %rax
+	movq $15, %rbx
+	movq -16(%rbp), %rcx
+	imulq %rbx, %rcx
+	movq %rcx, -24(%rbp)
 # (13) <[int][MOD], (int)n1, (int)#2, 18>
-	mov -24(%rbp), %rax
-	mov -32(%rbp), %rbx
-	mov $18, %rcx
+	movq -24(%rbp), %rax
+	movq -32(%rbp), %rbx
+	movq $18, %rcx
 	cqo 
-	idiv %rcx
-	mov %rdx, %rbx # save remainder
-	mov %rbx, -32(%rbp)
+	idivq %rcx
+	movq %rdx, -32(%rbp) # save remainder
 # (14) <[int][MUL], (int)n2, (int)n1, (int)n1>
-	mov -40(%rbp), %rax
-	mov -32(%rbp), %rbx
-	imul %rbx, %rbx
-	mov %rbx, %rax
-	mov %rax, -40(%rbp)
+	movq -40(%rbp), %rax
+	movq -32(%rbp), %rbx
+	imulq %rbx, %rbx
+	movq %rbx, -40(%rbp)
 # (15) <[int][ADD], (int)#0, (int)n1, (int)n1>
-	mov -8(%rbp), %rax
-	mov -32(%rbp), %rbx
-	add %rbx, %rbx
-	mov %rbx, %rax
-	mov %rax, -8(%rbp)
+	movq -8(%rbp), %rax
+	movq -32(%rbp), %rbx
+	addq %rbx, %rbx
+	movq %rbx, -8(%rbp)
 # (15) <[int][ADD], (int)#1, (int)#0, (int)n2>
-	mov -16(%rbp), %rax
-	mov -8(%rbp), %rbx
-	mov -40(%rbp), %rcx
-	add %rbx, %rcx
-	mov %rcx, %rax
-	mov %rax, -16(%rbp)
+	movq -16(%rbp), %rax
+	movq -8(%rbp), %rbx
+	movq -40(%rbp), %rcx
+	addq %rbx, %rcx
+	movq %rcx, -16(%rbp)
 # (15) <[int][ADD], (int)n3, (int)#1, (int)n2>
-	mov -48(%rbp), %rax
-	mov -16(%rbp), %rbx
-	mov -40(%rbp), %rcx
-	add %rbx, %rcx
-	mov %rcx, %rax
-	mov %rax, -48(%rbp)
-# (16) <[float][MUL], (float)DF, 0.800000, (int)n2>
-	mov -56(%rbp), %rax
-	mov $0.800000, %rbx
-	mov -40(%rbp), %rcx
-	imul %rbx, %rcx
-	mov %rcx, %rax
-	mov %rax, -56(%rbp)
-# (17) <[char][ASSIGN], (char)G, 'G'>
-	mov -64(%rbp), %rax
-	mov $G, %rbx
-	mov %rbx, %rax
-	mov %rax, -64(%rbp)
-# (20) <[int][ASSIGN], (int)i, 0>
-	mov -72(%rbp), %rax
-	mov $0, %rbx
-	mov %rbx, %rax
-	mov %rax, -72(%rbp)
-.main.6:
-# (20) <[int][MUL], (int)#0, (int)n2, (int)n1>
-	mov -8(%rbp), %rax
-	mov -40(%rbp), %rbx
-	mov -32(%rbp), %rcx
-	imul %rbx, %rcx
-	mov %rcx, %rax
-	mov %rax, -8(%rbp)
-# (20) <[int][DIV], (int)#1, (int)#0, 2>
-	mov -8(%rbp), %rax
-	mov -16(%rbp), %rbx
-	mov $2, %rcx
+	movq -48(%rbp), %rax
+	movq -16(%rbp), %rbx
+	movq -40(%rbp), %rcx
+	addq %rbx, %rcx
+	movq %rcx, -48(%rbp)
+# (16) <[int][MUL], (int)DF, 8, (int)n2>
+	movq -56(%rbp), %rax
+	movq $8, %rbx
+	movq -40(%rbp), %rcx
+	imulq %rbx, %rcx
+	movq %rcx, -56(%rbp)
+# (19) <[int][ASSIGN], (int)i, 0>
+	movq $0, -64(%rbp)
+.main.5:
+# (19) <[int][MUL], (int)#0, (int)n2, (int)n1>
+	movq -8(%rbp), %rax
+	movq -40(%rbp), %rbx
+	movq -32(%rbp), %rcx
+	imulq %rbx, %rcx
+	movq %rcx, -8(%rbp)
+# (19) <[int][DIV], (int)#1, (int)#0, 2>
+	movq -8(%rbp), %rax
+	movq -16(%rbp), %rbx
+	movq $2, %rcx
 	cqo 
-	idiv %rcx
-	mov %rax, %rbx # save quotient
-	mov %rbx, -16(%rbp)
-# (20) <[JUMP_LT], <7>, (int)i, (int)#1>
-	mov -72(%rbp), %rax
-	mov -16(%rbp), %rbx
-	cmp %rbx, %rax
-	jl .main.7
-# (20) <[JUMP], <23>>
-	jmp .main.23
-.main.7:
-# (21) <[int][ASSIGN], (int)f, 10>
-	mov -80(%rbp), %rax
-	mov $10, %rbx
-	mov %rbx, %rax
-	mov %rax, -80(%rbp)
-# (22) <[JUMP], <23>>
-	jmp .main.23
-.main.9:
-# (23) <[int][ASSIGN], (int)j, 0>
-	mov -88(%rbp), %rax
-	mov $0, %rbx
-	mov %rbx, %rax
-	mov %rax, -88(%rbp)
-.main.10:
-# (23) <[int][DIV], (int)#0, (int)n1, 2>
-	mov -32(%rbp), %rax
-	mov -8(%rbp), %rbx
-	mov $2, %rcx
-	cqo 
-	idiv %rcx
-	mov %rax, %rbx # save quotient
-	mov %rbx, -8(%rbp)
-# (23) <[int][ADD], (int)#1, (int)n2, (int)#0>
-	mov -16(%rbp), %rax
-	mov -40(%rbp), %rbx
-	mov -8(%rbp), %rcx
-	add %rbx, %rcx
-	mov %rcx, %rax
-	mov %rax, -16(%rbp)
-# (23) <[JUMP_LT], <11>, (int)j, (int)#1>
-	mov -88(%rbp), %rax
-	mov -16(%rbp), %rbx
-	cmp %rbx, %rax
-	jl .main.11
-# (23) <[JUMP], <22>>
+	idivq %rcx
+	movq %rax, -16(%rbp) # save quotient
+# (19) <[JUMP_LT], <6>, (int)i, (int)#1>
+	movq -64(%rbp), %rax
+	movq -16(%rbp), %rbx
+	cmpq %rbx, %rax
+	jl .main.6
+# (19) <[JUMP], <22>>
 	jmp .main.22
-.main.11:
-# (24) <[int][ASSIGN], (int)x, 0>
-	mov -96(%rbp), %rax
-	mov $0, %rbx
-	mov %rbx, %rax
-	mov %rax, -96(%rbp)
-.main.12:
-# (25) <[JUMP_LT], <15>, (int)x, (int)n2>
-	mov -96(%rbp), %rax
-	mov -40(%rbp), %rbx
-	cmp %rbx, %rax
-	jl .main.15
-.main.13:
-# (25) <[JUMP_GE], <21>, (int)x, (int)n2>
-	mov -96(%rbp), %rax
-	mov -40(%rbp), %rbx
-	cmp %rbx, %rax
-	jge .main.21
-# (25) <[JUMP], <15>>
-	jmp .main.15
-.main.14:
-# (25) <[JUMP], <21>>
-	jmp .main.21
-.main.15:
-# (26) <[int][ASSIGN], (int)z, 10>
-	mov -104(%rbp), %rax
-	mov $10, %rbx
-	mov %rbx, %rax
-	mov %rax, -104(%rbp)
-# (27) <[int][ASSIGN], (int)x2, 3>
-	mov -112(%rbp), %rax
-	mov $3, %rbx
-	mov %rbx, %rax
-	mov %rax, -112(%rbp)
-# (28) <[int][ADD], (int)#0, (int)z, (int)x>
-	mov -8(%rbp), %rax
-	mov -104(%rbp), %rbx
-	mov -96(%rbp), %rcx
-	add %rbx, %rcx
-	mov %rcx, %rax
-	mov %rax, -8(%rbp)
-# (28) <[int][ADD], (int)x2, (int)x2, (int)#0>
-	mov -112(%rbp), %rax
-	mov -8(%rbp), %rbx
-	add %rax, %rbx
-	mov %rbx, %rax
-	mov %rax, -112(%rbp)
-# (29) <[int][MINUS], (int)n2, (int)n2, (int)x>
-	mov -40(%rbp), %rax
-	neg %rax
-	mov %rax, %rax
-	mov %rax, -40(%rbp)
-# (30) <[JUMP], <21>>
-	jmp .main.21
-.main.20:
-# (25) <[JUMP], <12>>
-	jmp .main.12
-.main.21:
-# (23) <[int][ADD], (int)j, (int)j, 1>
-	mov -88(%rbp), %rax
-	mov $1, %rbx
-	add %rax, %rbx
-	mov %rbx, %rax
-	mov %rax, -88(%rbp)
-# (23) <[JUMP], <10>>
-	jmp .main.10
-.main.22:
-# (20) <[int][ADD], (int)i, (int)i, 1>
-	mov -72(%rbp), %rax
-	mov $1, %rbx
-	add %rax, %rbx
-	mov %rbx, %rax
-	mov %rax, -72(%rbp)
-# (20) <[JUMP], <6>>
-	jmp .main.6
-.main.23:
-# (36) <[float][MUL], (float)#0, 0.101000, 2>
-	mov -120(%rbp), %rax
-	mov $0.101000, %rbx
-	mov $2, %rcx
-	imul %rbx, %rcx
-	mov %rcx, %rax
-	mov %rax, -120(%rbp)
-# (36) <[float][CALL], (float)#1, fun, (float)DF, (float)#0>
-	push -120(%rbp)
-	push -56(%rbp)
-	mov -128(%rbp), %rax
-	call fun
-	add $16, %rsp
-	mov %rax, -128(%rbp)
-# (36) <[float][CALL], (float)DF, fun, (float)#1, 0.900000>
-	push $0.900000
-	push -128(%rbp)
-	mov -56(%rbp), %rax
-	call fun
-	add $16, %rsp
-	mov %rax, -56(%rbp)
-# (39) <[float][MUL], (float)#0, (float)DF, (int)globA>
-	mov -120(%rbp), %rax
-	mov -56(%rbp), %rbx
-	mov globA(%rip), %rcx
-	imul %rbx, %rcx
-	mov %rcx, %rax
-	mov %rax, -120(%rbp)
-# (39) <[float][MUL], (float)DF, (float)#0, (int)globB>
-	mov -56(%rbp), %rax
-	mov -120(%rbp), %rbx
-	mov globB(%rip), %rcx
-	imul %rbx, %rcx
-	mov %rcx, %rax
-	mov %rax, -56(%rbp)
-# (41) <[float][MINUS], (float)#0, (float)DF>
-	mov -120(%rbp), %rax
-	mov -56(%rbp), %rbx
-	neg %rbx
-	mov %rbx, %rax
-	mov %rax, -120(%rbp)
-# (41) <[float][SUB], (float)#1, 0.800000, (float)#0>
-	mov -128(%rbp), %rax
-	mov $0.800000, %rbx
-	mov -120(%rbp), %rcx
-	sub %rcx, %rbx
-	mov %rbx, %rax
-	mov %rax, -128(%rbp)
-# (41) <[JUMP_LT], <26>, (float)DF, (float)#1>
-	mov -56(%rbp), %rax
-	mov -128(%rbp), %rbx
-	cmp %rbx, %rax
-	jl .main.26
-# (41) <[JUMP], <43>>
-	jmp .main.43
-.main.26:
-# (42) <[JUMP_NEQ], <27>, (int)n2, 10>
-	mov -40(%rbp), %rax
-	mov $10, %rbx
-	cmp %rbx, %rax
-	jne .main.27
-# (42) <[JUMP], <31>>
-	jmp .main.31
-.main.27:
-# (43) <[char][ASSIGN], (char)G, 'H'>
-	mov -64(%rbp), %rax
-	mov $H, %rbx
-	mov %rbx, %rax
-	mov %rax, -64(%rbp)
-# (44) <[int][MUL], (int)n1, (int)n1, 1>
-	mov -32(%rbp), %rax
-	mov $1, %rbx
-	imul %rax, %rbx
-	mov %rbx, %rax
-	mov %rax, -32(%rbp)
-# (45) <[int][MOD], (int)n1, (int)n1, 10>
-	mov -32(%rbp), %rax
-	mov $10, %rbx
+.main.6:
+# (20) <[int][ASSIGN], (int)f, 10>
+	movq $10, -72(%rbp)
+# (21) <[JUMP], <22>>
+	jmp .main.22
+.main.8:
+# (22) <[int][ASSIGN], (int)j, 0>
+	movq $0, -80(%rbp)
+.main.9:
+# (22) <[int][DIV], (int)#0, (int)n1, 2>
+	movq -32(%rbp), %rax
+	movq -8(%rbp), %rbx
+	movq $2, %rcx
 	cqo 
-	idiv %rbx
-	mov %rdx, %rax # save remainder
-	mov %rax, -32(%rbp)
-# (46) <[int][ADD], (int)n1, (int)n1, 1>
-	mov -32(%rbp), %rax
-	mov $1, %rbx
-	add %rax, %rbx
-	mov %rbx, %rax
-	mov %rax, -32(%rbp)
+	idivq %rcx
+	movq %rax, -8(%rbp) # save quotient
+# (22) <[int][ADD], (int)#1, (int)n2, (int)#0>
+	movq -16(%rbp), %rax
+	movq -40(%rbp), %rbx
+	movq -8(%rbp), %rcx
+	addq %rbx, %rcx
+	movq %rcx, -16(%rbp)
+# (22) <[JUMP_LT], <10>, (int)j, (int)#1>
+	movq -80(%rbp), %rax
+	movq -16(%rbp), %rbx
+	cmpq %rbx, %rax
+	jl .main.10
+# (22) <[JUMP], <21>>
+	jmp .main.21
+.main.10:
+# (23) <[int][ASSIGN], (int)x, 0>
+	movq $0, -88(%rbp)
+.main.11:
+# (24) <[JUMP_LT], <14>, (int)x, (int)n2>
+	movq -88(%rbp), %rax
+	movq -40(%rbp), %rbx
+	cmpq %rbx, %rax
+	jl .main.14
+.main.12:
+# (24) <[JUMP_GE], <20>, (int)x, (int)n2>
+	movq -88(%rbp), %rax
+	movq -40(%rbp), %rbx
+	cmpq %rbx, %rax
+	jge .main.20
+# (24) <[JUMP], <14>>
+	jmp .main.14
+.main.13:
+# (24) <[JUMP], <20>>
+	jmp .main.20
+.main.14:
+# (25) <[int][ASSIGN], (int)z, 10>
+	movq $10, -96(%rbp)
+# (26) <[int][ASSIGN], (int)x2, 3>
+	movq $3, -104(%rbp)
+# (27) <[int][ADD], (int)#0, (int)z, (int)x>
+	movq -8(%rbp), %rax
+	movq -96(%rbp), %rbx
+	movq -88(%rbp), %rcx
+	addq %rbx, %rcx
+	movq %rcx, -8(%rbp)
+# (27) <[int][ADD], (int)x2, (int)x2, (int)#0>
+	movq -104(%rbp), %rax
+	movq -8(%rbp), %rbx
+	addq %rax, %rbx
+	movq %rbx, -104(%rbp)
+# (28) <[int][MINUS], (int)n2, (int)n2, (int)x>
+	movq -40(%rbp), %rax
+	negq %rax
+	movq %rax, -40(%rbp)
+# (29) <[JUMP], <20>>
+	jmp .main.20
+.main.19:
+# (24) <[JUMP], <11>>
+	jmp .main.11
+.main.20:
+# (22) <[int][ADD], (int)j, (int)j, 1>
+	movq -80(%rbp), %rax
+	movq $1, %rbx
+	addq %rax, %rbx
+	movq %rbx, -80(%rbp)
+# (22) <[JUMP], <9>>
+	jmp .main.9
+.main.21:
+# (19) <[int][ADD], (int)i, (int)i, 1>
+	movq -64(%rbp), %rax
+	movq $1, %rbx
+	addq %rax, %rbx
+	movq %rbx, -64(%rbp)
+# (19) <[JUMP], <5>>
+	jmp .main.5
+.main.22:
+# (35) <[int][MUL], (int)#0, 101, 2>
+	movq -8(%rbp), %rax
+	movq $101, %rbx
+	movq $2, %rcx
+	imulq %rbx, %rcx
+	movq %rcx, -8(%rbp)
+# (35) <[int][CALL], (int)#1, fun, (int)DF, (int)#0>
+	pushq -8(%rbp)
+	pushq -56(%rbp)
+	movq -16(%rbp), %rax
+	call fun
+	addq $16, %rsp
+	movq %rax, -16(%rbp)
+# (35) <[int][CALL], (int)DF, fun, (int)#1, 9>
+	pushq $9
+	pushq -16(%rbp)
+	movq -56(%rbp), %rax
+	call fun
+	addq $16, %rsp
+	movq %rax, -56(%rbp)
+# (36) <[int][CALL], (int)#0, printf, "test: %f\n", (int)DF>
+	leaq _string_main.0(%rip), %rdi
+	movq -56(%rbp), %rsi
+	movq $0, %rax
+	call printf
+# (38) <[int][MUL], (int)#0, (int)DF, (int)globA>
+	movq -8(%rbp), %rax
+	movq -56(%rbp), %rbx
+	movq globA(%rip), %rcx
+	imulq %rbx, %rcx
+	movq %rcx, -8(%rbp)
+# (38) <[int][MUL], (int)DF, (int)#0, (int)globB>
+	movq -56(%rbp), %rax
+	movq -8(%rbp), %rbx
+	movq globB(%rip), %rcx
+	imulq %rbx, %rcx
+	movq %rcx, -56(%rbp)
+# (40) <[int][MINUS], (int)#0, (int)DF>
+	movq -8(%rbp), %rax
+	movq -56(%rbp), %rbx
+	negq %rbx
+	movq %rbx, -8(%rbp)
+# (40) <[int][SUB], (int)#1, 8, (int)#0>
+	movq -16(%rbp), %rax
+	movq $8, %rbx
+	movq -8(%rbp), %rcx
+	subq %rcx, %rbx
+	movq %rbx, -16(%rbp)
+# (40) <[JUMP_LT], <26>, (int)DF, (int)#1>
+	movq -56(%rbp), %rax
+	movq -16(%rbp), %rbx
+	cmpq %rbx, %rax
+	jl .main.26
+# (40) <[JUMP], <37>>
+	jmp .main.37
+.main.26:
+# (41) <[JUMP_NEQ], <27>, (int)n2, 10>
+	movq -40(%rbp), %rax
+	movq $10, %rbx
+	cmpq %rbx, %rax
+	jne .main.27
+# (41) <[JUMP], <30>>
+	jmp .main.30
+.main.27:
+# (42) <[int][MUL], (int)n1, (int)n1, 1>
+	movq -32(%rbp), %rax
+	movq $1, %rbx
+	imulq %rax, %rbx
+	movq %rbx, -32(%rbp)
+# (43) <[int][MOD], (int)n1, (int)n1, 10>
+	movq -32(%rbp), %rax
+	movq $10, %rbx
+	cqo 
+	idivq %rbx
+	movq %rdx, -32(%rbp) # save remainder
+# (44) <[int][ADD], (int)n1, (int)n1, 1>
+	movq -32(%rbp), %rax
+	movq $1, %rbx
+	addq %rax, %rbx
+	movq %rbx, -32(%rbp)
+.main.30:
+# (45) <[JUMP_GT], <36>, (int)n1, 2>
+	movq -32(%rbp), %rax
+	movq $2, %rbx
+	cmpq %rbx, %rax
+	jg .main.36
 .main.31:
-# (47) <[JUMP_GT], <39>, (int)n1, 2>
-	mov -32(%rbp), %rax
-	mov $2, %rbx
-	cmp %rbx, %rax
-	jg .main.39
-.main.32:
-# (47) <[JUMP_EQ], <36>, (char)G, 'H'>
-	mov -64(%rbp), %rax
-	mov $H, %rbx
-	cmp %rbx, %rax
+# (45) <[JUMP_EQ], <36>, (int)n2, 100>
+	movq -40(%rbp), %rax
+	movq $100, %rbx
+	cmpq %rbx, %rax
 	je .main.36
+.main.32:
+# (45) <[JUMP], <33>>
+	jmp .main.33
 .main.33:
-# (47) <[JUMP_NEQ], <36>, (int)n2, 100>
-	mov -40(%rbp), %rax
-	mov $100, %rbx
-	cmp %rbx, %rax
-	jne .main.36
-.main.34:
-# (47) <[JUMP], <39>>
-	jmp .main.39
-.main.35:
+# (46) <[int][MINUS], (int)#0, 6>
+	movq -8(%rbp), %rax
+	movq $6, %rbx
+	negq %rbx
+	movq %rbx, -8(%rbp)
+# (46) <[int][ADD], (int)DF, (int)DF, (int)#0>
+	movq -56(%rbp), %rax
+	movq -8(%rbp), %rbx
+	addq %rax, %rbx
+	movq %rbx, -56(%rbp)
+# (47) <[JUMP_EQ], <35>, (int)DF, 0>
+	movq -56(%rbp), %rax
+	movq $0, %rbx
+	cmpq %rbx, %rax
+	je .main.35
 # (47) <[JUMP], <36>>
 	jmp .main.36
+.main.35:
+# (48) <[int][ASSIGN], (int)DF, 101>
+	movq $101, -56(%rbp)
+# (48) <[JUMP], <37>>
+	jmp .main.37
 .main.36:
-# (48) <[float][MINUS], (float)#0, 0.600000>
-	mov -120(%rbp), %rax
-	mov $0.600000, %rbx
-	neg %rbx
-	mov %rbx, %rax
-	mov %rax, -120(%rbp)
-# (48) <[float][ADD], (float)DF, (float)DF, (float)#0>
-	mov -56(%rbp), %rax
-	mov -120(%rbp), %rbx
-	add %rax, %rbx
-	mov %rbx, %rax
-	mov %rax, -56(%rbp)
-# (49) <[JUMP_EQ], <38>, (float)DF, 0.000000>
-	mov -56(%rbp), %rax
-	mov $0.000000, %rbx
-	cmp %rbx, %rax
-	je .main.38
-# (49) <[JUMP], <39>>
-	jmp .main.39
-.main.38:
-# (50) <[float][ASSIGN], (float)DF, 1.010000>
-	mov -56(%rbp), %rax
-	mov $1.010000, %rbx
-	mov %rbx, %rax
-	mov %rax, -56(%rbp)
-.main.39:
-# (52) <[JUMP_GE], <40>, (char)G, 'H'>
-	mov -64(%rbp), %rax
-	mov $H, %rbx
-	cmp %rbx, %rax
-	jge .main.40
-# (52) <[JUMP], <42>>
-	jmp .main.42
-.main.40:
-# (53) <[int][MINUS], (int)n2, (int)n2, 16>
-	mov -40(%rbp), %rax
-	neg %rax
-	mov %rax, %rax
-	mov %rax, -40(%rbp)
-# (54) <[int][MINUS], (int)n2, (int)n2, 1>
-	mov -40(%rbp), %rax
-	neg %rax
-	mov %rax, %rax
-	mov %rax, -40(%rbp)
-# (54) <[JUMP], <43>>
-	jmp .main.43
-.main.42:
-# (56) <[int][DIV], (int)n1, (int)n1, 2>
-	mov -32(%rbp), %rax
-	mov $2, %rbx
+# (51) <[int][DIV], (int)n1, (int)n1, 2>
+	movq -32(%rbp), %rax
+	movq $2, %rbx
 	cqo 
-	idiv %rbx
-	mov %rax, %rax # save quotient
-	mov %rax, -32(%rbp)
-.main.43:
-# (59) <[int][CALL], (int)#0, printf, "n1: %d, n2: %d, n3: %d\n", (int)n1, (int)n2, (int)n3>
-	lea _string_main.0(%rip), %rdi
-	mov -32(%rbp), %rsi
-	mov -40(%rbp), %rdx
-	mov -48(%rbp), %rcx
-	mov $0, %rax
+	idivq %rbx
+	movq %rax, -32(%rbp) # save quotient
+.main.37:
+# (54) <[int][CALL], (int)#0, printf, "n1: %d, n2: %d, n3: %d\n", (int)n1, (int)n2, (int)n3>
+	leaq _string_main.1(%rip), %rdi
+	movq -32(%rbp), %rsi
+	movq -40(%rbp), %rdx
+	movq -48(%rbp), %rcx
+	movq $0, %rax
 	call printf
-# (61) <[JUMP], <46>>
-	jmp .main.46
-.main.45:
-# (62) <[int][MINUS], (int)#0, 1>
-	mov -8(%rbp), %rax
-	mov $1, %rbx
-	neg %rbx
-	mov %rbx, %rax
-	mov %rax, -8(%rbp)
-# (62) <[int][RETURN], (int)#0>
-	mov -8(%rbp), %rax
-# stack size is 136
-	mov %rbp, %rdx
-	sub %rsp, %rdx
-	add %rdx, %rsp
-	pop %rbp
+# (56) <[JUMP], <40>>
+	jmp .main.40
+.main.39:
+# (57) <[int][MINUS], (int)#0, 1>
+	movq -8(%rbp), %rax
+	movq $1, %rbx
+	negq %rbx
+	movq %rbx, -8(%rbp)
+# (57) <[int][RETURN], (int)#0>
+	movq -8(%rbp), %rax
+# stack size is 112
+	movq %rbp, %rdx
+	subq %rsp, %rdx
+	addq %rdx, %rsp
+	popq %rbp
 	ret 
-.main.46:
-# (63) <[NO_OP]>
-# (64) <[int][MUL], (int)#0, (int)n1, 2>
-	mov -8(%rbp), %rax
-	mov -32(%rbp), %rbx
-	mov $2, %rcx
-	imul %rbx, %rcx
-	mov %rcx, %rax
-	mov %rax, -8(%rbp)
-# (64) <[int][RETURN], (int)#0>
-	mov -8(%rbp), %rax
-# stack size is 136
-	mov %rbp, %rdx
-	sub %rsp, %rdx
-	add %rdx, %rsp
-	pop %rbp
+.main.40:
+# (58) <[NO_OP]>
+# (59) <[int][MUL], (int)#0, (int)n1, 2>
+	movq -8(%rbp), %rax
+	movq -32(%rbp), %rbx
+	movq $2, %rcx
+	imulq %rbx, %rcx
+	movq %rcx, -8(%rbp)
+# (59) <[int][RETURN], (int)#0>
+	movq -8(%rbp), %rax
+# stack size is 112
+	movq %rbp, %rdx
+	subq %rsp, %rdx
+	addq %rdx, %rsp
+	popq %rbp
 	ret 

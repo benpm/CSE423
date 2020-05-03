@@ -39,14 +39,14 @@ std::string InstrArg::toString() const
 }
 
 std::map<OpCode, std::string> opToStr {
-    {OpCode::ADD,  "add"},
-    {OpCode::IMUL, "imul"},
-    {OpCode::IDIV, "idiv"},
-    {OpCode::SUB,  "sub"},
-    {OpCode::NEG,  "neg"},
-    {OpCode::MOV,  "mov"},
-    {OpCode::PUSH, "push"},
-    {OpCode::POP,  "pop"},
+    {OpCode::ADD,  "addq"},
+    {OpCode::IMUL, "imulq"},
+    {OpCode::IDIV, "idivq"},
+    {OpCode::SUB,  "subq"},
+    {OpCode::NEG,  "negq"},
+    {OpCode::MOV,  "movq"},
+    {OpCode::PUSH, "pushq"},
+    {OpCode::POP,  "popq"},
     {OpCode::JMP,  "jmp"},
     {OpCode::JE,   "je"},
     {OpCode::JNE,  "jne"},
@@ -58,8 +58,8 @@ std::map<OpCode, std::string> opToStr {
     {OpCode::JNZ,  "jnz"},
     {OpCode::RET,  "ret"},
     {OpCode::CALL, "call"},
-    {OpCode::CMP,  "cmp"},
-    {OpCode::LEA,  "lea"},
+    {OpCode::CMP,  "cmpq"},
+    {OpCode::LEA,  "leaq"},
     {OpCode::CQO,  "cqo"}
 };
 

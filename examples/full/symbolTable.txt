@@ -1,7 +1,7 @@
 +---------------------------+
 | Table ID: 0   __GLOBAL__  |
 +---------------------------+
-| fun   | Float  | Function |
+| fun   | Int    | Function |
 | globA | Int    | Local    |
 | globB | Int    | Local    |
 | main  | Int    | Function |
@@ -9,9 +9,9 @@
   +--------------------------+
   | Table ID: 1       fun()  |
   +--------------------------+
-  | V    | Float  | Parameter|
-  | XKAD | Float  | Parameter|
-  | n1   | Float  | Local    |
+  | V    | Int    | Parameter|
+  | XKAD | Int    | Parameter|
+  | n1   | Int    | Local    |
   +--------------------------+
     +--------------------+
     | Table ID: 2  list  |
@@ -19,8 +19,7 @@
   +------------------------+
   | Table ID: 3    main()  |
   +------------------------+
-  | DF | Float  | Local    |
-  | G  | Char   | Local    |
+  | DF | Int    | Local    |
   | n1 | Int    | Local    |
   | n2 | Int    | Local    |
   | n3 | Int    | Local    |
@@ -83,15 +82,9 @@
                 +--------------------+
                 | Table ID: 18  list |
                 +--------------------+
-          +-----------------------+
-          | Table ID: 19  else_if |
-          +-----------------------+
+          +-------------------------+
+          | Table ID: 19  else_stmt |
+          +-------------------------+
             +--------------------+
             | Table ID: 20  list |
-            +--------------------+
-          +-------------------------+
-          | Table ID: 21  else_stmt |
-          +-------------------------+
-            +--------------------+
-            | Table ID: 22  list |
             +--------------------+
