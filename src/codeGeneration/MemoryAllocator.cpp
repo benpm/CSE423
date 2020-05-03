@@ -3,7 +3,11 @@
 #include <spdlog/spdlog.h>
 #include <magic_enum.hpp>
 
-
+/**
+ * @brief Tracks memory/register location of variables
+ * 
+ * @param codeGen Code generator object so we can insert instructions
+ */
 MemoryAllocator::MemoryAllocator(CodeGenerator& codeGen) :
     codeGen(codeGen)
 {
@@ -12,6 +16,12 @@ MemoryAllocator::MemoryAllocator(CodeGenerator& codeGen) :
     this->stackSize = 0;
 }
 
+/**
+ * @brief Returns the location of an argument (register, stack, etc)
+ * 
+ * @param arg Relevant arg
+ * @return InstrArg 
+ */
 InstrArg MemoryAllocator::getLoc(const Arg& arg)
 {
     spdlog::debug("--> Getting location for {}", arg.toString());
@@ -29,6 +39,12 @@ InstrArg MemoryAllocator::getLoc(const Arg& arg)
     exit(EXIT_FAILURE);
 }
 
+/**
+ * @brief Returns the register an argument is in
+ * 
+ * @param arg Relevant arg
+ * @return InstrArg 
+ */
 InstrArg MemoryAllocator::getReg(const Arg& arg)
 {
     assert(this->regMap.count(arg));
@@ -39,6 +55,11 @@ InstrArg MemoryAllocator::getReg(const Arg& arg)
     return instrArg;
 }
 
+/**
+ * @brief Allocates space ON THE STACK
+ * 
+ * @param arg Relevant arg
+ */
 void MemoryAllocator::allocateArg(const Arg& arg)
 {
     if ((this->storageMap.count(arg) == 0) && (arg.type == Arg::NAME)) {
@@ -52,7 +73,12 @@ void MemoryAllocator::allocateArg(const Arg& arg)
     }
 }
 
-
+/**
+ * @brief Allocates a register for a given arg
+ * 
+ * @param arg Relevant arg
+ * @return InstrArg 
+ */
 InstrArg MemoryAllocator::allocateReg(const Arg& arg)
 {
     spdlog::debug("--> Getting register for {}", arg.toString());
@@ -75,6 +101,12 @@ InstrArg MemoryAllocator::allocateReg(const Arg& arg)
     return dest;
 }
 
+/**
+ * @brief Returns a register for an argument and evicts a register if necessary
+ * 
+ * @param arg Relevant arg
+ * @return Register 
+ */
 Register MemoryAllocator::getNextAvailReg(const Arg& arg)
 {
     // Find next unoccupied register. THIS CURRENTLY DOES NOT
@@ -107,8 +139,13 @@ Register MemoryAllocator::getNextAvailReg(const Arg& arg)
     return reg;
 }
 
-// Transfers location of A to location of B WITHOUT inserting instructions
-// (assume B's location was destroyed, does not save)
+/**
+ * @brief Transfers location of A to location of B WITHOUT inserting instructions
+ *        (assume B's location was destroyed, does not save)
+ * 
+ * @param argA 
+ * @param argB 
+ */
 void MemoryAllocator::transfer(const Arg& argA, const Arg& argB)
 {
     assert(this->regMap.count(argB));
@@ -126,6 +163,11 @@ void MemoryAllocator::transfer(const Arg& argA, const Arg& argB)
     this->regMap.emplace(argA, reg);
 }
 
+/**
+ * @brief Saves an argument to its permanent storage location
+ * 
+ * @param arg Relevant argument
+ */
 void MemoryAllocator::save(const Arg& arg)
 {
     spdlog::debug("--> Saving {}", arg.toString());
@@ -148,6 +190,11 @@ void MemoryAllocator::save(const Arg& arg)
     spdlog::debug("----> Restoring {} to {}", arg.toString(), dest.toString());
 }
 
+/**
+ * @brief Overload that allows you to deregister multiple args at once
+ * 
+ * @param args Relevant args
+ */
 void MemoryAllocator::deregister(const std::unordered_set<Arg, ArgHash> args)
 {
     for (const Arg& arg : args) {
@@ -155,6 +202,11 @@ void MemoryAllocator::deregister(const std::unordered_set<Arg, ArgHash> args)
     }
 }
 
+/**
+ * @brief Deregisters a single arg (does not save to permanent storage, only marks the register it's in as unused)
+ * 
+ * @param arg Relevant arg
+ */
 void MemoryAllocator::deregister(const Arg& arg)
 {
     spdlog::debug("--> Deregistering {}", arg.toString());
@@ -169,6 +221,11 @@ void MemoryAllocator::deregister(const Arg& arg)
     spdlog::error("Deregistering a register that is not allocated! {}", arg.toString());
 }
 
+/**
+ * @brief Evicts an argument from the given register
+ * 
+ * @param reg Relevant register
+ */
 void MemoryAllocator::evict(Register reg)
 {
     // Try to deallocate the occupied register
@@ -184,6 +241,13 @@ void MemoryAllocator::evict(Register reg)
     }
 }
 
+
+/**
+ * @brief Inserts an argument at the given register
+ * 
+ * @param arg Argument to insert
+ * @param reg Insertion location
+ */
 void MemoryAllocator::insertAt(const Arg& arg, Register reg)
 {
     spdlog::debug("--> Inserting {} in {}", arg.toString(), magic_enum::enum_name(reg));
@@ -205,6 +269,10 @@ void MemoryAllocator::insertAt(const Arg& arg, Register reg)
     this->codeGen.insert(mov);
 }
 
+/**
+ * @brief Dumps all registers to permanent storage
+ * 
+ */
 void MemoryAllocator::clear()
 {
     for (int i = 0; i < regOccupied.size(); i++) {
@@ -214,6 +282,12 @@ void MemoryAllocator::clear()
     }
 }
 
+/**
+ * @brief Registers a function parameter on the stack
+ * 
+ * @param arg Funciton parameter
+ * @param n nth parameter
+ */
 void MemoryAllocator::parameter(const Arg& arg, int n)
 {
     this->storageMap.emplace(arg, InstrArg{Register::rbp, n * 8});

@@ -5,6 +5,10 @@
 
 class MemoryAllocator;
 
+/**
+ * @brief Class that generates assembly
+ * 
+ */
 class CodeGenerator
 {
 private:
