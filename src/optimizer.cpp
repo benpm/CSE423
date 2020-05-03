@@ -10,6 +10,14 @@ const std::set<Statement::Type> canEvalTypes {
     Statement::NOT
 };
 
+const std::set<Statement::Type> jumpStmts {
+    Statement::JUMP_EQ, Statement::JUMP_NEQ,
+    Statement::JUMP_LT, Statement::JUMP_GT,
+    Statement::JUMP_LE, Statement::JUMP_GE,
+    Statement::JUMP,
+    Statement::JUMP_IF_TRUE, Statement::JUMP_IF_FALSE
+};
+
 template<class T>
 T internalEval(const Statement& statement)
 {
@@ -46,14 +54,6 @@ Arg Optimizer::evaluate(const Statement& statement)
 void Optimizer::optimize(Program& program)
 {
     spdlog::info("Optimizer beginning");
-
-    const std::set<Statement::Type> jumpStmts {
-        Statement::JUMP_EQ, Statement::JUMP_NEQ,
-        Statement::JUMP_LT, Statement::JUMP_GT,
-        Statement::JUMP_LE, Statement::JUMP_GE,
-        Statement::JUMP,
-        Statement::JUMP_IF_TRUE, Statement::JUMP_IF_FALSE
-    };
 
     for (auto& item : program.functions) {
         bool proceed = false;
@@ -127,6 +127,7 @@ void Optimizer::propagate(
         const bool isTemp = (pair.first[0] == '#');
         const char* name = pair.first;
         Arg value = stmts[pair.second].second.args.at(1);
+        spdlog::debug("optimizer: <{}={}>", pair.first, value.toString());
         size_t i = pair.second + 1;
         BasicBlock& originBlock = stmts[pair.second].first;
         for (; i < stmts.size(); i++) {
@@ -145,9 +146,11 @@ void Optimizer::propagate(
                 if (stmt.args.at(argindx).type == Arg::NAME 
                     && strcmp(stmt.args.at(argindx).val.sval, name) == 0) {
                     if (jumpBlocks.count(block.label)
-                        && jumpBlocks.count(originBlock.label) == 0) {
+                        && block.label != originBlock.label) {
+                        spdlog::debug("optimizer: stopping {}", pair.first);
                         goto stop;
                     }
+                    spdlog::debug("optimizer: replacing {} in {}", pair.first, stmt.toString());
                     stmt.args.at(argindx) = value;
                     proceed = true;
                 }
