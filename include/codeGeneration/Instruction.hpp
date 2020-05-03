@@ -8,11 +8,11 @@
 
 // When adding registers, make sure to update USABLE_REGS
 // The size of regOccupied should be the number of registers we can USE (i.e. we cannut "USE" ebp/esp/pc)
-#define USABLE_REGS 4
+#define USABLE_REGS 9
 #define WORD_SIZE 8
 enum Register {
     // General registers
-    rax, rbx, rcx, rdx, r8, r9,
+    rax, rbx, rcx, rdx, r8, r9, r10, r11, r12,
     // Special registers
     no_reg,
     rsi = 123,

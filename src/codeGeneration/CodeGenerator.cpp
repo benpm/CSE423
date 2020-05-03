@@ -294,6 +294,8 @@ void CodeGenerator::genConditionalJump(MemoryAllocator& allocator, const Stateme
 
 void CodeGenerator::genRETURN(MemoryAllocator& allocator, const Statement& stmt)
 {
+    // Clear all registers (including %eax)
+    allocator.clear();
     // Place return arg into %eax
     allocator.insertAt(stmt.args.at(0), Register::rax);
     // Restore old call frame

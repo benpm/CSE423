@@ -8,6 +8,7 @@ MemoryAllocator::MemoryAllocator(CodeGenerator& codeGen) :
     codeGen(codeGen)
 {
     this->regOccupied = std::vector<bool>(USABLE_REGS, false);
+    this->regLRU = std::vector<size_t>(USABLE_REGS, 0);
     this->stackSize = 0;
 }
 
@@ -16,7 +17,7 @@ InstrArg MemoryAllocator::getLoc(const Arg& arg)
     spdlog::debug("--> Getting location for {}", arg.toString());
     
     if (this->regMap.count(arg)) { // Argument is already in a register, return reg
-        return this->regMap.at(arg);
+        return this->getReg(arg);
     } else if (this->storageMap.count(arg)) { // If on stack, return offset(%ebp)
         return this->storageMap.at(arg);
     } if (arg.type != Arg::NAME) {  // If immediate return that immediate
@@ -26,6 +27,16 @@ InstrArg MemoryAllocator::getLoc(const Arg& arg)
     // Not found, error
     spdlog::error("MemoryAllocator::get -> {} not found!", arg.toString());
     exit(EXIT_FAILURE);
+}
+
+InstrArg MemoryAllocator::getReg(const Arg& arg)
+{
+    assert(this->regMap.count(arg));
+
+    InstrArg instrArg = this->regMap.at(arg);
+    this->step += 1;
+    this->regLRU.at(std::get<Register>(instrArg.arg)) = this->step;
+    return instrArg;
 }
 
 void MemoryAllocator::allocateArg(const Arg& arg)
@@ -47,8 +58,8 @@ InstrArg MemoryAllocator::allocateReg(const Arg& arg)
     spdlog::debug("--> Getting register for {}", arg.toString());
     // Check if argument is already in a register, return the register if it is
     if (this->regMap.count(arg)) {
-        spdlog::debug("----> already in {}", this->regMap.at(arg).toString());
-        return InstrArg{this->regMap.at(arg)};
+        spdlog::debug("----> already in {}", this->getReg(arg).toString());
+        return InstrArg{this->getReg(arg)};
     }
 
     // It is not in a register so we must check if it's on the stack
@@ -75,8 +86,44 @@ Register MemoryAllocator::getNextAvailReg(const Arg& arg)
             return (Register)i;
         }
     }
-    spdlog::error("Holy shit we ran out of registers on {}", arg.toString());
-    return Register::no_reg;
+
+    // Prefer to evict registers with immediates assigned
+    for (auto pair : this->regMap) {
+        if (pair.first.type != Arg::NAME) {
+            spdlog::debug("----> Choosing to evict {} from {}", pair.first.toString(), pair.second.toString());
+            Register reg = std::get<Register>(pair.second.arg);
+            this->evict(reg);
+            this->regOccupied.at(reg) = true;
+            this->regMap.emplace(arg, InstrArg{reg});
+            return reg;
+        }
+    }
+
+    // Find and evict least recently used register
+    Register reg = (Register)(std::min_element(this->regLRU.begin(), this->regLRU.end()) - this->regLRU.begin());
+    this->evict(reg);
+    this->regOccupied.at(reg) = true;
+    this->regMap.emplace(arg, InstrArg{reg});
+    return reg;
+}
+
+// Transfers location of A to location of B WITHOUT inserting instructions
+// (assume B's location was destroyed, does not save)
+void MemoryAllocator::transfer(const Arg& argA, const Arg& argB)
+{
+    assert(this->regMap.count(argB));
+
+    // Deregister argA if in register
+    if (this->regMap.count(argA)) {
+        this->deregister(argA);
+    }
+    // Grab B's register location, then deregister it
+    InstrArg loc = this->getReg(argB);
+    Register reg = std::get<Register>(loc.arg);
+    this->deregister(argB);
+    // Set argA to be in argB's location
+    this->regOccupied.at(reg) = true;
+    this->regMap.emplace(argA, reg);
 }
 
 void MemoryAllocator::save(const Arg& arg)
@@ -93,7 +140,7 @@ void MemoryAllocator::save(const Arg& arg)
     }
     assert(arg.type == Arg::Type::NAME);
 
-    InstrArg src{this->regMap.at(arg)};
+    InstrArg src{this->getReg(arg)};
     InstrArg dest = this->storageMap.at(arg);
     Instruction instr = {OpCode::MOV, {src, dest}}; // mov %reg, offset(%ebp)
     this->codeGen.insert(instr);
@@ -113,7 +160,7 @@ void MemoryAllocator::deregister(const Arg& arg)
     spdlog::debug("--> Deregistering {}", arg.toString());
     // Arg must be in register to deregister it. If its not we error
     if (this->regMap.count(arg)) {
-        Register reg = std::get<Register>(this->regMap.at(arg).arg);
+        Register reg = std::get<Register>(this->getReg(arg).arg);
         this->regMap.erase(arg);
         this->regOccupied.at(reg) = false;
         return;
@@ -128,7 +175,9 @@ void MemoryAllocator::evict(Register reg)
     for (auto& pair : this->regMap) {
         if (std::get<Register>(pair.second.arg) == reg) {
             spdlog::debug("----> {} occupied, saving it out.", magic_enum::enum_name(reg));
-            this->save(pair.first);
+            if (pair.first.type == Arg::NAME) {
+                this->save(pair.first);
+            }
             this->deregister(pair.first);
             break;
         }
