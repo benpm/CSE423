@@ -14,8 +14,8 @@ int foo() {
     return n;
 }
 
-char bar() { // Warning: unused function bar
-    return 'c';
+int bar() { // Warning: unused function bar
+    return 9;
 }
 
 int fun(int d) { // Warning: unused parameter
@@ -28,7 +28,7 @@ int fun(int d) { // Warning: unused parameter
 int a = 5;
 
 int main() {
-    float a; // Warning: variable a shadowed
+    int a; // Warning: variable a shadowed
     int b = 10, c = 11; // Warning: unused variable c
     int d = a + b; // Warning: uninitialized variable a
     fun(1, 2); // Error: incorrect number of parameters
