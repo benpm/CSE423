@@ -1,4 +1,4 @@
-# CSE423 Compiler Writing (RELEASE)
+# CSE423 Compiler Writing
 _Benjamin Mastripolito, Haydn Jones, and Steven Anaya_
 
 Documentation and User Manual lives on our [Wiki](https://github.com/benpm/CSE423/wiki).
