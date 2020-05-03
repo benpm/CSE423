@@ -20,11 +20,11 @@ Documentation and User Manual lives on our [Wiki](https://github.com/benpm/CSE42
 - [X] Optimizer
     - [X] Constant propagation
     - [X] Constant folding
-- [ ] Code generator
-    - [ ] x86 processor model
-    - [ ] Instruction selection
-    - [ ] Register allocation
-    - [ ] Output x86 ASM
+- [X] Code generator
+    - [X] x86 processor model
+    - [X] Instruction selection
+    - [X] Register allocation
+    - [X] Output x86 ASM
 
 ## Examples
 Visit the [/examples](/examples) directory for examples of intermediate ouputs.
