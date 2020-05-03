@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-[frontend][warning] line 3: unused variable ‘a’
-[frontend][warning] line 5: unused variable ‘hek’
-[frontend][warning] line 6: unused variable ‘str’
-[frontend][warning] line 7: unused variable ‘str2’
-[frontend][error] line 13: redeclaration of symbol ‘a’
-=======
 BB,4294967295,globals
 func,main
 BB,0,combined
@@ -17,4 +10,3 @@ stmt,7,int,ADD,int k,4,20
 stmt,9,int,CALL,int #0,printf,"i: %d, j: %d, k: %d\n",int i,int j,int k
 stmt,11,int,RETURN,int i
 
->>>>>>> origin/CodeGen

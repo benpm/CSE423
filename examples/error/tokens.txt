@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-[frontend][warning] line 3: unused variable ‘d’
-[frontend][error] line 4: redeclaration of symbol ‘n’
-[frontend][warning] line 5: declaration shadows earlier declaration of ‘n’
-[frontend][warning] line 11: unused function ‘bar’
-[frontend][warning] line 15: unused function parameter ‘d’
-[frontend][warning] line 19: unused variable ‘a’
-[frontend][warning] line 22: declaration shadows earlier declaration of ‘a’
-[frontend][warning] line 23: unused variable ‘c’
-[frontend][warning] line 24: attempt to use uninitialized variable ‘a’
-[frontend][error] line 25: wrong number of arguments given to function ‘fun’
-[frontend][error] line 26: improper use of symbol ‘fun’
-[frontend][error] line 29: attempt to use undefined label ‘foo’
-[frontend][error] line 30: improper use of symbol ‘d’
-[frontend][error] line 31: attempt to use undeclared variable ‘e’
-=======
->>>>>>> origin/CodeGen
 <int, INT>
 <foo, ID>
 <(, LPAREN>
@@ -31,11 +14,8 @@
 <=, EQUAL>
 <10, INTCONST>
 <;, SEMICOLON>
-<<<<<<< HEAD
-=======
 <break, BREAK>
 <;, SEMICOLON>
->>>>>>> origin/CodeGen
 <for, IF>
 <(, LPAREN>
 <int, INT>
@@ -56,96 +36,6 @@
 <5, INTCONST>
 <;, SEMICOLON>
 <}, RBRACE>
-<<<<<<< HEAD
-<return, RETURN>
-<n, ID>
-<;, SEMICOLON>
-<}, RBRACE>
-<char, CHAR>
-<bar, ID>
-<(, LPAREN>
-<), RPAREN>
-<{, LBRACE>
-<return, RETURN>
-<'c', CHARLIT>
-<;, SEMICOLON>
-<}, RBRACE>
-<int, INT>
-<fun, ID>
-<(, LPAREN>
-<int, INT>
-<d, ID>
-<), RPAREN>
-<{, LBRACE>
-<return, RETURN>
-<4, INTCONST>
-<;, SEMICOLON>
-<}, RBRACE>
-<int, INT>
-<a, ID>
-<=, EQUAL>
-<5, INTCONST>
-<;, SEMICOLON>
-<int, INT>
-<main, ID>
-<(, LPAREN>
-<), RPAREN>
-<{, LBRACE>
-<float, FLOAT>
-<a, ID>
-<;, SEMICOLON>
-<int, INT>
-<b, ID>
-<=, EQUAL>
-<10, INTCONST>
-<,, COMMA>
-<c, ID>
-<=, EQUAL>
-<11, INTCONST>
-<;, SEMICOLON>
-<int, INT>
-<d, ID>
-<=, EQUAL>
-<a, ID>
-<+, PLUS>
-<b, ID>
-<;, SEMICOLON>
-<fun, ID>
-<(, LPAREN>
-<1, INTCONST>
-<,, COMMA>
-<2, INTCONST>
-<), RPAREN>
-<;, SEMICOLON>
-<d, ID>
-<=, EQUAL>
-<b, ID>
-<+, PLUS>
-<fun, ID>
-<;, SEMICOLON>
-<goto, GOTO>
-<bar, ID>
-<;, SEMICOLON>
-<bar, ID>
-<:, COLON>
-<goto, GOTO>
-<foo, ID>
-<;, SEMICOLON>
-<d, ID>
-<(, LPAREN>
-<), RPAREN>
-<;, SEMICOLON>
-<return, RETURN>
-<foo, ID>
-<(, LPAREN>
-<), RPAREN>
-<*, TIMES>
-<d, ID>
-<+, PLUS>
-<e, ID>
-<;, SEMICOLON>
-<}, RBRACE>
-=======
 <while, WHILE>
 <(, LPAREN>
 <n, ID>
@@ -169,4 +59,3 @@
 <;, SEMICOLON>
 <}, RBRACE>
 <char, ID>
->>>>>>> origin/CodeGen
