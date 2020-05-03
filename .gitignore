@@ -1,4 +1,0 @@
-build/*
-!build/lex.yy.cpp
-!build/parser.tab.cpp
-!build/parser.tab.hpp
