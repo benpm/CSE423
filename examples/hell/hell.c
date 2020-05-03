@@ -1,5 +1,5 @@
-int globalA = 78123 * 88 - (-0 + 371 % 138);
-int globalB = 222222;
+int globalA = 3 * 7 - (-0 + 2 % 7);
+int globalB = 2;
 
 int funA(int x, int y, int z)
 {
@@ -48,12 +48,12 @@ int funB(int f)
     f -= 1;
     if (f >= 10 && f < 23) {
         //printf("funB 1\n");
-        return funB(f / 2) + funA(-123, 23, f * 2 * f - f);
+        return funB(f / 2) + funA(-2, 3, f * 2 * f - f);
     } else if (f < 10 && f > -10) {
         //printf("funB 2\n");
         return globalA + 69;
     } else if (f < 10 && f > -100) {
-        int z = 100;
+        int z = 3;
         f += f * f;
         //printf("funB 3\n");
         while (z != (z * 0)) {
@@ -80,8 +80,8 @@ int funB(int f)
 int main()
 {
     int accum = 0;
-    for (int i = -100; i < 100; i += 1) {
-        for (int j = -100; j < 100; j += 1) {
+    for (int i = -10; i < 10; i += 1) {
+        for (int j = -17; j < 17; j += 1) {
             for (int k = -100; k < 100; k += 1) {
                 int val = funA(i, j, k);
                 //printf("funA(%d, %d, %d) = %d\n", i, j, k, val);
@@ -89,7 +89,7 @@ int main()
             }
         }
     }
-    for (int i = -100; i < 100; i += 1) {
+    for (int i = -35; i < 35; i += 1) {
         int val = funB(i);
         //printf("funB(%d) = %d\n", i, val);
         accum += val;

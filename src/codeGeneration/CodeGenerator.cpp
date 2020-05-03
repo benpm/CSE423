@@ -27,8 +27,6 @@ CodeGenerator::CodeGenerator(const Program& program, bool printDebug)
         this->insert({fmt::format(".type {}, @function", pair.first)});
         this->genFunction(program, pair.second);
     }
-    
-    this->optimizeAssembly();
 }
 
 void CodeGenerator::genFunction(const Program& program, const Function& func)
@@ -252,11 +250,14 @@ void CodeGenerator::genMINUS(MemoryAllocator& allocator, const Statement& stmt)
 void CodeGenerator::genASSIGN(MemoryAllocator& allocator, const Statement& stmt)
 {
     // dest = src
-    InstrArg dest = allocator.getLoc(stmt.args.at(0));
-    InstrArg src  = allocator.getLoc(stmt.args.at(1));
+    InstrArg dest = allocator.allocateReg(stmt.args.at(0));
+    InstrArg src  = allocator.allocateReg(stmt.args.at(1));
 
     Instruction movInstr{OpCode::MOV, {src, dest}};
     this->insert(movInstr);
+
+    allocator.save(stmt.args.at(0));
+    allocator.deregister({stmt.args.at(0), stmt.args.at(1)});
 }
 
 void CodeGenerator::genJUMP(MemoryAllocator& allocator, const Statement& stmt)
@@ -382,52 +383,4 @@ void CodeGenerator::print()
     {
         fmt::print("{}\n", instr.toString());
     }
-}
-
-
-void CodeGenerator::optimizeAssembly()
-{
-    std::vector<Instruction> newInstrs;
-
-    for (int start = 0; start < this->instrs.size() - 1; start++) {
-        Instruction origInstr = this->instrs.at(start);
-        if (origInstr.opCode != OpCode::MOV) {
-            newInstrs.push_back(origInstr);
-            continue;
-        }
-
-        int offset = start;
-        int lastValidIndex = start;
-        Instruction next;
-        Instruction lastValid = origInstr;
-        while(offset < this->instrs.size()) {
-            offset++;
-            next = this->instrs.at(offset);
-
-            if (next.asmDirective.size() != 0) continue;
-            if (next.opCode != OpCode::MOV) break;
-
-            if (next.args.at(0).toString() == lastValid.args.at(1).toString() && !std::holds_alternative<Register, int>(next.args.at(1).arg)) {
-                lastValid = next;
-                lastValidIndex = offset;
-            } else {
-                break;
-            }
-        }
-
-        Instruction compressed{OpCode::MOV, {origInstr.args.at(0), lastValid.args.at(1)}, origInstr.comment};
-        if (compressed.args.at(0).toString() != compressed.args.at(1).toString()) {
-            newInstrs.push_back(compressed);
-        }
-        for (int i = start; i < lastValidIndex; i++) {
-            if (this->instrs.at(i).asmDirective.size() != 0)
-                newInstrs.push_back(this->instrs.at(i));
-        }
-        
-        start = lastValidIndex;
-    }
-
-    newInstrs.push_back(this->instrs.back());
-
-    this->instrs = newInstrs;
 }
