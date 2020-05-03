@@ -22,6 +22,10 @@ enum Register {
     rbp = 127
 };
 
+/**
+ * @brief Represents an argument for an ASM instruction
+ * 
+ */
 class InstrArg
 {
 public:
@@ -84,6 +88,10 @@ enum OpCode {
     NOP,   //                | Default op code
 };
 
+/**
+ * @brief Represents an ASM instruction with args (or directive or comment)
+ * 
+ */
 class Instruction
 {
 public:

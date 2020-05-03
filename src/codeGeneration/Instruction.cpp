@@ -4,6 +4,11 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/formatter.h>
 
+/**
+ * @brief Converts an argument to a string i.e. -10(%rsp)
+ * 
+ * @return std::string 
+ */
 std::string InstrArg::toString() const
 {   
     if (std::holds_alternative<Register>(this->arg)) {
@@ -63,6 +68,11 @@ std::map<OpCode, std::string> opToStr {
     {OpCode::CQO,  "cqo"}
 };
 
+/**
+ * @brief Converts and instruction to a string to be output to a file
+ * 
+ * @return std::string 
+ */
 std::string Instruction::toString() const
 {
     if (this->asmDirective.size() != 0) {

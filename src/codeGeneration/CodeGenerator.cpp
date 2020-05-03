@@ -4,6 +4,12 @@
 #include <unordered_set>
 #include <iostream>
 
+/**
+ * @brief Creates an x86 representation of our IR
+ * 
+ * @param program IR representation of program to output
+ * @param printDebug Whether or not assembly and debug messages should be output during compilation
+ */
 CodeGenerator::CodeGenerator(const Program& program, bool printDebug)
 {
     this->printDebug = printDebug;
@@ -29,6 +35,12 @@ CodeGenerator::CodeGenerator(const Program& program, bool printDebug)
     }
 }
 
+/**
+ * @brief Generates Assembly for a single function in the IR
+ * 
+ * @param program Takes a program because it needs access to the globals
+ * @param func Function to generate
+ */
 void CodeGenerator::genFunction(const Program& program, const Function& func)
 {
     this->curFuncName = func.name;
@@ -99,6 +111,12 @@ void CodeGenerator::genFunction(const Program& program, const Function& func)
     }
 }
 
+/**
+ * @brief Creates a set of assembly instructions representing a single statement
+ * 
+ * @param allocator Memory allocator that tracks storage locations
+ * @param stmt Stmt to generate
+ */
 void CodeGenerator::genStatement(MemoryAllocator& allocator, const Statement& stmt)
 {
     switch(stmt.type) {
@@ -130,6 +148,12 @@ void CodeGenerator::genStatement(MemoryAllocator& allocator, const Statement& st
     }
 }
 
+/**
+ * @brief Generates an addition statement
+ * 
+ * @param allocator Memory allocator
+ * @param stmt Stmt to generate
+ */
 void CodeGenerator::genADD(MemoryAllocator& allocator, const Statement& stmt)
 {
     // dest = opA + opB
@@ -147,6 +171,12 @@ void CodeGenerator::genADD(MemoryAllocator& allocator, const Statement& stmt)
     allocator.deregister({stmt.args.at(0), stmt.args.at(1), stmt.args.at(2)});
 }
 
+/**
+ * @brief Generates a multiplication statement
+ * 
+ * @param allocator Memory allocator
+ * @param stmt Stmt to generate
+ */
 void CodeGenerator::genMUL(MemoryAllocator& allocator, const Statement& stmt)
 {
     // dest = opA * opB
@@ -164,7 +194,12 @@ void CodeGenerator::genMUL(MemoryAllocator& allocator, const Statement& stmt)
 
     allocator.deregister({stmt.args.at(0), stmt.args.at(1), stmt.args.at(2)});
 }
-
+/**
+ * @brief Generates a division statement
+ * 
+ * @param allocator Memory allocator
+ * @param stmt Stmt to generate
+ */
 void CodeGenerator::genDIV(MemoryAllocator& allocator, const Statement& stmt)
 {
     // Evict whatever was in %eax previously, saving it if needed, moving dividend in
@@ -189,6 +224,12 @@ void CodeGenerator::genDIV(MemoryAllocator& allocator, const Statement& stmt)
     allocator.deregister({stmt.args.at(0), stmt.args.at(1), stmt.args.at(2)});
 }
 
+/**
+ * @brief Generates a subtraction statement
+ * 
+ * @param allocator Memory allocator
+ * @param stmt Stmt to generate
+ */
 void CodeGenerator::genSUB(MemoryAllocator& allocator, const Statement& stmt)
 {
     // dest = arg1 - arg2
@@ -208,6 +249,12 @@ void CodeGenerator::genSUB(MemoryAllocator& allocator, const Statement& stmt)
 
 }
 
+/**
+ * @brief Generates a modulo statement
+ * 
+ * @param allocator Memory allocator
+ * @param stmt Stmt to generate
+ */
 void CodeGenerator::genMOD(MemoryAllocator& allocator, const Statement& stmt)
 {
     // Evict whatever was in %eax previously, saving it if needed, moving dividend in
@@ -232,6 +279,12 @@ void CodeGenerator::genMOD(MemoryAllocator& allocator, const Statement& stmt)
     allocator.deregister({stmt.args.at(0), stmt.args.at(1), stmt.args.at(2)});
 }
 
+/**
+ * @brief Generates a unary minus statement
+ * 
+ * @param allocator Memory allocator
+ * @param stmt Stmt to generate
+ */
 void CodeGenerator::genMINUS(MemoryAllocator& allocator, const Statement& stmt)
 {
     // dest = -op
@@ -247,6 +300,12 @@ void CodeGenerator::genMINUS(MemoryAllocator& allocator, const Statement& stmt)
     allocator.deregister({stmt.args.at(0), stmt.args.at(1)});
 }
 
+/**
+ * @brief Generates an assignment statement
+ * 
+ * @param allocator Memory allocator
+ * @param stmt Stmt to generate
+ */
 void CodeGenerator::genASSIGN(MemoryAllocator& allocator, const Statement& stmt)
 {
     // dest = src
@@ -260,6 +319,12 @@ void CodeGenerator::genASSIGN(MemoryAllocator& allocator, const Statement& stmt)
     allocator.deregister({stmt.args.at(0), stmt.args.at(1)});
 }
 
+/**
+ * @brief Generates a jump statement
+ * 
+ * @param allocator Memory allocator
+ * @param stmt Stmt to generate
+ */
 void CodeGenerator::genJUMP(MemoryAllocator& allocator, const Statement& stmt)
 {
     std::string label = fmt::format(".{}.{}", this->curFuncName, stmt.args.at(0).val.label);
@@ -267,6 +332,12 @@ void CodeGenerator::genJUMP(MemoryAllocator& allocator, const Statement& stmt)
     this->insert(jmp);
 }
 
+/**
+ * @brief Generates a conditional jump statement
+ * 
+ * @param allocator Memory allocator
+ * @param stmt Stmt to generate
+ */
 void CodeGenerator::genConditionalJump(MemoryAllocator& allocator, const Statement& stmt)
 {
     const std::map<Statement::Type, OpCode> jumpMapping {
@@ -293,6 +364,12 @@ void CodeGenerator::genConditionalJump(MemoryAllocator& allocator, const Stateme
     allocator.deregister({stmt.args.at(1), stmt.args.at(2)});
 }
 
+/**
+ * @brief Generates a return statement
+ * 
+ * @param allocator Memory allocator
+ * @param stmt Stmt to generate
+ */
 void CodeGenerator::genRETURN(MemoryAllocator& allocator, const Statement& stmt)
 {
     // Clear all registers (including %eax)
@@ -312,6 +389,12 @@ void CodeGenerator::genRETURN(MemoryAllocator& allocator, const Statement& stmt)
     allocator.deregister(stmt.args.at(0));
 }
 
+/**
+ * @brief Generates a call statement
+ * 
+ * @param allocator Memory allocator
+ * @param stmt Stmt to generate
+ */
 void CodeGenerator::genCALL(MemoryAllocator& allocator, const Statement& stmt)
 {
     // Push all arguments onto the stack (in reverse order!)
@@ -338,6 +421,12 @@ void CodeGenerator::genCALL(MemoryAllocator& allocator, const Statement& stmt)
     allocator.deregister(stmt.args.at(0));
 }
 
+/**
+ * @brief Generates a call to printf
+ * 
+ * @param allocator Memory allocator
+ * @param stmt Stmt to generate
+ */
 void CodeGenerator::genPRINTF(MemoryAllocator& allocator, const Statement& stmt)
 {
     // Clear all registers (including %eax)
@@ -369,6 +458,11 @@ void CodeGenerator::genPRINTF(MemoryAllocator& allocator, const Statement& stmt)
     }
 }
 
+/**
+ * @brief Inserts an instruction into the instruciton vector
+ * 
+ * @param instr instruction to insert
+ */
 void CodeGenerator::insert(const Instruction& instr)
 {
     this->instrs.push_back(instr);
@@ -377,6 +471,10 @@ void CodeGenerator::insert(const Instruction& instr)
     }
 }
 
+/**
+ * @brief Prints out all assembly instructions
+ * 
+ */
 void CodeGenerator::print()
 {
     for (const Instruction& instr : this->instrs)
