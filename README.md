@@ -11,23 +11,23 @@ would normally, but *do not delete* the lex.yy.cpp, parser.tab.cpp, or parser.ta
 This branch also does not include the test scripts.
 
 ## Progress
-- [x] [Scanner](https://github.com/benpm/CSE423/wiki/Design#scanningparsing) (lexical analyzer)
+- [x] [Scanner](https://github.com/benpm/CSE423/wiki/Scanner-Parser) (lexical analyzer)
     - [x] Full token set
-- [x] [Parser](https://github.com/benpm/CSE423/wiki/Design#scanningparsing) (syntactic analyzer)
+- [x] [Parser](https://github.com/benpm/CSE423/wiki/Scanner-Parser) (syntactic analyzer)
     - [x] Parse tree
     - [x] Abstract syntax tree
     - [x] Symbol table population
-- [x] Semantic analyzer
+- [x] [Semantic Analyzer](https://github.com/benpm/CSE423/wiki/Semantic-Analyzer)
     - [x] Illegal operation checking
     - [x] Unused function/variable checking
     - [x] Scope checking
-- [X] [IR generator](https://github.com/benpm/CSE423/wiki/Specification#intermediate-representation)
+- [X] [IR Generator](https://github.com/benpm/CSE423/wiki/Intermediate-Representation)
     - [X] Output IR to file
     - [X] Read in IR from file
-- [X] Optimizer
+- [X] [Optimizer](https://github.com/benpm/CSE423/wiki/Optimizer)
     - [X] Constant propagation
     - [X] Constant folding
-- [X] Code generator
+- [X] [Code Generator](https://github.com/benpm/CSE423/wiki/Code-Generator)
     - [X] x86 processor model
     - [X] Instruction selection
     - [X] Register allocation
