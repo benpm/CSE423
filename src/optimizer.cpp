@@ -145,7 +145,7 @@ void Optimizer::propagate(
                 if (stmt.args.at(argindx).type == Arg::NAME 
                     && strcmp(stmt.args.at(argindx).val.sval, name) == 0) {
                     if (jumpBlocks.count(block.label)
-                        && jumpBlocks.count(originBlock.label) == 0) {
+                        && block.label == originBlock.label) {
                         goto stop;
                     }
                     stmt.args.at(argindx) = value;
