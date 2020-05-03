@@ -6,6 +6,7 @@ stmt,3,none,JUMP_GT,2,int foo,10
 stmt,3,none,JUMP,3
 BB,2,assignment
 stmt,4,int,ASSIGN,int foo,19
-BB,3,return_stmt
-stmt,6,int,RETURN,0
+BB,3,combined
+stmt,6,int,CALL,int #0,printf,"Foo val: %d\n",int foo
+stmt,7,int,RETURN,0
 

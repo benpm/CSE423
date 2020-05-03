@@ -1,0 +1,18 @@
+BB,4294967295,globals
+func,funA
+BB,0,return_stmt
+stmt,3,int,RETURN,3
+func,funB
+BB,0,return_stmt
+stmt,8,int,RETURN,4
+func,main
+BB,0,combined
+stmt,13,int,CALL,int #0,int funA
+stmt,13,int,CALL,int #1,int funB
+stmt,13,int,ADD,int #2,int #0,int #1
+stmt,13,int,CALL,int #3,printf,"ret: %d\n",int #2
+stmt,14,int,CALL,int #0,int funA
+stmt,14,int,CALL,int #1,int funB
+stmt,14,int,ADD,int #2,int #0,int #1
+stmt,14,int,RETURN,int #2
+

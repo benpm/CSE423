@@ -1,0 +1,31 @@
+BB,4294967295,globals
+stmt,1,int,ASSIGN,int v,7
+stmt,2,int,ASSIGN,int x,0
+stmt,3,int,ASSIGN,int z,13
+func,fun
+BB,0,combined
+stmt,7,int,ADD,int v,int v,9
+stmt,8,int,ADD,int #0,1,int v
+stmt,8,int,ADD,int x,int x,int #0
+stmt,9,int,ADD,int #0,3,int x
+stmt,9,int,ADD,int z,int z,int #0
+stmt,10,int,RETURN,int v
+func,main
+BB,0,combined
+stmt,15,int,ADD,int v,int v,2
+stmt,16,int,ASSIGN,int x,3
+stmt,17,int,ASSIGN,int i,0
+BB,3,lt
+stmt,17,none,JUMP_LT,4,int i,7
+stmt,17,none,JUMP,6
+BB,4,combined
+stmt,18,int,CALL,int #0,int fun
+stmt,18,int,ADD,int x,int x,int #0
+stmt,17,int,ADD,int i,int i,1
+stmt,17,none,JUMP,3
+BB,6,combined
+stmt,20,int,CALL,int #0,printf,"v: %d, x: %d, z: %d\n",int v,int x,int z
+stmt,21,int,ADD,int #0,int v,int x
+stmt,21,int,ADD,int #1,int #0,int z
+stmt,21,int,RETURN,int #1
+

@@ -10,8 +10,9 @@ main()
   BB2 [assignment]
   │(4) <[int][ASSIGN], (int)foo, 19>
   └────────────────────
-  BB3 [return_stmt]
-  │(6) <[int][RETURN], 0>
+  BB3 [combined]
+  │(6) <[int][CALL], (int)#0, printf, "Foo val: %d\n", (int)foo>
+  │(7) <[int][RETURN], 0>
   └────────────────────
 
 

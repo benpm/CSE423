@@ -1,0 +1,37 @@
+BB,4294967295,globals
+func,main
+BB,0,combined
+stmt,3,int,ASSIGN,int x,3
+stmt,4,int,ASSIGN,int i,0
+BB,2,lt
+stmt,4,none,JUMP_LT,3,int i,13
+stmt,4,none,JUMP,14
+BB,3,combined
+stmt,5,int,MUL,int #0,int x,int i
+stmt,5,int,ADD,int x,int x,int #0
+stmt,6,int,ASSIGN,int j,0
+BB,5,lt
+stmt,6,none,JUMP_LT,6,int j,56
+stmt,6,none,JUMP,13
+BB,6,combined
+stmt,7,int,ASSIGN,int z,2
+stmt,8,int,MINUS,int x,int x,int j
+BB,8,lt
+stmt,9,none,JUMP_LT,9,int z,100
+stmt,9,none,JUMP,11
+BB,9,combined
+stmt,10,int,MUL,int #0,int x,int x
+stmt,10,int,ADD,int z,int z,int #0
+stmt,9,none,JUMP,8
+BB,11,combined
+stmt,12,int,MOD,int #0,int z,int j
+stmt,12,int,ADD,int x,int x,int #0
+stmt,6,int,ADD,int j,int j,2
+stmt,6,none,JUMP,5
+BB,13,for_post
+stmt,4,int,ADD,int i,int i,1
+stmt,4,none,JUMP,2
+BB,14,combined
+stmt,16,int,CALL,int #0,printf,"x: %d\n",int x
+stmt,18,int,RETURN,int x
+

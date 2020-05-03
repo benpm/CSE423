@@ -27,13 +27,15 @@ Error::Error(Category cat, uint lineno, std::string name)
         {Category::UnusedVariable, "line {}: unused variable ‘{}’"},
         {Category::UnusedFunction, "line {}: unused function ‘{}’"},
         {Category::UnusedParam, "line {}: unused function parameter ‘{}’"},
+        {Category::UninitializedVariable, "line {}: attempt to use uninitialized variable ‘{}’"},
+        {Category::ShadowedVariable, "line {}: declaration shadows earlier declaration of ‘{}’"},
         {Category::UndeclaredVariable, "line {}: attempt to use undeclared variable ‘{}’"},
         {Category::UndefinedLabel, "line {}: attempt to use undefined label ‘{}’"},
-        {Category::ShadowedVariable, "line {}: declaration shadows earlier declaration of ‘{}’"},
         {Category::ImproperUse, "line {}: improper use of symbol ‘{}’"},
         {Category::WrongArgCount, "line {}: wrong number of arguments given to function ‘{}’"},
         {Category::Redeclaration, "line {}: redeclaration of symbol ‘{}’"},
-        {Category::UninitializedVariable, "line {}: attempt to use uninitialized variable ‘{}’"}
+        {Category::ReturnVoid, "line {}: ‘return’ must have value in non-void function{}"},
+        {Category::MisplacedBreak, "line {}: ‘break’ statement not in loop"}
     };
 
     this->category = cat;
@@ -255,7 +257,6 @@ void SemanticAnalyzer::analyzeOperation(AST const *op, std::set<std::string> con
         case AST::Label::decr:
         case AST::Label::unary_minus:
         case AST::Label::log_not:
-        case AST::Label::return_stmt:
             // unary operation
             analyzeTerm(op->children[0], parentDecls);
             break;
@@ -325,7 +326,10 @@ void SemanticAnalyzer::analyzeTerm(AST const *term, std::set<std::string> const 
             analyzeGoto(term, parentDecls);
             break;
         case AST::Label::break_stmt:
-            // ignore breaks
+            analyzeBreak(term);
+            break;
+        case AST::Label::return_stmt:
+            analyzeReturn(term, parentDecls);
             break;
         default:
             // must be operation
@@ -414,10 +418,10 @@ void SemanticAnalyzer::analyzeIfElse(AST const *ifElse, std::set<std::string> co
 
             localDecls.insert(parentDecls.begin(), parentDecls.end());
             for (AST const *stmt : ifElse->children[2]->children)
-                analyzeTerm(stmt, parentDecls);
+                analyzeTerm(stmt, localDecls);
             
-            for (auto it = ifElse->children.begin() + 3; it < ifElse->children.end(); it++)
-                analyzeIfElse(*it, parentDecls);
+            for (auto it = ifElse->children.begin() + 3; it != ifElse->children.end(); it++)
+                analyzeIfElse(*it, localDecls);
             break;
         case AST::Label::else_if:
             analyzeTerm(ifElse->children[0], parentDecls);
@@ -426,7 +430,7 @@ void SemanticAnalyzer::analyzeIfElse(AST const *ifElse, std::set<std::string> co
 
             localDecls.insert(parentDecls.begin(), parentDecls.end());
             for (AST const *stmt : ifElse->children[2]->children)
-                analyzeTerm(stmt, parentDecls);
+                analyzeTerm(stmt, localDecls);
             break;
         case AST::Label::else_stmt:
             for (AST const *decl : ifElse->children[0]->children)
@@ -540,6 +544,41 @@ void SemanticAnalyzer::analyzeGoto(AST const *gotoStmt, std::set<std::string> co
     if (!label || label->category != Symbol::Category::Label) {
         errors.emplace_back(Error::Category::UndefinedLabel, gotoStmt->children[0]->lineNum,
                             labelName);
+    }
+}
+
+/**
+ * Analyze a return statement AST
+ *
+ * @param returnStmt The AST subnode to traverse (must be a return statement)
+ * @param parentDecls A reference to the parent scope declarations
+ *
+ */
+void SemanticAnalyzer::analyzeReturn(AST const *returnStmt,
+                                     std::set<std::string> const &parentDecls)
+{
+    if (returnStmt->children.empty()) {
+        // Error: must return value, term, or expression
+        errors.emplace_back(Error::Category::ReturnVoid, returnStmt->lineNum);
+    } else {
+        analyzeTerm(returnStmt->children[0], parentDecls);
+    }
+}
+
+/**
+ * Analyze a break statement AST
+ *
+ * @param returnStmt The AST subnode to traverse (must be a break statement)
+ *
+ */
+void SemanticAnalyzer::analyzeBreak(AST const *breakStmt)
+{
+    AST const *tmp = breakStmt;
+    while (tmp && tmp->label != AST::Label::for_stmt && tmp->label != AST::Label::while_stmt)
+        tmp = tmp->parent;
+    if (!tmp) {
+        // Error: break not in loop
+        errors.emplace_back(Error::Category::MisplacedBreak, breakStmt->lineNum);
     }
 }
 

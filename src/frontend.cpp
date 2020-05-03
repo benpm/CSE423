@@ -7,7 +7,6 @@
  */
 #include <iostream>
 #include <spdlog/spdlog.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
 #include <analyzer.hpp>
 #include <ast.hpp>
 #include <config.hpp>
@@ -15,15 +14,11 @@
 #include <symboltable.hpp>
 #include <ir/program.hpp>
 #include <optimizer.hpp>
+#include <codeGeneration/CodeGenerator.hpp>
 
 // Main entry point for compiler
 int main(int argc, char **argv)
 {
-    // Logging configuration
-    spdlog::set_default_logger(spdlog::stderr_color_mt("console"));
-    spdlog::set_level(spdlog::level::debug);
-    spdlog::set_pattern("[frontend][%^%l%$] %v");
-
     // Parse command line options
     Config config(argc, argv);
 
@@ -53,6 +48,12 @@ int main(int argc, char **argv)
         // Create IR program
         Program program(ast);
 
+        // Optimize IR program
+        if (config.optimize) {
+            Optimizer optimizer;
+            optimizer.optimize(program);
+        }
+
         if (config.printSymbolTable) {
             spdlog::info("Symbol table:");
             symbolTable.print();
@@ -69,16 +70,25 @@ int main(int argc, char **argv)
             spdlog::info("IR output as CSV to {}", config.outputCSV);
             program.outputToFile(config.outputCSV);
         }
-        if (config.optimize) {
-            Optimizer optimizer;
-            optimizer.optimize(program);
-        }
         if (config.printIR) {
             spdlog::info("IR:");
             program.print();
         }
+        if (config.printASM) {
+            // Generate assembly code
+            CodeGenerator codeGenerator(program, config.printDebug);
+            spdlog::info("x86_64 Assembly Output:");
+            if (!config.printDebug) {
+                codeGenerator.print();
+            }
+        }
     } else {
+        // Load IR program from CSV
         Program program(config.inputCSV);
+        if (config.optimize) {
+            Optimizer optimizer;
+            optimizer.optimize(program);
+        }
 
         if (config.printSymbolTable)
             spdlog::info("IR as input, ignoring symbol table print flag");
@@ -93,6 +103,11 @@ int main(int argc, char **argv)
         if (config.printIR) {
             spdlog::info("IR:");
             program.print();
+        }
+        if (config.printASM) {
+            CodeGenerator codeGenerator(program, config.printDebug);
+            spdlog::info("x86_64 Assembly Output:");
+            codeGenerator.print();
         }
     }
 

@@ -1,5 +1,23 @@
+<<<<<<< HEAD
 [frontend][warning] line 3: unused variable ‘a’
 [frontend][warning] line 5: unused variable ‘hek’
 [frontend][warning] line 6: unused variable ‘str’
 [frontend][warning] line 7: unused variable ‘str2’
 [frontend][error] line 13: redeclaration of symbol ‘a’
+=======
++--------------------------+
+| Table ID: 0  __GLOBAL__  |
++--------------------------+
+| main | Int    | Function |
++--------------------------+
+  +-----------------------+
+  | Table ID: 1   main()  |
+  +-----------------------+
+  | i | Int    | Local    |
+  | j | Int    | Local    |
+  | k | Int    | Local    |
+  +-----------------------+
+    +--------------------+
+    | Table ID: 2  list  |
+    +--------------------+
+>>>>>>> origin/CodeGen

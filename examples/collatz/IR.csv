@@ -1,0 +1,37 @@
+BB,4294967295,globals
+func,collatz,int i
+BB,0,assignment
+stmt,3,int,ASSIGN,int iters,0
+BB,1,noteq
+stmt,4,none,JUMP_NEQ,2,int i,1
+stmt,4,none,JUMP,7
+BB,2,equal
+stmt,5,int,MOD,int #0,int i,2
+stmt,5,none,JUMP_EQ,3,int #0,0
+stmt,5,none,JUMP,4
+BB,3,assignment
+stmt,6,int,DIV,int i,int i,2
+stmt,6,none,JUMP,5
+BB,4,assignment
+stmt,8,int,MUL,int #0,3,int i
+stmt,8,int,ADD,int i,int #0,1
+BB,5,combined
+stmt,10,int,ADD,int iters,int iters,1
+stmt,4,none,JUMP,1
+BB,7,return_stmt
+stmt,13,int,RETURN,int iters
+func,main
+BB,0,assignment
+stmt,18,int,ASSIGN,int i,1
+BB,1,lt
+stmt,18,none,JUMP_LT,2,int i,100
+stmt,18,none,JUMP,4
+BB,2,combined
+stmt,19,int,CALL,int #0,collatz,int i
+stmt,19,int,CALL,int #1,printf,"%d: %d\n",int i,int #0
+stmt,18,int,ADD,int i,int i,1
+stmt,18,none,JUMP,1
+BB,4,return_stmt
+stmt,22,int,CALL,int #0,collatz,100
+stmt,22,int,RETURN,int #0
+

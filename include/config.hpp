@@ -15,6 +15,8 @@ struct Config {
     bool printTokens = false;
     bool printSymbolTable = false;
     bool printIR = false;
+    bool printASM = false;
+    bool printDebug = false;
     bool optimize = false;
     bool suppressLogs = false;
 
@@ -24,4 +26,5 @@ struct Config {
 
     Config(int argc, char **argv);
     void usage(std::string exec_name);
+    void setupLogger();
 };

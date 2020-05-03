@@ -21,7 +21,8 @@
 struct Error {
     enum Category {
         UnusedVariable, UnusedFunction, UnusedParam, UninitializedVariable, ShadowedVariable, // Warnings
-        UndeclaredVariable, UndefinedLabel, ImproperUse, WrongArgCount, Redeclaration // Errors
+        UndeclaredVariable, UndefinedLabel, ImproperUse, WrongArgCount, Redeclaration, // Errors
+        ReturnVoid, MisplacedBreak // Errors
     };
 
     Category category;
@@ -34,6 +35,7 @@ struct Error {
     void printMessage();
 
     Error(Category cat, uint lineno, std::string name);
+    Error(Category cat, uint lineno) : Error(cat, lineno, "") {};
 };
 
 /**
@@ -59,6 +61,8 @@ private:
     void analyzeFor(AST const *forLoop, std::set<std::string> const &parentDecls);
     void analyzeWhile(AST const *whileLoop, std::set<std::string> const &parentDecls);
     void analyzeGoto(AST const *gotoStmt, std::set<std::string> const &parentDecls);
+    void analyzeReturn(AST const *returnStmt, std::set<std::string> const &parentDecls);
+    void analyzeBreak(AST const *breakStmt);
     bool isDeclared(std::string name, std::set<std::string> const &decls);
     bool isInitialized(Symbol *s);
     bool isUsed(Symbol *s);

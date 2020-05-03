@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [frontend][warning] line 3: unused variable ‘d’
 [frontend][error] line 4: redeclaration of symbol ‘n’
 [frontend][warning] line 5: declaration shadows earlier declaration of ‘n’
@@ -12,6 +13,8 @@
 [frontend][error] line 29: attempt to use undefined label ‘foo’
 [frontend][error] line 30: improper use of symbol ‘d’
 [frontend][error] line 31: attempt to use undeclared variable ‘e’
+=======
+>>>>>>> origin/CodeGen
 <int, INT>
 <foo, ID>
 <(, LPAREN>
@@ -28,6 +31,11 @@
 <=, EQUAL>
 <10, INTCONST>
 <;, SEMICOLON>
+<<<<<<< HEAD
+=======
+<break, BREAK>
+<;, SEMICOLON>
+>>>>>>> origin/CodeGen
 <for, IF>
 <(, LPAREN>
 <int, INT>
@@ -48,6 +56,7 @@
 <5, INTCONST>
 <;, SEMICOLON>
 <}, RBRACE>
+<<<<<<< HEAD
 <return, RETURN>
 <n, ID>
 <;, SEMICOLON>
@@ -136,3 +145,28 @@
 <e, ID>
 <;, SEMICOLON>
 <}, RBRACE>
+=======
+<while, WHILE>
+<(, LPAREN>
+<n, ID>
+<<, LT>
+<12, INTCONST>
+<), RPAREN>
+<{, LBRACE>
+<if, IF>
+<(, LPAREN>
+<n, ID>
+<>, GT>
+<11, INTCONST>
+<), RPAREN>
+<{, LBRACE>
+<break, BREAK>
+<;, SEMICOLON>
+<}, RBRACE>
+<}, RBRACE>
+<return, RETURN>
+<n, ID>
+<;, SEMICOLON>
+<}, RBRACE>
+<char, ID>
+>>>>>>> origin/CodeGen

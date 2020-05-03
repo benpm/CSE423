@@ -55,12 +55,6 @@ void Optimizer::optimize(Program& program)
         Statement::JUMP_IF_TRUE, Statement::JUMP_IF_FALSE
     };
 
-    const std::set<Statement::Type> resultStmts {
-        Statement::ADD, Statement::MUL, Statement::DIV, Statement::SUB,
-        Statement::MOD, Statement::MINUS, Statement::NOT, Statement::ASSIGN,
-        Statement::CALL
-    };
-
     for (auto& item : program.functions) {
         bool proceed = false;
         do {
@@ -83,74 +77,105 @@ void Optimizer::optimize(Program& program)
                 proceed = this->foldConstants(block);
             }
 
-            // Find last constant assignment for each identifier
-            std::map<const char*, size_t> lastAssigns;
-            for (size_t i = 0; i < stmts.size(); i++) {
-                const Statement& stmt = stmts[i].second;
-                if (stmt.type == Statement::ASSIGN
-                    && stmt.args.at(1).type != Arg::NAME) {
-                    lastAssigns.emplace(stmt.args.at(0).val.sval, i);
-                }
-            }
-
-            // Perform constant propagation
-            std::vector<std::pair<const char*, size_t>> removeStmts;
-            for (const auto& pair : lastAssigns) {
-                const bool isTemp = (pair.first[0] == '#');
-                const char* name = pair.first;
-                Arg value = stmts[pair.second].second.args.at(1);
-                size_t i = pair.second + 1;
-                BasicBlock& originBlock = stmts[pair.second].first;
-                for (; i < stmts.size(); i++) {
-                    Statement& stmt = stmts[i].second;
-                    BasicBlock& block = stmts[i].first;
-                    // Continue if no args
-                    if (stmt.args.size() == 0)
-                        continue;
-                    // Break if name is the result arg of operation
-                    if (resultStmts.count(stmt.type)
-                        && strcmp(stmt.args.at(0).val.sval, name) == 0) {
-                        break;
-                    }
-                    // Find and replace arg with value
-                    for (size_t argindx = 0; argindx < stmt.args.size(); argindx++) {
-                        if (stmt.args.at(argindx).type == Arg::NAME 
-                            && strcmp(stmt.args.at(argindx).val.sval, name) == 0) {
-                            if (jumpBlocks.count(block.label)
-                                && jumpBlocks.count(originBlock.label) == 0) {
-                                goto stop;
-                            }
-                            stmt.args.at(argindx) = value;
-                            proceed = true;
-                        }
-                    }
-                    // Break if temporary and non-temp assignment
-                    if (isTemp && stmt.type == Statement::ASSIGN
-                        && stmt.args.at(0).val.sval[0] != '#'
-                    ) {
-                        break;  
-                    }
-                }
-                // If we reached the end, remove assignment
-                stop:
-                if (i == stmts.size() || isTemp) {
-                    removeStmts.push_back(pair);
-                }
-            }
-
-            // Remove statements that were marked
-            for (const auto& pair : removeStmts) {
-                BasicBlock& block = stmts.at(pair.second).first;
-                auto it = block.statements.begin();
-                while (it->type != Statement::ASSIGN || strcmp(it->args.at(0).val.sval, pair.first)) {
-                    it++;
-                }
-                block.statements.erase(it);
-                proceed = true;
-            }
+            this->propagate(proceed, stmts, jumpBlocks);
         } while (proceed);
     }
     spdlog::info("Optimizer done");
+}
+
+void Optimizer::optimize(BasicBlock& block)
+{
+    bool proceed = false;
+    do {
+        proceed = false;
+        std::vector<std::pair<BasicBlock&, Statement&>> stmts;
+        std::set<size_t> jumpBlocks;
+        for (Statement& stmt : block.statements) {
+            stmts.emplace_back(std::pair<BasicBlock&, Statement&>(block, stmt));
+        }
+        // Perform constant folding
+        proceed = this->foldConstants(block);
+        this->propagate(proceed, stmts, jumpBlocks, true);
+    } while (proceed);
+}
+
+void Optimizer::propagate(
+    bool& proceed,
+    std::vector<std::pair<BasicBlock&, Statement&>>& stmts,
+    std::set<size_t>& jumpBlocks,
+    bool onlyRemoveTemps)
+{
+    const std::set<Statement::Type> resultStmts {
+        Statement::ADD, Statement::MUL, Statement::DIV, Statement::SUB,
+        Statement::MOD, Statement::MINUS, Statement::NOT, Statement::ASSIGN,
+        Statement::CALL
+    };
+
+    // Find last constant assignment for each identifier
+    std::map<const char*, size_t> lastAssigns;
+    for (size_t i = 0; i < stmts.size(); i++) {
+        const Statement& stmt = stmts[i].second;
+        if (stmt.type == Statement::ASSIGN
+            && stmt.args.at(1).type != Arg::NAME) {
+            lastAssigns.emplace(stmt.args.at(0).val.sval, i);
+        }
+    }
+
+    // Perform constant propagation
+    std::vector<std::pair<const char*, size_t>> removeStmts;
+    for (const auto& pair : lastAssigns) {
+        const bool isTemp = (pair.first[0] == '#');
+        const char* name = pair.first;
+        Arg value = stmts[pair.second].second.args.at(1);
+        size_t i = pair.second + 1;
+        BasicBlock& originBlock = stmts[pair.second].first;
+        for (; i < stmts.size(); i++) {
+            Statement& stmt = stmts[i].second;
+            BasicBlock& block = stmts[i].first;
+            // Continue if no args
+            if (stmt.args.size() == 0)
+                continue;
+            // Break if name is the result arg of operation
+            if (resultStmts.count(stmt.type)
+                && strcmp(stmt.args.at(0).val.sval, name) == 0) {
+                break;
+            }
+            // Find and replace arg with value
+            for (size_t argindx = 0; argindx < stmt.args.size(); argindx++) {
+                if (stmt.args.at(argindx).type == Arg::NAME 
+                    && strcmp(stmt.args.at(argindx).val.sval, name) == 0) {
+                    if (jumpBlocks.count(block.label)
+                        && jumpBlocks.count(originBlock.label) == 0) {
+                        goto stop;
+                    }
+                    stmt.args.at(argindx) = value;
+                    proceed = true;
+                }
+            }
+            // Break if temporary and non-temp assignment
+            if (isTemp && stmt.type == Statement::ASSIGN
+                && stmt.args.at(0).val.sval[0] != '#'
+            ) {
+                break;  
+            }
+        }
+        // If we reached the end, remove assignment
+        stop:
+        if ((i == stmts.size() && !onlyRemoveTemps) || isTemp) {
+            removeStmts.push_back(pair);
+        }
+    }
+
+    // Remove statements that were marked
+    for (const auto& pair : removeStmts) {
+        BasicBlock& block = stmts.at(pair.second).first;
+        auto it = block.statements.begin();
+        while (it->type != Statement::ASSIGN || strcmp(it->args.at(0).val.sval, pair.first)) {
+            it++;
+        }
+        block.statements.erase(it);
+        proceed = true;
+    }
 }
 
 bool Optimizer::canEvaluate(const Statement& statement)

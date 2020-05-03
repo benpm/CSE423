@@ -17,14 +17,18 @@ compilerFlags=(
     s # Symbol Table
     r # IR
     or # Optimization
+    S # Assembly
+    oS # Optimized assembly
 )
 compilerFlagNames=(
-    tokens
-    parseTree
-    AST
-    symbolTable
-    IR
-    optimization
+    tokens.txt
+    parseTree.txt
+    AST.txt
+    symbolTable.txt
+    IR.txt
+    optimization.txt
+    assembly.s
+    optimized_assembly.s
 )
 
 # IR CSV flag
@@ -59,17 +63,18 @@ do
     for (( i=0; i<${#compilerFlags[@]}; i++ ));
     do 
         flag=${compilerFlags[i]}
-        flagName=${compilerFlagNames[i]}
-        outName=$flagName.txt
+        outName=${compilerFlagNames[i]}
 
-        printf "\tGenerating %s\n" $flagName
+        printf "\tGenerating %s\n" $outName
 
         # Bash magic to get sterr indented on output
-        $compilerExecutable -l -$flag $cFile > $outName 2>&1
+        touch $outName
+        $compilerExecutable -l -$flag $cFile > $outName 2>/dev/null
     done
 
     printf "\tGenerating %s\n" $csvFlagName
-    $compilerExecutable -l $cFile -$csvFlag $csvFlagName 2> $csvFlagName
+    touch $csvFlagName
+    $compilerExecutable -l $cFile -$csvFlag $csvFlagName 2>/dev/null
 
     cd ../
 done

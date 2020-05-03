@@ -1,0 +1,73 @@
+ BB4294967295 [globals]
+  └────────────────────
+
+main()
+  BB0 [combined]
+  │(3) <[int][ASSIGN], (int)x, 3>
+  │(4) <[JUMP_LT], <2>, (int)x, 3>
+  │(4) <[JUMP], <8>>
+  └────────────────────
+  BB2 [combined]
+  │(5) <[int][ADD], (int)x, (int)x, 1>
+  │(6) <[int][ADD], (int)#0, (int)x, (int)x>
+  │(6) <[int][ADD], (int)x, (int)#0, 4>
+  │(7) <[JUMP_LT], <5>, (int)x, 3>
+  │(7) <[JUMP], <6>>
+  └────────────────────
+  BB5 [assignment]
+  │(8) <[int][SUB], (int)x, (int)x, 100>
+  └────────────────────
+  BB6 [gt]
+  │(10) <[JUMP_GT], <7>, (int)x, 3>
+  │(10) <[JUMP], <8>>
+  └────────────────────
+  BB7 [assignment]
+  │(11) <[int][ADD], (int)x, (int)x, 1234>
+  └────────────────────
+  BB8 [gt]
+  │(14) <[JUMP_GT], <9>, (int)x, 3>
+  │(14) <[JUMP], <15>>
+  └────────────────────
+  BB9 [combined]
+  │(15) <[int][ADD], (int)x, (int)x, 7>
+  │(16) <[int][ADD], (int)#0, (int)x, (int)x>
+  │(16) <[int][ADD], (int)x, (int)#0, 4>
+  │(17) <[JUMP_LT], <12>, (int)x, 3>
+  │(17) <[JUMP], <13>>
+  └────────────────────
+  BB12 [assignment]
+  │(18) <[int][SUB], (int)x, (int)x, 100>
+  └────────────────────
+  BB13 [gt]
+  │(20) <[JUMP_GT], <14>, (int)x, 3>
+  │(20) <[JUMP], <15>>
+  └────────────────────
+  BB14 [assignment]
+  │(21) <[int][ADD], (int)x, (int)x, 1234>
+  └────────────────────
+  BB15 [equal]
+  │(24) <[JUMP_EQ], <16>, (int)x, 3>
+  │(24) <[JUMP], <21>>
+  └────────────────────
+  BB16 [combined]
+  │(25) <[int][ADD], (int)#0, (int)x, (int)x>
+  │(25) <[int][ADD], (int)x, (int)#0, 4>
+  │(26) <[JUMP_LT], <18>, (int)x, 3>
+  │(26) <[JUMP], <19>>
+  └────────────────────
+  BB18 [assignment]
+  │(27) <[int][SUB], (int)x, (int)x, 100>
+  └────────────────────
+  BB19 [gt]
+  │(29) <[JUMP_GT], <20>, (int)x, 3>
+  │(29) <[JUMP], <21>>
+  └────────────────────
+  BB20 [assignment]
+  │(30) <[int][ADD], (int)x, (int)x, 1234>
+  └────────────────────
+  BB21 [combined]
+  │(34) <[int][CALL], (int)#0, printf, "x: %d\n", (int)x>
+  │(36) <[int][RETURN], (int)x>
+  └────────────────────
+
+

@@ -376,6 +376,12 @@ std::vector<BasicBlock> Function::constructIf(const AST* ast)
             blocks = this->constructIf(child);
         } else if (child->label == AST::else_stmt) {
             blocks = this->populateBB(child);
+            Statement jumpOut(Statement::JUMP, this->nextBlockID);
+            if (elseIfChainBlocks.size() > 0) {
+                elseIfChainBlocks.back().statements.push_back(jumpOut);
+            } else {
+                bodyBlocks.back().statements.push_back(jumpOut);
+            }
         } else {
             spdlog::error("Unexpected child in If/else if AST node");
         }

@@ -11,14 +11,18 @@ compilerFlags=(
     s # Symbol Table
     r # IR
     or # Optimization
+    S # Assembly
+    oS # Optimized assembly
 )
 compilerFlagNames=(
-    tokens
-    parseTree
-    AST
-    symbolTable
-    IR
-    optimization
+    tokens.txt
+    parseTree.txt
+    AST.txt
+    symbolTable.txt
+    IR.txt
+    optimization.txt
+    assembly.s
+    optimized_assembly.s
 )
 
 csvFlag=c
@@ -53,12 +57,12 @@ do
     do 
         flag=${compilerFlags[i]}
         flagName=${compilerFlagNames[i]}
-        outName=$dir/$flagName.txt
+        outName=$dir/$flagName
 
         printf "\tDiffing %s... " $flagName
 
         # Bash magic to get sterr indented on output
-        $compilerExecutable -l -$flag $cFile > "diff_tmp.txt" 2>&1
+        $compilerExecutable -l -$flag $cFile > "diff_tmp.txt" 2>/dev/null
         diff "diff_tmp.txt" $outName > /dev/null
         if [ "$?" != "0" ]
         then
@@ -78,7 +82,7 @@ do
     # Diff IR CSV
     # Bash magic to get sterr indented on output
     outName=$dir/$csvFlagName
-    $compilerExecutable -l $cFile -$csvFlag "diff_tmp.txt" 2> "diff_tmp.txt"
+    $compilerExecutable -l $cFile -$csvFlag "diff_tmp.txt" 2>/dev/null
     diff "diff_tmp.txt" $outName > /dev/null
     if [ "$?" != "0" ]
     then

@@ -31,15 +31,6 @@ const std::unordered_map<AST::Label, Statement::Type> labelMap {
     {AST::sub,          Statement::SUB},
     {AST::modulo,       Statement::MOD},
     {AST::unary_minus,  Statement::MINUS},
-    {AST::log_not,      Statement::NOT},
-    // {AST::log_or,       Statement::LOG_OR},
-    // {AST::log_and,      Statement::LOG_AND},
-    // {AST::gt,           Statement::JUMP_GT},
-    // {AST::ge,           Statement::JUMP_GE},
-    // {AST::lt,           Statement::JUMP_LT},
-    // {AST::le,           Statement::JUMP_LE},
-    // {AST::equal,        Statement::JUMP_EQ},
-    // {AST::noteq,        Statement::JUMP_NEQ},
     {AST::plus_equal,   Statement::ADD},
     {AST::minus_equal,  Statement::MINUS},
     {AST::mod_equal,    Statement::MOD},
@@ -49,6 +40,7 @@ const std::unordered_map<AST::Label, Statement::Type> labelMap {
     {AST::decr,         Statement::MINUS},
     {AST::assignment,   Statement::ASSIGN},
     {AST::args,         Statement::CALL},
+    {AST::call,         Statement::CALL},
     {AST::return_stmt,  Statement::RETURN}
 };
 
@@ -66,7 +58,7 @@ Arg createAlias(const AST* idnode)
     const SymbolTable* scope = declScope->parent;
     while (scope) {
         if (scope->table.count(idnode->data.sval)) {
-            std::string newName = fmt::format("{}_{}", declScope->tableID, idnode->data.sval);
+            std::string newName = fmt::format(".{}.{}", declScope->tableID, idnode->data.sval);
             return Arg(strdup(newName.c_str()), idType);
         }
         scope = scope->parent;
@@ -141,10 +133,12 @@ Arg BasicBlock::expand(const AST* ast, bool start)
 
     // Function calls
     if (ast->label == AST::call) {
-        // Add function identifier to args
-        args.push_back(Arg(ast->children[0]->data.sval));
         // Set current ast node to the args child so that function args can be added properly
-        ast = ast->children[1];
+        if (ast->children.size() > 1) {
+            // Add function identifier to args
+            args.push_back(Arg(ast->children.at(0)->data.sval));
+            ast = ast->children.at(1);
+        }
     }
 
     // Constants, identifiers
@@ -178,15 +172,6 @@ Arg BasicBlock::expand(const AST* ast, bool start)
             case AST::sub:
             case AST::divide:
             case AST::unary_minus:
-            // case AST::log_not:
-            // case AST::log_or:
-            // case AST::log_and:
-            // case AST::lt:
-            // case AST::gt:
-            // case AST::le:
-            // case AST::ge:
-            case AST::equal:
-            case AST::noteq:
                 args.push_back(this->expand(child, false));
                 break;
             // Identifier or constant value arguments
@@ -205,8 +190,21 @@ Arg BasicBlock::expand(const AST* ast, bool start)
             case AST::string_const:
                 args.emplace_back(child->data.sval);
                 break;
+            case AST::log_not:
+            case AST::log_or:
+            case AST::log_and:
+            case AST::lt:
+            case AST::gt:
+            case AST::le:
+            case AST::ge:
+            case AST::equal:
+            case AST::noteq:
+                spdlog::error("Comparison not allowed in assignments! Line {}", child->toString(), child->lineNum);
+                exit(EXIT_FAILURE);
+                break;
             default:
-                spdlog::warn("{} unhandled", child->toString());
+                spdlog::error("{} unhandled", child->toString());
+                exit(EXIT_FAILURE);
                 break;
         }
     }

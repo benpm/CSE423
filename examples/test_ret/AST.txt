@@ -1,0 +1,39 @@
+root
+ └─[0] dec_list
+   ├─[1] function
+   │ ├─[1] int_type
+   │ ├─[1] id (funA)
+   │ ├─[1] params
+   │ ├─[1] dec_list
+   │ └─[2] list
+   │   └─[2] return_stmt
+   │     └─[2] int_const (3)
+   ├─[3] function
+   │ ├─[3] int_type
+   │ ├─[3] id (funB)
+   │ ├─[3] params
+   │ ├─[3] dec_list
+   │ └─[4] list
+   │   └─[4] return_stmt
+   │     └─[4] int_const (4)
+   └─[5] function
+     ├─[5] int_type
+     ├─[5] id (main)
+     ├─[5] params
+     ├─[5] dec_list
+     └─[6] list
+       ├─[6] call
+       │ ├─[6] id (printf)
+       │ └─[6] args
+       │   ├─[6] string_const ("ret: %d\n")
+       │   └─[6] sum
+       │     ├─[6] call
+       │     │ └─[6] id (funA)
+       │     └─[6] call
+       │       └─[6] id (funB)
+       └─[6] return_stmt
+         └─[6] sum
+           ├─[6] call
+           │ └─[6] id (funA)
+           └─[6] call
+             └─[6] id (funB)

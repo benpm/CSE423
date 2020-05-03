@@ -1,0 +1,135 @@
+root
+ └─[0] dec_list
+   └─[1] function
+     ├─[1] int_type
+     ├─[1] id (main)
+     ├─[1] params
+     ├─[1] dec_list
+     │ └─[1] declaration
+     │   ├─[1] int_type
+     │   └─[1] assignment
+     │     ├─[1] id (x)
+     │     └─[1] int_const (3)
+     └─[2] list
+       ├─[3] if_stmt
+       │ ├─[3] lt
+       │ │ ├─[3] id (x)
+       │ │ └─[3] int_const (3)
+       │ ├─[3] dec_list
+       │ └─[4] list
+       │   ├─[4] assignment
+       │   │ ├─[4] id (x)
+       │   │ └─[4] sum
+       │   │   ├─[4] id (x)
+       │   │   └─[4] int_const (1)
+       │   ├─[4] assignment
+       │   │ ├─[4] id (x)
+       │   │ └─[4] sum
+       │   │   ├─[4] sum
+       │   │   │ ├─[4] id (x)
+       │   │   │ └─[4] id (x)
+       │   │   └─[4] int_const (4)
+       │   ├─[5] if_stmt
+       │   │ ├─[5] lt
+       │   │ │ ├─[5] id (x)
+       │   │ │ └─[5] int_const (3)
+       │   │ ├─[5] dec_list
+       │   │ └─[6] list
+       │   │   └─[6] assignment
+       │   │     ├─[6] id (x)
+       │   │     └─[6] sub
+       │   │       ├─[6] id (x)
+       │   │       └─[6] int_const (100)
+       │   └─[7] if_stmt
+       │     ├─[7] gt
+       │     │ ├─[7] id (x)
+       │     │ └─[7] int_const (3)
+       │     ├─[7] dec_list
+       │     └─[8] list
+       │       └─[8] assignment
+       │         ├─[8] id (x)
+       │         └─[8] sum
+       │           ├─[8] id (x)
+       │           └─[8] int_const (1234)
+       ├─[9] if_stmt
+       │ ├─[9] gt
+       │ │ ├─[9] id (x)
+       │ │ └─[9] int_const (3)
+       │ ├─[9] dec_list
+       │ └─[10] list
+       │   ├─[10] assignment
+       │   │ ├─[10] id (x)
+       │   │ └─[10] sum
+       │   │   ├─[10] id (x)
+       │   │   └─[10] int_const (7)
+       │   ├─[10] assignment
+       │   │ ├─[10] id (x)
+       │   │ └─[10] sum
+       │   │   ├─[10] sum
+       │   │   │ ├─[10] id (x)
+       │   │   │ └─[10] id (x)
+       │   │   └─[10] int_const (4)
+       │   ├─[11] if_stmt
+       │   │ ├─[11] lt
+       │   │ │ ├─[11] id (x)
+       │   │ │ └─[11] int_const (3)
+       │   │ ├─[11] dec_list
+       │   │ └─[12] list
+       │   │   └─[12] assignment
+       │   │     ├─[12] id (x)
+       │   │     └─[12] sub
+       │   │       ├─[12] id (x)
+       │   │       └─[12] int_const (100)
+       │   └─[13] if_stmt
+       │     ├─[13] gt
+       │     │ ├─[13] id (x)
+       │     │ └─[13] int_const (3)
+       │     ├─[13] dec_list
+       │     └─[14] list
+       │       └─[14] assignment
+       │         ├─[14] id (x)
+       │         └─[14] sum
+       │           ├─[14] id (x)
+       │           └─[14] int_const (1234)
+       ├─[15] if_stmt
+       │ ├─[15] equal
+       │ │ ├─[15] id (x)
+       │ │ └─[15] int_const (3)
+       │ ├─[15] dec_list
+       │ └─[16] list
+       │   ├─[16] assignment
+       │   │ ├─[16] id (x)
+       │   │ └─[16] sum
+       │   │   ├─[16] sum
+       │   │   │ ├─[16] id (x)
+       │   │   │ └─[16] id (x)
+       │   │   └─[16] int_const (4)
+       │   ├─[17] if_stmt
+       │   │ ├─[17] lt
+       │   │ │ ├─[17] id (x)
+       │   │ │ └─[17] int_const (3)
+       │   │ ├─[17] dec_list
+       │   │ └─[18] list
+       │   │   └─[18] assignment
+       │   │     ├─[18] id (x)
+       │   │     └─[18] sub
+       │   │       ├─[18] id (x)
+       │   │       └─[18] int_const (100)
+       │   └─[19] if_stmt
+       │     ├─[19] gt
+       │     │ ├─[19] id (x)
+       │     │ └─[19] int_const (3)
+       │     ├─[19] dec_list
+       │     └─[20] list
+       │       └─[20] assignment
+       │         ├─[20] id (x)
+       │         └─[20] sum
+       │           ├─[20] id (x)
+       │           └─[20] int_const (1234)
+       ├─[2] call
+       │ ├─[2] id (printf)
+       │ └─[2] args
+       │   ├─[2] string_const ("x: %d\n")
+       │   └─[2] id (x)
+       └─[2] return_stmt
+         └─[2] id (x)

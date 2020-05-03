@@ -1,0 +1,18 @@
+BB,4294967295,globals
+func,refun,int x
+BB,0,combined
+stmt,2,int,ADD,int x,int x,3
+stmt,3,none,JUMP_LT,2,int x,1239
+stmt,3,none,JUMP,3
+BB,2,call
+stmt,4,int,MUL,int #0,int x,2
+stmt,4,int,CALL,int #1,refun,int #0
+BB,3,return_stmt
+stmt,6,int,RETURN,int x
+func,main
+BB,0,combined
+stmt,11,int,CALL,int #0,refun,10
+stmt,11,int,CALL,int #1,printf,"refun(10): %d\n",int #0
+stmt,12,int,CALL,int #0,refun,1
+stmt,12,int,RETURN,int #0
+

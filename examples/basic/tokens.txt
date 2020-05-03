@@ -20,6 +20,13 @@
 <19, INTCONST>
 <;, SEMICOLON>
 <}, RBRACE>
+<printf, ID>
+<(, LPAREN>
+<"Foo val: %d\n", STRINGLIT>
+<,, COMMA>
+<foo, ID>
+<), RPAREN>
+<;, SEMICOLON>
 <return, RETURN>
 <0, INTCONST>
 <;, SEMICOLON>

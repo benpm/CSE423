@@ -23,18 +23,6 @@ int {
         printf("<%s, %s>\n", yytext, "INT");
     return INT;
 }
-float {
-    yylval.sval = strdup(yytext);
-    if (scannerPrintTokens)
-        printf("<%s, %s>\n", yytext, "FLOAT");
-    return FLOAT;
-}
-char {
-    yylval.sval = strdup(yytext);
-    if (scannerPrintTokens)
-        printf("<%s, %s>\n", yytext, "CHAR");
-    return CHAR;
-}
 for {
     yylval.sval = strdup(yytext);
     if (scannerPrintTokens)
@@ -251,12 +239,6 @@ goto {
         printf("<%s, %s>\n", yytext, "NOT");
     return NOT;
 }
-'.' {
-    yylval.cval = yytext[1];
-    if (scannerPrintTokens)
-        printf("<%s, %s>\n", yytext, "CHARLIT");
-    return CHARLIT;
-}
 \"(\\.|[^"\\])*\" {
     yylval.sval = strdup(yytext);
     if (scannerPrintTokens)
@@ -268,12 +250,6 @@ goto {
     if (scannerPrintTokens)
         printf("<%s, %s>\n", yytext, "INTCONST");
     return INTCONST;
-}
-([0-9]+\.[0-9]*)|([0-9]*\.[0-9]+)  {
-    yylval.fval = atof(yytext);
-    if (scannerPrintTokens)
-        printf("<%s, %s>\n", yytext, "FLOATCONST");
-    return FLOATCONST;
 }
 [a-zA-Z_][a-zA-Z0-9_]* {
     yylval.sval = strdup(yytext);

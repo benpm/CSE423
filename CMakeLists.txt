@@ -62,6 +62,9 @@ add_executable(sc64
     "src/ir/function.cpp"
     "src/ir/program.cpp"
     "src/optimizer.cpp"
+    "src/codeGeneration/CodeGenerator.cpp"
+    "src/codeGeneration/MemoryAllocator.cpp"
+    "src/codeGeneration/Instruction.cpp"
     ${FLEX_scanner_OUTPUTS}
     ${BISON_parser_OUTPUTS}
 )

@@ -1,0 +1,54 @@
+BB,4294967295,globals
+func,main
+BB,0,combined
+stmt,3,int,ASSIGN,int x,3
+stmt,4,none,JUMP_LT,2,int x,3
+stmt,4,none,JUMP,8
+BB,2,combined
+stmt,5,int,ADD,int x,int x,1
+stmt,6,int,ADD,int #0,int x,int x
+stmt,6,int,ADD,int x,int #0,4
+stmt,7,none,JUMP_LT,5,int x,3
+stmt,7,none,JUMP,6
+BB,5,assignment
+stmt,8,int,SUB,int x,int x,100
+BB,6,gt
+stmt,10,none,JUMP_GT,7,int x,3
+stmt,10,none,JUMP,8
+BB,7,assignment
+stmt,11,int,ADD,int x,int x,1234
+BB,8,gt
+stmt,14,none,JUMP_GT,9,int x,3
+stmt,14,none,JUMP,15
+BB,9,combined
+stmt,15,int,ADD,int x,int x,7
+stmt,16,int,ADD,int #0,int x,int x
+stmt,16,int,ADD,int x,int #0,4
+stmt,17,none,JUMP_LT,12,int x,3
+stmt,17,none,JUMP,13
+BB,12,assignment
+stmt,18,int,SUB,int x,int x,100
+BB,13,gt
+stmt,20,none,JUMP_GT,14,int x,3
+stmt,20,none,JUMP,15
+BB,14,assignment
+stmt,21,int,ADD,int x,int x,1234
+BB,15,equal
+stmt,24,none,JUMP_EQ,16,int x,3
+stmt,24,none,JUMP,21
+BB,16,combined
+stmt,25,int,ADD,int #0,int x,int x
+stmt,25,int,ADD,int x,int #0,4
+stmt,26,none,JUMP_LT,18,int x,3
+stmt,26,none,JUMP,19
+BB,18,assignment
+stmt,27,int,SUB,int x,int x,100
+BB,19,gt
+stmt,29,none,JUMP_GT,20,int x,3
+stmt,29,none,JUMP,21
+BB,20,assignment
+stmt,30,int,ADD,int x,int x,1234
+BB,21,combined
+stmt,34,int,CALL,int #0,printf,"x: %d\n",int x
+stmt,36,int,RETURN,int x
+

@@ -1,0 +1,26 @@
+ BB4294967295 [globals]
+  └────────────────────
+
+funA()
+  BB0 [return_stmt]
+  │(3) <[int][RETURN], 3>
+  └────────────────────
+
+funB()
+  BB0 [return_stmt]
+  │(8) <[int][RETURN], 4>
+  └────────────────────
+
+main()
+  BB0 [combined]
+  │(13) <[int][CALL], (int)#0, (int)funA>
+  │(13) <[int][CALL], (int)#1, (int)funB>
+  │(13) <[int][ADD], (int)#2, (int)#0, (int)#1>
+  │(13) <[int][CALL], (int)#3, printf, "ret: %d\n", (int)#2>
+  │(14) <[int][CALL], (int)#0, (int)funA>
+  │(14) <[int][CALL], (int)#1, (int)funB>
+  │(14) <[int][ADD], (int)#2, (int)#0, (int)#1>
+  │(14) <[int][RETURN], (int)#2>
+  └────────────────────
+
+
