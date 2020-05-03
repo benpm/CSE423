@@ -1,7 +1,9 @@
 # CSE423 Compiler Writing
 _Benjamin Mastripolito, Haydn Jones, and Steven Anaya_
 
-Documentation and User Manual lives on our [Wiki](https://github.com/benpm/CSE423/wiki)
+Documentation and User Manual lives on our [Wiki](https://github.com/benpm/CSE423/wiki).
+
+NOTE: *To compile without flex and bison, [use the release](https://github.com/benpm/CSE423/releases)*
 
 ## Progress
 - [x] [Scanner](https://github.com/benpm/CSE423/wiki/Design#scanningparsing) (lexical analyzer)
